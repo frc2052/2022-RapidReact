@@ -24,7 +24,9 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lthor = table.getEntry("thor");       // horizontal sidelength of bound box   0 - 320 (pixels) 
     private NetworkTableEntry ltvert = table.getEntry("tvert");     // vertical sidelength of bound box     0 - 320 (pixels)
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 ... 9
-    private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
+    private NetworkTableEntry lcamtran = table.getEntry("camtran");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
+
+    private boolean hasValidTarget = false;
 
     public void updateLimelight() {
 
@@ -127,4 +129,38 @@ public class VisionSubsystem extends SubsystemBase{
      */
     public double getCamtran() {return this.camtran;}
     
+    public boolean hasValidTarget() { // method for accessing tv to see if it has a target, which is when tv = 1.0.
+        if (this.tv < 1.0) 
+          return false; 
+        else 
+          return true;
+      }
+
+    //public double verticalOffsetFromTargetMeters() {
+
+    //}
+
+      public void setPipeline(int pipeline) { // method to set pipeline (limelight 'profile')
+        if(pipeline >= 0 && pipeline <= 9) // 10 availible pipelines
+          lgetpipe.setDouble((double) pipeline);
+        else
+            System.out.println("Select a pipeline between 0 and 9"); //Not sure how i'd print this to somewhere it'd need to be read here yet
+      }
+
+      public void putToSmartDashboard() { //primarily for learning purposes right now
+        updateLimelight();
+        SmartDashboard.putBoolean("Has target?", hasValidTarget());
+        SmartDashboard.putNumber("Vertical Distance from Crosshair (degrees)", ty);
+        SmartDashboard.putNumber("Horizontal Distance from Crosshair (degrees)", tx);
+        SmartDashboard.putString("Target's area of the image", ta + "%");
+        SmartDashboard.putNumber("Skew or Rotation", ts);
+        SmartDashboard.putString("Pipeline latency contribution", tl + "ms");
+
+        SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
+        SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
+        SmartDashboard.putString("Horizontal Bounding Box Sidelength", thor + " pixels");
+        SmartDashboard.putString("Vertical Bounding Box Sidelength", tvert + " pixels");
+        SmartDashboard.putNumber("Pipeline", getpipe);
+        SmartDashboard.putNumber("Camtran", camtran);
+      }
 }

@@ -12,4 +12,26 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+
+    public static final class Motors {
+        public static final int kTurretMotorID = 12;
+    }
+
+    //Copied from 2020 Scorpion for testing aiming using Limelight
+    public static final class Turret{
+        public static final double kTurnLeftSpeed = -0.1;
+        public static final double kTurnRightSpeed = 0.1;
+
+        public static final int kTurretMinEncoderPos = -4000;
+        public static final int kTurretMaxEncoderPos = 16000;
+
+        public static final double kTicksPerDegree = 4096 / 90;
+        public static final double kMaxAngle = 90;
+        public static final double kMinAngle = -90;
+
+        public static final double kMinTurretSpeed = .07;
+        public static final double kMaxTurretSpeed = .75;
+    }
+  
+}
