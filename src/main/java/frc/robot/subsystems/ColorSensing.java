@@ -18,7 +18,7 @@ public class ColorSensing extends SubsystemBase{
     private final Color kYellowTarget = new Color(0.132, 0.99, 0.32);
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-
+    public boolean wantColorSense = false;
 
     public void initializeColor() {
         m_colorMatcher.addColorMatch(kBlueTarget);
@@ -26,8 +26,12 @@ public class ColorSensing extends SubsystemBase{
         m_colorMatcher.addColorMatch(kYellowTarget);
 
     }
+
+    public void execute(){
+       
+    }
     
-    public void findColor(){
+    public void findColor(boolean wantColorSense){
         Color detectedColor;
 
         detectedColor = m_colorSensor.getColor();
