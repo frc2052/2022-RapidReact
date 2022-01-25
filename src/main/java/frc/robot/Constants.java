@@ -14,6 +14,12 @@ package frc.robot;
  */
 public final class Constants {
 
+    
+    
+    public static final class Field {
+        public static final double kUpperHubHeight = 2.64;   // In meters
+    }
+    
     public static final class Motors {
         public static final int kTurretMotorID = 12;
     }
@@ -32,6 +38,11 @@ public final class Constants {
 
         public static final double kMinTurretSpeed = .07;
         public static final double kMaxTurretSpeed = .75;
+    }
+
+    public static final class Limelight {
+        public static final double kLimelightMountHeight = 37.5;
+        public static final double kLimelightMountAngle = 28;
     }
   
 }

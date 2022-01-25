@@ -5,6 +5,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
+import frc.robot.Constants;
 
 public class VisionSubsystem extends SubsystemBase{
 
@@ -24,12 +25,9 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lthor = table.getEntry("thor");       // horizontal sidelength of bound box   0 - 320 (pixels) 
     private NetworkTableEntry ltvert = table.getEntry("tvert");     // vertical sidelength of bound box     0 - 320 (pixels)
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 ... 9
-    private NetworkTableEntry lcamtran = table.getEntry("camtran");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
-
-    private boolean hasValidTarget = false;
+    private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
 
     public void updateLimelight() {
-
         this.tv = this.ltv.getDouble(0.0);
         this.tx = this.ltx.getDouble(0.0);
         this.ty = this.lty.getDouble(0.0);
@@ -45,88 +43,18 @@ public class VisionSubsystem extends SubsystemBase{
         this.camtran = this.lcamtran.getDouble(0.0);
     }
 
-    /**
-     * Returns a double between 0 and 1 for if the Limelight has any targets
-     * 
-     * @return tv
-     */
     public double getTv() {return this.tv;}
-
-    /**
-     * Returns a double between between -29.8 and 29.8 (degrees) for the horizontal offset from crosshair to target
-     * 
-     * @return tx
-     */
     public double getTx() {return this.tx;}
-    
-    /**
-     * Returns a double between -24.85 and 24.85 (degrees) for the vertical offset from crosshair to target
-     * 
-     * @return ty
-     */
     public double getTy() {return this.ty;}
-
-     /**
-     * Returns a double between 0 and 100 (percent) for the target's area of the image
-     * 
-     * @return ta
-     */
     public double getTa() {return this.ta;}
-
-     /**
-     * Returns a double between -90 and 0 (degrees) for the skew or rotation
-     * 
-     * @return ts
-     */
     public double getTs() {return this.ts;}
-
-    /**
-     * Returns a double of at least at least 11 (ms) for the Limelights's pipeline's latency contribution 
-     * 
-     * @return tl
-     */
     public double getTl() {return this.tl;}
 
-    /**
-     * Returns a double for pixels of the length of shortest bounding box side
-     * 
-     * @return tshort
-     */
     public double getTshort() {return this.tshort;}
-
-    /**
-     * Returns a double for pixels of the length of longest bounding box side
-     * 
-     * @return tlong
-     */
     public double getTlong() {return this.tlong;}
-
-    /**
-     * Returns a double between 0 - 320 (pixels) for the horizontal sidelength of the bounding box
-     * 
-     * @return thor
-     */
     public double getThor() {return this.thor;}
-    
-    /**
-     * Returns a double between 0 - 320 (pixels) for the vertical sidelength of the bounding box
-     * 
-     * @return tvert
-     */
     public double getTvert() {return this.tvert;}
-
-    /**
-     * Returns a double between 0 ... 9 for the true active pipeline index of camera
-     * 
-     * @return getpipe
-     */
     public double getGetpipe() {return this.getpipe;}
-
-    /**
-     * Returns a for the "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
-     * 
-     * @return camtran
-     */
     public double getCamtran() {return this.camtran;}
     
     public boolean hasValidTarget() { // method for accessing tv to see if it has a target, which is when tv = 1.0.
@@ -136,22 +64,27 @@ public class VisionSubsystem extends SubsystemBase{
           return true;
       }
 
-    //public double verticalOffsetFromTargetMeters() {
-
-    //}
-
-      public void setPipeline(int pipeline) { // method to set pipeline (limelight 'profile')
+    public void setPipeline(int pipeline) { // method to set pipeline (limelight 'profile')
         if(pipeline >= 0 && pipeline <= 9) // 10 availible pipelines
           lgetpipe.setDouble((double) pipeline);
         else
             System.out.println("Select a pipeline between 0 and 9"); //Not sure how i'd print this to somewhere it'd need to be read here yet
-      }
+    }
 
-      public void putToSmartDashboard() { //primarily for learning purposes right now
+    public double xDistanceToUpperHub() {
+      updateLimelight();
+      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kLimelightMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kLimelightMountAngle + ty)));
+    }
+
+    public double xDistanceToUpperHub(double angle) {
+      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kLimelightMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kLimelightMountAngle + angle)));
+    }
+
+    public void putToSmartDashboard() { //sends all values to smart dashboad, primarily for learning purposes right now
         updateLimelight();
         SmartDashboard.putBoolean("Has target?", hasValidTarget());
-        SmartDashboard.putNumber("Vertical Distance from Crosshair (degrees)", ty);
-        SmartDashboard.putNumber("Horizontal Distance from Crosshair (degrees)", tx);
+        SmartDashboard.putString("Vertical Distance from Crosshair", ty + " degrees");
+        SmartDashboard.putString("Horizontal Distance from Crosshair", tx + " degrees");
         SmartDashboard.putString("Target's area of the image", ta + "%");
         SmartDashboard.putNumber("Skew or Rotation", ts);
         SmartDashboard.putString("Pipeline latency contribution", tl + "ms");
@@ -162,5 +95,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("Vertical Bounding Box Sidelength", tvert + " pixels");
         SmartDashboard.putNumber("Pipeline", getpipe);
         SmartDashboard.putNumber("Camtran", camtran);
-      }
+
+        SmartDashboard.putString("xDistance away", xDistanceToUpperHub() + " meters");
+    }
 }
