@@ -41,8 +41,13 @@ public final class Constants {
     }
 
     public static final class Limelight {
-        public static final double kLimelightMountHeight = 37.5;
+        public static final double kLimelightMountHeight = 0.9525;
         public static final double kLimelightMountAngle = 28;
     }
   
+    public static final class Calculations {
+        public static final double kParabolicPeakOffsetX = -0.5;
+        public static final double kParabolicPeakOffsetY = 0.5;
+        public static final double kGravitationalConstant = 9.8;
+    }
 }

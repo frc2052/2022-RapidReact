@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TurretTrackTargetCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -26,6 +27,8 @@ public class RobotContainer {
 
   private VisionSubsystem vision;
   private TurretSubsystem turret;
+  
+  private ProjectileCalculator pC;
 
   private TurretTrackTargetCommand turretTrackTarget;
 
@@ -34,6 +37,8 @@ public class RobotContainer {
 
     vision = new VisionSubsystem();
     turret = new TurretSubsystem();
+
+    pC = new ProjectileCalculator();
 
     turretTrackTarget = new TurretTrackTargetCommand();
 
@@ -65,5 +70,8 @@ public class RobotContainer {
 
   public void putToSmartDashboard() {
     vision.putToSmartDashboard();
+    double fireAngle = pC.calculateUHFireAngle(vision.xDistanceToUpperHub(), Constants.Field.kUpperHubHeight);
+    SmartDashboard.putNumber("Limelight calculated firing angle", fireAngle);
+    SmartDashboard.putNumber("Limelight calculated firing velocity", pC.calculateReqProjectileVelocity(fireAngle, vision.xDistanceToUpperHub(), Constants.Field.kUpperHubHeight));
   }
 }

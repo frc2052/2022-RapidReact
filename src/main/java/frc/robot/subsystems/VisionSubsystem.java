@@ -24,6 +24,9 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry ltlong = table.getEntry("tlong");     // length of longest bounding box side  (pixels)
     private NetworkTableEntry lthor = table.getEntry("thor");       // horizontal sidelength of bound box   0 - 320 (pixels) 
     private NetworkTableEntry ltvert = table.getEntry("tvert");     // vertical sidelength of bound box     0 - 320 (pixels)
+
+    private NetworkTableEntry lledMode = table.getEntry("ledMode");
+    private NetworkTableEntry lcamMode = table.getEntry("camMode");
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 ... 9
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
 
@@ -71,6 +74,28 @@ public class VisionSubsystem extends SubsystemBase{
             System.out.println("Select a pipeline between 0 and 9"); //Not sure how i'd print this to somewhere it'd need to be read here yet
     }
 
+    public void setLED(LEDMode mode) {
+      switch(mode) {
+        case DEFAULT:
+          lledMode.setNumber(0);  // Whatever value is specified by the current pipeline
+        case OFF:
+          lledMode.setNumber(1);  // Turns the Limelight's LEDs off
+        case BLINK:
+          lledMode.setNumber(2);  // Makes the Limelight's LEDs blink
+        case ON:
+          lledMode.setNumber(3);  // Turns the Limelight's LEDs on
+      }
+    }
+
+    public void setCamMode(CamMode mode) {
+      switch(mode) {
+        case VISION:
+          lcamMode.setNumber(0);
+        case DRIVER:
+          lcamMode.setNumber(1);
+      }
+    }
+
     public double xDistanceToUpperHub() {
       updateLimelight();
       return (Constants.Field.kUpperHubHeight - Constants.Limelight.kLimelightMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kLimelightMountAngle + ty)));
@@ -97,5 +122,17 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Camtran", camtran);
 
         SmartDashboard.putString("xDistance away", xDistanceToUpperHub() + " meters");
+    }
+
+    public enum LEDMode {
+      DEFAULT,
+      OFF,
+      BLINK,
+      ON,
+    }
+
+    public enum CamMode {
+      VISION,
+      DRIVER,
     }
 }
