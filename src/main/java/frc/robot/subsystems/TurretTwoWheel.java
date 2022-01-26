@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 //import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -15,20 +16,60 @@ import frc.robot.Constants;
 
 public class TurretTwoWheel extends SubsystemBase {
   
-  private TalonSRX angleMotor = null;
+  private TalonSRX turretMotor;
+  private int currentPos = 0;
+  private double motorPower = 0;
+  private boolean isLinedUp;
 
   public TurretTwoWheel() {
 
-angleMotor = new TalonSRX(Constants.Motors.kHoodMotorID);      
-  angleMotor.configFactoryDefault(); 
-  angleMotor.setNeutralMode(NeutralMode.Brake);
-  angleMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-  angleMotor.config_kF(0, 0.00001, 10); 
-  angleMotor.config_kP(0, 0, 10);
-  angleMotor.config_kI(0, 0, 10);
-  angleMotor.config_kD(0, 0, 10);
+  turretMotor = new TalonSRX(Constants.Motors.kHoodMotorID);      
+  turretMotor.configFactoryDefault(); 
+  turretMotor.setNeutralMode(NeutralMode.Brake);
+  turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor
+  turretMotor.setSelectedSensorPosition(0, 0, 10); //Selected Sensor Position for Motor
 
   }
+
+  public void resetEncoder() {
+
+    turretMotor.setSelectedSensorPosition(0);
+
+  }
+
+  public void TurnTurret(double power) {
+  motorPower = power;
+  turretMotor.set(ControlMode.PercentOutput, power);
+
+  }
+
+  public void driveToPos(double angle) {
+
+    //will take in angle and drive to find a shot
+
+  }
+
+  public boolean getIsOnTarget() {
+
+    return isLinedUp;
+
+  }
+
+  public int getEncoderPos() {
+
+    return (int) turretMotor.getSelectedSensorPosition();
+
+  }
+
+  public double getTurretDegree() {
+
+    double ticks = turretMotor.getSelectedSensorPosition(0);
+    return ticks; // Constants.Turret.kTicksPerDegree; Will return ticks per degree from constants
+
+  }
+
+  // public void printEncoderPos() {}
+
 
   @Override
   public void periodic() {
