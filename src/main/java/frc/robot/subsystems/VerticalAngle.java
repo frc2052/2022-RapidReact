@@ -14,16 +14,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TurretTwoWheel extends SubsystemBase {
+public class VerticalAngle extends SubsystemBase {
   
   private TalonSRX turretMotor;
   private int currentPos = 0;
   private double motorPower = 0;
   private boolean isLinedUp;
 
-  public TurretTwoWheel() {
+  public VerticalAngle() { 
 
-  turretMotor = new TalonSRX(Constants.Motors.kHoodMotorID);      
+  turretMotor = new TalonSRX(Constants.Motors.TURRET);      
   turretMotor.configFactoryDefault(); 
   turretMotor.setNeutralMode(NeutralMode.Brake);
   turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor

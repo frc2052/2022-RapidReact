@@ -16,11 +16,11 @@ public final class Constants {
 
     public static final class Motors {
 
-        public static final int  kHoodMotorID = 1;
+        public static final int  TURRET = 1;
         
 
     }
 
-    public static final String Turret = null;
 
+    
 }
