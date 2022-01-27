@@ -14,13 +14,18 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static final class Motors {
+    public static final class MotorIDs {
 
-        public static final int  TURRET = 1;
-        
+        public static final int  PITCH_SHOOTER = 1;
+        public static final int YAW_SHOOTER = 2;
+        public static final int FLYWHEELS_SHOOTER = 3;   
+
+    } 
+
+    public static final class ShooterSub {
+
+        public static final double FLYWHEELSPEED = .75;
 
     }
 
-
-    
 }

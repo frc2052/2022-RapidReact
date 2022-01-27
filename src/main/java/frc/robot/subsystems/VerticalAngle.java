@@ -23,7 +23,7 @@ public class VerticalAngle extends SubsystemBase {
 
   public VerticalAngle() { 
 
-  turretMotor = new TalonSRX(Constants.Motors.TURRET);      
+  turretMotor = new TalonSRX(Constants.MotorIDs.PITCH_SHOOTER);      
   turretMotor.configFactoryDefault(); 
   turretMotor.setNeutralMode(NeutralMode.Brake);
   turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor

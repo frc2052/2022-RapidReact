@@ -23,7 +23,7 @@ public class HorizontalAngle extends SubsystemBase {
 
   public HorizontalAngle() { 
 
-  turretMotor = new TalonSRX(Constants.Motors.TURRET);      
+  turretMotor = new TalonSRX(Constants.MotorIDs.YAW_SHOOTER);      
   turretMotor.configFactoryDefault(); 
   turretMotor.setNeutralMode(NeutralMode.Brake);
   turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor
