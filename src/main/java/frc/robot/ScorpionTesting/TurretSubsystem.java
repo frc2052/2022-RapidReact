@@ -7,7 +7,7 @@
 
 //Copied from 2020 Scorpion for testing aiming using limelight
 
-package frc.robot.subsystems;
+package frc.robot.ScorpionTesting;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;             //CTRE Phoenix Framework imports
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -27,7 +27,7 @@ public class TurretSubsystem extends SubsystemBase {          //It truely extend
   private boolean isLinedUp;  //Declares isLinedUp boolean but doesn't set. It's value is currently null
  
   public TurretSubsystem() {  //Contructor method
-    turretMotor = new TalonSRX(Constants.Motors.kTurretMotorID);  //Sets turret Motor to a vlaue of a new TalonSRX motor and gets the id of it declared in Constants
+    turretMotor = new TalonSRX(Constants.CopiedFromScorpion.Motors.kTurretMotorID);  //Sets turret Motor to a vlaue of a new TalonSRX motor and gets the id of it declared in Constants
     turretMotor.configFactoryDefault();                           //Resets motor to factory defaults
     turretMotor.setNeutralMode(NeutralMode.Brake);                //Sets neutral mode to Brake, which commonly electrilizes motor leads to reduce motion
     turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);  //Configures feedback sensor to a QuadEncoder (what the motor product is) with a Pid Index of 0 (primary closed loop) and 10ms timeout
@@ -58,9 +58,9 @@ public class TurretSubsystem extends SubsystemBase {          //It truely extend
     // }
     // turretMotor.set(ControlMode.PercentOutput, motorPower);
 
-    if(turretMotor.getSelectedSensorVelocity() < 0 && turretMotor.getSelectedSensorPosition() < Constants.Turret.kTurretMinEncoderPos) {          //gets turrentMotor's sensor velocity and checks if it's less than 0 and is less than the minimul encoder position for the turret motor
+    if(turretMotor.getSelectedSensorVelocity() < 0 && turretMotor.getSelectedSensorPosition() < Constants.CopiedFromScorpion.Turret.kTurretMinEncoderPos) {          //gets turrentMotor's sensor velocity and checks if it's less than 0 and is less than the minimul encoder position for the turret motor
       turretMotor.set(ControlMode.PercentOutput, 0);  // if true, sets the motor power to 0%
-    } else if(turretMotor.getSelectedSensorVelocity() > 0 && turretMotor.getSelectedSensorPosition() > Constants.Turret.kTurretMaxEncoderPos) {   //checks if the turrets velocity is greater than 0 and that the pid index of 0 is greater than the max encoder position 
+    } else if(turretMotor.getSelectedSensorVelocity() > 0 && turretMotor.getSelectedSensorPosition() > Constants.CopiedFromScorpion.Turret.kTurretMaxEncoderPos) {   //checks if the turrets velocity is greater than 0 and that the pid index of 0 is greater than the max encoder position 
       turretMotor.set(ControlMode.PercentOutput, 0);  
     }
   }
@@ -72,11 +72,11 @@ public class TurretSubsystem extends SubsystemBase {          //It truely extend
     //System.out.println(turretMotor.getSelectedSensorPosition());
     printEncoderPos();  //sends the turret's sensor position to the smartdashboard 
     //System.out.println("****************** TARGET ANGLE: " + angle);
-    if(angle < 0 && turretMotor.getSelectedSensorPosition() < Constants.Turret.kTurretMinEncoderPos) {          //checks if the angle given is less than 0 and the positon is less than the min encoder position
+    if(angle < 0 && turretMotor.getSelectedSensorPosition() < Constants.CopiedFromScorpion.Turret.kTurretMinEncoderPos) {          //checks if the angle given is less than 0 and the positon is less than the min encoder position
       //too far to the negative can't keep going
       System.out.println("TURRET TOO FAR NEGATIVE");  //prints that it's too far negative
       turretMotor.set(ControlMode.PercentOutput, 0);  //then stops the turret by reducing the power to 0
-    } else if (angle > 0 && turretMotor.getSelectedSensorPosition() > Constants.Turret.kTurretMaxEncoderPos) {  //does the same for if the position is greater than the max encoder position
+    } else if (angle > 0 && turretMotor.getSelectedSensorPosition() > Constants.CopiedFromScorpion.Turret.kTurretMaxEncoderPos) {  //does the same for if the position is greater than the max encoder position
       //too far to the positive can't keep going
       System.out.println("TURRET TOO FAR POSITIVE");
       turretMotor.set(ControlMode.PercentOutput, 0);
@@ -97,11 +97,11 @@ public class TurretSubsystem extends SubsystemBase {          //It truely extend
           isLinedUp = false;
           double targetSpeed = angle * .05;
 
-          if(Math.abs(targetSpeed) < Constants.Turret.kMinTurretSpeed) {  //checks if the target speed is less than the minimum turret speed, and if true sets the speed to the minimum turrent speed which is inverted if negative
+          if(Math.abs(targetSpeed) < Constants.CopiedFromScorpion.Turret.kMinTurretSpeed) {  //checks if the target speed is less than the minimum turret speed, and if true sets the speed to the minimum turrent speed which is inverted if negative
             if (targetSpeed < 0) {
-              targetSpeed = -Constants.Turret.kMinTurretSpeed;
+              targetSpeed = -Constants.CopiedFromScorpion.Turret.kMinTurretSpeed;
             } else {
-              targetSpeed = Constants.Turret.kMinTurretSpeed;
+              targetSpeed = Constants.CopiedFromScorpion.Turret.kMinTurretSpeed;
             }
           }
 
@@ -121,7 +121,7 @@ public class TurretSubsystem extends SubsystemBase {          //It truely extend
 
   public double getTurretDegree() { // get method for the turrets angle in degrees by getting the amount of encoder ticks from the turretMotor using getSelectedSensorPosition(0) (0 being the Pid index)
     double ticks = turretMotor.getSelectedSensorPosition(0);  
-    return ticks / Constants.Turret.kTicksPerDegree;  // and deviding it by a ticks per degree conversion constant (4096 / 90)
+    return ticks / Constants.CopiedFromScorpion.Turret.kTicksPerDegree;  // and deviding it by a ticks per degree conversion constant (4096 / 90)
   }
 
   public void printEncoderPos() {

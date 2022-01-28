@@ -12,6 +12,7 @@ public class VisionSubsystem extends SubsystemBase{
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
     private double tv, tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, getpipe, camtran;
+    private boolean hasValidTarget;
 
     private NetworkTableEntry ltv = table.getEntry("tv"); // if the Limelight has any targets               between 0 and 1
     private NetworkTableEntry ltx = table.getEntry("tx"); // horizontal offset from crosshair to target     between -29.8 and 29.8 (degrees) 
@@ -44,6 +45,8 @@ public class VisionSubsystem extends SubsystemBase{
         this.tvert = this.ltvert.getDouble(0.0);
         this.getpipe = this.lgetpipe.getDouble(0.0);
         this.camtran = this.lcamtran.getDouble(0.0);
+        
+        hasValidTarget = ltl.getDouble(0.0) == 1.0;
     }
 
     public double getTv() {return this.tv;}
@@ -61,11 +64,8 @@ public class VisionSubsystem extends SubsystemBase{
     public double getCamtran() {return this.camtran;}
     
     public boolean hasValidTarget() { // method for accessing tv to see if it has a target, which is when tv = 1.0.
-        if (this.tv < 1.0) 
-          return false; 
-        else 
-          return true;
-      }
+      return ltl.getDouble(0.0) == 1.0;
+    }
 
     public void setPipeline(int pipeline) { // method to set pipeline (limelight 'profile')
         if(pipeline >= 0 && pipeline <= 9) // 10 availible pipelines
@@ -90,24 +90,24 @@ public class VisionSubsystem extends SubsystemBase{
     public void setCamMode(CamMode mode) {
       switch(mode) {
         case VISION:
-          lcamMode.setNumber(0);
+          lcamMode.setNumber(0);  // Camera is used for vision processing
         case DRIVER:
-          lcamMode.setNumber(1);
+          lcamMode.setNumber(1);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
       }
     }
 
     public double xDistanceToUpperHub() {
       updateLimelight();
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kLimelightMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kLimelightMountAngle + ty)));
+      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + ty))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
     public double xDistanceToUpperHub(double angle) {
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kLimelightMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kLimelightMountAngle + angle)));
+      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
     public void putToSmartDashboard() { //sends all values to smart dashboad, primarily for learning purposes right now
         updateLimelight();
-        SmartDashboard.putBoolean("Has target?", hasValidTarget());
+        SmartDashboard.putBoolean("Has target?", hasValidTarget);
         SmartDashboard.putString("Vertical Distance from Crosshair", ty + " degrees");
         SmartDashboard.putString("Horizontal Distance from Crosshair", tx + " degrees");
         SmartDashboard.putString("Target's area of the image", ta + "%");
@@ -124,15 +124,6 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("xDistance away", xDistanceToUpperHub() + " meters");
     }
 
-    public enum LEDMode {
-      DEFAULT,
-      OFF,
-      BLINK,
-      ON,
-    }
-
-    public enum CamMode {
-      VISION,
-      DRIVER,
-    }
+    public enum LEDMode {DEFAULT, OFF, BLINK, ON}
+    public enum CamMode {VISION, DRIVER}
 }
