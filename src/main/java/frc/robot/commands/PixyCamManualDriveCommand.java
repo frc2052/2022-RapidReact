@@ -3,16 +3,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.*;
 import frc.robot.subsystems.PixyCamSubsystem;
 import frc.robot.subsystems.PixyCamSubsystem.PixyBlock;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PixyCamManualDriveCommand extends CommandBase {
-  private PixyCamSubsystem pixyCam = new PixyCamSubsystem();
-  private Constants constants = new Constants();
+    private PixyCamSubsystem pixyCam;
   //private DriveTrainSubsystem driveTrain;
   //private Joystick tankJoy;
 
@@ -20,12 +17,13 @@ public class PixyCamManualDriveCommand extends CommandBase {
    * Creates a new PixyCamDrive.
    */
 
-  //public PixyCamManualDriveCommand(DriveTrainSubsystem drive, Joystick joystick) {
+  public PixyCamManualDriveCommand(PixyCamSubsystem pixy) {
+      pixyCam = pixy;
     // Use addRequirements() here to declare subsystem dependencies.
     //driveTrain = drive;
     //tankJoy = joystick;
     //addRequirements(driveTrain);
-  //}
+  }
 
   public void getBallPosition() { 
     double xOffset;
@@ -44,16 +42,20 @@ public class PixyCamManualDriveCommand extends CommandBase {
       Collections.reverse(list);//reverses the list order
     } else {
       System.out.println("incoming list empty");//list is empty
+      SmartDashboard.putNumber("PixyOffset", -999);
     }
 
-    if(list !=null && list.size() > 0){//same as line 35
+    if(list !=null && list.size() > 0){//same as line 35 
       PixyBlock biggestBall = list.get(0); //gets the biggest object in the list
-       xOffset = biggestBall.centerX - 155;//centers biggest object
-      if (xOffset > 100){ //
+       xOffset = biggestBall.centerX - 155;//centers biggest object, range 0 - 315
+      if (xOffset > 100){ //turn the turn target to between 0 and 100, if you are over 100, just target 100
         xOffset = 100;
       } else if (xOffset < -100){
         xOffset = -100;
       }
+
+      SmartDashboard.putNumber("PixyOffset", xOffset);
+    
 
       //double turnPercent = -xOffset/100.0;
      // double turnSpeed = Constants.PixyCamDriveConstants.turnSpeed * turnPercent;
