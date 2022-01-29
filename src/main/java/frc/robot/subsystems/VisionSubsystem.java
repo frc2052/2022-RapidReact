@@ -77,14 +77,18 @@ public class VisionSubsystem extends SubsystemBase{
 
     public void setLED(LEDMode mode) {
       switch(mode) {
-        case DEFAULT:
-          lledMode.setNumber(0);  // Whatever value is specified by the current pipeline
+        case PIPELINE:
+          lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline
+          break;
         case OFF:
-          lledMode.setNumber(1);  // Turns the Limelight's LEDs off
+          lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off
+          break;
         case BLINK:
-          lledMode.setNumber(2);  // Makes the Limelight's LEDs blink
+          lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink
+          break;
         case ON:
-          lledMode.setNumber(3);  // Turns the Limelight's LEDs on
+          lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on
+          break;
       }
     }
 
@@ -126,6 +130,6 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()) + " inches");
     }
 
-    public enum LEDMode {DEFAULT, OFF, BLINK, ON}
+    public enum LEDMode {PIPELINE, OFF, BLINK, ON}
     public enum CamMode {VISION, DRIVER}
 }

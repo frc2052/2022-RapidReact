@@ -4,27 +4,24 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
 
-public class VisionDriveCommand extends CommandBase {
+public class AutoVisionDriveCommand extends CommandBase {
     private final DrivetrainSubsystem m_drivetrainSubsystem;
 
-    private final DoubleSupplier m_translationXSupplier;
-    private final DoubleSupplier m_translationYSupplier;
+    
     //private final DoubleSupplier m_rotationSupplier;
     private VisionSubsystem m_vision;
 
     double visionRotation = 0;
+    double tx;
+    boolean isLinedUp;
 
-    public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
-                               DoubleSupplier translationXSupplier,
-                               DoubleSupplier translationYSupplier,
-                               //DoubleSupplier rotationSupplier,
+    public AutoVisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                VisionSubsystem vision) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_translationXSupplier = translationXSupplier;
-        this.m_translationYSupplier = translationYSupplier;
         //this.m_rotationSupplier = rotationSupplier;
         this.m_vision = vision;
 
@@ -32,17 +29,26 @@ public class VisionDriveCommand extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+        m_vision.setLED(LEDMode.ON);
+    }
+
+    @Override
     public void execute() {
         m_vision.updateLimelight();
+        tx = m_vision.getTx();
+        isLinedUp = false;
         //visionRotation = Math.PI;
         if(m_vision.hasValidTarget()) {
             ///visionRotation = Math.PI / 4;
-            if(Math.abs(m_vision.getTx()) > 5) {
-                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , m_vision.getTx());
-            } else if(Math.abs(m_vision.getTx()) > 2) {
-                visionRotation = -Math.copySign(Math.PI /4, m_vision.getTx());
+            if(Math.abs(tx) > 5) {
+                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx);
+            } else if(Math.abs(tx) > 2) {
+                visionRotation = -Math.copySign(Math.PI /4, tx);
             } else{
                 visionRotation = 0;
+                isLinedUp = true;
             }
 
         } else
@@ -51,8 +57,8 @@ public class VisionDriveCommand extends CommandBase {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
+                        0,
+                        0,
                         visionRotation,
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )
@@ -61,6 +67,13 @@ public class VisionDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        m_vision.setLED(LEDMode.OFF);
         m_drivetrainSubsystem.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        // TODO Auto-generated method stub
+        return isLinedUp;
     }
 }

@@ -6,11 +6,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.AutoVisionDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class Simple3BallAuto extends AutoBase {
-    public Simple3BallAuto(DrivetrainSubsystem drivetrain) {
+    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain);
+        vision.setLED(LEDMode.OFF);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
@@ -23,17 +27,20 @@ public class Simple3BallAuto extends AutoBase {
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(-45); };
 
         SwerveControllerCommand driveToBall1 = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(startPos, ball1Pos);
+        
         SwerveControllerCommand driveToBall2 = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(start2, ball2Pos, aimNeg130DegreesRight);
         SwerveControllerCommand driveToShoot = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
+        AutoVisionDriveCommand autoAim = new AutoVisionDriveCommand(drivetrain, vision);
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1);
         //TOOD: shoot 2 balls
         //TODO: is there  a way to force the wheels to point 90 immediately before it starts to drive? 
         this.addCommands(driveToBall2);
         this.addCommands(driveToShoot);
+        this.addCommands(autoAim);
         //TODO: turn towards goal        
         //TODO: shoot ball
-
+        vision.setLED(LEDMode.OFF);
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
