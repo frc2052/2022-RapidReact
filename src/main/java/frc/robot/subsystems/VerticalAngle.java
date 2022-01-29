@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-//import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -16,60 +15,27 @@ import frc.robot.Constants;
 
 public class VerticalAngle extends SubsystemBase {
   
-  private TalonSRX turretMotor;
-  private int currentPos = 0;
-  private double motorPower = 0;
-  private boolean isLinedUp;
+  private TalonSRX pitchMotor;
 
   public VerticalAngle() { 
-
-  turretMotor = new TalonSRX(Constants.MotorIDs.PITCH_SHOOTER);      
-  turretMotor.configFactoryDefault(); 
-  turretMotor.setNeutralMode(NeutralMode.Brake);
-  turretMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor
-  turretMotor.setSelectedSensorPosition(0, 0, 10); //Selected Sensor Position for Motor
-
+    pitchMotor = new TalonSRX(Constants.MotorIDs.PITCH_MOTOR);      
+    pitchMotor.configFactoryDefault(); 
+    pitchMotor.setNeutralMode(NeutralMode.Brake);
+    pitchMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10); //Selecting Feedback Sensor for Motor
+    pitchMotor.setSelectedSensorPosition(0, 0, 10); //Selected Sensor Position for Motor
   }
 
   public void resetEncoder() {
-
-    turretMotor.setSelectedSensorPosition(0);
-
+    pitchMotor.setSelectedSensorPosition(0);
   }
 
-  public void TurnTurret(double power) {
-  motorPower = power;
-  turretMotor.set(ControlMode.PercentOutput, power);
-
-  }
-
-  public void driveToPos(double angle) {
-
-    //will take in angle and drive to find a shot
-
-  }
-
-  public boolean getIsOnTarget() {
-
-    return isLinedUp;
-
+  public void aimTurret(double ticks) {
+    pitchMotor.set(ControlMode.Position, ticks);
   }
 
   public int getEncoderPos() {
-
-    return (int) turretMotor.getSelectedSensorPosition();
-
+    return (int) pitchMotor.getSelectedSensorPosition();
   }
-
-  public double getTurretDegree() {
-
-    double ticks = turretMotor.getSelectedSensorPosition(0);
-    return ticks; // Constants.Turret.kTicksPerDegree; Will return ticks per degree from constants
-
-  }
-
-  // public void printEncoderPos() {}
-
 
   @Override
   public void periodic() {

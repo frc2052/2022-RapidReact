@@ -15,17 +15,17 @@ package frc.robot;
 public final class Constants {
 
     public static final class MotorIDs {
-
-        public static final int  PITCH_SHOOTER = 1;
-        public static final int YAW_SHOOTER = 2;
-        public static final int FLYWHEELS_SHOOTER = 3;   
-
+        public static final int PITCH_MOTOR = 91;
+        public static final int YAW_MOTOR = 92;
+        public static final int TOP_SHOOTER_MOTOR = 93;
+        public static final int BOTTOM_SHOOTER_MOTOR = 94;
+        public static final int INDEXER_MOTOR = 95;
     } 
 
     public static final class ShooterSub {
-
-        public static final double FLYWHEELSPEED = .75;
-
+        public static final double INDEXER_SPEED = .75;
+        public static final double TOPWHEELSPEED = 5;
+        public static final double BOTTOMWHEELSPEED = 5;
     }
 
 }
