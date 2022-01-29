@@ -186,12 +186,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 
   public void setModuleStates(SwerveModuleState[] states) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
-        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+        double maxVelocity = MAX_VELOCITY_METERS_PER_SECOND;
+        double maxAngularVelocity = 1;
+
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, maxVelocity);
+
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
 
         odometry.update(
                 getGyroscopeRotation(),
@@ -215,6 +219,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(m_frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(m_backLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
+        SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
+        SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
   }
-
 }

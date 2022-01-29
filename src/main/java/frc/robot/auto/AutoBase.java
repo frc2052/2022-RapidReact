@@ -29,7 +29,7 @@ public class AutoBase  extends SequentialCommandGroup {
         m_drivetrain = drivetrain;
         m_swerveDriveKinematics = drivetrain.getKinematics();
 
-        m_slowTrajectoryConfig = new TrajectoryConfig(0.75, 0.3).setKinematics(m_swerveDriveKinematics);
+        m_slowTrajectoryConfig = new TrajectoryConfig(2.5, 1.5).setKinematics(m_swerveDriveKinematics);
         m_slowXYController = new PIDController(1, 0, 0);
         TrapezoidProfile.Constraints thetaControllerConstraints = new TrapezoidProfile.Constraints(Math.PI, Math.PI);    
         m_slowThetaController = new ProfiledPIDController(3, 0, 0, thetaControllerConstraints);

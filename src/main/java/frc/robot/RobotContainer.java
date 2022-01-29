@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ExampleCommand;
@@ -58,7 +59,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new TestAuto1(m_drivetrainSubsystem);
+    return new Simple3BallAuto(m_drivetrainSubsystem);
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
