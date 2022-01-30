@@ -8,10 +8,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.auto.Simple3BallAuto;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.VisionDriveCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -24,30 +24,37 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-
   private final VisionSubsystem vision = new VisionSubsystem();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryJoystick = new Joystick(2);
+  private final Joystick m_secondaryPannel = new Joystick(2);
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
+  private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
 
-  SlewRateLimiter xLimiter = new SlewRateLimiter(1);
-  SlewRateLimiter yLimiter = new SlewRateLimiter(1);
-  SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    m_drivetrainSubsystem.setDefaultCommand(new FieldOrientedDriveCommand(
             m_drivetrainSubsystem,
             () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
+
+    // Sendable chooser for getting selected auto from whatever SmartDashboard is being used
+    m_chooser.setDefaultOption("Simple 3 Ball Auto", new Simple3BallAuto(m_drivetrainSubsystem, vision)); // Adding default and options
+    m_chooser.addOption("TestAuto1", new TestAuto1(m_drivetrainSubsystem));
+
+    SmartDashboard.putData(m_chooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -64,9 +71,10 @@ public class RobotContainer {
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      //() -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
       vision
       ));
+    
+    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
   }
 
   /**
@@ -75,8 +83,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+    
+    return m_chooser.getSelected(); // Gets the selected auto from the SmartDashboard
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
@@ -97,7 +105,7 @@ public class RobotContainer {
     // Deadband
     value = deadband(value, 0.05);
 
-    // Square the axis
+    // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
 
     return value;
