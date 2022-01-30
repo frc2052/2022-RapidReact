@@ -34,9 +34,6 @@ public class AutoBase  extends SequentialCommandGroup {
         TrapezoidProfile.Constraints thetaControllerConstraints = new TrapezoidProfile.Constraints(Math.PI, Math.PI);    
         m_slowThetaController = new ProfiledPIDController(3, 0, 0, thetaControllerConstraints);
         m_slowThetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-
-
     }
 
     protected SwerveControllerCommand CreateSlowDriveSlowTurnSwerveTrajectoryCommand(Pose2d startPose, Pose2d endPose) {

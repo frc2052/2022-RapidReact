@@ -2,27 +2,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-import java.util.function.DoubleSupplier;
-
 public class AutoVisionDriveCommand extends CommandBase {
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
 
-    
-    //private final DoubleSupplier m_rotationSupplier;
+    private final DrivetrainSubsystem m_drivetrainSubsystem;
     private VisionSubsystem m_vision;
 
-    double visionRotation = 0;
-    double tx;
-    boolean isLinedUp;
+    private double visionRotation = 0;
+    private double tx;
+    private boolean isLinedUp;
 
-    public AutoVisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
-                               VisionSubsystem vision) {
+    public AutoVisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem, VisionSubsystem vision) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        //this.m_rotationSupplier = rotationSupplier;
         this.m_vision = vision;
 
         addRequirements(drivetrainSubsystem);
@@ -36,24 +29,22 @@ public class AutoVisionDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        m_vision.updateLimelight();
-        tx = m_vision.getTx();
+        m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
+        tx = m_vision.getTx();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
-        //visionRotation = Math.PI;
-        if(m_vision.hasValidTarget()) {
-            ///visionRotation = Math.PI / 4;
+
+        if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(tx) > 5) {
                 visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx);
             } else if(Math.abs(tx) > 2) {
                 visionRotation = -Math.copySign(Math.PI /4, tx);
-            } else{
-                visionRotation = 0;
+            } else {
+                visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
                 isLinedUp = true;
             }
-
         } else
             visionRotation = 0;
-        System.out.println(visionRotation);
+
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(

@@ -27,10 +27,10 @@ public class Simple3BallAuto extends AutoBase {
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(-45); };
 
         SwerveControllerCommand driveToBall1 = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(startPos, ball1Pos);
-        
         SwerveControllerCommand driveToBall2 = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(start2, ball2Pos, aimNeg130DegreesRight);
         SwerveControllerCommand driveToShoot = super.CreateSlowDriveSlowTurnSwerveTrajectoryCommand(super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
         AutoVisionDriveCommand autoAim = new AutoVisionDriveCommand(drivetrain, vision);
+
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1);
         //TOOD: shoot 2 balls

@@ -14,15 +14,18 @@ import edu.wpi.first.math.util.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+
+// Constants shall be in meters
+ 
 public final class Constants {
     
     public static final class Field {
-        public static final double kUpperHubHeight = Units.inchesToMeters(52);   // In meters, upper hub is 2.64
+        public static final double kUpperHubHeight = 2.64;
     }
 
     public static final class Limelight {
-        public static final double kMountHeight = Units.inchesToMeters(19); // Scorpion - 0.9525
-        public static final double kMountAngle = 45;      // Scorpion - 28
+        public static final double kMountHeight = Units.inchesToMeters(19);
+        public static final double kMountAngle = 45;
 
         public static final double kDistanceCalcOffset = 0;
     }

@@ -33,7 +33,6 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
 
     public void updateLimelight() {
-        this.tv = this.ltv.getDouble(0.0);
         this.tx = this.ltx.getDouble(0.0);
         this.ty = this.lty.getDouble(0.0);
         this.ta = this.lta.getDouble(0.0);
@@ -50,7 +49,6 @@ public class VisionSubsystem extends SubsystemBase{
         hasValidTarget = ltv.getDouble(0.0) == 1.0;
     }
 
-    public double getTv() {return this.tv;}
     public double getTx() {return this.tx;}
     public double getTy() {return this.ty;}
     public double getTa() {return this.ta;}
@@ -72,7 +70,7 @@ public class VisionSubsystem extends SubsystemBase{
         if(pipeline >= 0 && pipeline <= 9) // 10 availible pipelines
           lgetpipe.setDouble((double) pipeline);
         else
-            System.out.println("Select a pipeline between 0 and 9"); //Not sure how i'd print this to somewhere it'd need to be read here yet
+          System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
     }
 
     public void setLED(LEDMode mode) {
@@ -95,9 +93,14 @@ public class VisionSubsystem extends SubsystemBase{
     public void setCamMode(CamMode mode) {
       switch(mode) {
         case VISION:
+          setLED(LEDMode.ON);
           lcamMode.setNumber(0);  // Camera is used for vision processing
+          break;
         case DRIVER:
+          setLED(LEDMode.OFF);
           lcamMode.setNumber(1);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
+          this.setPipeline(9);
+          break;
       }
     }
 
