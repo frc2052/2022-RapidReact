@@ -39,22 +39,16 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
 
-  private SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private AutoSelector autoSelector = new AutoSelector();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_drivetrainSubsystem.setDefaultCommand(new FieldOrientedDriveCommand(
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
             () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
-
-    // Sendable chooser for getting selected auto from whatever SmartDashboard is being used
-    m_chooser.setDefaultOption("Simple 3 Ball Auto", new Simple3BallAuto(m_drivetrainSubsystem, vision)); // Adding default and options
-    m_chooser.addOption("TestAuto1", new TestAuto1(m_drivetrainSubsystem));
-
-    SmartDashboard.putData(m_chooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -84,7 +78,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     
-    return m_chooser.getSelected(); // Gets the selected auto from the SmartDashboard
+    switch(autoSelector.getSelectedAuto()) {
+      case SIMPLE3BALL:
+        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+      case TESTAUTO1:
+        return new TestAuto1(m_drivetrainSubsystem);
+      default:
+        return null;
+    }
+
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
@@ -112,7 +114,7 @@ public class RobotContainer {
   }
 
   public void printToSmartDashboard() {
-    m_drivetrainSubsystem.printToSmartDashboard();
+    m_drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
   }
 

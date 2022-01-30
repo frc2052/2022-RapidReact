@@ -8,7 +8,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class AutoVisionDriveCommand extends CommandBase {
 
     private final DrivetrainSubsystem m_drivetrainSubsystem;
-    private VisionSubsystem m_vision;
+    private final VisionSubsystem m_vision;
 
     private double visionRotation = 0;
     private double tx;
