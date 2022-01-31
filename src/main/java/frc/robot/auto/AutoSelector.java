@@ -2,7 +2,6 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoSelector {
     private static SendableChooser<autos> autoSelector;
@@ -22,8 +21,11 @@ public class AutoSelector {
     }
 
     public enum autos {
+        TESTAUTO1("TestAuto1"),
+        SIMPLE1BALL("Simple 1 Ball"),
         SIMPLE3BALL("Simple 3 Ball"),
-        TESTAUTO1("TestAuto1");
+        THREEBALLTERMINAL("3 Ball - Terminal Cargo"),
+        FOURBALL("4 Ball Auto");
 
         public String name;
 

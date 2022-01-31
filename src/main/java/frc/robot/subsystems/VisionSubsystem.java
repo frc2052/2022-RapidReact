@@ -12,7 +12,7 @@ public class VisionSubsystem extends SubsystemBase{
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-    private double tv, tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, getpipe, camtran;
+    private double tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, camMode, getpipe;
     private boolean hasValidTarget;
 
     private NetworkTableEntry ltv = table.getEntry("tv"); // if the Limelight has any targets               between 0 and 1
@@ -28,9 +28,18 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry ltvert = table.getEntry("tvert");     // vertical sidelength of bound box     0 - 320 (pixels)
 
     private NetworkTableEntry lledMode = table.getEntry("ledMode");
-    private NetworkTableEntry lcamMode = table.getEntry("camMode");
-    private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 ... 9
+    private NetworkTableEntry lcamMode = table.getEntry("camMode"); // can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
+    private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 through 9
+
+    /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
+    private NetworkTableEntry lstream = table.getEntry("stream");   // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
+    private NetworkTableEntry ltcornxy = table.getEntry("tcornxy"); // gets a number array of bounding box corner coordiantes [x0,y0,x1,y1……]
+    private NetworkTableEntry cx0 = table.getEntry("cx0");          // Crosshair A X in normalized screen space
+    private NetworkTableEntry cy0 = table.getEntry("cy0");          // Crosshair A Y in normalized screen space
+    private NetworkTableEntry cx1 = table.getEntry("cx1");          // Crosshair B X in normalized screen space
+    private NetworkTableEntry cy1 = table.getEntry("cy1");          // Crosshair B Y in normalized screen space
+    */
 
     public void updateLimelight() {
         this.tx = this.ltx.getDouble(0.0);
@@ -43,8 +52,8 @@ public class VisionSubsystem extends SubsystemBase{
         this.tlong = this.ltlong.getDouble(0.0);
         this.thor = this.lthor.getDouble(0.0);
         this.tvert = this.ltvert.getDouble(0.0);
+        this.camMode = this.lcamMode.getDouble(0.0);
         this.getpipe = this.lgetpipe.getDouble(0.0);
-        this.camtran = this.lcamtran.getDouble(0.0);
         
         hasValidTarget = ltv.getDouble(0.0) == 1.0;
     }
@@ -59,8 +68,8 @@ public class VisionSubsystem extends SubsystemBase{
     public double getTlong() {return this.tlong;}
     public double getThor() {return this.thor;}
     public double getTvert() {return this.tvert;}
+    public double getCamMode() {return this.camMode;}
     public double getGetpipe() {return this.getpipe;}
-    public double getCamtran() {return this.camtran;}
     
     public boolean hasValidTarget() { // method for accessing tv to see if it has a target, which is when tv = 1.0.
       return hasValidTarget;
@@ -103,21 +112,22 @@ public class VisionSubsystem extends SubsystemBase{
     public void putToSmartDashboard() { //sends all values to smart dashboad, primarily for learning purposes right now
         updateLimelight();
         SmartDashboard.putBoolean("Has target?", hasValidTarget);
-        SmartDashboard.putString("Vertical Distance from Crosshair", ty + " degrees");
-        SmartDashboard.putString("Horizontal Distance from Crosshair", tx + " degrees");
+        SmartDashboard.putString("Vertical Distance from Crosshair: ", ty + " degrees");
+        SmartDashboard.putString("Horizontal Distance from Crosshair: ", tx + " degrees");
         SmartDashboard.putString("Target's area of the image", ta + "%");
-        SmartDashboard.putNumber("Skew or Rotation", ts);
-        SmartDashboard.putString("Pipeline latency contribution", tl + "ms");
+        SmartDashboard.putNumber("Skew or Rotation: ", ts);
+        SmartDashboard.putString("Latency: ", tl + "ms");
+        SmartDashboard.putString("Pipeline: ", getpipe + " degrees");
+        SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
-        SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
-        SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
-        SmartDashboard.putString("Horizontal Bounding Box Sidelength", thor + " pixels");
-        SmartDashboard.putString("Vertical Bounding Box Sidelength", tvert + " pixels");
-        SmartDashboard.putNumber("Pipeline", getpipe);
-        SmartDashboard.putNumber("Camtran", camtran);
+        SmartDashboard.putNumber("xDistance away (Meters): ", xDistanceToUpperHub());
+        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()));
 
-        SmartDashboard.putString("xDistance away (Meters)", xDistanceToUpperHub() + " meters");
-        SmartDashboard.putString("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()) + " inches");
+        //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
+        //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
+        //SmartDashboard.putString("Horizontal Bounding Box Sidelength", thor + " pixels");
+        //SmartDashboard.putString("Vertical Bounding Box Sidelength", tvert + " pixels");
+        //SmartDashboard.putNumber("Camtran", camtran);
     }
 
     public enum LEDMode {

@@ -44,6 +44,7 @@ public class VisionDriveCommand extends CommandBase {
                 visionRotation = 0; // must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
         } else
             visionRotation = 0;
+            // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
         
         // System.out.println(visionRotation);
 

@@ -42,9 +42,11 @@ public class AutoVisionDriveCommand extends CommandBase {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
                 isLinedUp = true;
             }
-        } else
+        } else {
+            // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             visionRotation = 0;
-
+        }
+        
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(

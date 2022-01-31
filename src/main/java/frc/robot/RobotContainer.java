@@ -7,9 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -39,8 +36,6 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
 
-  private AutoSelector autoSelector = new AutoSelector();
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
@@ -68,7 +63,7 @@ public class RobotContainer {
       vision
       ));
     
-    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
+    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
   }
 
   /**
@@ -78,15 +73,22 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     
-    switch(autoSelector.getSelectedAuto()) {
-      case SIMPLE3BALL:
-        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+    // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    switch(AutoSelector.getSelectedAuto()) {
       case TESTAUTO1:
         return new TestAuto1(m_drivetrainSubsystem);
+      case SIMPLE3BALL:       // 3 Ball Auto using the two closest cargo near the tarmac
+        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+      case THREEBALLTERMINAL: // 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal
+        break;
+      case FOURBALL:          // Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player)
+        break;
       default:
-        return null;
+        break;
     }
 
+    System.err.println("NO VALID AUTO SELECTED");
+    return null;
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
