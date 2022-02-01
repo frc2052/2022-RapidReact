@@ -21,6 +21,7 @@ public class Intake extends SubsystemBase {
         inSolenoid.set(false);
         outSolenoid.set(true);
     }
+    //replaced "down" with "out" and "up" with "in" to be more intuitive for this year's robot
 
     public void intakeOn(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
