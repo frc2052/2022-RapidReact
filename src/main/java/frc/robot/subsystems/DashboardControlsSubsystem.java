@@ -16,15 +16,17 @@ public class DashboardControlsSubsystem {
 
     private boolean limelightLEDsEnabled;
     private boolean lastLEDState;
-    private boolean limelightCamModeToggle;
+    private boolean limelightDriveCamToggle;
     private boolean lastCamState;
+    private CamMode lastCamMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
         m_vision = vision;
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         lastLEDState = limelightLEDsEnabled;
-        limelightCamModeToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
-        lastCamState = limelightCamModeToggle;
+        limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        lastCamState = limelightDriveCamToggle;
+        lastCamMode = CamMode.VISION;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -47,12 +49,12 @@ public class DashboardControlsSubsystem {
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
-        SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightCamModeToggle);
+        SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
     }
 
     public void checkSmartDashboardControls() { // Method currently executed in robotPeriodic that checks toggles and performs subsystem methods as needed
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
-        limelightCamModeToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
 
         if(limelightLEDsEnabled && !lastLEDState) {
             m_vision.setLED(LEDMode.ON);
@@ -61,12 +63,33 @@ public class DashboardControlsSubsystem {
         }
         lastLEDState = limelightLEDsEnabled;
 
-        if(!limelightCamModeToggle && lastCamState) {
+        // Currently not working properly
+        if(!limelightDriveCamToggle && lastCamState) {
+            //System.out.println("Setting vision");
             m_vision.setCamMode(CamMode.VISION);
-        } else if (limelightCamModeToggle && !lastCamState) {
+            lastCamMode = CamMode.VISION;
+        } else if (limelightDriveCamToggle && !lastCamState) {
+            //System.out.println("Setting driver");
             m_vision.setCamMode(CamMode.DRIVER);
+            lastCamMode = CamMode.DRIVER;
         }
-        lastCamState = limelightCamModeToggle;
+        lastCamState = limelightDriveCamToggle;
+
+        /* logic for having a selection list for limelight mode, unworking and uneeded for now...
+        if(limelightCamModeSelector.getSelected() == CamMode.DRIVER && (lastCamMode == CamMode.VISION)) {
+            m_vision.setCamMode(CamMode.DRIVER);
+            lastCamMode = CamMode.DRIVER;
+            limelightDriveCamToggle = true;
+            lastCamState = true;
+            SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
+        } else if (limelightCamModeSelector.getSelected() == CamMode.VISION && (lastCamMode == CamMode.DRIVER)) {
+            m_vision.setCamMode(CamMode.VISION);
+            lastCamMode = CamMode.VISION;
+            limelightDriveCamToggle = false;
+            lastCamState = false;
+            SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
+        }
+        */
     }
 
     public Autos getSelectedAuto() {
@@ -82,7 +105,8 @@ public class DashboardControlsSubsystem {
         SIMPLE_1_BALL("Simple 1 Ball"),
         SIMPLE_3_BALL("Simple 3 Ball"),
         THREE_BALL_TERMINAL("3 Ball - Terminal Cargo"),
-        FOUR_BALL("4 Ball Auto");
+        FOUR_BALL("4 Ball Auto"),
+        FRONT_INTAKE_3_BALL("Simple 3 Ball using front intake");
 
         public String name;
 
