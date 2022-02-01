@@ -10,15 +10,11 @@ public class IntakeStop extends CommandBase {
       m_intakeSubsystem = subsystem;
       // Maybe add dependencies   
   }
-      
-    @Override
-    public void initialize() {
-    m_intakeSubsystem.intakeStop();
-
-    }
+  
     @Override
     public void execute() {
-  
+        m_intakeSubsystem.intakeStop();
+        //stops the intake
     }
     @Override
     public boolean isFinished(){
