@@ -17,7 +17,7 @@ public class ShooterCommand extends CommandBase {
   }
 
   public static void executeShooter() {
-    if (boolean linedUp) { 
+    if (linedUp == true) { 
     double limelight.distance;
     x = Calculator.findAngle(); 
     TwoWheelFly.runAtShootSpeed(x); 
