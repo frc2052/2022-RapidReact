@@ -59,7 +59,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveCommandSwitch.whenHeld(new VisionDriveCommand(
+    driveCommandSwitch.whenHeld(new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -78,14 +78,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
-    switch(AutoSelector.getSelectedAuto()) {
-      case TESTAUTO1:
+    switch(dashboardControlsSubsystem.getSelectedAuto()) {
+      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
         return new TestAuto1(m_drivetrainSubsystem);
-      case SIMPLE3BALL:       // 3 Ball Auto using the two closest cargo near the tarmac
+      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-      case THREEBALLTERMINAL: // 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal
+      case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
         break;
-      case FOURBALL:          // Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player)
+      case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
         break;
       default:
         break;

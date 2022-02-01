@@ -1,6 +1,6 @@
-//Subsystem for accessing the Limelight's NetworkTables and methods for it
-
 package frc.robot.subsystems;
+
+// Subsystem for accessing the Limelight's NetworkTable values and creating methods to control it.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,12 +71,12 @@ public class VisionSubsystem extends SubsystemBase{
     public double getCamMode() {return this.camMode;}
     public double getGetpipe() {return this.getpipe;}
     
-    public boolean hasValidTarget() { // method for accessing tv to see if it has a target, which is when tv = 1.0.
+    public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return hasValidTarget;
     }
 
-    public void setPipeline(int pipeline) { // method to set pipeline (limelight 'profile')
-        if(pipeline >= 0 && pipeline <= 9) // 10 availible pipelines
+    public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile')
+        if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines
           lgetpipe.setDouble((double) pipeline);
         else
           System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
@@ -103,26 +103,27 @@ public class VisionSubsystem extends SubsystemBase{
       switch(mode) {
         case VISION:
           setLED(LEDMode.ON);
+          // TODO switch back to default pipeline with option to choose in SmartDashboard
           lcamMode.setNumber(0);  // Camera is used for vision processing
           break;
         case DRIVER:
           setLED(LEDMode.OFF);
           lcamMode.setNumber(1);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
-          this.setPipeline(9);
+          this.setPipeline(9);    // Change to pipeline 
           break;
       }
     }
 
-    public double xDistanceToUpperHub() {
+    public double xDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();
       return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + ty))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
-    public double xDistanceToUpperHub(double angle) {
+    public double xDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
       return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
-    public void putToSmartDashboard() { //sends all values to smart dashboad, primarily for learning purposes right now
+    public void putToSmartDashboard() {
         updateLimelight();
         SmartDashboard.putBoolean("Has target?", hasValidTarget);
         SmartDashboard.putString("Vertical Distance from Crosshair: ", ty + " degrees");

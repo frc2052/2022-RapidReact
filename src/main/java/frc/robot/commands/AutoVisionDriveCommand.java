@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+// Command for simply rotating the robot to aim at the horizontal center of the upper hub. Similar to VisionDriveCommand.
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
@@ -35,8 +37,8 @@ public class AutoVisionDriveCommand extends CommandBase {
 
         if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(tx) > 5) {
-                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx);
-            } else if(Math.abs(tx) > 2) {
+                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx); // Dynamically changes rotation speed to be faster at a larger tx,
+            } else if(Math.abs(tx) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
                 visionRotation = -Math.copySign(Math.PI /4, tx);
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
@@ -47,7 +49,6 @@ public class AutoVisionDriveCommand extends CommandBase {
             visionRotation = 0;
         }
         
-        // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         0,

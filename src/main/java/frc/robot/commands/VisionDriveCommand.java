@@ -6,6 +6,7 @@ import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.driveMode;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
 
@@ -18,7 +19,9 @@ public class VisionDriveCommand extends CommandBase {
     //private final DoubleSupplier m_rotationSupplier;
     private VisionSubsystem m_vision;
 
-    double visionRotation = 0;
+    private double visionRotation = 0;
+    private double tx;
+    private boolean isLinedUp;
 
     public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -35,24 +38,31 @@ public class VisionDriveCommand extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        m_vision.setLED(LEDMode.ON);
+    }
+
+    @Override
     public void execute() {
-        m_vision.updateLimelight();
+        m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
+        tx = m_vision.getTx();      // Horizontal offset from the Limelight's crosshair to target.
+        isLinedUp = false;
 
-        if(m_vision.hasValidTarget()) {
-            if(Math.abs(m_vision.getTx()) > 5)
-                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , m_vision.getTx());
-            else if(Math.abs(m_vision.getTx()) > 2)
-                visionRotation = -Math.copySign(Math.PI /4, m_vision.getTx());
-            else
-                visionRotation = 0; // must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
-        } else
-            visionRotation = 0;
+        if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
+            if(Math.abs(tx) > 5) {
+                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx); // Dynamically changes rotation speed to be faster at a larger tx,
+            } else if(Math.abs(tx) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+                visionRotation = -Math.copySign(Math.PI /4, tx);
+            } else {
+                visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+                isLinedUp = true;
+            }
+        } else {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
-        
-        // System.out.println(visionRotation);
+            visionRotation = 0;
+        }
 
-        // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
-        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == driveMode.FIELDCENTRIC) {
+        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == driveMode.FIELD_CENTRIC) {
             m_drivetrainSubsystem.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                             m_translationXSupplier.getAsDouble(),
@@ -70,8 +80,13 @@ public class VisionDriveCommand extends CommandBase {
         }
     }
 
+    public boolean getIsLinedUp() {
+        return isLinedUp;
+    }
+
     @Override
     public void end(boolean interrupted) {
+        m_vision.setLED(LEDMode.OFF);
         m_drivetrainSubsystem.stop();
     }
 }

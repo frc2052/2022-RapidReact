@@ -15,7 +15,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 
-// Constants shall be in meters
+// Constants shall be stored in meters
  
 public final class Constants {
     

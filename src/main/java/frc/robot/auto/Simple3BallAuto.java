@@ -32,15 +32,15 @@ public class Simple3BallAuto extends AutoBase {
         AutoVisionDriveCommand autoAim = new AutoVisionDriveCommand(drivetrain, vision);
 
         //TODO: extend intake and turn on intake motors
-        this.addCommands(driveToBall1);
+        this.addCommands(driveToBall1); // Drives to the closest ball to the robot
         //TOOD: shoot 2 balls
         //TODO: is there  a way to force the wheels to point 90 immediately before it starts to drive? 
-        this.addCommands(driveToBall2);
-        this.addCommands(driveToShoot);
-        this.addCommands(autoAim);
-        //TODO: turn towards goal        
-        //TODO: shoot ball
+        this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
+        this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
+        this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
         vision.setLED(LEDMode.OFF);
+        //TODO: shoot ball
+
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
