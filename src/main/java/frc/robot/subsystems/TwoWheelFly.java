@@ -35,9 +35,5 @@ public class TwoWheelFly extends SubsystemBase {
     bottomMotor.set(ControlMode.Velocity, bottomWheelSpeed);
     //encoder needed for ticks per revolution calculation
   }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  
 }
