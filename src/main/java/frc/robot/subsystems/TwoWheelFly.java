@@ -13,8 +13,8 @@ import frc.robot.Constants.MotorIDs;
 
 public class TwoWheelFly extends SubsystemBase {
   
-  private TalonSRX topMotor;
-  private TalonSRX bottomMotor;
+  private static TalonSRX topMotor;
+  private static TalonSRX bottomMotor;
 
   public TwoWheelFly() {
     topMotor = new TalonSRX(MotorIDs.TOP_SHOOTER_MOTOR);

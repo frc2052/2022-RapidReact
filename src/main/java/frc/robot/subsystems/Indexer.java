@@ -14,7 +14,7 @@ import frc.robot.Constants.MotorIDs;
 
 public class Indexer extends SubsystemBase {
   
-  private VictorSPX indexerMotor;
+  private static VictorSPX indexerMotor;
 
   public Indexer() {
     indexerMotor = new VictorSPX(MotorIDs.INDEXER_MOTOR);
@@ -22,7 +22,7 @@ public class Indexer extends SubsystemBase {
     indexerMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void forward() {
+  public static void forward() {
     indexerMotor.set(ControlMode.PercentOutput, Constants.ShooterSub.INDEXER_SPEED);
   }
 
