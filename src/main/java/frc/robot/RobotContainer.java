@@ -26,7 +26,8 @@ public class RobotContainer {
 
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
-  pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
+  //pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
+  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -49,6 +50,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return pixyCmd;
   }
 }
