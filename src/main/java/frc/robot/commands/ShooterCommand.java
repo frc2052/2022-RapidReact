@@ -13,8 +13,11 @@ public class ShooterCommand extends CommandBase {
 
   private final boolean wantShoot = false;
 
-  public ShooterCommand(wantShoot true) {
-    if (DriveTrain linedUp) {
+  public ShooterCommand() {
+  }
+
+  public static void executeShooter() {
+    if (boolean linedUp) {
     double limelight.distance 
     x = Calculator.findAngle(); 
     TwoWheelFly.runAtShootSpeed(x); 
@@ -22,6 +25,7 @@ public class ShooterCommand extends CommandBase {
     wheelTwo = Calculator.findBottomSpeed(x); 
     Shooter.setSpeed(wheelOne, wheelTwo); 
   }
+
     if (Shooter.Angle == x && Shooter.Speeds == x) {
       Indexer.forward();
     }
