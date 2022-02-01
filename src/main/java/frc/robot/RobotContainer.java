@@ -31,7 +31,6 @@ public class RobotContainer {
     // Configure the button bindings
     colorSensor = new ColorSensing();
     configureButtonBindings();
-    System.out.println("new color sensor created");
 
 
 
