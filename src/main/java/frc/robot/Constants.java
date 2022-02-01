@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+    
 public final class Constants {
     
     public static final class DriveTrain{
@@ -59,6 +60,7 @@ public final class Constants {
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
     }
     
-
-
+    public static final class Intake{
+        public static final double kIntakeSpeed = .75;
+    }
 }
