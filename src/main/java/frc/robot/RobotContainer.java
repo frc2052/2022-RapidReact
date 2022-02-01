@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -14,6 +15,8 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.UsbCameraSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -35,6 +38,8 @@ public class RobotContainer {
   SlewRateLimiter xLimiter = new SlewRateLimiter(1);
   SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+
+  private final UsbCameraSubsystem m_inakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
