@@ -4,7 +4,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem;
-import frc.robot.subsystems.DashboardControlsSubsystem.driveMode;
+import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 
 import java.util.function.DoubleSupplier;
 
@@ -36,7 +36,7 @@ public class DefaultDriveCommand extends CommandBase {
     @Override
     public void execute() {
         
-        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == driveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
+        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
             m_drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
                     ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
                             m_translationXSupplier.getAsDouble(),

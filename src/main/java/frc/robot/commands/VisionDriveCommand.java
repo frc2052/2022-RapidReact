@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.DashboardControlsSubsystem.driveMode;
+import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
@@ -62,7 +62,7 @@ public class VisionDriveCommand extends CommandBase {
             visionRotation = 0;
         }
 
-        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == driveMode.FIELD_CENTRIC) {
+        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {
             m_drivetrainSubsystem.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
                             m_translationXSupplier.getAsDouble(),
