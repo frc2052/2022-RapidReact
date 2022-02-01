@@ -7,9 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ShooterCommand extends CommandBase {
-  /** Creates a new ShooterCommand. */
-  public ShooterCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  private final boolean wantShoot;
+
+  public ShooterCommand(boolean) {
+    
   }
 
   // Called when the command is initially scheduled.
