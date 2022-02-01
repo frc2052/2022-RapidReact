@@ -79,15 +79,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
-
-  private static SendableChooser<driveMode> sendableChooserDriveMode;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-    sendableChooserDriveMode = new SendableChooser<driveMode>();
-
-    sendableChooserDriveMode.setDefaultOption("Field Centric Drive", driveMode.FIELDCENTRIC);
-    sendableChooserDriveMode.addOption("Robot Centric Drive", driveMode.ROBOTCENTRIC);
 
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
@@ -228,17 +222,5 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
-
-        SmartDashboard.putData("Drive Modes", sendableChooserDriveMode);
-  }
-
-  public driveMode getSelectedDriveMode() {
-    driveMode selectedDriveMode = sendableChooserDriveMode.getSelected();
-    return selectedDriveMode;
-  }
-
-  public enum driveMode {
-    FIELDCENTRIC,
-    ROBOTCENTRIC,
   }
 }

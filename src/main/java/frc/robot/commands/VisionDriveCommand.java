@@ -2,13 +2,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.DashboardControlsSubsystem.driveMode;
 
 import java.util.function.DoubleSupplier;
 
 public class VisionDriveCommand extends CommandBase {
     private final DrivetrainSubsystem m_drivetrainSubsystem;
+    private final DashboardControlsSubsystem m_dashboardControlsSubsystem;
 
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
@@ -20,12 +23,12 @@ public class VisionDriveCommand extends CommandBase {
     public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
                                DoubleSupplier translationYSupplier,
-                               //DoubleSupplier rotationSupplier,
-                               VisionSubsystem vision) {
+                               VisionSubsystem vision,
+                               DashboardControlsSubsystem dashboard) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
-        //this.m_rotationSupplier = rotationSupplier;
+        m_dashboardControlsSubsystem = dashboard;
         this.m_vision = vision;
 
         addRequirements(drivetrainSubsystem);
@@ -49,14 +52,22 @@ public class VisionDriveCommand extends CommandBase {
         // System.out.println(visionRotation);
 
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
-        m_drivetrainSubsystem.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
-                        visionRotation,
-                        m_drivetrainSubsystem.getGyroscopeRotation()
-                )
-        );
+        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == driveMode.FIELDCENTRIC) {
+            m_drivetrainSubsystem.drive(
+                    ChassisSpeeds.fromFieldRelativeSpeeds(
+                            m_translationXSupplier.getAsDouble(),
+                            m_translationYSupplier.getAsDouble(),
+                            visionRotation,
+                            m_drivetrainSubsystem.getGyroscopeRotation()
+            ));
+        } else {
+            m_drivetrainSubsystem.drive(
+                new ChassisSpeeds(
+                    m_translationXSupplier.getAsDouble(), 
+                    m_translationYSupplier.getAsDouble(), 
+                    visionRotation
+            ));
+        }
     }
 
     @Override

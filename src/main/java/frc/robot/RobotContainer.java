@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.auto.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.VisionSubsystem.CamMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -24,10 +25,11 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
+  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryPannel = new Joystick(2);
+  private final Joystick m_secondaryPannel = new Joystick(3);
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
@@ -42,7 +44,8 @@ public class RobotContainer {
             m_drivetrainSubsystem,
             () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            dashboardControlsSubsystem
     ));
 
     // Configure the button bindings
@@ -60,7 +63,8 @@ public class RobotContainer {
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      vision
+      vision,
+      dashboardControlsSubsystem
       ));
     
     resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
@@ -115,6 +119,14 @@ public class RobotContainer {
     return value;
   }
 
+  public void addSelectorsToSmartDashboard() {
+    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+  }
+
+  public void checkSmartDashboardControls() {
+    dashboardControlsSubsystem.checkSmartDashboardControls();
+  }
+
   public void printToSmartDashboard() {
     m_drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
@@ -122,5 +134,6 @@ public class RobotContainer {
 
   public void resetGyro() {
     m_drivetrainSubsystem.zeroGyroscope();
+    vision.setCamMode(CamMode.DRIVER);
   }
 }

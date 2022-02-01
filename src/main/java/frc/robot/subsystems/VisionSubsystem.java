@@ -83,7 +83,20 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     public void setLED(LEDMode mode) {
-      lledMode.setNumber(mode.value);
+      switch(mode) {
+        case PIPELINE:
+          lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline
+          break;
+        case OFF:
+          lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off
+          break;
+        case BLINK:
+          lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink
+          break;
+        case ON:
+          lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on
+          break;
+      }
     }
 
     public void setCamMode(CamMode mode) {
@@ -117,7 +130,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("Target's area of the image", ta + "%");
         SmartDashboard.putNumber("Skew or Rotation: ", ts);
         SmartDashboard.putString("Latency: ", tl + "ms");
-        SmartDashboard.putString("Pipeline: ", getpipe + " degrees");
+        SmartDashboard.putNumber("Pipeline: ", getpipe);
         SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
         SmartDashboard.putNumber("xDistance away (Meters): ", xDistanceToUpperHub());
@@ -130,18 +143,6 @@ public class VisionSubsystem extends SubsystemBase{
         //SmartDashboard.putNumber("Camtran", camtran);
     }
 
-    public enum LEDMode {
-      PIPELINE(0),
-      OFF(1), 
-      BLINK(2), 
-      ON(3);
-    
-      public int value;
-
-      LEDMode(int value) {
-        this.value = value;
-      }
-    }
-
+    public enum LEDMode {PIPELINE, OFF, BLINK, ON}
     public enum CamMode {VISION, DRIVER}
 }
