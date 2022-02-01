@@ -134,6 +134,5 @@ public class RobotContainer {
 
   public void resetGyro() {
     m_drivetrainSubsystem.zeroGyroscope();
-    vision.setCamMode(CamMode.DRIVER);
   }
 }
