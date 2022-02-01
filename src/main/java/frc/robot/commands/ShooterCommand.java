@@ -5,13 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.TwoWheelFly;
 
 public class ShooterCommand extends CommandBase {
 
-  private final boolean wantShoot;
+  private final boolean wantShoot = false;
 
-  public ShooterCommand(boolean) {
-    
+  public ShooterCommand(wantShoot true) {
+    if (DriveTrain linedUp) {
+    double limelight.distance 
+    x = Calculator.findAngle(); 
+    TwoWheelFly.runAtShootSpeed(x); 
+    wheelOne = Calculator.findTopSpeed(x); 
+    wheelTwo = Calculator.findBottomSpeed(x); 
+    Shooter.setSpeed(wheelOne, wheelTwo); 
+  }
+    if (Shooter.Angle == x && Shooter.Speeds == x) {
+      Indexer.forward();
+    }
   }
 
   // Called when the command is initially scheduled.
