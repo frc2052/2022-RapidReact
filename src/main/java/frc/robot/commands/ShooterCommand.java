@@ -17,19 +17,19 @@ public class ShooterCommand extends CommandBase {
   }
 
   public static void executeShooter() {
-    if (boolean linedUp) {
-    double limelight.distance 
+    if (boolean linedUp) { 
+    double limelight.distance;
     x = Calculator.findAngle(); 
     TwoWheelFly.runAtShootSpeed(x); 
     wheelOne = Calculator.findTopSpeed(x); 
     wheelTwo = Calculator.findBottomSpeed(x); 
     Shooter.setSpeed(wheelOne, wheelTwo); 
-  }
+  } 
 
-    if (Shooter.Angle == x && Shooter.Speeds == x) {
-      Indexer.forward();
-    }
-  }
+    if (Shooter.Angle == x && Shooter.Speeds == x) { 
+      Indexer.forward(); 
+    } 
+  } 
 
   // Called when the command is initially scheduled.
   @Override
