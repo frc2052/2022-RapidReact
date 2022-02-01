@@ -31,13 +31,6 @@ public final class Constants {
      */
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
 
-    /**
-     * OLD OFFSET VALUES
-     * Front Left: 136.42
-     * Front Right: -182.05
-     * Back Left: 132.07
-     * Back Right: -68.12
-     */
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
@@ -62,5 +55,6 @@ public final class Constants {
     
     public static final class Intake{
         public static final double kIntakeSpeed = .75;
+    //sets the speed of the motors
     }
 }
