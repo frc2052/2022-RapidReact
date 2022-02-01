@@ -16,10 +16,9 @@ public final class Constants {
 
     public static final class MotorIDs {
         public static final int PITCH_MOTOR = 91;
-        public static final int YAW_MOTOR = 92;
-        public static final int TOP_SHOOTER_MOTOR = 93;
-        public static final int BOTTOM_SHOOTER_MOTOR = 94;
-        public static final int INDEXER_MOTOR = 95;
+        public static final int TOP_SHOOTER_MOTOR = 92;
+        public static final int BOTTOM_SHOOTER_MOTOR = 93;
+        public static final int INDEXER_MOTOR = 94;
     } 
 
     public static final class ShooterSub {
