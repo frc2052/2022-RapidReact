@@ -12,10 +12,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.UsbCameraSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -26,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
