@@ -39,8 +39,8 @@ public class AutoBase  extends SequentialCommandGroup {
         );
 
         m_fastTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(2.5, 1.5).setKinematics(m_swerveDriveKinematics), 
-            new PIDController(0.25, 0, 0),
+            new TrajectoryConfig(4, 3).setKinematics(m_swerveDriveKinematics), 
+            new PIDController(1, 0, 0),
             new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
         );
     }
