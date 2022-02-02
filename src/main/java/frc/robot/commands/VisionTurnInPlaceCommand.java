@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class AutoVisionDriveCommand extends CommandBase {
+public class VisionTurnInPlaceCommand extends CommandBase {
 
     private final DrivetrainSubsystem m_drivetrainSubsystem;
     private final VisionSubsystem m_vision;
@@ -16,7 +16,7 @@ public class AutoVisionDriveCommand extends CommandBase {
     private double tx;
     private boolean isLinedUp;
 
-    public AutoVisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem, VisionSubsystem vision) {
+    public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrainSubsystem, VisionSubsystem vision) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_vision = vision;
 
@@ -50,12 +50,12 @@ public class AutoVisionDriveCommand extends CommandBase {
         }
         
         m_drivetrainSubsystem.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                        0,
-                        0,
-                        visionRotation,
-                        m_drivetrainSubsystem.getGyroscopeRotation()
-                )
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                0,
+                0,
+                visionRotation,
+                m_drivetrainSubsystem.getGyroscopeRotation()
+            )
         );
     }
 
