@@ -86,6 +86,8 @@ public class RobotContainer {
         break;
       case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
         break;
+      case FRONT_INTAKE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+        return new Simple3BallAutoFrontIntake(m_drivetrainSubsystem, vision);
       default:
         break;
     }
