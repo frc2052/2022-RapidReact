@@ -30,6 +30,7 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lledMode = table.getEntry("ledMode");
     private NetworkTableEntry lcamMode = table.getEntry("camMode"); // can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 through 9
+    private NetworkTableEntry lpipeline = table.getEntry("pipeline");
 
     /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
@@ -77,7 +78,7 @@ public class VisionSubsystem extends SubsystemBase{
 
     public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile')
         if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines
-          lgetpipe.setDouble((double) pipeline);
+          lpipeline.setDouble((double) pipeline);
         else
           System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
     }
@@ -106,11 +107,12 @@ public class VisionSubsystem extends SubsystemBase{
           // TODO switch back to default pipeline with option to choose in SmartDashboard
           this.setPipeline(0);
           lcamMode.setDouble(0.0);  // Camera is used for vision processing
+          setPipeline(0);
           break;
         case DRIVER:
           setLED(LEDMode.OFF);
           lcamMode.setDouble(1.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
-          this.setPipeline(9);    // Change to pipeline 
+          setPipeline(1);   // Change to pipeline 
           break;
       }
     }
