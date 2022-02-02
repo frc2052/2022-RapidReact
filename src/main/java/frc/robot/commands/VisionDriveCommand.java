@@ -1,24 +1,14 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
 
-public class VisionDriveCommand extends CommandBase {
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
-    private final DashboardControlsSubsystem m_dashboardControlsSubsystem;
-
-    private final DoubleSupplier m_translationXSupplier;
-    private final DoubleSupplier m_translationYSupplier;
-    //private final DoubleSupplier m_rotationSupplier;
+public class VisionDriveCommand extends DefaultDriveCommand {
     private VisionSubsystem m_vision;
-
     private double visionRotation = 0;
     private double tx;
     private boolean isLinedUp;
@@ -28,22 +18,23 @@ public class VisionDriveCommand extends CommandBase {
                                DoubleSupplier translationYSupplier,
                                VisionSubsystem vision,
                                DashboardControlsSubsystem dashboard) {
-        this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_translationXSupplier = translationXSupplier;
-        this.m_translationYSupplier = translationYSupplier;
-        m_dashboardControlsSubsystem = dashboard;
-        this.m_vision = vision;
+        super(drivetrainSubsystem,
+        translationXSupplier,
+        translationYSupplier,
+        () -> { return 0.0; }, //this value will not be used because getTurnWillBeOverriden
+        dashboard);
 
-        addRequirements(drivetrainSubsystem);
+        this.m_vision = vision;
     }
 
     @Override
     public void initialize() {
+        super.initialize();
         m_vision.setLED(LEDMode.ON);
     }
 
     @Override
-    public void execute() {
+    protected double getTurnValue() {
         m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
         tx = m_vision.getTx();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
@@ -61,23 +52,7 @@ public class VisionDriveCommand extends CommandBase {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             visionRotation = 0;
         }
-
-        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {
-            m_drivetrainSubsystem.drive(
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                            m_translationXSupplier.getAsDouble(),
-                            m_translationYSupplier.getAsDouble(),
-                            visionRotation,
-                            m_drivetrainSubsystem.getGyroscopeRotation()
-            ));
-        } else {
-            m_drivetrainSubsystem.drive(
-                new ChassisSpeeds(
-                    m_translationXSupplier.getAsDouble(), 
-                    m_translationYSupplier.getAsDouble(), 
-                    visionRotation
-            ));
-        }
+        return visionRotation;
     }
 
     public boolean getIsLinedUp() {
@@ -86,7 +61,7 @@ public class VisionDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         m_vision.setLED(LEDMode.OFF);
-        m_drivetrainSubsystem.stop();
     }
 }

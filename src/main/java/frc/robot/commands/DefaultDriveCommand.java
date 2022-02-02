@@ -33,6 +33,10 @@ public class DefaultDriveCommand extends CommandBase {
 
     // TODO Adjust this class to have VisionDriveCommand and other drive commands extend this as a base class.
 
+    protected double getTurnValue() {
+        return m_rotationSupplier.getAsDouble();
+    }
+
     @Override
     public void execute() {
         
@@ -41,7 +45,7 @@ public class DefaultDriveCommand extends CommandBase {
                     ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
                             m_translationXSupplier.getAsDouble(),
                             m_translationYSupplier.getAsDouble(),
-                            m_rotationSupplier.getAsDouble(),
+                            getTurnValue(),
                             m_drivetrainSubsystem.getGyroscopeRotation()
             ));
         } else {
@@ -49,7 +53,7 @@ public class DefaultDriveCommand extends CommandBase {
                 new ChassisSpeeds(
                     m_translationXSupplier.getAsDouble(), 
                     m_translationYSupplier.getAsDouble(), 
-                    m_rotationSupplier.getAsDouble()
+                    getTurnValue()
             ));
         }
     }
