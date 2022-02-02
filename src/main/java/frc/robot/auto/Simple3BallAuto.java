@@ -38,6 +38,9 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
+        
+        this.addCommands();
+
         vision.setLED(LEDMode.OFF);
         //TODO: shoot ball
 
