@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    
+    m_robotContainer.addSelectorsToSmartDashboard();
   }
 
   /**
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+    m_robotContainer.checkSmartDashboardControls();
     m_robotContainer.printToSmartDashboard();
   }
 

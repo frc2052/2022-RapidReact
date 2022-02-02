@@ -5,17 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.auto.Simple3BallAuto;
-import frc.robot.auto.TestAuto1;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.auto.*;
+import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.UsbCameraSubsystem;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,16 +21,20 @@ import edu.wpi.first.wpilibj2.command.Command;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem();
+  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryJoystick = new Joystick(2);
+  private final Joystick m_secondaryPannel = new Joystick(3);
 
-  SlewRateLimiter xLimiter = new SlewRateLimiter(1);
-  SlewRateLimiter yLimiter = new SlewRateLimiter(1);
-  SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+  private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
+  private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
+
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
 
   private final UsbCameraSubsystem m_inakeCamera = new UsbCameraSubsystem();
 
@@ -43,7 +44,8 @@ public class RobotContainer {
             m_drivetrainSubsystem,
             () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            dashboardControlsSubsystem
     ));
 
     // Configure the button bindings
@@ -56,7 +58,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    driveCommandSwitch.whenHeld(new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+      m_drivetrainSubsystem,
+      () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      vision,
+      dashboardControlsSubsystem
+      ));
+    
+    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -64,8 +76,25 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new Simple3BallAuto(m_drivetrainSubsystem);
+    
+    // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    switch(dashboardControlsSubsystem.getSelectedAuto()) {
+      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
+        return new TestAuto1(m_drivetrainSubsystem);
+      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+      case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
+        break;
+      case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
+        break;
+      case FRONT_INTAKE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+        return new Simple3BallAutoFrontIntake(m_drivetrainSubsystem, vision);
+      default:
+        break;
+    }
+
+    System.err.println("NO VALID AUTO SELECTED");
+    return null;
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
@@ -86,14 +115,23 @@ public class RobotContainer {
     // Deadband
     value = deadband(value, 0.05);
 
-    // Square the axis
+    // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
-
+    
     return value;
   }
 
+  public void addSelectorsToSmartDashboard() {
+    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+  }
+
+  public void checkSmartDashboardControls() {
+    dashboardControlsSubsystem.checkSmartDashboardControls();
+  }
+
   public void printToSmartDashboard() {
-    m_drivetrainSubsystem.printToSmartDashboard();
+    m_drivetrainSubsystem.putToSmartDashboard();
+    vision.putToSmartDashboard();
   }
 
   public void resetGyro() {
