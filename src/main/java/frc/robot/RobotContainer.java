@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.auto.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -20,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
@@ -36,6 +35,12 @@ public class RobotContainer {
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+
+  SlewRateLimiter xLimiter = new SlewRateLimiter(1);
+  SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+  SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+
+  private final UsbCameraSubsystem m_inakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -116,7 +121,7 @@ public class RobotContainer {
 
     // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
-
+    
     return value;
   }
 
