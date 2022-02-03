@@ -12,22 +12,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
 
-public class Indexer extends SubsystemBase {
+public class IndexerSubsystem extends SubsystemBase {
   
   private static VictorSPX indexerMotor;
 
-  public Indexer() {
+  public IndexerSubsystem() {
     indexerMotor = new VictorSPX(MotorIDs.INDEXER_MOTOR);
     indexerMotor.configFactoryDefault();
     indexerMotor.setNeutralMode(NeutralMode.Brake);
+    //TODO: Cry, Limit Switch, Victor;
   }
 
-  public static void forward() {
+  public void forward() {
     indexerMotor.set(ControlMode.PercentOutput, Constants.ShooterSub.INDEXER_SPEED);
-  }
-
-  public void backward() {
-    indexerMotor.set(ControlMode.PercentOutput, -Constants.ShooterSub.INDEXER_SPEED);
   }
 
   public void stop() {
