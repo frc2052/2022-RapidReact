@@ -119,11 +119,11 @@ public class VisionSubsystem extends SubsystemBase{
 
     public double xDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + ty))) + Constants.Limelight.kDistanceCalcOffset;
+      return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + ty))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
     public double xDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + angle))) + Constants.Limelight.kDistanceCalcOffset;
+      return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
     public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation 

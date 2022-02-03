@@ -215,8 +215,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getVelocity() {
-        // TODO Get the velocity from odometry
-        return 0.0;
+        // Gets X and Y velocity from the navx and gets their resulting velocity vector
+        return Math.sqrt(Math.pow(m_navx.getVelocityY(), 2) * Math.pow(m_navx.getVelocityX(), 2));
   }
 
   public void putToSmartDashboard() {

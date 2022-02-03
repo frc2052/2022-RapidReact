@@ -40,7 +40,7 @@ public class AutoDriveAndShootCommandV1 extends SwerveControllerCommand {
             trajectoryConfig.getXYController(),
             trajectoryConfig.getXYController(),
             trajectoryConfig.getThetaController(),
-            visionRotationSupplier,
+            () -> { return Rotation2d.fromDegrees(0); },
             driveTrain::setModuleStates,
             driveTrain
         );

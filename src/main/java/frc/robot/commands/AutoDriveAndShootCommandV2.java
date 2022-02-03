@@ -41,6 +41,8 @@ public class AutoDriveAndShootCommandV2 extends CommandBase {
 
     private SwerveDriveKinematics m_swerveDriveKinematics;
     private Pose2d m_lastCreatedEndingPose;
+
+    private boolean isLinedUp = false;
     
     public AutoDriveAndShootCommandV2(Pose2d startPose, Pose2d endPose, DrivetrainSubsystem driveTrain, VisionSubsystem vision) {
         m_driveTrain = driveTrain;
@@ -101,10 +103,40 @@ public class AutoDriveAndShootCommandV2 extends CommandBase {
     m_timer.stop();
   }
 
+  // Temporarily using this from VisionDriveCommand and now also in VisionSubsystem for more adjustability as I test this and try to get it to work.
+  public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation 
+    m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
+    double horizontalAngle = m_vision.getTx() + drivingHorizontalFiringOffsetAngle();      // Horizontal offset from the Limelight's crosshair to target.
+    double visionRotation;
+
+    if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
+        if(Math.abs(horizontalAngle) > 5) {
+            visionRotation = -Math.copySign(Math.toRadians(horizontalAngle * 9) , horizontalAngle); // Dynamically changes rotation speed to be faster at a larger tx,
+        } else if(Math.abs(horizontalAngle) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+            visionRotation = -Math.copySign(Math.PI /4, horizontalAngle);
+        } else {
+            visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+            isLinedUp = true;
+        }
+    } else {
+        visionRotation = Math.PI / 2;
+        visionRotation = 0;
+    }
+    return visionRotation;
+  }
+
   private double drivingHorizontalFiringOffsetAngle() {
+    if(m_driveTrain.getVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+      return 0.0;
+    }
     // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
-    double firingVelocity = 0.0; // TODO make this get the value calculated for firing the shooter 
-    return Math.atan(Math.toRadians((m_vision.xDistanceToUpperHub()*m_driveTrain.getVelocity()/firingVelocity)/Math.sqrt(Math.pow(Constants.Field.kUpperHubHeight,2) + Math.pow(m_vision.xDistanceToUpperHub(), 2))));
+    double firingVelocity = 20.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
+    double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters, 2) + Math.pow(m_vision.xDistanceToUpperHub(), 2));
+    return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
+  }
+
+  public boolean getIsLinedUp() {
+    return isLinedUp;
   }
 
   @Override
