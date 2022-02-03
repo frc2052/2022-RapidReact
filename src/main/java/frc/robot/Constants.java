@@ -76,6 +76,7 @@ public final class Constants {
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
 
         public static final double kDrivingAimAngleOffsetDegrees = 0.0;
+        public static final double kDrivingInRangeAngleOffsetDegrees = 0.0;
     }
     
     public static final class Intake{

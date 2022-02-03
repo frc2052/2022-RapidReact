@@ -37,22 +37,30 @@ public class DefaultDriveCommand extends CommandBase {
         return m_rotationSupplier.getAsDouble();
     }
 
+    protected double getXSupplier() {
+        return m_translationXSupplier.getAsDouble();
+    }
+    
+    protected double getYSupplier() {
+        return m_translationYSupplier.getAsDouble();
+    }
+
     @Override
     public void execute() {
         
         if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
             m_drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
                     ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
-                            m_translationXSupplier.getAsDouble(),
-                            m_translationYSupplier.getAsDouble(),
+                            getXSupplier(),
+                            getYSupplier(),
                             getTurnValue(),
                             m_drivetrainSubsystem.getGyroscopeRotation()
             ));
         } else {
             m_drivetrainSubsystem.drive(
                 new ChassisSpeeds(
-                    m_translationXSupplier.getAsDouble(), 
-                    m_translationYSupplier.getAsDouble(), 
+                    getXSupplier(), 
+                    getYSupplier(), 
                     getTurnValue()
             ));
         }

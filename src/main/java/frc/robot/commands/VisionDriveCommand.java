@@ -13,7 +13,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     private DrivetrainSubsystem m_driveTrain;
     private double visionRotation = 0;
     private double horizontalAngle;
-    private boolean isLinedUp;
+    private boolean horizontalIsLinedUp;
 
     public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -40,7 +40,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     protected double getTurnValue() {
         m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
         horizontalAngle = m_vision.getTx() + drivingHorizontalFiringOffsetAngle();      // Horizontal offset from the Limelight's crosshair to target.
-        isLinedUp = false;
+        horizontalIsLinedUp = false;
 
         if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(horizontalAngle) > 5) {
@@ -49,7 +49,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
                 visionRotation = -Math.copySign(Math.PI /4, horizontalAngle);
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
-                isLinedUp = true;
+                horizontalIsLinedUp = true;
             }
         } else {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
@@ -58,8 +58,8 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         return visionRotation;
     }
 
-    public boolean getIsLinedUp() {
-        return isLinedUp;
+    public boolean getHorizontalIsLinedUp() {
+        return horizontalIsLinedUp;
     }
 
     private double drivingHorizontalFiringOffsetAngle() {
