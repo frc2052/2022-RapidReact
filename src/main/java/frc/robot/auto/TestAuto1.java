@@ -12,6 +12,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -79,10 +80,13 @@ public class TestAuto1 extends SequentialCommandGroup {
       drivetrain
     );
 
-    addCommands(forwardA.andThen(() -> drivetrain.stop()));
+    // addCommands(forwardA.andThen(() -> drivetrain.stop()));
 
-    addCommands(turn.andThen(() -> drivetrain.stop()));
+    // addCommands(turn.andThen(() -> drivetrain.stop()));
 
-    addCommands(forwardB1.andThen(() -> drivetrain.stop()));
+    // addCommands(forwardB1.andThen(() -> drivetrain.stop()));
+
+    addCommands(new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(90)));
+
   }
 }

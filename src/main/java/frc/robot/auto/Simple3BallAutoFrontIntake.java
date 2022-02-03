@@ -23,6 +23,8 @@ public class Simple3BallAutoFrontIntake extends AutoBase {
         Pose2d ball1rotate = new Pose2d(Units.inchesToMeters(35), Units.inchesToMeters(-30), Rotation2d.fromDegrees(180));
         Supplier<Rotation2d> rotate180 = () -> { return Rotation2d.fromDegrees(180); };
         
+        // TODO: Supplier<Rotation2d> visionRotation = () -> { return ; };
+
         Pose2d start2 = new Pose2d(Units.inchesToMeters(35), Units.inchesToMeters(-30), Rotation2d.fromDegrees(-130));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130)); //wheels should be pointing 90 degrees from straight ahead at end of path
         Supplier<Rotation2d> aimNeg130DegreesRight = () -> { return Rotation2d.fromDegrees(-130); };
