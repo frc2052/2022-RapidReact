@@ -19,6 +19,7 @@ public class IntakeArmIn extends CommandBase {
     public void execute() {
         m_intakeSubsystem.intakeArmIn();
         m_intakeSubsystem.intakeStop();
+        m_intakeSubsystem.hopperStop();
         //arm retracts and stops
     }
     @Override

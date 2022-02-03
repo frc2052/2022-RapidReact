@@ -78,6 +78,8 @@ public final class Constants {
     
     public static final class Intake{
         public static final double kIntakeSpeed = .75;
-    //sets the speed of the motors
+        public static final double kHopperSpeed = .75;
+        //sets the speed of the motors
+    
     }
 }

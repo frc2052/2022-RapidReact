@@ -14,6 +14,7 @@ public class IntakeStop extends CommandBase {
     @Override
     public void execute() {
         m_intakeSubsystem.intakeStop();
+        m_intakeSubsystem.hopperStop();
         //stops the intake
     }
     @Override
