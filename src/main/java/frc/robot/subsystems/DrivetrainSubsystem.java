@@ -214,6 +214,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
           return odometry.getPoseMeters();
   }
 
+  public double getVelocity() {
+        // TODO Get the velocity from odometry
+        return 0.0;
+  }
+
   public void putToSmartDashboard() {
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(m_frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(m_frontRightModule.getSteerAngle()));
