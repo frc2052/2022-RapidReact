@@ -126,6 +126,22 @@ public class VisionSubsystem extends SubsystemBase{
       return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
+    public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation 
+      if(hasValidTarget()) {
+        // Logic to set the chassis rotation speed based on horizontal offset.
+        if(Math.abs(this.tx) > 5) {
+          return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
+        } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+          return -Math.copySign(Math.PI /4, this.tx);
+        } else {
+          return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+        }
+      } else {
+        // No target found so don't turn.
+        return 0;
+      }
+    }
+
     public void putToSmartDashboard() {
         updateLimelight();
         SmartDashboard.putBoolean("Has target?", hasValidTarget);
