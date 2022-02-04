@@ -78,6 +78,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+
+  private double lastwheelVelocity;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -192,6 +194,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         SwerveDriveKinematics.desaturateWheelSpeeds(states, maxVelocity);
 
+        lastwheelVelocity = states[0].speedMetersPerSecond;
+
         m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
         m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
         m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
@@ -214,9 +218,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
           return odometry.getPoseMeters();
   }
 
-  public double getVelocity() {
-        // Gets X and Y velocity from the navx and gets their resulting velocity vector
+  public double getGyroVelocity() {
+        // Gets X and Y velocity from the navx and gets their resulting velocity vector - Probably innaccurate, but is to be tested
         return Math.sqrt(Math.pow(m_navx.getVelocityY(), 2) * Math.pow(m_navx.getVelocityX(), 2));
+  }
+
+  public double getLastWheelVelocity() {
+        return lastwheelVelocity;
   }
 
   public void putToSmartDashboard() {
@@ -226,5 +234,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        
+        // For comparing gyro and wheel velocities
+        SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", lastwheelVelocity);
+        SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
   }
 }
