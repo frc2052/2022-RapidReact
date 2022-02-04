@@ -27,7 +27,7 @@ public class RobotContainer {
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryPannel = new Joystick(3);
+  private final Joystick m_secondaryPannel = new Joystick(2);
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
@@ -120,7 +120,7 @@ public class RobotContainer {
   // This code borrowed from the SwerverDriveSpecialist Sample code
   private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
-    value = deadband(value, 0.05);
+    value = deadband(value, 0.1);
     // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
     

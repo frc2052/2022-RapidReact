@@ -41,7 +41,7 @@ public class TurnInPlaceCommand extends CommandBase {
   public void execute() {
     // Turns the drivetrain in place using 5% of a full rotation per second.
     // TODO: Use PID to control speed ramping and prevent overshooting.
-    m_drivetrain.drive(new ChassisSpeeds(0, 0, Math.copySign(Math.PI * 0.1, m_deltaAngle.getDegrees())));
+    m_drivetrain.drive(new ChassisSpeeds(0, 0, Math.copySign(Math.PI, m_deltaAngle.getDegrees())));
   }
 
   // Called once the command ends or is interrupted.
@@ -55,7 +55,7 @@ public class TurnInPlaceCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // Find the difference between the current rotation and our target angle (deltaAngle)
-    // and check if the difference is less than 2 degrees inwhich case the robot angle is on target.
-    return Math.abs(m_drivetrain.getPose().getRotation().minus(m_targetTurn).getDegrees()) <= 2;
+    // and check if the difference is less than 5 degrees inwhich case the robot angle is on target.
+    return Math.abs(m_drivetrain.getPose().getRotation().minus(m_targetTurn).getDegrees()) <= 5;
   }
 }

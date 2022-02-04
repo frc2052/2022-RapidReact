@@ -86,7 +86,6 @@ public class TestAuto1 extends SequentialCommandGroup {
 
     // addCommands(forwardB1.andThen(() -> drivetrain.stop()));
 
-    addCommands(new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(90)));
-
+    addCommands(new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(180)));
   }
 }
