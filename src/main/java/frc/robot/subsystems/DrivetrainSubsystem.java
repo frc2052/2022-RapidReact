@@ -78,6 +78,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+
+  private double m_lastWheelVelocityMetersPerSecond;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -184,6 +186,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
+  // set up class variable 
 
   public void setModuleStates(SwerveModuleState[] states) {
 
@@ -191,6 +194,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         double maxAngularVelocity = 1;
 
         SwerveDriveKinematics.desaturateWheelSpeeds(states, maxVelocity);
+
+        m_lastWheelVelocityMetersPerSecond = states[0].speedMetersPerSecond;
 
         m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
         m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
@@ -216,10 +221,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getVelocity() {
         // Gets X and Y velocity from the navx and gets their resulting velocity vector
-        return Math.sqrt(Math.pow(m_navx.getVelocityY(), 2) * Math.pow(m_navx.getVelocityX(), 2));
+        //return Math.sqrt(Math.pow(m_navx.getVelocityY(), 2) * Math.pow(m_navx.getVelocityX(), 2));
+        return m_lastWheelVelocityMetersPerSecond;
   }
 
   public void putToSmartDashboard() {
+        SmartDashboard.putNumber("Wheel Velocity", m_lastWheelVelocityMetersPerSecond);
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(m_frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(m_frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(m_backLeftModule.getSteerAngle()));

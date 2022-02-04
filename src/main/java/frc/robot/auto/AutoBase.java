@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class AutoBase  extends SequentialCommandGroup {
-    private DrivetrainSubsystem m_drivetrain;
+    protected DrivetrainSubsystem m_drivetrain;
     private SwerveDriveKinematics m_swerveDriveKinematics;
     private Pose2d m_lastCreatedEndingPose;
 
@@ -78,6 +78,7 @@ public class AutoBase  extends SequentialCommandGroup {
             trajectoryConfig.getXYController(),
             trajectoryConfig.getXYController(),
             trajectoryConfig.getThetaController(), 
+            rotationSupplier,
             m_drivetrain::setModuleStates,
             m_drivetrain
         );

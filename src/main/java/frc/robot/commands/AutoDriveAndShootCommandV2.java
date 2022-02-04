@@ -49,7 +49,9 @@ public class AutoDriveAndShootCommandV2 extends CommandBase {
         m_vision = vision;
         m_swerveDriveKinematics = driveTrain.getKinematics();
 
-        visionRotationSupplier = () -> { return Rotation2d.fromDegrees(m_vision.getRotationSpeedToTarget() + drivingHorizontalFiringOffsetAngle()); };
+        visionRotationSupplier = () -> { 
+          m_vision.updateLimelight();
+          return Rotation2d.fromDegrees(m_vision.getTx()); }; //+ drivingHorizontalFiringOffsetAngle()); };
 
         m_slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(m_swerveDriveKinematics), 
@@ -132,7 +134,7 @@ public class AutoDriveAndShootCommandV2 extends CommandBase {
     // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
     double firingVelocity = 20.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
     double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters, 2) + Math.pow(m_vision.xDistanceToUpperHub(), 2));
-    return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
+    return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getVelocity()/firingVelocity/lineToHub)) + Constants.DriveTrain.kDrivingAimAngleOffsetDegrees;
   }
 
   public boolean getIsLinedUp() {
