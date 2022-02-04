@@ -39,10 +39,10 @@ public class VisionDriveInRangeCommand extends VisionDriveCommand {
         // Don't know the actual rates I should be setting these to right now but this should work...
 
         if (m_vision.hasValidTarget()) {
-            if (verticalAngle > 5) {
-                driveForwardRate = 0.5;
-            } else if (verticalAngle > 2) {
-                driveForwardRate = 0.25;
+            if (Math.abs(verticalAngle) > 5) {
+                driveForwardRate = -Math.copySign(1, verticalAngle);
+            } else if (Math.abs(verticalAngle) > 3) {
+                driveForwardRate = -Math.copySign(0.5, verticalAngle);
             } else {
                 driveForwardRate = 0;
                 verticalIsLinedUp = true;

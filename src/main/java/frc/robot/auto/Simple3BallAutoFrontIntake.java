@@ -26,8 +26,8 @@ public class Simple3BallAutoFrontIntake extends AutoBase {
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
 
-        Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
-        Pose2d shootAndDriveRotate = new Pose2d(Units.inchesToMeters(-96), Units.inchesToMeters(-130), Rotation2d.fromDegrees(-130));
+        Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
+        Pose2d shootAndDriveRotate = new Pose2d(Units.inchesToMeters(-96), Units.inchesToMeters(-130), Rotation2d.fromDegrees(0));
         Supplier<Rotation2d> trackTargetToEnd = () -> {
             visionRotation = m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(m_vision.getTx()));
             System.err.println("*****************************" + visionRotation);
