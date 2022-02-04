@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.AutoVisionDriveCommand;
+import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -23,6 +23,8 @@ public class Simple3BallAutoFrontIntake extends AutoBase {
         Pose2d ball1rotate = new Pose2d(Units.inchesToMeters(35), Units.inchesToMeters(-30), Rotation2d.fromDegrees(180));
         Supplier<Rotation2d> rotate180 = () -> { return Rotation2d.fromDegrees(180); };
         
+        // TODO: Supplier<Rotation2d> visionRotation = () -> { return ; };
+
         Pose2d start2 = new Pose2d(Units.inchesToMeters(35), Units.inchesToMeters(-30), Rotation2d.fromDegrees(-130));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130)); //wheels should be pointing 90 degrees from straight ahead at end of path
         Supplier<Rotation2d> aimNeg130DegreesRight = () -> { return Rotation2d.fromDegrees(-130); };
@@ -35,7 +37,7 @@ public class Simple3BallAutoFrontIntake extends AutoBase {
         //AutoVisionDriveCommand autoAim1 = new AutoVisionDriveCommand(drivetrain, vision);
         SwerveControllerCommand driveToBall2 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
         SwerveControllerCommand driveToShoot = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
-        AutoVisionDriveCommand autoAim2 = new AutoVisionDriveCommand(drivetrain, vision);
+        VisionTurnInPlaceCommand autoAim2 = new VisionTurnInPlaceCommand(drivetrain, vision);
 
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot

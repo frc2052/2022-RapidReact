@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.AutoVisionDriveCommand;
+import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -29,7 +29,7 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
         SwerveControllerCommand driveToBall2 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
         SwerveControllerCommand driveToShoot = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
-        AutoVisionDriveCommand autoAim = new AutoVisionDriveCommand(drivetrain, vision);
+        VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot
@@ -38,6 +38,7 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
+
         vision.setLED(LEDMode.OFF);
         //TODO: shoot ball
 
