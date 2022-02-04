@@ -45,12 +45,12 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
-    protected SwerveControllerCommand ceateSwerveTrajectoryCommand(
+    protected SwerveControllerCommand createSwerveTrajectoryCommand(
         AutoTrajectoryConfig trajectoryConfig, 
         Pose2d startPose, 
         Pose2d endPose
     ) {
-        return ceateSwerveTrajectoryCommand(
+        return createSwerveTrajectoryCommand(
             trajectoryConfig,
             startPose,
             endPose,
@@ -58,7 +58,7 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
-    protected SwerveControllerCommand ceateSwerveTrajectoryCommand(
+    protected SwerveControllerCommand createSwerveTrajectoryCommand(
         AutoTrajectoryConfig trajectoryConfig, 
         Pose2d startPose, 
         Pose2d endPose, 
@@ -78,6 +78,7 @@ public class AutoBase  extends SequentialCommandGroup {
             trajectoryConfig.getXYController(),
             trajectoryConfig.getXYController(),
             trajectoryConfig.getThetaController(), 
+            rotationSupplier,
             m_drivetrain::setModuleStates,
             m_drivetrain
         );

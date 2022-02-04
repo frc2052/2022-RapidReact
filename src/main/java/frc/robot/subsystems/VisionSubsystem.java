@@ -152,6 +152,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("Latency: ", tl + "ms");
         SmartDashboard.putNumber("Pipeline: ", getpipe);
         SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+        SmartDashboard.putBoolean("Enable Limelight LEDs", lledMode.getDouble(0.0) == 1.0 ? false : (lledMode.getDouble(0.0) == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
 
         SmartDashboard.putNumber("xDistance away (Meters): ", xDistanceToUpperHub());
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()));

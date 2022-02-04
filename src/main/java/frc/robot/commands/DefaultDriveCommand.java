@@ -31,18 +31,8 @@ public class DefaultDriveCommand extends CommandBase {
         addRequirements(drivetrainSubsystem);
     }
 
-    // TODO Adjust this class to have VisionDriveCommand and other drive commands extend this as a base class.
-
     protected double getTurnValue() {
         return m_rotationSupplier.getAsDouble();
-    }
-
-    protected double getXSupplier() {
-        return m_translationXSupplier.getAsDouble();
-    }
-    
-    protected double getYSupplier() {
-        return m_translationYSupplier.getAsDouble();
     }
 
     @Override
@@ -51,16 +41,16 @@ public class DefaultDriveCommand extends CommandBase {
         if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
             m_drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
                     ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
-                            getXSupplier(),
-                            getYSupplier(),
+                            m_translationXSupplier.getAsDouble(),
+                            m_translationYSupplier.getAsDouble(),
                             getTurnValue(),
                             m_drivetrainSubsystem.getGyroscopeRotation()
             ));
         } else {
             m_drivetrainSubsystem.drive(
                 new ChassisSpeeds(
-                    getXSupplier(), 
-                    getYSupplier(), 
+                    m_translationXSupplier.getAsDouble(), 
+                    m_translationYSupplier.getAsDouble(), 
                     getTurnValue()
             ));
         }

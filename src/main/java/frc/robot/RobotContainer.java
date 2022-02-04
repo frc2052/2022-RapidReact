@@ -83,12 +83,14 @@ public class RobotContainer {
         return new TestAuto1(m_drivetrainSubsystem);
       case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
+      case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
+        return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
         break;
       case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
         break;
-      case FRONT_INTAKE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
-        return new Simple3BallAutoFrontIntake(m_drivetrainSubsystem, vision);
       default:
         break;
     }

@@ -1,19 +1,20 @@
 package frc.robot.auto;
 
+// A version of Simple3BallAuto to be used and abused for testing and learning !
+
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.AutoDriveAndShootCommandV2;
 import frc.robot.commands.AutoVisionDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class Simple3BallAutoFrontIntake extends AutoBase {
-    public Simple3BallAutoFrontIntake(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+public class Simple3BallAutoTesting extends AutoBase {
+    public Simple3BallAutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain);
         vision.setLED(LEDMode.OFF);
         
@@ -32,20 +33,20 @@ public class Simple3BallAutoFrontIntake extends AutoBase {
         Pose2d shootPos = new Pose2d(Units.inchesToMeters(24), Units.inchesToMeters(-60), Rotation2d.fromDegrees(-45)); //wheels should be pointing 90 degrees from straight ahead at end of path
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(-45); };
 
-        SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
 
-        AutoDriveAndShootCommandV2 autoDriveAndShootTest = new AutoDriveAndShootCommandV2(startPos2, shootAndDriveRotate, drivetrain, vision);
+        //AutoDriveAndShootCommandV2 autoDriveAndShootTest = new AutoDriveAndShootCommandV2(startPos2, shootAndDriveRotate, drivetrain, vision);
 
         //SwerveControllerCommand rotate180ToFire = super.ceateSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, startPos2, ball1rotate, rotate180);
         //AutoVisionDriveCommand autoAim1 = new AutoVisionDriveCommand(drivetrain, vision);
         //SwerveControllerCommand driveToBall2 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
 
-        SwerveControllerCommand driveToShoot = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
+        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
         AutoVisionDriveCommand autoAim2 = new AutoVisionDriveCommand(drivetrain, vision);
 
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot
-        this.addCommands(autoDriveAndShootTest);
+        //this.addCommands(autoDriveAndShootTest);
         //this.addCommands(autoAim1);
         //TOOD: shoot 2 balls
         //TODO: is there  a way to force the wheels to point 90 immediately before it starts to drive? 
