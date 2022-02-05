@@ -14,21 +14,30 @@ import frc.robot.Constants.MotorIDs;
 
 public class IndexerSubsystem extends SubsystemBase {
   
-  private static VictorSPX indexerMotor;
+  private static VictorSPX largeIndexer;
+  private static VictorSPX feederIndexer;
 
   public IndexerSubsystem() {
-    indexerMotor = new VictorSPX(MotorIDs.INDEXER_MOTOR);
-    indexerMotor.configFactoryDefault();
-    indexerMotor.setNeutralMode(NeutralMode.Brake);
+    largeIndexer = new VictorSPX(MotorIDs.INDEXER_MOTOR);
+    largeIndexer.configFactoryDefault();
+    largeIndexer.setNeutralMode(NeutralMode.Brake);
+    feederIndexer = new VictorSPX(MotorIDs.INDEXER_MOTOR_FEEDER);
+    feederIndexer.configFactoryDefault();
+    feederIndexer.setNeutralMode(NeutralMode.Brake);
     //TODO: Cry, Limit Switch, Victor;
   }
 
-  public void forward() {
-    indexerMotor.set(ControlMode.PercentOutput, Constants.ShooterSub.INDEXER_SPEED);
+  public void runPreload() {
+    largeIndexer.set(ControlMode.PercentOutput, Constants.ShooterSub.INDEXER_SPEED);
+  }
+
+  public void runFeeder() {
+    feederIndexer.set(ControlMode.PercentOutput, Constants.ShooterSub.FEEDER_SPEED);
   }
 
   public void stop() {
-    indexerMotor.set(ControlMode.PercentOutput, 0);
+    largeIndexer.set(ControlMode.PercentOutput, 0);
+    feederIndexer.set(ControlMode.PercentOutput, 0);
   }
 
   @Override

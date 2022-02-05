@@ -22,10 +22,11 @@ public class FeedCargoLaunchCommand extends CommandBase {
   @Override
   public void execute() {
     if (twoWheelFly.isAtSpeed()) {
-      indexer.forward();  
+      indexer.runPreload();  
+      indexer.runFeeder();
     }
   }
-  
+
   @Override
    public void end(boolean interrupted) {
     indexer.stop();
