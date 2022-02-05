@@ -24,7 +24,6 @@ public class IndexerSubsystem extends SubsystemBase {
     feederIndexer = new VictorSPX(MotorIDs.INDEXER_MOTOR_FEEDER);
     feederIndexer.configFactoryDefault();
     feederIndexer.setNeutralMode(NeutralMode.Brake);
-    //TODO: Cry, Limit Switch, Victor;
   }
 
   public void runPreload() {

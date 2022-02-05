@@ -47,5 +47,9 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
 
     return topIsOnTarget && bottomIsOnTarget;
   }
+  public void stop() {
+    topMotor.set(ControlMode.Velocity, 0);
+    bottomMotor.set(ControlMode.Velocity, 0);
+  }
 
 }
