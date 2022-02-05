@@ -14,9 +14,32 @@ import edu.wpi.first.math.util.Units;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-    
+// Constants shall be stored in meters
 public final class Constants {
+    public static final class MotorIDs {
+        public static final int PITCH_MOTOR = 91;
+        public static final int TOP_SHOOTER_MOTOR = 92;
+        public static final int BOTTOM_SHOOTER_MOTOR = 93;
+        public static final int INDEXER_MOTOR = 94;
+    } 
+
+    public static final class ShooterSub {
+        public static final double INDEXER_SPEED = .75;
+        public static final double TOPWHEELSPEED = 5;
+        public static final double BOTTOMWHEELSPEED = 5;
+    }
     
+    public static final class Field {
+        public static final double kUpperHubHeight = 2.64;
+    }
+
+    public static final class Limelight {
+        public static final double kMountHeight = Units.inchesToMeters(19);
+        public static final double kMountAngle = 45;
+
+        public static final double kDistanceCalcOffset = 0;
+    }
+
     public static final class DriveTrain{
     /**
      * The left-to-right distance between the drivetrain wheels
@@ -31,13 +54,6 @@ public final class Constants {
      */
     public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
 
-    /**
-     * OLD OFFSET VALUES
-     * Front Left: 136.42
-     * Front Right: -182.05
-     * Back Left: 132.07
-     * Back Right: -68.12
-     */
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
@@ -62,5 +78,6 @@ public final class Constants {
     
     public static final class Intake{
         public static final double kIntakeSpeed = .75;
+    //sets the speed of the motors
     }
 }

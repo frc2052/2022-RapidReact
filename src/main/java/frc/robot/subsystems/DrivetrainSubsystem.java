@@ -214,7 +214,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
           return odometry.getPoseMeters();
   }
 
-  public void printToSmartDashboard() {
+  public void putToSmartDashboard() {
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(m_frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(m_frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(m_backLeftModule.getSteerAngle()));
