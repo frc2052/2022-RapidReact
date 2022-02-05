@@ -41,7 +41,6 @@ public class Intake extends SubsystemBase {
     public void intakeStop(){
         intakeMotor.set(ControlMode.PercentOutput, 0);
     }
-
     //stops the wheels of the intake
 
 }

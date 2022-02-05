@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Constants.Intake;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
 
@@ -30,6 +30,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     twoWheelFly.runAtShootSpeed(Constants.ShooterSub.TOPWHEELSPEED, Constants.ShooterSub.BOTTOMWHEELSPEED);
     if (limitSwitch.get() == false) {
       indexer.runPreload();
+      intake.intakeOn();
     } else {
         indexer.stop();
     }
