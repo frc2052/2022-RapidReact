@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.AutoVisionDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -23,8 +22,8 @@ public class LeftTerminal3Cargo extends AutoBase {
         Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(-130); };
         
         //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand driveToFirstBallPos = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, firstBallPos);
-        SwerveControllerCommand driveToleftmostBallPos = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, firstBallPos, leftmostBallPos);
+        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, firstBallPos);
+        SwerveControllerCommand driveToleftmostBallPos = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, firstBallPos, leftmostBallPos);
 
 
         //TODO: extend intake and turn on intake motors
