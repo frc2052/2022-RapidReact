@@ -17,8 +17,8 @@ public class Middle2CargoDefenseAuto extends AutoBase {
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         //Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
-        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(13), Units.inchesToMeters(62), Rotation2d.fromDegrees(0));
-        Pose2d leftmostBallPos = new Pose2d(Units.inchesToMeters(73),Units.inchesToMeters(-37),Rotation2d.fromDegrees(90));
+        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(60), Units.inchesToMeters(0), Rotation2d.fromDegrees(0));
+        Pose2d leftmostBallPos = new Pose2d(Units.inchesToMeters(-37),Units.inchesToMeters(60),Rotation2d.fromDegrees(0));
         Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(90); };
         Pose2d opposingBallPos = new Pose2d(0,Units.inchesToMeters(24),Rotation2d.fromDegrees(0));
         
@@ -28,10 +28,10 @@ public class Middle2CargoDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToOpposingBallPos = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, leftmostBallPos, opposingBallPos);
 
         //TODO: extend intake and turn on intake motors
-        //TODO:Drive to middle ball
+        //Drive to middle ball
         this.addCommands(driveToFirstBallPos);
         //TODO:Shoot both loaded balls
-        //TODO:Drive to rightmost ball
+        //Drive to rightmost ball
         this.addCommands(driveToleftmostBallPos);
         //Shoot ball
         //bump right opponent ball.
