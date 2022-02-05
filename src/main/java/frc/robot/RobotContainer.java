@@ -86,7 +86,7 @@ public class RobotContainer {
       case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
         return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
-        return new ThreeBallDriveAndShoot(m_drivetrainSubsystem, vision);
+        return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
         break;
       case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
