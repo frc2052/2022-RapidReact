@@ -5,14 +5,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
 
 public class FeedCargoLaunchCommand extends CommandBase {
 
-  private final boolean wantShoot = false;
   private final TwoWheelFlySubsystem twoWheelFly;
   private final IndexerSubsystem indexer;
 
@@ -25,10 +22,15 @@ public class FeedCargoLaunchCommand extends CommandBase {
   @Override
   public void execute() {
     if (twoWheelFly.isAtSpeed()) {
-    indexer.forward();  
+      indexer.forward();  
     }
   }
- 
+  
+  @Override
+   public void end(boolean interrupted) {
+    indexer.stop();
+  }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

@@ -38,8 +38,14 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
   }
 
   public boolean isAtSpeed() {
-    return (topMotor.getSelectedSensorVelocity() == Constants.ShooterSub.TOPWHEELSPEED)
-     && (bottomMotor.getSelectedSensorVelocity() == Constants.ShooterSub.BOTTOMWHEELSPEED);
+    //Consider the shooter on target if we are within 5% of target speeds 
+    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > Constants.ShooterSub.TOPWHEELSPEED * .95 
+      && topMotor.getSelectedSensorVelocity() < Constants.ShooterSub.TOPWHEELSPEED * 1.05;
+
+    boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > Constants.ShooterSub.BOTTOMWHEELSPEED * .95
+      && bottomMotor.getSelectedSensorVelocity() < Constants.ShooterSub.BOTTOMWHEELSPEED * 1.05; 
+
+    return topIsOnTarget && bottomIsOnTarget;
   }
 
 }
