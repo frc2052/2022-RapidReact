@@ -38,7 +38,7 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
-  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+  //private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
