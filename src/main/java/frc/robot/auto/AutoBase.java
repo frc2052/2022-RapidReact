@@ -39,9 +39,9 @@ public class AutoBase  extends SequentialCommandGroup {
         );
 
         m_fastTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(2.5, 1.5).setKinematics(m_swerveDriveKinematics), 
-            new PIDController(0.25, 0, 0),
-            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
+            new TrajectoryConfig(4, 2.5).setKinematics(m_swerveDriveKinematics), // Speed of actions, 1st TrajectoryFactory value is max velocity and 2nd is max accelaration.
+            new PIDController(0.25, 0, 0),  // The XY controller PID value
+            new ProfiledPIDController(13, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 4*Math.PI)) // Turning PID COntroller. Increasing 1st value increases speed of turning, and the TrapezoidalProfile is our contraints of these values.
         );
     }
 

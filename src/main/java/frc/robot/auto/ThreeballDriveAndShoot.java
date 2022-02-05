@@ -33,7 +33,7 @@ public class ThreeballDriveAndShoot extends AutoBase {
             if(m_vision.hasValidTarget()) {
                 rotation = m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
             } else {
-                rotation = Rotation2d.fromDegrees(179);
+                rotation = Rotation2d.fromDegrees(170);
             }
             return rotation;
         };
