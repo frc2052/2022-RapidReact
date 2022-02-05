@@ -30,9 +30,9 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     twoWheelFly.runAtShootSpeed(Constants.ShooterSub.TOPWHEELSPEED, Constants.ShooterSub.BOTTOMWHEELSPEED);
     if (limitSwitch.get() == false) {
       indexer.runPreload();
-      intake.intakeOn();
+      intake.hopperGo();
     } else {
-        indexer.stop();
+      indexer.stop();
     }
   }
 
