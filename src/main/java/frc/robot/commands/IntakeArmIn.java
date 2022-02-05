@@ -13,13 +13,13 @@ public class IntakeArmIn extends CommandBase {
       
     @Override
     public void initialize() {
-    m_intakeSubsystem.intakeArmIn();
-    m_intakeSubsystem.intakeStop();
-
+        
     }
     @Override
     public void execute() {
-  
+        m_intakeSubsystem.intakeArmIn();
+        m_intakeSubsystem.intakeStop();
+        //arm retracts and stops
     }
     @Override
     public boolean isFinished(){

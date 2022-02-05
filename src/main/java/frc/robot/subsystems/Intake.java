@@ -16,22 +16,32 @@ public class Intake extends SubsystemBase {
         inSolenoid.set(true);
         outSolenoid.set(false);
     }
-  
+    //retracts arm
     public void intakeArmOut(){
         inSolenoid.set(false);
         outSolenoid.set(true);
     }
-    //replaced "down" with "out" and "up" with "in" to be more intuitive for this year's robot
+    //extends arm 
+    //replaced "down" with "out" and "up" with "in" because it makes more sense
+
 
     public void intakeOn(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
     }
-   
+    
+    //turns the wheels of the intake
+    
     public void intakeReverse(){
         intakeMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);
     }
    
+    //turns the wheels of the intake in the opposite direction
+
+
     public void intakeStop(){
         intakeMotor.set(ControlMode.PercentOutput, 0);
     }
+
+    //stops the wheels of the intake
+
 }

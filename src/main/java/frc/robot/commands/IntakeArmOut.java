@@ -18,10 +18,10 @@ public class IntakeArmOut extends CommandBase {
     }
       
     @Override
-    public void initialize() {
-    m_intakeSubsystem.intakeArmOut();
-    m_intakeSubsystem.intakeOn();
-
+    public void execute() {
+      m_intakeSubsystem.intakeArmOut();
+      m_intakeSubsystem.intakeOn();
+      //arm extends and spins the wheels
     }
     @Override
     public boolean isFinished(){
