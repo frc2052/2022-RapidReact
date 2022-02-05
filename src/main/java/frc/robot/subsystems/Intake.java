@@ -5,12 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.Victor;
-
+//what is this for? 
 
 public class Intake {
     private Solenoid outSolenoid;
     private Solenoid inSolenoid;
-    private boolean isArmOut;
     private VictorSPX intakeMotor;
     private VictorSPX hopperMotor;
 
@@ -19,14 +18,11 @@ public class Intake {
     public void intakeArmIn(){
         inSolenoid.set(true);
         outSolenoid.set(false);
-        isArmOut = false;
-        boolean armOut = false;
     }
   
     public void intakeArmOut(){
         inSolenoid.set(false);
         outSolenoid.set(true);
-        isArmOut = true;
     }
 
     public void intakeOn(){
