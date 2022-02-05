@@ -21,6 +21,7 @@ public class IntakeArmOut extends CommandBase {
     public void execute() {
       m_intakeSubsystem.intakeArmOut();
       m_intakeSubsystem.intakeOn();
+      m_intakeSubsystem.hopperGo();
       //arm extends and spins the wheels
     }
     @Override
