@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveTrain;
-import frc.robot.commands.AutoVisionDriveCommand;
+import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -55,7 +55,7 @@ public class ThreeballDriveAndShoot extends AutoBase {
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, super.getLastEndingPosCreated(), arriveAtBall2, spinToBall2);
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
 
-        AutoVisionDriveCommand autoAim = new AutoVisionDriveCommand(drivetrain, vision);
+        VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
         // Add commands to scheduler
         this.addCommands(driveToBall1);
