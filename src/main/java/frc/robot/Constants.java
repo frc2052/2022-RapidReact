@@ -38,8 +38,8 @@ public final class Constants {
 
     public static final class ShooterSub {
         public static final double INDEXER_SPEED = .75;
-        public static final double TOPWHEELSPEED = 5;
-        public static final double BOTTOMWHEELSPEED = 5;
+        public static final double TOP_WHEEL_SPEED = 5;
+        public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
     }
     
