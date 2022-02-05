@@ -32,8 +32,6 @@ public class DefaultDriveCommand extends CommandBase {
         addRequirements(drivetrainSubsystem);
     }
 
-    // TODO Adjust this class to have VisionDriveCommand and other drive commands extend this as a base class.
-
     protected double getTurnValue() {
         return m_rotationSupplier.getAsDouble();
     }

@@ -63,19 +63,20 @@ public class DashboardControlsSubsystem {
         }
         lastLEDState = limelightLEDsEnabled;
 
-        // Currently not working properly
         if(!limelightDriveCamToggle && lastCamState) {
-            //System.out.println("Setting vision");
+            System.out.println("**********Limelight Set to Vision Mode**********");
             m_vision.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            //System.out.println("Setting driver");
+            System.out.println("**********Limelight Set to Driver Camera Mode**********");
             m_vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }
         lastCamState = limelightDriveCamToggle;
 
-        /* logic for having a selection list for limelight mode, unworking and uneeded for now...
+        //Logic for having a selection list for limelight modes, unworking and uneeded for now...
+        
+        /* 
         if(limelightCamModeSelector.getSelected() == CamMode.DRIVER && (lastCamMode == CamMode.VISION)) {
             m_vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
@@ -100,13 +101,18 @@ public class DashboardControlsSubsystem {
         return driveModeSelector.getSelected();
     }
 
+    public void setLastLEDState(boolean state) {
+        lastLEDState = state;
+    }
+
     public enum Autos {
         TEST_AUTO_1("TestAuto1"),
         SIMPLE_1_BALL("Simple 1 Ball"),
         SIMPLE_3_BALL("Simple 3 Ball"),
+        SIMPLE_3_BALL_TESTING("Simple 3 Ball using front intake"),
+        THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot"),
         THREE_BALL_TERMINAL("3 Ball - Terminal Cargo"),
-        FOUR_BALL("4 Ball Auto"),
-        FRONT_INTAKE_3_BALL("Simple 3 Ball using front intake");
+        FOUR_BALL("4 Ball Auto");
 
         public String name;
 
