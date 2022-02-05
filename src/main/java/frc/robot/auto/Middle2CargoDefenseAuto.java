@@ -18,22 +18,25 @@ public class Middle2CargoDefenseAuto extends AutoBase {
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         //Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
-        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(25), Units.inchesToMeters(58), Rotation2d.fromDegrees(0));
-        Pose2d leftmostBallPos = new Pose2d(Units.inchesToMeters(48),Units.inchesToMeters(84),Rotation2d.fromDegrees(0));
-        Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(-130); };
+        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(13), Units.inchesToMeters(62), Rotation2d.fromDegrees(0));
+        Pose2d leftmostBallPos = new Pose2d(Units.inchesToMeters(73),Units.inchesToMeters(-37),Rotation2d.fromDegrees(90));
+        Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(90); };
+        Pose2d opposingBallPos = new Pose2d(0,Units.inchesToMeters(24),Rotation2d.fromDegrees(0));
         
         //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
         SwerveControllerCommand driveToFirstBallPos = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveToleftmostBallPos = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, firstBallPos, leftmostBallPos);
-
+        SwerveControllerCommand driveToOpposingBallPos = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, leftmostBallPos, opposingBallPos)
 
         //TODO: extend intake and turn on intake motors
         //TODO:Drive to middle ball
         this.addCommands(driveToFirstBallPos);
         //TODO:Shoot both loaded balls
         //TODO:Drive to rightmost ball
+        this.addCommands(driveToleftmostBallPos);
         //Shoot ball
         //bump right opponent ball.
+        this.addCommands(driveToOpposingBallPos);
 
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
