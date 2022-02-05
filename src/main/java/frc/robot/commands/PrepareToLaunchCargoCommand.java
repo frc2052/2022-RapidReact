@@ -4,12 +4,7 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Intake;
@@ -17,7 +12,6 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
-  private static final int speed = 0;
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final Intake intake;
@@ -29,7 +23,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     this.intake = intake;
   }
 
-  
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
