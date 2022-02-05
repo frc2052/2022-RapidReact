@@ -94,10 +94,18 @@ public class RobotContainer {
         return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
-      case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
-        break;
-      case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
-        break;
+      case LEFT_TERMINAL: 
+        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
+      case MIDDLE_TWO_DEFENSE:
+        return new Middle2CargoDefenseAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_DEFENSE:
+        return new MiddleDefenseAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_TERMINAL_3:
+        return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_TERMINAL_DEFENSE:
+        return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision);
+      case FIVE_BALL:
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
       default:
         break;
     }
