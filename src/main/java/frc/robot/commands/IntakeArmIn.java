@@ -5,7 +5,6 @@ import frc.robot.subsystems.Intake;
 
 public class IntakeArmIn extends CommandBase {
     private final Intake m_intakeSubsystem;
-
     public IntakeArmIn(Intake subsystem) {
       m_intakeSubsystem = subsystem;
       // Maybe add dependencies   
@@ -19,6 +18,7 @@ public class IntakeArmIn extends CommandBase {
     public void execute() {
         m_intakeSubsystem.intakeArmIn();
         m_intakeSubsystem.intakeStop();
+        m_intakeSubsystem.hopperStop();
         //arm retracts and stops
     }
     @Override
