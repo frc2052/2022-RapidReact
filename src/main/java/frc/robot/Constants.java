@@ -28,6 +28,10 @@ public final class Constants {
         public static final int CLOSE_B_SOLENOID = 2;
         public static final int OPEN_A_SOLENOID = 1;
         public static final int OPEN_B_SOLENOID = 3;
+        public static final int FORWARD_1_SOLENOID = 12;
+        public static final int BACKWARD_1_SOLENOID = 8;
+        public static final int FORWARD_2_SOLENOID = 4;
+        public static final int BACKWARD_2_SOLENOID = 10;
     } 
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
