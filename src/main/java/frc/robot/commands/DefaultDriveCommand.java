@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem;
@@ -37,22 +38,23 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        
         if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
             m_drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
-                    ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
-                            m_translationXSupplier.getAsDouble(),
-                            m_translationYSupplier.getAsDouble(),
-                            getTurnValue(),
-                            m_drivetrainSubsystem.getGyroscopeRotation()
-            ));
+                ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
+                    m_translationXSupplier.getAsDouble(),
+                    m_translationYSupplier.getAsDouble(),
+                    getTurnValue(),
+                    m_drivetrainSubsystem.getGyroscopeRotation()
+                )
+            );
         } else {
             m_drivetrainSubsystem.drive(
                 new ChassisSpeeds(
                     m_translationXSupplier.getAsDouble(), 
                     m_translationYSupplier.getAsDouble(), 
                     getTurnValue()
-            ));
+                )
+            );
         }
     }
 

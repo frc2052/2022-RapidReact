@@ -27,26 +27,30 @@ public class RobotContainer {
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryPannel = new Joystick(3);
+  private final Joystick m_secondaryPannel = new Joystick(2);
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
-  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
+  // Slew rate limiters to make joystick inputs more gentle.
+  // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private final UsbCameraSubsystem m_inakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-            dashboardControlsSubsystem
-    ));
+    m_drivetrainSubsystem.setDefaultCommand(
+      new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        dashboardControlsSubsystem
+      )
+    );
 
     // Configure the button bindings
     configureButtonBindings();
@@ -59,15 +63,19 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveCommandSwitch.whenHeld(new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      vision,
-      dashboardControlsSubsystem
-      ));
-    
-    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
+    driveCommandSwitch.whenHeld(
+      new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        vision,
+        dashboardControlsSubsystem
+      )
+    );
+
+    // TEMP to reset the gyro using a button on the secondary pannel to make 
+    // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
+    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
   }
 
   /**
@@ -76,7 +84,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
@@ -115,8 +122,7 @@ public class RobotContainer {
   // This code borrowed from the SwerverDriveSpecialist Sample code
   private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
-    value = deadband(value, 0.05);
-
+    value = deadband(value, 0.1);
     // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
     

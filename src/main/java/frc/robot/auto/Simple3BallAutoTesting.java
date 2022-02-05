@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.AutoVisionDriveCommand;
+import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -23,7 +23,7 @@ public class Simple3BallAutoTesting extends AutoBase {
 
         Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
         Pose2d shootAndDriveRotate = new Pose2d(Units.inchesToMeters(-96), Units.inchesToMeters(-130), Rotation2d.fromDegrees(-130));
-        
+        Supplier<Rotation2d> aimNeg130DegreesRight = () -> { return Rotation2d.fromDegrees(-130); };
         /*
         Pose2d start2 = new Pose2d(Units.inchesToMeters(35), Units.inchesToMeters(-30), Rotation2d.fromDegrees(-130));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130)); //wheels should be pointing 90 degrees from straight ahead at end of path
@@ -39,10 +39,9 @@ public class Simple3BallAutoTesting extends AutoBase {
 
         //SwerveControllerCommand rotate180ToFire = super.ceateSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, startPos2, ball1rotate, rotate180);
         //AutoVisionDriveCommand autoAim1 = new AutoVisionDriveCommand(drivetrain, vision);
-        //SwerveControllerCommand driveToBall2 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
-
+        // SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos2, shootPos, aimNeg130DegreesRight);
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
-        AutoVisionDriveCommand autoAim2 = new AutoVisionDriveCommand(drivetrain, vision);
+        VisionTurnInPlaceCommand autoAim2 = new VisionTurnInPlaceCommand(drivetrain, vision);
 
         //TODO: extend intake and turn on intake motors
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot
