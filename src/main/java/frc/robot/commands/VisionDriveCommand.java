@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -9,8 +10,9 @@ import java.util.function.DoubleSupplier;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
     private VisionSubsystem m_vision;
+    private DrivetrainSubsystem m_driveTrain;
     private double visionRotation = 0;
-    private double tx;
+    private double horizontalAngle;
     private boolean isLinedUp;
 
     public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
@@ -25,6 +27,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         dashboard);
 
         this.m_vision = vision;
+        this.m_driveTrain = drivetrainSubsystem;
     }
 
     @Override
@@ -36,14 +39,14 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     @Override
     protected double getTurnValue() {
         m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
-        tx = m_vision.getTx();      // Horizontal offset from the Limelight's crosshair to target.
+        horizontalAngle = m_vision.getTx() + drivingHorizontalFiringOffsetAngle();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 
         if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
-            if(Math.abs(tx) > 5) {
-                visionRotation = -Math.copySign(Math.toRadians(m_vision.getTx() * 9) , tx); // Dynamically changes rotation speed to be faster at a larger tx,
-            } else if(Math.abs(tx) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
-                visionRotation = -Math.copySign(Math.PI /4, tx);
+            if(Math.abs(horizontalAngle) > 5) {
+                visionRotation = -Math.copySign(Math.toRadians(horizontalAngle * 9) , horizontalAngle); // Dynamically changes rotation speed to be faster at a larger tx,
+            } else if(Math.abs(horizontalAngle) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+                visionRotation = -Math.copySign(Math.PI /4, horizontalAngle);
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
                 isLinedUp = true;
@@ -58,6 +61,16 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     public boolean getIsLinedUp() {
         return isLinedUp;
     }
+
+    private double drivingHorizontalFiringOffsetAngle() {
+        if(m_driveTrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+            return 0.0;
+        }
+        // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
+        double firingVelocity = 5.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
+        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters,2) + Math.pow(m_vision.xDistanceToUpperHub(), 2));
+        return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
+      }
 
     @Override
     public void end(boolean interrupted) {

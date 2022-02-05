@@ -119,11 +119,48 @@ public class VisionSubsystem extends SubsystemBase{
 
     public double xDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + ty))) + Constants.Limelight.kDistanceCalcOffset;
+      return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + ty))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
     public double xDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
-      return (Constants.Field.kUpperHubHeight - Constants.Limelight.kMountHeight) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngle + angle))) + Constants.Limelight.kDistanceCalcOffset;
+      return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + angle))) + Constants.Limelight.kDistanceCalcOffset;
+    }
+
+    public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation 
+      if(hasValidTarget()) {
+        // Logic to set the chassis rotation speed based on horizontal offset.
+        if(Math.abs(this.tx) > 5) {
+          return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
+        } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+          return -Math.copySign(Math.PI /4, this.tx);
+        } else {
+          return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+        }
+      } else {
+        // No target found so don't turn.
+        return 0;
+      }
+    }
+
+    /**
+     * Allways check if vision has a valid target.
+     * 
+     * @return
+     */
+    public double getRotationToTarget() {
+      if(hasValidTarget()) {
+        // Logic to set the chassis rotation speed based on horizontal offset.
+        if(Math.abs(this.tx) > 5) {
+          return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
+        } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+          return -Math.copySign(Math.PI /4, this.tx);
+        } else {
+          return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+        }
+      } else {
+        // No target found so don't turn.
+        return 0;
+      }
     }
 
     public void putToSmartDashboard() {
@@ -136,6 +173,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("Latency: ", tl + "ms");
         SmartDashboard.putNumber("Pipeline: ", getpipe);
         SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+        SmartDashboard.putBoolean("Enable Limelight LEDs", lledMode.getDouble(0.0) == 1.0 ? false : (lledMode.getDouble(0.0) == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
 
         SmartDashboard.putNumber("xDistance away (Meters): ", xDistanceToUpperHub());
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()));
