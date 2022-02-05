@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.TwoWheelFly;
+import frc.robot.subsystems.TwoWheelFlySubsystem;
 
-public class WheelVelocity extends CommandBase {
+public class WheelVelocityCommand extends CommandBase {
   
-  private TwoWheelFly twoWheelFly;
+  private final TwoWheelFlySubsystem twoWheelFly;
 
-  public WheelVelocity(TwoWheelFly twoWheelFly) { 
+  public WheelVelocityCommand(TwoWheelFlySubsystem twoWheelFly) { 
     this.twoWheelFly = twoWheelFly;
   }
 

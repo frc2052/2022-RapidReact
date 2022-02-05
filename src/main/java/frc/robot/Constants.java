@@ -21,6 +21,7 @@ public final class Constants {
         public static final int TOP_SHOOTER_MOTOR = 92;
         public static final int BOTTOM_SHOOTER_MOTOR = 93;
         public static final int INDEXER_MOTOR = 94;
+        public static final int INDEXER_MOTOR_FEEDER = 95;
         public static final int ARM_MOTOR = 87;
     } 
     public static final class Solenoids {
@@ -39,6 +40,7 @@ public final class Constants {
         public static final double INDEXER_SPEED = .75;
         public static final double TOPWHEELSPEED = 5;
         public static final double BOTTOMWHEELSPEED = 5;
+        public static final double FEEDER_SPEED = .75;
     }
     
     public static final class Field {
