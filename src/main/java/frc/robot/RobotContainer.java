@@ -24,6 +24,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+  private final Intake intake = new Intake();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
@@ -38,7 +39,7 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
-  //private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+  //private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem(); // Commented out for now to make Limelight stream work
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -74,8 +75,8 @@ public class RobotContainer {
     );
 
     // TEMP to reset the gyro using a button on the secondary pannel to make 
-    // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
-    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
+    // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
+    resetGyroButton.whenPressed(() -> { this.resetGyro(); }, m_drivetrainSubsystem); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
   }
 
   /**
@@ -103,7 +104,7 @@ public class RobotContainer {
       case MIDDLE_TERMINAL_3:
         return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision);
+        return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision, intake);
       case FIVE_BALL:
         return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
       default:

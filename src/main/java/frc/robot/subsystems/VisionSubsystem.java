@@ -107,12 +107,11 @@ public class VisionSubsystem extends SubsystemBase{
           // TODO switch back to default pipeline with option to choose in SmartDashboard
           this.setPipeline(0);
           lcamMode.setDouble(0.0);  // Camera is used for vision processing
-          setPipeline(0);
           break;
         case DRIVER:
-          setLED(LEDMode.OFF);
+          this.setLED(LEDMode.OFF);
           lcamMode.setDouble(1.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
-          setPipeline(1);   // Change to pipeline 
+          this.setPipeline(1);   // Change to pipeline 
           break;
       }
     }
