@@ -28,10 +28,10 @@ public class ThreeballDriveAndShoot extends AutoBase {
         Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
         Pose2d driveTowardsBall2 = new Pose2d(Units.inchesToMeters(18.33), Units.inchesToMeters(-80), Rotation2d.fromDegrees(-130)); // To stop at point along the way to the ball, can be figured out by making equation for the line
         Supplier<Rotation2d> aimAtHub = () -> { // Lambda that calls everything in the brackets every time the Suppier is accessed.
-            m_vision.updateLimelight();
+            vision.updateLimelight();
             Rotation2d rotation;
             if(m_vision.hasValidTarget()) {
-                rotation = m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())).plus(Rotation2d.fromDegrees(getHorizontalFiringOffsetAdvanced(drivetrain, vision)));
             } else {
                 rotation = Rotation2d.fromDegrees(170);
             }
@@ -68,5 +68,18 @@ public class ThreeballDriveAndShoot extends AutoBase {
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 
+    public double getHorizontalFiringOffsetAdvanced(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+        if(drivetrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+          return 0.0;
+        }
+        // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
+        double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
+        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters, 2) + Math.pow(vision.xDistanceToUpperHub(), 2));
+        return Math.atan(Math.toRadians(vision.xDistanceToUpperHub()*drivetrain.getLastWheelVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
+    }
 
+    public double getHorizontalFiringOffsetBasic(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+        double linearOffsetMultiplier = 0.5;
+        return drivetrain.getLastWheelVelocity()*linearOffsetMultiplier;
+    }
 }
