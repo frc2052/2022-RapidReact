@@ -31,14 +31,14 @@ public class ThreeballDriveAndShoot extends AutoBase {
             vision.updateLimelight();
             Rotation2d rotation;
             if(m_vision.hasValidTarget()) {
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())).plus(Rotation2d.fromDegrees(getHorizontalFiringOffsetAdvanced(drivetrain, vision)));
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())).minus(Rotation2d.fromDegrees(getHorizontalFiringOffsetAdvanced(drivetrain, vision)));
             } else {
                 rotation = Rotation2d.fromDegrees(170);
             }
             return rotation;
         };
 
-        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130));
+        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(-19.5), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130));
         Supplier<Rotation2d> spinToBall2 = () -> {   // TODO Get pixy cam to control this in the case we're not fully aligned with the ball
             return Rotation2d.fromDegrees(-130);
         };
