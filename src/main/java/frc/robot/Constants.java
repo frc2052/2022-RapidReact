@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -12,4 +14,93 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+// Constants shall be stored in meters
+public final class Constants {
+    public static final class MotorIDs {
+        public static final int PITCH_MOTOR = 91;
+        public static final int TOP_SHOOTER_MOTOR = 92;
+        public static final int BOTTOM_SHOOTER_MOTOR = 93;
+        public static final int INDEXER_MOTOR = 94;
+        public static final int INDEXER_MOTOR_FEEDER = 95;
+        public static final int ARM_MOTOR = 87;
+    } 
+    public static final class Solenoids {
+        public static final int CLOSE_A_SOLENOID = 0;
+        public static final int CLOSE_B_SOLENOID = 2;
+        public static final int OPEN_A_SOLENOID = 1;
+        public static final int OPEN_B_SOLENOID = 3;
+    } 
+    public static final class LimitSwitch {
+        public static final int CLAW_A_LIMIT_SWITCH = 7;
+        public static final int CLAW_B_LIMIT_SWITCH = 2;
+    
+    } 
+
+    public static final class ShooterSub {
+        public static final double INDEXER_SPEED = .75;
+        public static final double TOPWHEELSPEED = 5;
+        public static final double BOTTOMWHEELSPEED = 5;
+        public static final double FEEDER_SPEED = .75;
+    }
+    
+    public static final class Field {
+        public static final double kUpperHubHeightMeters = 2.64;
+    }
+
+    public static final class Limelight {
+        public static final double kMountHeightMeters = Units.inchesToMeters(19);
+        public static final double kMountAngleDegrees = 45;
+
+        public static final double kDistanceCalcOffset = 0;
+    }
+
+    public static final class DriveTrain{
+    /**
+     * The left-to-right distance between the drivetrain wheels
+     *
+     * Should be measured from center to center.
+     */
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
+    /**
+     * The front-to-back distance between the drivetrain wheels.
+     *
+     * Should be measured from center to center.
+     */
+    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
+
+
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 12;
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(36.241150 + 180);
+
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 7;
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 8;
+        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13;
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(355.187988 + 180);
+
+        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 3;
+        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4;
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(42.942810 + 180);
+
+        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 1;
+        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 2;
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
+
+        public static final double kDrivingAimAngleOffsetDegrees = 0.0;
+        public static final double kDrivingInRangeAngleOffsetDegrees = 0.0;
+    }
+    
+    public static final class Intake{
+        public static final double kIntakeSpeed = .75;
+        public static final double kHopperSpeed = .75;
+        //sets the speed of the motors
+    
+    }
+
+    public static final class Arm{
+
+        public static final double kArmSpeed  = .75;}
+}
