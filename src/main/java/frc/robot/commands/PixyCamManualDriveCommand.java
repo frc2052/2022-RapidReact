@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PixyCamSubSystem;
+import frc.robot.subsystems.PixyCamSubsystem;
 //import frc.robot.subsystems.PixyCamSubsystem.PixyBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PixyCamManualDriveCommand extends CommandBase {
-    private PixyCamSubSystem pixyCam;
+    private PixyCamSubsystem pixyCam;
   //private DriveTrainSubsystem driveTrain;
   //private Joystick tankJoy;
 
@@ -18,7 +18,7 @@ public class PixyCamManualDriveCommand extends CommandBase {
    * Creates a new PixyCamDrive.
    */
 
-  public PixyCamManualDriveCommand(PixyCamSubSystem pixy) {
+  public PixyCamManualDriveCommand(PixyCamSubsystem pixy) {
       pixyCam = pixy;
     // Use addRequirements() here to declare subsystem dependencies.
     //driveTrain = drive;

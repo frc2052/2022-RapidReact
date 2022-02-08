@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.PixyCamSubSystem;
+import frc.robot.subsystems.PixyCamSubsystem;
 import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 
 /**
@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private PixyCamSubSystem m_pixy;
+  private PixyCamSubsystem m_pixy;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_pixy = new PixyCamSubSystem();
+    m_pixy = new PixyCamSubsystem();
   }
 
   /** This function is called periodically during autonomous. */

@@ -7,17 +7,25 @@ import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 import io.github.pseudoresonance.pixy2api.links.SPILink;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PixyCamConstants;
 
-public class PixyCamSubSystem extends SubsystemBase {
+public class PixyCamSubsystem extends SubsystemBase {
 
-    private Pixy2 m_pixy;
+	private Pixy2 m_pixy;
 
-    public PixyCamSubSystem(){
+	public PixyCamSubsystem() {
         m_pixy = Pixy2.createInstance(new SPILink());
         m_pixy.init();
         m_pixy.setLamp((byte)0,(byte)1);
         m_pixy.setLED(0,30,255);        
     }
+
+	@Override
+	public void periodic() {
+		super.periodic();
+
+		SmartDashboard.putNumber("Pixyblock.Angle", hasRedBall() ? angleToRedBall() : 0);
+	}
 
     public Block getBlueBiggestBlock() {
 		// Gets the number of "blocks", identified targets, that match signature 1 on the Pixy2,
@@ -32,7 +40,6 @@ public class PixyCamSubSystem extends SubsystemBase {
 		Block largestBlock = null;
 		for (Block block : blocks) { // Loops through all blocks and finds the widest one
 			SmartDashboard.putNumber("Pixyblock.signature",  block.getSignature());
-			SmartDashboard.putNumber("Pixyblock.Angle", block.getX());
 			SmartDashboard.putNumber("Pixyblock.X-value",  block.getX());
 			SmartDashboard.putNumber("Pixyblock.Y-value",  block.getY());
 			SmartDashboard.putNumber("Pixyblock.Witdth",  block.getWidth());
@@ -87,7 +94,8 @@ public class PixyCamSubSystem extends SubsystemBase {
 		if (biggestBlock == null) {
 			return 0;
 		}else{
-			return Math.abs(((- 158)/(316/60)));
+			//return Math.abs(((- 158)/(316/60)));
+			return (biggestBlock.getX() - PixyCamConstants.IMAGE_WIDTH_PIXELS/2)*(PixyCamConstants.FOV/PixyCamConstants.IMAGE_WIDTH_PIXELS);
 		}
 	}
 
