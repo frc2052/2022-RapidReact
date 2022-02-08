@@ -7,9 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.PixyCamManualDriveCommand;
+//import frc.robot.commands.PixyCamManualDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.PixyCamSubsystem;
+//import frc.robot.subsystems.PixyCamSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -25,9 +25,9 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
-  private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
+  //private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
   //pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
-  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
+ // private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,9 +47,11 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   */
+  */ 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return pixyCmd;
+    //System.out.println("Auto Command");
+    return null;
   }
+  
 }

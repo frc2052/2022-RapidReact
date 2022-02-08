@@ -1,15 +1,16 @@
+
 package frc.robot.commands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.PixyCamSubsystem;
-import frc.robot.subsystems.PixyCamSubsystem.PixyBlock;
+import frc.robot.subsystems.PixyCamSubSystem;
+//import frc.robot.subsystems.PixyCamSubsystem.PixyBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PixyCamManualDriveCommand extends CommandBase {
-    private PixyCamSubsystem pixyCam;
+    private PixyCamSubSystem pixyCam;
   //private DriveTrainSubsystem driveTrain;
   //private Joystick tankJoy;
 
@@ -17,7 +18,7 @@ public class PixyCamManualDriveCommand extends CommandBase {
    * Creates a new PixyCamDrive.
    */
 
-  public PixyCamManualDriveCommand(PixyCamSubsystem pixy) {
+  public PixyCamManualDriveCommand(PixyCamSubSystem pixy) {
       pixyCam = pixy;
     // Use addRequirements() here to declare subsystem dependencies.
     //driveTrain = drive;
@@ -25,13 +26,19 @@ public class PixyCamManualDriveCommand extends CommandBase {
     //addRequirements(driveTrain);
   }
 
+  /*
   public void getBallPosition() { 
     double xOffset;
 
+//    System.out.println("Read Pixycam");
     ArrayList<PixyBlock> list = pixyCam.read();//list of objects that mach the color that i config the camera to do
 
-    if (list != null && list.size() > 0){ //the camera sees an object it is true. 
+    if (list == null) {
+//      System.err.println("******************* NULL *******************");
+    }    
+    else if (list != null && list.size() > 0){ //the camera sees an object it is true. 
       
+      System.err.println("FOUND SOMETHING");
         Collections.sort(list, new Comparator<PixyBlock>() { //sort objects so that the smallest objects are first in the list
             @Override
             public int compare(PixyBlock first, PixyBlock second) {
@@ -40,9 +47,9 @@ public class PixyCamManualDriveCommand extends CommandBase {
       });
 
       Collections.reverse(list);//reverses the list order
-    } else {
-      System.out.println("incoming list empty");//list is empty
-      SmartDashboard.putNumber("PixyOffset", -999);
+    } else {      
+//      System.out.println("incoming list empty");//list is empty
+      SmartDashboard.putNumber("PixyOffset", -998);
     }
 
     if(list !=null && list.size() > 0){//same as line 35 
@@ -55,7 +62,7 @@ public class PixyCamManualDriveCommand extends CommandBase {
       }
 
       SmartDashboard.putNumber("PixyOffset", xOffset);
-    
+      
 
       //double turnPercent = -xOffset/100.0;
      // double turnSpeed = Constants.PixyCamDriveConstants.turnSpeed * turnPercent;
@@ -65,11 +72,11 @@ public class PixyCamManualDriveCommand extends CommandBase {
     }
 
   }
-
+*/
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    getBallPosition();
+    pixyCam.getBlueBiggestBlock();
   }
 
   // Returns true when the command should end.
