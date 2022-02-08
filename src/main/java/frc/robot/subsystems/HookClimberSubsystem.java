@@ -62,7 +62,7 @@ public class HookClimberSubsystem {
     }
 
     private double heightInInchesToTicks(double inches) {
-        double numberOfRotaions = inches / Constants.Arm.WINCH_CIRCUMFRENCE_INCHES;
+        double numberOfRotaions = inches / Constants.Arm.WINCH_CIRCUMFERENCE_INCHES;
         return numberOfRotaions * Constants.Arm.TICKS_PER_WINCH_ROTATION;
 
     }

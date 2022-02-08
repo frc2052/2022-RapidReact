@@ -104,7 +104,7 @@ public final class Constants {
     public static final class Arm{
 
         public static final double kArmSpeed  = .75;
-        public static final double WINCH_CIRCUMFRENCE_INCHES = .8 * Math.PI;
+        public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
         // our gearbox ratio is 12
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
     }
