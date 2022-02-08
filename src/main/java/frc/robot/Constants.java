@@ -22,6 +22,7 @@ public final class Constants {
         public static final int BOTTOM_SHOOTER_MOTOR = 93;
         public static final int INDEXER_MOTOR = 94;
         public static final int ARM_MOTOR = 87;
+        public static final int EXTEND_ARM_MOTOR = 88;
     } 
     public static final class Solenoids {
         public static final int CLOSE_A_SOLENOID = 0;
@@ -102,5 +103,10 @@ public final class Constants {
 
     public static final class Arm{
 
-        public static final double kArmSpeed  = .75;}
+        public static final double kArmSpeed  = .75;
+        public static final double WINCH_CIRCUMFRENCE_INCHES = .8 * Math.PI;
+        // our gearbox ratio is 12
+        public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
+    }
+    
 }
