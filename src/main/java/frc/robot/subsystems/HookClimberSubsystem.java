@@ -5,9 +5,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class HookClimberSubsystem {
+public class HookClimberSubsystem extends SubsystemBase{
 
     private Solenoid forward1Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
             Constants.Solenoids.FORWARD_1_SOLENOID);
@@ -18,7 +19,7 @@ public class HookClimberSubsystem {
     private Solenoid backward2Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
             Constants.Solenoids.BACKWARD_2_SOLENOID);
     private TalonFX extendArmMotor = new TalonFX(Constants.MotorIDs.EXTEND_ARM_MOTOR);
-
+    private double desiredPosition;
     // This extend the arm at a set speed
     public void extendArm() {
         extendArmMotor.set(ControlMode.PercentOutput, Constants.Arm.kArmSpeed);
@@ -26,6 +27,10 @@ public class HookClimberSubsystem {
     public void setArmPostionInches(double inches){
         double ticks = heightInInchesToTicks(inches);
         extendArmMotor.set(ControlMode.Position, ticks);
+        desiredPosition = ticks;
+    }
+    public boolean isAtDesiredPosition(){
+        return extendArmMotor.getSelectedSensorPosition() == desiredPosition;
     }
 
     // This retract the arm at a set speed
@@ -64,6 +69,5 @@ public class HookClimberSubsystem {
     private double heightInInchesToTicks(double inches) {
         double numberOfRotaions = inches / Constants.Arm.WINCH_CIRCUMFERENCE_INCHES;
         return numberOfRotaions * Constants.Arm.TICKS_PER_WINCH_ROTATION;
-
     }
 }
