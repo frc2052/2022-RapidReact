@@ -92,12 +92,12 @@ public class RobotContainer {
       case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
       case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
+        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision, intake);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case LEFT_TERMINAL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
-      case MIDDLE_TWO_DEFENSE:
+      case RIGHT_MIDDLE_TWO_DEFENSE:
         return new MiddleRight2CargoDefenseAuto(m_drivetrainSubsystem, vision);
       case LEFT_DEFENSE:
         return new LeftDefenseAuto(m_drivetrainSubsystem, vision);

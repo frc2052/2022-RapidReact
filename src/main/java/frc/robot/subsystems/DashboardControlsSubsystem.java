@@ -115,7 +115,7 @@ public class DashboardControlsSubsystem {
         LEFT_DEFENSE("Left start, shoot two and move opp ball"),
         MIDDLE_TERMINAL_3("center start, ball, then terminal ball"),
         MIDDLE_TERMINAL_DEFENSE("center start, terminal cargo and defense"),
-        MIDDLE_TWO_DEFENSE("Center start, two cargo and defense"),
+        RIGHT_MIDDLE_TWO_DEFENSE("Right middle start, two cargo and defense"),
         FIVE_BALL("Five ball dream auto, rightmost start");
 
         public String name;

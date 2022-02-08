@@ -1,6 +1,7 @@
 package frc.robot.auto;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -88,6 +89,21 @@ public class AutoBase  extends SequentialCommandGroup {
     protected SwerveControllerCommand createSwerveTrajectoryCommand(
         AutoTrajectoryConfig trajectoryConfig, 
         Pose2d startPose, 
+        Pose2d endPose,
+        List<Translation2d> midpointList
+    ) {
+        return createSwerveTrajectoryCommand(
+            trajectoryConfig,
+            startPose,
+            endPose,
+            midpointList,
+            () -> { return new Rotation2d(); }
+        );
+    }
+
+    protected SwerveControllerCommand createSwerveTrajectoryCommand(
+        AutoTrajectoryConfig trajectoryConfig, 
+        Pose2d startPose, 
         Pose2d endPose, 
         Supplier<Rotation2d> rotationSupplier
     ) {
@@ -116,7 +132,7 @@ public class AutoBase  extends SequentialCommandGroup {
         AutoTrajectoryConfig trajectoryConfig, 
         Pose2d startPose, 
         Pose2d endPose, 
-        ArrayList<Translation2d> midpointList,
+        List<Translation2d> midpointList,
         Supplier<Rotation2d> rotationSupplier
     ) {
         m_lastCreatedEndingPose = endPose;
@@ -182,13 +198,26 @@ public class AutoBase  extends SequentialCommandGroup {
     //       return cmd;
     // }
 
+    protected Supplier<Rotation2d> createRotationAngle(double angle) {
+        return () -> { return Rotation2d.fromDegrees(angle); };
+    }
+
     protected Pose2d getLastEndingPosCreated() {
         return m_lastCreatedEndingPose;
+    }
+
+    protected Pose2d getLastEndingPosCreated(double rotation) {
+        return new Pose2d(m_lastCreatedEndingPose.getTranslation(), Rotation2d.fromDegrees(rotation));
     }
 
     protected Pose2d getLastEndingPosCreated(Rotation2d rotation) {
         return new Pose2d(m_lastCreatedEndingPose.getTranslation(), rotation);
     }
 
-
+//    public enum StartPos {
+//        PositionA,
+//        PositionB,
+//        PositionC,
+//        PositionD,
+//  }
 }
