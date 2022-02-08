@@ -32,8 +32,10 @@ public class RobotContainer {
   
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
+  private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
+  private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
   private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
-
+  
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
@@ -71,6 +73,8 @@ public class RobotContainer {
     
     resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
     intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
+    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
+    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
   }
 
   /**
