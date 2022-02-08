@@ -33,6 +33,8 @@ public final class Constants {
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
+        public static final int INDEXER_PRELOAD = 0;
+        public static final int INDEXER_FEEDER = 1;
     
     } 
 
