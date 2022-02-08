@@ -47,13 +47,13 @@ public class ThreeballDriveAndShoot extends AutoBase {
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(135); };
 
         // Create SwerveControllerCommands
-        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, startPos2, driveTowardsBall2, aimAtHub);
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
+        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, startPos2, driveTowardsBall2, aimAtHub);
 
         //ParallelCommandGroup driveAndShootToBall2 = new ParallelCommandGroup(aimWhileDrivingToBall2/*, shooterCommand*/);
 
-        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, super.getLastEndingPosCreated(), arriveAtBall2, spinToBall2);
-        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(), arriveAtBall2, spinToBall2);
+        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
 
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 

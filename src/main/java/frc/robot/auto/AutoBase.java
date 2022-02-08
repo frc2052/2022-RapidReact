@@ -25,23 +25,50 @@ public class AutoBase  extends SequentialCommandGroup {
     // private PIDController m_slowXYController;
     // private ProfiledPIDController m_slowThetaController;
 
-    protected final AutoTrajectoryConfig m_slowTrajectoryConfig;
-    protected final AutoTrajectoryConfig m_fastTrajectoryConfig;
+    protected final AutoTrajectoryConfig slowTrajectoryConfig;
+    protected final AutoTrajectoryConfig fastTurnTrajectoryConfig;
+    protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
+    protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
     public AutoBase(DrivetrainSubsystem drivetrain) {
         m_drivetrain = drivetrain;
         m_swerveDriveKinematics = drivetrain.getKinematics();
 
-        m_slowTrajectoryConfig = new AutoTrajectoryConfig(
+        slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(m_swerveDriveKinematics), 
             new PIDController(1, 0, 0),
             new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
         );
 
-        m_fastTrajectoryConfig = new AutoTrajectoryConfig(
+        fastTurnTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(4, 2.5).setKinematics(m_swerveDriveKinematics), // Speed of actions, 1st TrajectoryFactory value is max velocity and 2nd is max accelaration.
             new PIDController(0.25, 0, 0),  // The XY controller PID value
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 4*Math.PI)) // Turning PID COntroller. Increasing 1st value increases speed of turning, and the TrapezoidalProfile is our contraints of these values.
+        );
+
+        fastTurnSlowDriveTrajectoryConfig = new AutoTrajectoryConfig(
+            new TrajectoryConfig(1, 0.5).setKinematics(m_swerveDriveKinematics), 
+            new PIDController(0.1, 0, 0),
+            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
+        );
+
+        speedDriveTrajectoryConfig = new AutoTrajectoryConfig(
+            new TrajectoryConfig(5, 4).setKinematics(m_swerveDriveKinematics), 
+            new PIDController(1, 0, 0),
+            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
+        );
+    }
+
+    // Most basic deafult swerve command, automatically using slowTrajectoryConfig.
+    protected SwerveControllerCommand createSwerveTrajectoryCommand(
+        Pose2d startPose, 
+        Pose2d endPose
+    ) {
+        return createSwerveTrajectoryCommand(
+            slowTrajectoryConfig,
+            startPose,
+            endPose,
+            () -> { return new Rotation2d(); }
         );
     }
 
@@ -70,6 +97,34 @@ public class AutoBase  extends SequentialCommandGroup {
             TrajectoryGenerator.generateTrajectory(
                 startPose,
                 new ArrayList<Translation2d>(), //no midpoints in path (S curve)
+                endPose,
+                trajectoryConfig.getTrajectoryConfig()
+            ),
+            m_drivetrain::getPose,
+            m_swerveDriveKinematics,
+            trajectoryConfig.getXYController(),
+            trajectoryConfig.getXYController(),
+            trajectoryConfig.getThetaController(), 
+            rotationSupplier,
+            m_drivetrain::setModuleStates,
+            m_drivetrain
+        );
+    }
+
+    // Swerve controller command for adding an ArrayList of midpoints.
+    protected SwerveControllerCommand createSwerveTrajectoryCommand(
+        AutoTrajectoryConfig trajectoryConfig, 
+        Pose2d startPose, 
+        Pose2d endPose, 
+        ArrayList<Translation2d> midpointList,
+        Supplier<Rotation2d> rotationSupplier
+    ) {
+        m_lastCreatedEndingPose = endPose;
+
+        return new SwerveControllerCommand(
+            TrajectoryGenerator.generateTrajectory(
+                startPose,
+                midpointList,
                 endPose,
                 trajectoryConfig.getTrajectoryConfig()
             ),
