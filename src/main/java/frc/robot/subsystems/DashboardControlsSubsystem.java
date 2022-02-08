@@ -112,7 +112,7 @@ public class DashboardControlsSubsystem {
         SIMPLE_3_BALL_TESTING("Simple 3 Ball using front intake"),
         THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot"),
         LEFT_TERMINAL("3 Ball - Terminal Cargo"),
-        MIDDLE_DEFENSE("center start, with defense only"),
+        LEFT_DEFENSE("Left start, shoot two and move opp ball"),
         MIDDLE_TERMINAL_3("center start, ball, then terminal ball"),
         MIDDLE_TERMINAL_DEFENSE("center start, terminal cargo and defense"),
         MIDDLE_TWO_DEFENSE("Center start, two cargo and defense"),
