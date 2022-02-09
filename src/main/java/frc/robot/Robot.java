@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.PixyCamSubsystem;
+import frc.robot.subsystems.PixyCamSubsystem.BallColor;
 import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 
 /**
@@ -77,22 +80,25 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    System.err.println("AUTO");
-    Block b = m_pixy.getBlueBiggestBlock();
-    if (b == null) {
-      System.err.println("****************BLOCK IS NULL**********************");
-    } else {
-      System.err.println("**************BLOCK SIZE " + b.getHeight());
-    }
-   {
-    System.err.println("AUTO");
-    Block r = m_pixy.getRedBiggestBlock();
-    if (r == null) {
-      System.err.println("****************BLOCK IS NULL**********************");
-    } else {
-      System.err.println("**************BLOCK SIZE " + r.getHeight());
-    }
-  }
+    Rotation2d angle = m_pixy.angleToBall(BallColor.BLUE);
+		SmartDashboard.putString("Pixyblock.Angle", (angle != null) ? angle.toString() : "-------");
+
+  //   System.err.println("AUTO");
+  //   Block b = m_pixy.getBiggestBlock(BallColor.BLUE);
+  //   if (b == null) {
+  //     System.err.println("****************BLOCK IS NULL**********************");
+  //   } else {
+  //     System.err.println("**************BLOCK SIZE " + b.getHeight());
+  //   }
+  //  {
+  //   System.err.println("AUTO");
+  //   Block r = m_pixy.getBiggestBlock(BallColor.RED);
+  //   if (r == null) {
+  //     System.err.println("****************BLOCK IS NULL**********************");
+  //   } else {
+  //     System.err.println("**************BLOCK SIZE " + r.getHeight());
+  //   }
+  // }
 
   }
 

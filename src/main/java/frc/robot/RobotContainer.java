@@ -27,7 +27,6 @@ public class RobotContainer {
   // private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
-  //pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
   private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
 
   private final Joystick m_driveJoystick = new Joystick(0);
@@ -47,6 +46,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
     // m_drivetrainSubsystem.setDefaultCommand(
     //   new DefaultDriveCommand(
     //     m_drivetrainSubsystem,

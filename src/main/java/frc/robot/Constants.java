@@ -54,8 +54,8 @@ public final class Constants {
     }
 
     public static final class PixyCamConstants {
-        public static final int FOV = 120;
-        public static final int IMAGE_WIDTH_PIXELS = 316;
+        public static final double FOV = 60;
+        public static final double IMAGE_WIDTH_PIXELS = 316;
 
 
     }

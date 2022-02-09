@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PixyCamSubsystem;
+import frc.robot.subsystems.PixyCamSubsystem.BallColor;
 //import frc.robot.subsystems.PixyCamSubsystem.PixyBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,7 +24,7 @@ public class PixyCamManualDriveCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     //driveTrain = drive;
     //tankJoy = joystick;
-    //addRequirements(driveTrain);
+    addRequirements(pixy);
   }
 
   /*
@@ -76,7 +77,7 @@ public class PixyCamManualDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pixyCam.getBlueBiggestBlock();
+    //pixyCam.getBiggestBlock(BallColor.BLUE);
   }
 
   // Returns true when the command should end.
