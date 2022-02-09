@@ -76,7 +76,6 @@ public class RobotContainer {
       )
     );
 
-    // TEMP to reset the gyro using a button on the secondary pannel to make 
     // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
     resetGyroButton.whenPressed(() -> { this.resetGyro(); }, m_drivetrainSubsystem); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
   }
@@ -88,14 +87,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    // Go ahead and hover over auto constructors for each auto's detailed description.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
-      case AUTO_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+      case AUTO_TESTING:
       return new AutoTesting(m_drivetrainSubsystem, vision, intake);
-      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
+      case TEST_AUTO_1:
         return new TestAuto1(m_drivetrainSubsystem);
-      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+      case SIMPLE_3_BALL:
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-      case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
+      case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 

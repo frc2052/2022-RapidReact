@@ -15,22 +15,22 @@ public class VisionSubsystem extends SubsystemBase{
     private double tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, camMode, getpipe;
     private boolean hasValidTarget;
 
-    private NetworkTableEntry ltv = table.getEntry("tv"); // if the Limelight has any targets               between 0 and 1
-    private NetworkTableEntry ltx = table.getEntry("tx"); // horizontal offset from crosshair to target     between -29.8 and 29.8 (degrees) 
-    private NetworkTableEntry lty = table.getEntry("ty"); // vertical offset from crosshair to target       between -24.85 and 24.85 (degrees)
-    private NetworkTableEntry lta = table.getEntry("ta"); // target's area of the image                     between 0 and 100 (percent)  
-    private NetworkTableEntry lts = table.getEntry("ts"); // the skew or rotation                           between -90 and 0 (degrees)
-    private NetworkTableEntry ltl = table.getEntry("tl"); // the pipeline's latency contribution            at least 11ms
+    private NetworkTableEntry ltv = table.getEntry("tv"); // If the Limelight has any targets.              Value between 0.0 and 1.0.
+    private NetworkTableEntry ltx = table.getEntry("tx"); // Horizontal offset from crosshair to target.    Value between -29.8 and 29.8 (degrees).
+    private NetworkTableEntry lty = table.getEntry("ty"); // Vertical offset from crosshair to target.      Value between -24.85 and 24.85 (degrees).
+    private NetworkTableEntry lta = table.getEntry("ta"); // Target's area of the image.                    Value between 0 and 100 (percent).
+    private NetworkTableEntry lts = table.getEntry("ts"); // The skew or rotation.                          Value between -90 and 0 (degrees).
+    private NetworkTableEntry ltl = table.getEntry("tl"); // The pipeline's latency contribution.           Value greater than 0 (ms).
 
-    private NetworkTableEntry ltshort = table.getEntry("tshort");   // length of shortest bounding box side (pixels)
-    private NetworkTableEntry ltlong = table.getEntry("tlong");     // length of longest bounding box side  (pixels)
-    private NetworkTableEntry lthor = table.getEntry("thor");       // horizontal sidelength of bound box   0 - 320 (pixels) 
-    private NetworkTableEntry ltvert = table.getEntry("tvert");     // vertical sidelength of bound box     0 - 320 (pixels)
+    private NetworkTableEntry ltshort = table.getEntry("tshort");   // Length of shortest bounding box side (pixels)
+    private NetworkTableEntry ltlong = table.getEntry("tlong");     // Length of longest bounding box side  (pixels)
+    private NetworkTableEntry lthor = table.getEntry("thor");       // Horizontal sidelength of bound box   0 - 320 (pixels) 
+    private NetworkTableEntry ltvert = table.getEntry("tvert");     // Vertical sidelength of bound box     0 - 320 (pixels)
 
-    private NetworkTableEntry lledMode = table.getEntry("ledMode");
-    private NetworkTableEntry lcamMode = table.getEntry("camMode"); // can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
-    private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // true active pipeline index of camera 0 through 9
-    private NetworkTableEntry lpipeline = table.getEntry("pipeline");
+    private NetworkTableEntry lledMode = table.getEntry("ledMode"); // Current LED mode, value between 0.0 and 4.0, explained in setLED() method.
+    private NetworkTableEntry lcamMode = table.getEntry("camMode"); // Can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
+    private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // True active pipeline index of camera 0 through 9.
+    private NetworkTableEntry lpipeline = table.getEntry("pipeline"); // NetworkTableEntry needed for setting pipeline value.
 
     /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
@@ -42,19 +42,19 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry cy1 = table.getEntry("cy1");          // Crosshair B Y in normalized screen space
     */
 
-    public void updateLimelight() {
-        this.tx = this.ltx.getDouble(0.0);
-        this.ty = this.lty.getDouble(0.0);
-        this.ta = this.lta.getDouble(0.0);
-        this.ts = this.lts.getDouble(0.0);
-        this.tl = this.ltl.getDouble(0.0);
+    public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
+        tx = ltx.getDouble(0.0);
+        ty = lty.getDouble(0.0);
+        ta = lta.getDouble(0.0);
+        ts = lts.getDouble(0.0);
+        tl = ltl.getDouble(0.0);
 
-        this.tshort = this.ltshort.getDouble(0.0);
-        this.tlong = this.ltlong.getDouble(0.0);
-        this.thor = this.lthor.getDouble(0.0);
-        this.tvert = this.ltvert.getDouble(0.0);
-        this.camMode = this.lcamMode.getDouble(0.0);
-        this.getpipe = this.lgetpipe.getDouble(0.0);
+        tshort = ltshort.getDouble(0.0);
+        tlong = ltlong.getDouble(0.0);
+        thor = lthor.getDouble(0.0);
+        tvert = ltvert.getDouble(0.0);
+        camMode = lcamMode.getDouble(0.0);
+        getpipe = lgetpipe.getDouble(0.0);
         
         hasValidTarget = ltv.getDouble(0.0) == 1.0;
     }
@@ -76,8 +76,8 @@ public class VisionSubsystem extends SubsystemBase{
       return hasValidTarget;
     }
 
-    public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile')
-        if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines
+    public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile').
+        if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines.
           lpipeline.setDouble((double) pipeline);
         else
           System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
@@ -86,16 +86,16 @@ public class VisionSubsystem extends SubsystemBase{
     public void setLED(LEDMode mode) {
       switch(mode) {
         case PIPELINE:
-          lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline
+          lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline.
           break;
         case OFF:
-          lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off
+          lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off.
           break;
         case BLINK:
-          lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink
+          lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink.
           break;
         case ON:
-          lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on
+          lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on.
           break;
       }
     }
@@ -104,14 +104,13 @@ public class VisionSubsystem extends SubsystemBase{
       switch(mode) {
         case VISION:
           setLED(LEDMode.ON);
-          // TODO switch back to default pipeline with option to choose in SmartDashboard
-          this.setPipeline(0);
-          lcamMode.setDouble(0.0);  // Camera is used for vision processing
+          lcamMode.setDouble(0.0);  // Camera is used for vision processing.
+          this.setPipeline(0);      // Change to default pipeline for vision processing.
           break;
         case DRIVER:
           this.setLED(LEDMode.OFF);
-          lcamMode.setDouble(1.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver
-          this.setPipeline(1);   // Change to pipeline 
+          lcamMode.setDouble(1.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver.
+          this.setPipeline(9);      // Change to pipeline intended for driver cam.
           break;
       }
     }
@@ -125,7 +124,7 @@ public class VisionSubsystem extends SubsystemBase{
       return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
-    public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation 
+    public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation.
       if(hasValidTarget()) {
         // Logic to set the chassis rotation speed based on horizontal offset.
         if(Math.abs(this.tx) > 5) {
@@ -136,29 +135,7 @@ public class VisionSubsystem extends SubsystemBase{
           return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
         }
       } else {
-        // No target found so don't turn.
-        return 0;
-      }
-    }
-
-    /**
-     * Allways check if vision has a valid target.
-     * 
-     * @return
-     */
-    public double getRotationToTarget() {
-      if(hasValidTarget()) {
-        // Logic to set the chassis rotation speed based on horizontal offset.
-        if(Math.abs(this.tx) > 5) {
-          return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
-        } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
-          return -Math.copySign(Math.PI /4, this.tx);
-        } else {
-          return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
-        }
-      } else {
-        // No target found so don't turn.
-        return 0;
+        return Math.PI; // If no target found rotate half a rotation per second to find target.
       }
     }
 

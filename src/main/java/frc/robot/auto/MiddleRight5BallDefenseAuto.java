@@ -39,7 +39,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(55), Units.inchesToMeters(5), Rotation2d.fromDegrees(0));
         Pose2d approachSecondBall = new Pose2d(Units.inchesToMeters(34), Units.inchesToMeters(65), Rotation2d.fromDegrees(166));
-        List<Translation2d> drivingMidpoint1 = List.of(new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(75)));
+        List<Translation2d> alignWithWallMidpoint = List.of(new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(75)));
         Pose2d opposingBallPos = new Pose2d(Units.inchesToMeters(-40),Units.inchesToMeters(115),Rotation2d.fromDegrees(166));
         Pose2d hangerShootPos = new Pose2d(Units.inchesToMeters(50),Units.inchesToMeters(45),Rotation2d.fromDegrees(-23));
         Pose2d approachTerminalBall = new Pose2d(Units.inchesToMeters(160), Units.inchesToMeters(-32), Rotation2d.fromDegrees(-23));
@@ -65,7 +65,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveAndShootToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnSlowDriveTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplier(170));
-        SwerveControllerCommand driveToBall2AndOpposing = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(150), opposingBallPos, drivingMidpoint1, super.createRotationAngle(150));
+        SwerveControllerCommand driveToBall2AndOpposing = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(150), opposingBallPos, alignWithWallMidpoint, super.createRotationAngle(150));
         SwerveControllerCommand driveAndAimBall2 = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(-23), hangerShootPos, super.createHubTrackingSupplier(-90));
         SwerveControllerCommand hangerShootToTerminalBall = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(-23), approachTerminalBall, super.createRotationAngle(-90));
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));

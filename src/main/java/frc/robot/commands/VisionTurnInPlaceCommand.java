@@ -59,7 +59,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )
             );
-            visionRotation = m_vision.getRotationToTarget();
+            //visionRotation = m_vision.getRotationSpeedToTarget();
         /*} else {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             m_drivetrainSubsystem.stop();
