@@ -22,7 +22,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem m_drivetrain;
 
     public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
-        super(drivetrain);
+        super(drivetrain, vision);
 
         m_drivetrain = drivetrain;
 

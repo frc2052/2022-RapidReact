@@ -16,7 +16,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class ThreeballDriveAndShoot extends AutoBase {
     public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        super(drivetrain);
+        super(drivetrain, vision);
 
         DrivetrainSubsystem m_drivetrain = drivetrain;
         VisionSubsystem m_vision = vision;

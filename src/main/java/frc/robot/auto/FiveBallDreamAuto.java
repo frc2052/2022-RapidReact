@@ -12,7 +12,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class FiveBallDreamAuto extends AutoBase {
     public FiveBallDreamAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        super(drivetrain);
+        super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));

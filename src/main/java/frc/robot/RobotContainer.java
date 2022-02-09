@@ -25,6 +25,8 @@ public class RobotContainer {
   private final VisionSubsystem vision = new VisionSubsystem();
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
   private final Intake intake = new Intake();
+  private final TwoWheelFlySubsystem shooter = new TwoWheelFlySubsystem();
+  private final IndexerSubsystem indexer = new IndexerSubsystem();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
@@ -98,7 +100,7 @@ public class RobotContainer {
       case LEFT_TERMINAL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
       case RIGHT_MIDDLE_TWO_DEFENSE:
-        return new MiddleRight2CargoDefenseAuto(m_drivetrainSubsystem, vision);
+        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
       case LEFT_DEFENSE:
         return new LeftDefenseAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_3:

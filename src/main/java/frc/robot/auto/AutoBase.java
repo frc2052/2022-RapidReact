@@ -16,9 +16,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoBase  extends SequentialCommandGroup {
     private DrivetrainSubsystem m_drivetrain;
+    private VisionSubsystem m_vision;
     private SwerveDriveKinematics m_swerveDriveKinematics;
     private Pose2d m_lastCreatedEndingPose;
 
@@ -31,8 +33,9 @@ public class AutoBase  extends SequentialCommandGroup {
     protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
     protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
-    public AutoBase(DrivetrainSubsystem drivetrain) {
+    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         m_drivetrain = drivetrain;
+        m_vision = vision;
         m_swerveDriveKinematics = drivetrain.getKinematics();
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
@@ -42,19 +45,19 @@ public class AutoBase  extends SequentialCommandGroup {
         );
 
         fastTurnTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(4, 2.5).setKinematics(m_swerveDriveKinematics), // Speed of actions, 1st TrajectoryFactory value is max velocity and 2nd is max accelaration.
-            new PIDController(0.25, 0, 0),  // The XY controller PID value
+            new TrajectoryConfig(3, 1.5).setKinematics(m_swerveDriveKinematics), // Speed of actions, 1st TrajectoryFactory value is max velocity and 2nd is max accelaration.
+            new PIDController(1, 0, 0),  // The XY controller PID value
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 4*Math.PI)) // Turning PID COntroller. Increasing 1st value increases speed of turning, and the TrapezoidalProfile is our contraints of these values.
         );
 
         fastTurnSlowDriveTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(1, 0.5).setKinematics(m_swerveDriveKinematics), 
-            new PIDController(0.1, 0, 0),
+            new TrajectoryConfig(2, 1.5).setKinematics(m_swerveDriveKinematics), 
+            new PIDController(0.25, 0, 0),
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
         );
 
         speedDriveTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(5, 4).setKinematics(m_swerveDriveKinematics), 
+            new TrajectoryConfig(4.5, 3.5).setKinematics(m_swerveDriveKinematics), 
             new PIDController(1, 0, 0),
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
         );
@@ -200,6 +203,19 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Supplier<Rotation2d> createRotationAngle(double angle) {
         return () -> { return Rotation2d.fromDegrees(angle); };
+    }
+
+    protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
+        return () -> {
+            Rotation2d rotation;
+            m_vision.updateLimelight();
+            if(m_vision.hasValidTarget()) {
+                rotation = m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(m_vision.getTx()));
+            } else {
+                rotation = Rotation2d.fromDegrees(noTargetAngle);
+            }
+            return rotation;
+        };
     }
 
     protected Pose2d getLastEndingPosCreated() {
