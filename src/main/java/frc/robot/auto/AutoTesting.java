@@ -21,8 +21,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class Simple3BallAutoTesting extends AutoBase {
-    public Simple3BallAutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
+public class AutoTesting extends AutoBase {
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         

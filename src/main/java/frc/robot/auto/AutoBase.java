@@ -21,7 +21,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AutoBase  extends SequentialCommandGroup {
     private DrivetrainSubsystem m_drivetrain;
     private VisionSubsystem m_vision;
-    private SwerveDriveKinematics m_swerveDriveKinematics;
+    protected SwerveDriveKinematics m_swerveDriveKinematics;
     private Pose2d m_lastCreatedEndingPose;
 
     // private TrajectoryConfig m_slowTrajectoryConfig;

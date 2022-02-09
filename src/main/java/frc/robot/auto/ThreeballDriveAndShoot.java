@@ -15,6 +15,14 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class ThreeballDriveAndShoot extends AutoBase {
+
+    /**
+    * Position A Start (Far Right Parallel with Outer Tarmac Line)
+    * Varient of Simple3BallAuto originally used for testing driving while aiming at UpperHub in auto.
+    * Curretnly only left for driving with horizontal offset aiming based on velocity.
+    * @param drivetrain
+    * @param vision
+    */
     public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
 

@@ -12,6 +12,13 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class Simple3BallAuto extends AutoBase {
+
+     /**
+     * Position A Start (Far Right parallel with outer Tarmac line)
+     * Simple auto to score 3 alliance cargo.
+     * @param drivetrain
+     * @param vision
+     */
     public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);

@@ -9,9 +9,18 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class LeftDefenseAuto extends AutoBase {
+
+    /**
+     * Position D Start (Far Left Parallel with Outer Tarmac Line).
+     * First intakes closest alliance ball, then turns and reapproaches tarmac to score 2.
+     * Then drives to and intakes closest opponent cargo, and turns and fires it into the hanger.
+     * (Potential for trying to get a ball that comes out of the exits with this one)
+     * @param drivetrain
+     * @param vision
+     */
     public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
-        vision.setLED(LEDMode.OFF);
+        vision.setLED(LEDMode.ON);
         //Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         //Supplier<Rotation2d> aimNeg90 = () -> { return Rotation2d.fromDegrees(-90);};
         //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);

@@ -11,6 +11,16 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class FiveBallDreamAuto extends AutoBase {
+
+    /**
+     * Position A Start (Far Right Parallel with Outer Tarmac Line).
+     * Will immediatley shoot preloaded cargo, turn around, and intake closest alliance cargo.
+     * Will then drive to and intake second closest alliance cargo, and return to a position to shoot both.
+     * Will drive to terminal cargo and wait a second to try and make sure cargo rolled out of terminal is in'tooken'.
+     * Will then drive back to location just outside tarmac but avoiding upper exit to score 1 or 2 cargo held.
+     * @param drivetrain
+     * @param vision
+     */
     public FiveBallDreamAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);

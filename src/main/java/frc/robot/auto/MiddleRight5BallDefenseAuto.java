@@ -3,9 +3,13 @@ package frc.robot.auto;
 import java.util.List;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -14,6 +18,20 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class MiddleRight5BallDefenseAuto extends AutoBase {
+
+    /**
+    * Starts at position B (Right Middle parallel with double lines that go to the hub).
+    * Intakes first ball straight ahead of it, and drives and shoots 2 cargo on its way to the second alliance cargo.
+    * Then adjusts using a midpoint and 150 degree turn to drive along the wall and intake both alliance cargo 2 and opposing cargo 1.
+    * Drives and shoots alliance cargo 2, then rotates to aim relativley in the direction of the hanger, and shoots opposing cargo 1.
+    * Drives and rotates to intake alliance cargo 3 and possible an additional alliance cargo if timed correctly by human player.
+    * Drives back to just outside the tarmac to fire all cargo into upper hub.
+     * @param drivetrain
+     * @param vision
+     * @param shooter
+     * @param intake
+     * @param indexer
+     */
     public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, Intake intake, IndexerSubsystem indexer) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
@@ -27,6 +45,23 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         Pose2d approachTerminalBall = new Pose2d(Units.inchesToMeters(160), Units.inchesToMeters(-32), Rotation2d.fromDegrees(-23));
         Pose2d terminalBallPos = new Pose2d(Units.inchesToMeters(190), Units.inchesToMeters(-42), Rotation2d.fromDegrees(-23));
         Pose2d driveBackToShoot = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(15), Rotation2d.fromDegrees(166));
+ 
+        // TESTING Custom AutoTrajectoryConfigs for continous trajectories.
+        AutoTrajectoryConfig continousSpeedDriveEndTrajectoryConfig = new AutoTrajectoryConfig(
+            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setEndVelocity(4), 
+            new PIDController(1, 0, 0),
+            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
+            );
+        AutoTrajectoryConfig continousSpeedDriveStartTrajectoryConfig = new AutoTrajectoryConfig(
+            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setStartVelocity(4), 
+            new PIDController(1, 0, 0),
+            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
+            );
+        AutoTrajectoryConfig continousSpeedDriveMidTrajectoryConfig = new AutoTrajectoryConfig(
+            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setEndVelocity(4).setStartVelocity(4), 
+            new PIDController(1, 0, 0),
+            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
+            );
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveAndShootToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnSlowDriveTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplier(170));

@@ -89,21 +89,21 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
+      case AUTO_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+      return new AutoTesting(m_drivetrainSubsystem, vision, intake);
       case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
         return new TestAuto1(m_drivetrainSubsystem);
       case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision, intake);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
-      case LEFT_TERMINAL: 
+      case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
-      case RIGHT_MIDDLE_TWO_DEFENSE:
+      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
         return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
-      case LEFT_DEFENSE:
+      case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(m_drivetrainSubsystem, vision);
-      case MIDDLE_TERMINAL_3:
+      case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
         return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intake);
