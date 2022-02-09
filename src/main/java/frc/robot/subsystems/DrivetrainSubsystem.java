@@ -205,7 +205,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 m_frontRightModule.set(0, m_frontRightModule.getSteerAngle());
                 m_backLeftModule.set(0, m_backLeftModule.getSteerAngle());
                 m_backRightModule.set(0, m_backRightModule.getSteerAngle());
-                System.err.print("******************STOPPED*****************");
         } else { 
                 //we are moving
                 m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
