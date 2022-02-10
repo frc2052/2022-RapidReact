@@ -52,7 +52,6 @@ public class AutoTesting extends AutoBase {
         this.addCommands(driveToShoot);
         this.addCommands(autoAim);
 
-
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
