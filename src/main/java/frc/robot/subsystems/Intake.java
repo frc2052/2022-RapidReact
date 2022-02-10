@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,15 +16,18 @@ import frc.robot.Constants;
     private VictorSPX hopperMotor;
 
     private double intakePct;
+    private boolean isIntakeArmOut = false;
 
     public void intakeArmIn(){
         inSolenoid.set(true);
         outSolenoid.set(false);
+        isIntakeArmOut = false;
     }
   
     public void intakeArmOut(){
         inSolenoid.set(false);
         outSolenoid.set(true);
+        isIntakeArmOut = true;
     }
 
     public void intakeOn(){
@@ -57,5 +61,9 @@ import frc.robot.Constants;
 
     public double getIntakeSpeed() {
         return intakePct;
+    }
+
+    public void putToSmartDashboard() {
+        SmartDashboard.putBoolean("Intake Arm Out", isIntakeArmOut);
     }
 }

@@ -107,7 +107,7 @@ public class RobotContainer {
       case MIDDLE_TERMINAL_DEFENSE:
         return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intake);
       case FIVE_BALL:
-        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
         return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
       default:
@@ -152,6 +152,7 @@ public class RobotContainer {
   public void printToSmartDashboard() {
     m_drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
+    intake.putToSmartDashboard();
   }
 
   public void resetGyro() {

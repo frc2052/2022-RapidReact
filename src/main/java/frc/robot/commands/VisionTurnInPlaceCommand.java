@@ -33,6 +33,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     public void execute() {
         m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
         //double rotation = m_vision.getRotationToTarget();
+        tx = m_vision.getTx();
         isLinedUp = false;
 
         if(m_vision.hasValidTarget()) {
@@ -46,7 +47,6 @@ public class VisionTurnInPlaceCommand extends CommandBase {
               isLinedUp = true;
             }
           } else {
-            // No target found so don't turn.
             visionRotation = Math.PI;
           }
 
