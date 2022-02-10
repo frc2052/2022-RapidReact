@@ -25,6 +25,7 @@ public class RobotContainer {
   private final VisionSubsystem vision = new VisionSubsystem();
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);

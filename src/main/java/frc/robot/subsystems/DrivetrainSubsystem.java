@@ -196,18 +196,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         lastwheelVelocity = states[0].speedMetersPerSecond;
 
-        m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
+        if (states[0].speedMetersPerSecond == 0
+                        && states[1].speedMetersPerSecond == 0 
+                        && states[2].speedMetersPerSecond == 0
+                        && states[3].speedMetersPerSecond == 0) {
+                //do not zero the wheel angle, just stop driving
+                m_frontLeftModule.set(0, m_frontLeftModule.getSteerAngle());
+                m_frontRightModule.set(0, m_frontRightModule.getSteerAngle());
+                m_backLeftModule.set(0, m_backLeftModule.getSteerAngle());
+                m_backRightModule.set(0, m_backRightModule.getSteerAngle());
+        } else { 
+                //we are moving
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
+                m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
+                m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
+                m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
 
-        odometry.update(
-                getGyroscopeRotation(),
-                states[0],
-                states[1],
-                states[2],
-                states[3]
-        );
+                odometry.update(
+                        getGyroscopeRotation(),
+                        states[0],
+                        states[1],
+                        states[2],
+                        states[3]
+                );
+        }
+
   }
 
   public SwerveDriveKinematics getKinematics() {
