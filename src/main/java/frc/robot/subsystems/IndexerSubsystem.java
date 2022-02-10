@@ -40,12 +40,12 @@ public class IndexerSubsystem extends SubsystemBase {
     feederIndexer.set(ControlMode.PercentOutput, 0);
   }
 
-  public double runLargeIndexerSpeed() {
+  public double getLargeIndexerSpeed() {
     double largeIndexerRunning = largeIndexer.getSelectedSensorVelocity();
     return largeIndexerRunning;
   }
 
-  public double runFeederIndexerSpeed() {
+  public double getFeederIndexerSpeed() {
     double feederIndexerRunning = feederIndexer.getSelectedSensorVelocity();
     return feederIndexerRunning;
   }
@@ -53,8 +53,8 @@ public class IndexerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Feeder Indexer Speed", runFeederIndexerSpeed());
-    SmartDashboard.putNumber("Large Indexer Speed", runLargeIndexerSpeed());
+    SmartDashboard.putNumber("Feeder Indexer Speed", getFeederIndexerSpeed());
+    SmartDashboard.putNumber("Large Indexer Speed", getLargeIndexerSpeed());
   }
   
 }
