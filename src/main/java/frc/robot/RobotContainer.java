@@ -27,6 +27,7 @@ public class RobotContainer {
   private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final Intake intake = new Intake();
+  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
