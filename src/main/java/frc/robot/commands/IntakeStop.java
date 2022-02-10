@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeStop extends CommandBase {
-    private final IntakeSubsystem m_intakeSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
 
-    public IntakeStop(IntakeSubsystem subsystem) {
-      m_intakeSubsystem = subsystem;
+    public IntakeStop(IntakeSubsystem intakeSubsystem) {
+      this.intakeSubsystem = intakeSubsystem;
       // Maybe add dependencies   
   }
   
     @Override
     public void execute() {
-        m_intakeSubsystem.intakeStop();
-        m_intakeSubsystem.hopperStop();
+        intakeSubsystem.intakeStop();
+        intakeSubsystem.hopperStop();
         //stops the intake
     }
     @Override

@@ -5,23 +5,23 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 
 public class IntakeArmOut extends CommandBase {
-    private final IntakeSubsystem m_intakeSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
 
   /**
    * Creates a new ArmToggle.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param intakeSubsystem The subsystem used by this command.
    */
-    public IntakeArmOut(IntakeSubsystem subsystem) {
-      m_intakeSubsystem = subsystem;
+    public IntakeArmOut(IntakeSubsystem intakeSubsystem) {
+      this.intakeSubsystem = intakeSubsystem;
       // Maybe add dependencies   
     }
       
     @Override
     public void execute() {
-      m_intakeSubsystem.intakeArmOut();
-      m_intakeSubsystem.intakeOn();
-      m_intakeSubsystem.hopperGo();
+      intakeSubsystem.intakeArmOut();
+      intakeSubsystem.intakeOn();
+      intakeSubsystem.hopperGo();
       //arm extends and spins the wheels
     }
     @Override
