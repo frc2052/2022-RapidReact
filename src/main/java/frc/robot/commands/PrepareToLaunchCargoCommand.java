@@ -26,7 +26,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   @Override
   public void execute() {
     twoWheelFly.runAtShootSpeed();
-    if (limitSwitch.get() == false) {
+    if ( limitSwitch.get() == false ) {
       indexer.runPreload();
       intake.hopperGo();
     } else {
@@ -39,6 +39,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   public void end(boolean interrupted) {
     indexer.stop();
     twoWheelFly.stop();
+    intake.hopperStop();
   }
 
   // Returns true when the command should end.

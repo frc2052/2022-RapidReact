@@ -36,7 +36,6 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
   public void runAtShootSpeed() {
     topMotor.set(ControlMode.Velocity, topWheelVelocity);
     bottomMotor.set(ControlMode.Velocity, bottomWheelVelocity);
-    //encoder needed for ticks per revolution calculation
   }
 
   public boolean isAtSpeed() {
@@ -59,5 +58,8 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
   public void periodic() {
     topWheelVelocity = SmartDashboard.getNumber("Top Wheel Velocity", 5);
     bottomWheelVelocity = SmartDashboard.getNumber("Bottom Wheel Velocity", 5);
+    SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
+    SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
   }
 }

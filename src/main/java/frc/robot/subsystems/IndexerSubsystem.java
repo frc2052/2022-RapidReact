@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
@@ -39,9 +40,21 @@ public class IndexerSubsystem extends SubsystemBase {
     feederIndexer.set(ControlMode.PercentOutput, 0);
   }
 
+  public double runLargeIndexerSpeed() {
+    double largeIndexerRunning = largeIndexer.getSelectedSensorVelocity();
+    return largeIndexerRunning;
+  }
+
+  public double runFeederIndexerSpeed() {
+    double feederIndexerRunning = feederIndexer.getSelectedSensorVelocity();
+    return feederIndexerRunning;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Feeder Indexer Speed", runFeederIndexerSpeed());
+    SmartDashboard.putNumber("Large Indexer Speed", runLargeIndexerSpeed());
   }
   
 }
