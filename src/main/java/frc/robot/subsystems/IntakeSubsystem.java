@@ -5,11 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
 import frc.robot.Constants.Solenoids;
-import frc.robot.lib.CsvLogger;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.motorcontrol.Victor;
 
 
 public class IntakeSubsystem {
@@ -34,7 +31,7 @@ public class IntakeSubsystem {
         inSolenoid.set(true);
         outSolenoid.set(false);
         isArmOut = false;
-        boolean isarmOut = false;
+        boolean isArmOut = false;
     }
   
     public void intakeArmOut(){
