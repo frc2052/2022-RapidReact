@@ -43,20 +43,20 @@ public class VisionSubsystem extends SubsystemBase{
     */
 
     public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
-        tx = ltx.getDouble(0.0);
-        ty = lty.getDouble(0.0);
-        ta = lta.getDouble(0.0);
-        ts = lts.getDouble(0.0);
-        tl = ltl.getDouble(0.0);
+        this.tx = this.ltx.getDouble(0.0);
+        this.ty = this.lty.getDouble(0.0);
+        this.ta = this.lta.getDouble(0.0);
+        this.ts = this.lts.getDouble(0.0);
+        this.tl = this.ltl.getDouble(0.0);
 
-        tshort = ltshort.getDouble(0.0);
-        tlong = ltlong.getDouble(0.0);
-        thor = lthor.getDouble(0.0);
-        tvert = ltvert.getDouble(0.0);
-        camMode = lcamMode.getDouble(0.0);
-        getpipe = lgetpipe.getDouble(0.0);
+        this.tshort = this.ltshort.getDouble(0.0);
+        this.tlong = this.ltlong.getDouble(0.0);
+        this.thor = this.lthor.getDouble(0.0);
+        this.tvert = this.ltvert.getDouble(0.0);
+        this.camMode = this.lcamMode.getDouble(0.0);
+        this.getpipe = this.lgetpipe.getDouble(0.0);
         
-        hasValidTarget = ltv.getDouble(0.0) == 1.0;
+        this.hasValidTarget = ltv.getDouble(0.0) == 1.0;
     }
 
     public double getTx() {return this.tx;}
@@ -73,7 +73,7 @@ public class VisionSubsystem extends SubsystemBase{
     public double getGetpipe() {return this.getpipe;}
     
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
-      return hasValidTarget;
+      return this.hasValidTarget;
     }
 
     public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile').

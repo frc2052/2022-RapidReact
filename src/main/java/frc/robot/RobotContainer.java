@@ -78,7 +78,7 @@ public class RobotContainer {
     );
 
     // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
-    resetGyroButton.whenPressed(() -> { this.resetGyro(); }, m_drivetrainSubsystem); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
+    resetGyroButton.whenPressed(() -> { this.resetGyro(); }); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
   }
 
   /**
@@ -99,9 +99,7 @@ public class RobotContainer {
       case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
-      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
+        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision);
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_3_BALL:
@@ -110,6 +108,8 @@ public class RobotContainer {
         return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intake);
       case FIVE_BALL:
         return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
+      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, shooter, intake, indexer);
       default:
         break;
     }
