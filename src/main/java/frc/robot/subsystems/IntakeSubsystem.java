@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 
-public class IntakeSubsystem {
     private Solenoid outSolenoid;
     private Solenoid inSolenoid;
     private boolean isArmOut;
@@ -48,7 +47,7 @@ public class IntakeSubsystem {
     public void hopperGo() {
         hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
     }
-
+    //stops the wheels of the intake
 
     public void hopperStop() {
         hopperMotor.set(ControlMode.PercentOutput, 0);

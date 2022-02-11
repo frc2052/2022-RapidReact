@@ -6,8 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 import frc.robot.Constants;
-import frc.robot.Constants.Intake;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
 
@@ -15,7 +15,8 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final Intake intake;
-  private final DigitalInput limitSwitch = new DigitalInput(0);
+  private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
+  private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
   public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, Intake intake) {
     this.indexer = indexer;
@@ -23,23 +24,29 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     this.intake = intake;
   }
 
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    twoWheelFly.runAtShootSpeed(Constants.ShooterSub.TOPWHEELSPEED, Constants.ShooterSub.BOTTOMWHEELSPEED);
-    if (limitSwitch.get() == false) {
+    twoWheelFly.runAtShootSpeed();
+    if ( limitSwitch.get() == false ) {
       indexer.runPreload();
+      intake.hopperGo();
     } else {
+      indexer.stop();
+      if (limitSwitchTwo.get() == false) {
+        indexer.runPreload();
+        intake.hopperGo();
+      } else {
         indexer.stop();
+      }
     }
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     indexer.stop();
     twoWheelFly.stop();
+    intake.hopperStop();
   }
 
   // Returns true when the command should end.
