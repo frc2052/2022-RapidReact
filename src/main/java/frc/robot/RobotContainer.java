@@ -21,10 +21,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  // private final VisionSubsystem vision = new VisionSubsystem();
-  // private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-  // private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem();
+  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+  private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
+  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+  private final Intake intake = new Intake();
+  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
   private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
@@ -35,6 +38,8 @@ public class RobotContainer {
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
+  private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
+  private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -81,6 +86,9 @@ public class RobotContainer {
     // // TEMP to reset the gyro using a button on the secondary pannel to make 
     // // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
     // resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
+
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intake));
+    feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
   /**
