@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
@@ -14,11 +14,11 @@ import frc.robot.subsystems.TwoWheelFlySubsystem;
 public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
-  private final Intake intake;
+  private final IntakeSubsystem intake;
   private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
   private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, Intake intake) {
+  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
     this.indexer = indexer;
     this.twoWheelFly = twoWheelFly;
     this.intake = intake;
