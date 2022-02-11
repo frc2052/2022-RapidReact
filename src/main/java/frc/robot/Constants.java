@@ -23,23 +23,31 @@ public final class Constants {
         public static final int INDEXER_MOTOR = 94;
         public static final int INDEXER_MOTOR_FEEDER = 95;
         public static final int ARM_MOTOR = 87;
+        public static final int INTAKE_MOTOR = 76;
+        public static final int HOPPER_MOTOR = 77;
     } 
     public static final class Solenoids {
         public static final int CLOSE_A_SOLENOID = 0;
         public static final int CLOSE_B_SOLENOID = 2;
         public static final int OPEN_A_SOLENOID = 1;
         public static final int OPEN_B_SOLENOID = 3;
+        
+        public static final int s = 4;
+        public static final int INTAKE_OUT_SOLENOID = 5;
+        public static final int INTAKE_IN_SOLENOID = 0;
     } 
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
+        public static final int INDEXER_PRELOAD = 0;
+        public static final int INDEXER_FEEDER = 1;
     
     } 
 
     public static final class ShooterSub {
         public static final double INDEXER_SPEED = .75;
-        public static final double TOPWHEELSPEED = 5;
-        public static final double BOTTOMWHEELSPEED = 5;
+        public static final double TOP_WHEEL_SPEED = 5;
+        public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
     }
     
@@ -52,6 +60,13 @@ public final class Constants {
         public static final double kMountAngleDegrees = 45;
 
         public static final double kDistanceCalcOffset = 0;
+    }
+
+    public static final class PixyCamConstants {
+        public static final double FOV = 60;
+        public static final double IMAGE_WIDTH_PIXELS = 316;
+
+
     }
 
     public static final class DriveTrain{
@@ -102,5 +117,6 @@ public final class Constants {
 
     public static final class Arm{
 
-        public static final double kArmSpeed  = .75;}
+        public static final double kArmSpeed  = .75;
+    }
 }

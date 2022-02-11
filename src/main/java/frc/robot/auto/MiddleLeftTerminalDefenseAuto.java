@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.IntakeArmOut;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -29,7 +29,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
+    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake) {
         super(drivetrain, vision);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));

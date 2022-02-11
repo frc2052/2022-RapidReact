@@ -32,7 +32,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, Intake intake, IndexerSubsystem indexer) {
+    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 

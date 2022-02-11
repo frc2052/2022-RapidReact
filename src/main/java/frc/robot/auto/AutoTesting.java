@@ -17,12 +17,12 @@ import frc.robot.commands.IntakeArmIn;
 import frc.robot.commands.IntakeArmOut;
 import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoTesting extends AutoBase {
-    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         
