@@ -13,8 +13,8 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class LeftTerminal3Cargo extends AutoBase {
 
     /**
-     * Position D Start (Far Left Parallel with outer Tarmac edge)
-     * Auto for driving to terminal cargo (not likely to be used)
+     * Position D Start (Far Left Parallel With Outer Tarmac Edge) Facing Away From the Hub.
+     * Auto for driving to terminal cargo from position D (not likely to be used)
      * @param drivetrain
      * @param vision
      */

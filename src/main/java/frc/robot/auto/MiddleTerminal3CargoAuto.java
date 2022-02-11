@@ -13,7 +13,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class MiddleTerminal3CargoAuto extends AutoBase {
     public MiddleTerminal3CargoAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
-        vision.setLED(LEDMode.OFF);
+        vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         //Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));

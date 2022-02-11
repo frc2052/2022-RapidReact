@@ -63,6 +63,25 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
+    /**
+     * Creates a custom Trajectory Config from AutoTrajectoryConfig
+     * @param maxXYVelocityMPS - Max driving velocity in meters per second
+     * @param maxAccelarationMPS - Max driving accelaration in meters per second
+     * @param xyP - Driving P (Proportional) value in PID. Increasing makes driving actions happen faster and decreasing makes them slower.
+     * @param turnP - Driving P value. Increasing makes turning actions happen faster and decreasing makes them slower.
+     * @param turnProfileContraintsMultiplier - Amount PI will be multiplied by in the TrapezoidalProfile.Constrains of the turning PID controller
+     * @param startVelocityMPS - Tarjectory's starting velocity in meters per second
+     * @param endVelocityMPS - Trajectory's ending velocity in meters per second
+     * @return AutoTrajectoryConfig
+     */
+    protected AutoTrajectoryConfig createTrajectoryConfig(double maxXYVelocityMPS, double maxAccelarationMPS, double xyP, double turnP, double turnProfileContraintsMultiplier, double startVelocityMPS, double endVelocityMPS) {
+        return new AutoTrajectoryConfig(
+            new TrajectoryConfig(maxXYVelocityMPS, maxAccelarationMPS).setEndVelocity(endVelocityMPS).setStartVelocity(startVelocityMPS),
+            new PIDController(xyP, 0, 0),
+            new ProfiledPIDController(turnP, 0, 0, new TrapezoidProfile.Constraints(turnProfileContraintsMultiplier*Math.PI, turnProfileContraintsMultiplier*Math.PI))
+            );
+    }
+
     // Most basic deafult swerve command, automatically using slowTrajectoryConfig.
     protected SwerveControllerCommand createSwerveTrajectoryCommand(
         Pose2d startPose, 
@@ -229,6 +248,8 @@ public class AutoBase  extends SequentialCommandGroup {
     protected Pose2d getLastEndingPosCreated(Rotation2d rotation) {
         return new Pose2d(m_lastCreatedEndingPose.getTranslation(), rotation);
     }
+
+    
 
 //    public enum StartPos {
 //        PositionA,

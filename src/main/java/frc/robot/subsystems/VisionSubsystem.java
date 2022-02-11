@@ -109,9 +109,24 @@ public class VisionSubsystem extends SubsystemBase{
           break;
         case DRIVER:
           this.setLED(LEDMode.OFF);
-          lcamMode.setDouble(1.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver.
+          lcamMode.setDouble(9.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver.
           this.setPipeline(9);      // Change to pipeline intended for driver cam.
           break;
+      }
+    }
+
+    public LEDMode getLEDModeEnum() {
+      switch((int)lledMode.getDouble(0.0)) {
+        case 0:
+          return LEDMode.PIPELINE;
+        case 1:
+          return LEDMode.OFF;
+        case 2:
+          return LEDMode.BLINK;
+        case 3:
+          return LEDMode.OFF;
+        default:
+          return LEDMode.PIPELINE;
       }
     }
 

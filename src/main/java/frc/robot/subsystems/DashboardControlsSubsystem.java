@@ -64,11 +64,9 @@ public class DashboardControlsSubsystem {
         lastLEDState = limelightLEDsEnabled;
 
         if(!limelightDriveCamToggle && lastCamState) {
-            System.out.println("**********Limelight Set to Vision Mode**********");
             m_vision.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            System.out.println("**********Limelight Set to Driver Camera Mode**********");
             m_vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }

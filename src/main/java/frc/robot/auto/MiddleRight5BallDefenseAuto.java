@@ -45,30 +45,17 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         Pose2d approachTerminalBall = new Pose2d(Units.inchesToMeters(160), Units.inchesToMeters(-32), Rotation2d.fromDegrees(-23));
         Pose2d terminalBallPos = new Pose2d(Units.inchesToMeters(190), Units.inchesToMeters(-42), Rotation2d.fromDegrees(-23));
         Pose2d driveBackToShoot = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(15), Rotation2d.fromDegrees(166));
- 
-        // TESTING Custom AutoTrajectoryConfigs for continous trajectories.
-        AutoTrajectoryConfig continousSpeedDriveEndTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setEndVelocity(4), 
-            new PIDController(1, 0, 0),
-            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
-            );
-        AutoTrajectoryConfig continousSpeedDriveStartTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setStartVelocity(4), 
-            new PIDController(1, 0, 0),
-            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
-            );
-        AutoTrajectoryConfig continousSpeedDriveMidTrajectoryConfig = new AutoTrajectoryConfig(
-            new TrajectoryConfig(4, 3).setKinematics(super.m_swerveDriveKinematics).setEndVelocity(4).setStartVelocity(4), 
-            new PIDController(1, 0, 0),
-            new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(3*Math.PI, 3*Math.PI))
-            );
+        
+        AutoTrajectoryConfig continousSpeedDriveEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
+        AutoTrajectoryConfig continousSpeedDriveStart2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
+        AutoTrajectoryConfig continousSpeedDriveStartEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveAndShootToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnSlowDriveTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplier(170));
         SwerveControllerCommand driveToBall2AndOpposing = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(150), opposingBallPos, alignWithWallMidpoint, super.createRotationAngle(150));
-        SwerveControllerCommand driveAndAimBall2 = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(-23), hangerShootPos, super.createHubTrackingSupplier(-90));
-        SwerveControllerCommand hangerShootToTerminalBall = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(-23), approachTerminalBall, super.createRotationAngle(-90));
-        SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
+        SwerveControllerCommand driveAndAimBall2 = super.createSwerveTrajectoryCommand(continousSpeedDriveEnd2mpsTrajectoryConfig, super.getLastEndingPosCreated(-23), hangerShootPos, super.createHubTrackingSupplier(-110));
+        SwerveControllerCommand hangerShootToTerminalBall = super.createSwerveTrajectoryCommand(continousSpeedDriveStartEnd2mpsTrajectoryConfig, super.getLastEndingPosCreated(-23), approachTerminalBall, super.createRotationAngle(-90));
+        SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(continousSpeedDriveStart2mpsTrajectoryConfig, super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
         SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
         IntakeArmIn intakeArmIn = new IntakeArmIn(intake);

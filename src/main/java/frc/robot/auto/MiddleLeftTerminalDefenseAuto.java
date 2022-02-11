@@ -19,48 +19,45 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class MiddleLeftTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem m_drivetrain;
 
+    /**
+     * Position C Start (Middle Left Parallel with Outer Tarmac line) facing inwards towards the hub.
+     * First repositions slightly to get a better angle for shooting preloaded ball into the hub.
+     * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
+     * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
+     * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
+     * @param drivetrain
+     * @param vision
+     * @param intake
+     */
     public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, Intake intake) {
         super(drivetrain, vision);
 
-        m_drivetrain = drivetrain;
-
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
         Pose2d shootPreloadedPos = new Pose2d(Units.inchesToMeters(-24), Units.inchesToMeters(24), Rotation2d.fromDegrees(0));
-        Supplier<Rotation2d> aimAtHub = () -> { return m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())); };
+        Pose2d enemyBall1Pos = new Pose2d(Units.inchesToMeters(-42), Units.inchesToMeters(-31.5), Rotation2d.fromDegrees(-110));
+        Pose2d approachBall2 = new Pose2d(Units.inchesToMeters(-140), Units.inchesToMeters(-93), Rotation2d.fromDegrees(-150));
+        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(-160),Units.inchesToMeters(-100),Rotation2d.fromDegrees(-170));
 
-        Pose2d enemyBall1Pos = new Pose2d(Units.inchesToMeters(42), Units.inchesToMeters(31.5), Rotation2d.fromDegrees(-110));
-        Supplier<Rotation2d> enemyBall1Rotation = () -> { return Rotation2d.fromDegrees(-110); };
+        AutoTrajectoryConfig drivingToBall2Config2mpsStart = super.createTrajectoryConfig(3, 2, 1, 5, 2, 2, 0);
+        AutoTrajectoryConfig drivingToBall2Config2mpsEnd = super.createTrajectoryConfig(3, 2, 1, 5, 2, 0, 2);
 
-        Pose2d approachBall2 = new Pose2d(140, 93, Rotation2d.fromDegrees(30));
-        Supplier<Rotation2d> rotateToFaceHanger = () -> { return Rotation2d.fromDegrees(-80); };
+        SwerveControllerCommand driveToShootPreloaded = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, shootPreloadedPos, super.createHubTrackingSupplier(0));
+        SwerveControllerCommand driveToEnemyBall1 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-130)), enemyBall1Pos, super.createRotationAngle(-130));
+        SwerveControllerCommand approachBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsEnd, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-150)), approachBall2, super.createRotationAngle(120));
+        SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
+        SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(48),Units.inchesToMeters(84),Rotation2d.fromDegrees(30));
-        Supplier<Rotation2d> rotateToBall2 = () -> { return Rotation2d.fromDegrees(30); };
-
-        SwerveControllerCommand driveToShootPreloaded = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, shootPreloadedPos, aimAtHub);
-
-        // ParallelCommandGroup driveAndShootPreloaded = new ParallelCommandGroup(driveToShoot1st, ShooterCommand);
-
-        SwerveControllerCommand driveToEnemyBall1 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-110)), enemyBall1Pos, enemyBall1Rotation);
         IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
 
-        ParallelCommandGroup getEnemyBall1CommandGroup = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
-
-        SwerveControllerCommand approachBall2Command = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(30)), approachBall2, rotateToFaceHanger);
-
-        // ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand)
-
-        SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(30)), arriveAtBall2, rotateToBall2);
-
+        //ParallelCommandGroup driveAndShootPreloaded = new ParallelCommandGroup(driveToShoot1st, ShooterCommand);
+        //ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand);
+        //ParallelCommandGroup getEnemyBall1CommandGroup = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
 
         this.addCommands(driveToShootPreloaded); // change to driveAndShootPreloaded when shooter command ready.
-        this.addCommands(getEnemyBall1CommandGroup);
+        this.addCommands(driveToEnemyBall1);
         this.addCommands(approachBall2Command); // change to driveAndShootEnemyBall1 when shooter command ready
         this.addCommands(arriveAtBall2Command);
-        //TODO:Shoot both loaded balls
-        //TODO:Drive to rightmost ball
-        //Shoot ball
-        //bump right opponent ball.
+        this.addCommands(drivebackToShootPos);
 
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }

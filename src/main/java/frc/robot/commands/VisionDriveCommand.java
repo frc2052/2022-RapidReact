@@ -67,7 +67,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
             return 0.0;
         }
         // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
-        double firingVelocity = 5.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
+        double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
         double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters,2) + Math.pow(m_vision.xDistanceToUpperHub(), 2));
         return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
       }
