@@ -29,7 +29,8 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
-
+  private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
+  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
@@ -50,6 +51,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+//    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
     m_drivetrainSubsystem.setDefaultCommand(
       new DefaultDriveCommand(
         m_drivetrainSubsystem,
@@ -95,6 +97,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+//    return pixyCmd;
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.

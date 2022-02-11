@@ -56,6 +56,13 @@ public final class Constants {
         public static final double kDistanceCalcOffset = 0;
     }
 
+    public static final class PixyCamConstants {
+        public static final double FOV = 60;
+        public static final double IMAGE_WIDTH_PIXELS = 316;
+
+
+    }
+
     public static final class DriveTrain{
     /**
      * The left-to-right distance between the drivetrain wheels
@@ -104,5 +111,6 @@ public final class Constants {
 
     public static final class Arm{
 
-        public static final double kArmSpeed  = .75;}
+        public static final double kArmSpeed  = .75;
+    }
 }
