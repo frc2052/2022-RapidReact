@@ -64,11 +64,9 @@ public class DashboardControlsSubsystem {
         lastLEDState = limelightLEDsEnabled;
 
         if(!limelightDriveCamToggle && lastCamState) {
-            System.out.println("**********Limelight Set to Vision Mode**********");
             m_vision.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            System.out.println("**********Limelight Set to Driver Camera Mode**********");
             m_vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }
@@ -106,17 +104,17 @@ public class DashboardControlsSubsystem {
     }
 
     public enum Autos {
+        AUTO_TESTING("(A) Class for Testing Auto Actions and Paths"),
         TEST_AUTO_1("TestAuto1"),
-        SIMPLE_1_BALL("Simple 1 Ball"),
-        SIMPLE_3_BALL("Simple 3 Ball"),
-        SIMPLE_3_BALL_TESTING("Simple 3 Ball using front intake"),
-        THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot"),
-        LEFT_TERMINAL("3 Ball - Terminal Cargo"),
-        MIDDLE_DEFENSE("center start, with defense only"),
-        MIDDLE_TERMINAL_3("center start, ball, then terminal ball"),
+        SIMPLE_1_BALL("Any Position Start, Simple 1 Ball"),
+        SIMPLE_3_BALL("Far Right Start (A), Simple 3 Ball"),
+        THREE_BALL_DRIVE_AND_SHOOT("Far Right Start (A), 3 Ball Drive and Shoot"),
+        LEFT_TERMINAL_3_BALL("Far Left Start (D), 3 Ball Including Terminal Cargo"),
+        LEFT_2_BALL_1_DEFENSE("Far Left Start (D), Shoot Two and Move Opponent Ball"),
+        MIDDLE_TERMINAL_3_BALL("Center Start, ball, then terminal ball"),
         MIDDLE_TERMINAL_DEFENSE("center start, terminal cargo and defense"),
-        MIDDLE_TWO_DEFENSE("Center start, two cargo and defense"),
-        FIVE_BALL("Five ball dream auto, rightmost start");
+        FIVE_BALL("Far Right Start (A), Five Ball Auto"),
+        RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
 
         public String name;
 
