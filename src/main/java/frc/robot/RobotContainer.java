@@ -102,7 +102,8 @@ public class RobotContainer {
         dashboardControlsSubsystem
       ));
     
-    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
+    //intakeStopButton.whenPressed( try { new IntakeStop(intakeSubsystem); } catch(Exception e) {System.err.println("IntakeStopButton FAIL");} );
+    try { intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem)); } catch(Exception e) {}
     intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
 
@@ -130,9 +131,7 @@ public class RobotContainer {
         return new TestAuto1(m_drivetrainSubsystem);
       case SIMPLE_3_BALL:
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-//      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-//        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
-      case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
+      case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision);
@@ -190,6 +189,7 @@ public class RobotContainer {
     m_drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
     intakeSubsystem.putToSmartDashboard();
+    twoWheelFlySubsystem.putToSmartDashboard();
   }
 
   public void resetGyro() {

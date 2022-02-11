@@ -12,6 +12,7 @@ import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -80,6 +81,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private double lastwheelVelocity;
   

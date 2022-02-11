@@ -49,6 +49,9 @@ public final class Constants {
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
+
+        public static final double kShooterFiringAngleDegrees = 72.0;
+        public static final double kFlywheelRadiusMeters = Units.inchesToMeters(2);
     }
     
     public static final class Field {
