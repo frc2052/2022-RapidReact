@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 // Subsystem for accessing the Limelight's NetworkTable values and creating methods to control it.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.*;
@@ -42,21 +44,29 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry cy1 = table.getEntry("cy1");          // Crosshair B Y in normalized screen space
     */
 
-    public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
-        this.tx = this.ltx.getDouble(0.0);
-        this.ty = this.lty.getDouble(0.0);
-        this.ta = this.lta.getDouble(0.0);
-        this.ts = this.lts.getDouble(0.0);
-        this.tl = this.ltl.getDouble(0.0);
+    public VisionSubsystem() {
+      ShuffleboardTab visionTab = Shuffleboard.getTab("Vision Test");
 
-        this.tshort = this.ltshort.getDouble(0.0);
-        this.tlong = this.ltlong.getDouble(0.0);
-        this.thor = this.lthor.getDouble(0.0);
-        this.tvert = this.ltvert.getDouble(0.0);
-        this.camMode = this.lcamMode.getDouble(0.0);
-        this.getpipe = this.lgetpipe.getDouble(0.0);
+      visionTab.add("Has Valid Target", false)
+        .withPosition(0, 0)
+        .withSize(1,1);
+    }
+
+    public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
+        tx = ltx.getDouble(0.0);
+        ty = lty.getDouble(0.0);
+        ta = lta.getDouble(0.0);
+        ts = lts.getDouble(0.0);
+        tl = ltl.getDouble(0.0);
+
+        tshort = ltshort.getDouble(0.0);
+        tlong = ltlong.getDouble(0.0);
+        thor = lthor.getDouble(0.0);
+        tvert = ltvert.getDouble(0.0);
+        camMode = lcamMode.getDouble(0.0);
+        getpipe = lgetpipe.getDouble(0.0);
         
-        this.hasValidTarget = ltv.getDouble(0.0) == 1.0;
+        hasValidTarget = ltv.getDouble(0.0) == 1.0;
     }
 
     public double getTx() {return this.tx;}

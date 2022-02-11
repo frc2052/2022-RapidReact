@@ -21,16 +21,16 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final VisionSubsystem vision = new VisionSubsystem();
-  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-  private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
-  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
+  private DrivetrainSubsystem m_drivetrainSubsystem;
+  private VisionSubsystem vision;
+  private DashboardControlsSubsystem dashboardControlsSubsystem;
+  private TwoWheelFlySubsystem twoWheelFlySubsystem;
+  private IndexerSubsystem indexerSubsystem;
+  private IntakeSubsystem intakeSubsystem;
+  private PneumaticsSubsystem pnuematics;
 
-  private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
-  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
+  private PixyCamSubsystem pixyCamSubsystem;
+  private PixyCamManualDriveCommand pixyCamManualDriveCommand;
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
@@ -43,6 +43,7 @@ public class RobotContainer {
   private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
+  private final JoystickButton resetRobotButton = new JoystickButton(m_secondaryPannel, 8);
 
  
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
@@ -70,6 +71,21 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public void init() {
+    // Subsystems
+    try { m_drivetrainSubsystem = new DrivetrainSubsystem(); }                    catch(Exception e) { m_drivetrainSubsystem = null; System.err.println("DRIVETRAIN FAIL"); }
+    try { vision = new VisionSubsystem(); }                                       catch(Exception e) { vision = null; System.err.println("VISION FAIL");}
+    try { dashboardControlsSubsystem = new DashboardControlsSubsystem(vision); }  catch(Exception e) { dashboardControlsSubsystem = null; System.err.println("DASHBOARD CONTROLS FAIL");}
+    try { intakeSubsystem = new IntakeSubsystem(); }                              catch(Exception e) { intakeSubsystem = null; System.err.println("INTAKE FAIL");}
+    try { twoWheelFlySubsystem = new TwoWheelFlySubsystem(); }                    catch(Exception e) { twoWheelFlySubsystem = null; System.err.println("SHOOTER FAIL");}
+    try { indexerSubsystem = new IndexerSubsystem(); }                            catch(Exception e) { indexerSubsystem = null; System.err.println("INDEXER FAIL");}
+    try { pnuematics = new PneumaticsSubsystem(); }                               catch(Exception e) { pnuematics = null; System.err.println("PNUEMATICS FAIL");}
+    try { pixyCamSubsystem = new PixyCamSubsystem(); }                            catch(Exception e) { pixyCamSubsystem = null; System.err.println("PIXY CAM FAIL"); }
+
+    //Commands
+    try { pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem); }  catch(Exception e) { pixyCamManualDriveCommand = null; System.err.println("PIXY CAM COMMAND FAIL"); }
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -94,6 +110,8 @@ public class RobotContainer {
     resetGyroButton.whenPressed(() -> { this.resetGyro(); }); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+
+    resetRobotButton.whenPressed(() -> { this.init(); });
   }
 
   /**
