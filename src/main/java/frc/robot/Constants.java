@@ -39,13 +39,15 @@ public final class Constants {
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
+        public static final int INDEXER_PRELOAD = 0;
+        public static final int INDEXER_FEEDER = 1;
     
     } 
 
     public static final class ShooterSub {
         public static final double INDEXER_SPEED = .75;
-        public static final double TOPWHEELSPEED = 5;
-        public static final double BOTTOMWHEELSPEED = 5;
+        public static final double TOP_WHEEL_SPEED = 5;
+        public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
     }
     
@@ -58,6 +60,13 @@ public final class Constants {
         public static final double kMountAngleDegrees = 45;
 
         public static final double kDistanceCalcOffset = 0;
+    }
+
+    public static final class PixyCamConstants {
+        public static final double FOV = 60;
+        public static final double IMAGE_WIDTH_PIXELS = 316;
+
+
     }
 
     public static final class DriveTrain{
@@ -108,5 +117,6 @@ public final class Constants {
 
     public static final class Arm{
 
-        public static final double kArmSpeed  = .75;}
+        public static final double kArmSpeed  = .75;
+    }
 }
