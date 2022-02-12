@@ -14,10 +14,13 @@ import frc.robot.Constants;
 public class HookClimberSubsystem extends SubsystemBase{
     // DoubleSolenoid that controls both in and out solenoids for both climbing arms.
     private final DoubleSolenoid climberSolenoid;
+    private ClimberSolenoidState currentSolenoidState;
     // Motor that controls the wenches for climbing.
     private final TalonFX climberMotor;
     private double desiredPositionTicks;
-    private ClimberSolenoidState currentSolenoidState;
+
+    private final DoubleSolenoid lockSolenoid;
+    private boolean isLocked;
 
     public HookClimberSubsystem() {
         climberSolenoid = new DoubleSolenoid(
@@ -25,6 +28,7 @@ public class HookClimberSubsystem extends SubsystemBase{
             Constants.Solenoids.CLIMBER_FORWARD_SOLENOID,
             Constants.Solenoids.CLIMBER_BACKWARD_SOLENOID
         );
+        currentSolenoidState = ClimberSolenoidState.BACKWARD;
 
         climberMotor = new TalonFX(Constants.MotorIDs.CLIMBER_MOTOR);
         climberMotor.setNeutralMode(NeutralMode.Brake);
@@ -32,7 +36,12 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         climberMotor.setSelectedSensorPosition(0, 0, 10);
 
-        currentSolenoidState = ClimberSolenoidState.BACKWARD;
+        lockSolenoid = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            Constants.Solenoids.CLIMBER_LOCK_SOLENOID,
+            Constants.Solenoids.CLIMBER_UNLOCK_SOLENOID
+        );
+        isLocked = false;
     }
 
     /**
@@ -84,6 +93,20 @@ public class HookClimberSubsystem extends SubsystemBase{
 
     public ClimberSolenoidState getClimberSolenoidState() {
         return currentSolenoidState;
+    }
+
+    public void lockClimber() {
+        lockSolenoid.set(Value.kForward);
+        isLocked = true;
+    }
+
+    public void unlockClimber() {
+        lockSolenoid.set(Value.kReverse);
+        isLocked = false;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
     }
 
     public void setArmPostionInches(double inches){

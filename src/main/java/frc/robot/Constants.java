@@ -28,12 +28,17 @@ public final class Constants {
         public static final int HOPPER_MOTOR = 77;
     } 
     public static final class Solenoids {
-        public static final int CLOSE_A_SOLENOID = 0;
-        public static final int CLOSE_B_SOLENOID = 2;
-        public static final int OPEN_A_SOLENOID = 1;
-        public static final int OPEN_B_SOLENOID = 3;
-        public static final int CLIMBER_FORWARD_SOLENOID = 12;
-        public static final int CLIMBER_BACKWARD_SOLENOID = 4;
+        // Used for claw climber.
+        // public static final int CLOSE_A_SOLENOID = 0;
+        // public static final int CLOSE_B_SOLENOID = 2;
+        // public static final int OPEN_A_SOLENOID = 1;
+        // public static final int OPEN_B_SOLENOID = 3;
+
+        public static final int CLIMBER_FORWARD_SOLENOID = 0;
+        public static final int CLIMBER_BACKWARD_SOLENOID = 1;
+        public static final int CLIMBER_LOCK_SOLENOID = 2;
+        public static final int CLIMBER_UNLOCK_SOLENOID = 3;
+
         public static final int INTAKE_OUT_SOLENOID = 5;
         public static final int INTAKE_IN_SOLENOID = 0;
     } 

@@ -63,6 +63,7 @@ public class RobotContainer {
   private final JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
   private final JoystickButton retractClimberButton = new JoystickButton(secondaryPannel, 6);
   private final JoystickButton climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
+  private final JoystickButton climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -117,6 +118,13 @@ public class RobotContainer {
     extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
     retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
     climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
+    climberLockToggleButton.whenPressed(() -> {
+      if (climberSubsystem.isLocked()) {
+        climberSubsystem.unlockClimber();
+      } else {
+        climberSubsystem.lockClimber();
+      }
+    });
 
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
