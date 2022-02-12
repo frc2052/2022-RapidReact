@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
 
-public class IntakeArmOut extends CommandBase {
+public class IntakeArmOutCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
 
   /**
@@ -12,7 +12,7 @@ public class IntakeArmOut extends CommandBase {
    *
    * @param intakeSubsystem The subsystem used by this command.
    */
-    public IntakeArmOut(IntakeSubsystem intakeSubsystem) {
+    public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem) {
       this.intakeSubsystem = intakeSubsystem;
       // Maybe add dependencies   
     }
