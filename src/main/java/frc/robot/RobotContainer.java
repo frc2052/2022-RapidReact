@@ -27,6 +27,7 @@ public class RobotContainer {
   private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final HopperSubsystem grassHopper = new HopperSubsystem();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
@@ -86,11 +87,11 @@ public class RobotContainer {
       dashboardControlsSubsystem
       ));
     
-    intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem));
-    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem));
-    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem));
+    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem, grassHopper));
+    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem, grassHopper));
+    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem, grassHopper));
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem, grassHopper));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
@@ -103,27 +104,29 @@ public class RobotContainer {
 //    return pixyCmd;
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
-      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
-        return new TestAuto1(drivetrainSubsystem);
-      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
-        return new Simple3BallAuto(drivetrainSubsystem, vision);
-      
-      // case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-      //   return new Simple3BallAutoTesting(drivetrainSubsystem, vision);
+      case AUTO_TESTING:
+      return new AutoTesting(m_drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
+      case TEST_AUTO_1:
+        return new TestAuto1(m_drivetrainSubsystem);
+      case SIMPLE_3_BALL:
+        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+//      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+//        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
-        return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
-      case LEFT_TERMINAL: 
-        return new LeftTerminal3Cargo(drivetrainSubsystem, vision); 
-      case MIDDLE_TWO_DEFENSE:
-        return new Middle2CargoDefenseAuto(drivetrainSubsystem, vision);
-      case MIDDLE_DEFENSE:
-        return new MiddleDefenseAuto(drivetrainSubsystem, vision);
-      case MIDDLE_TERMINAL_3:
-        return new MiddleTerminal3CargoAuto(drivetrainSubsystem, vision);
+        return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
+      case LEFT_TERMINAL_3_BALL: 
+        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision);
+      case LEFT_2_BALL_1_DEFENSE:
+        return new LeftDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+      case MIDDLE_TERMINAL_3_BALL:
+        return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleTerminalDefenseAuto(drivetrainSubsystem, vision);
+        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
       case FIVE_BALL:
-        return new FiveBallDreamAuto(drivetrainSubsystem, vision);      default:
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+      default:
         break;
     }
 

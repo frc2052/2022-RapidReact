@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.IntakeArmOutCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -29,7 +30,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake) {
+    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
@@ -47,7 +48,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake);
+        IntakeArmOut intakeArmOut = new IntakeArmOut(intake, grassHopper);
 
         //ParallelCommandGroup driveAndShootPreloaded = new ParallelCommandGroup(driveToShoot1st, ShooterCommand);
         //ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand);
