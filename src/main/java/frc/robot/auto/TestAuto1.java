@@ -20,6 +20,11 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestAuto1 extends SequentialCommandGroup {
   
+  /**
+   * Auto originally used by Matt and Bryan to test using SwerveDrive in auto.
+   * Only leaving for potential reference for now.
+   * @param drivetrain
+   */
   public TestAuto1(DrivetrainSubsystem drivetrain) {
 
     var swerveDriveKinematics = drivetrain.getKinematics();

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 //import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
@@ -196,18 +198,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         lastwheelVelocity = states[0].speedMetersPerSecond;
 
-        m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
+        if (states[0].speedMetersPerSecond == 0
+                        && states[1].speedMetersPerSecond == 0 
+                        && states[2].speedMetersPerSecond == 0
+                        && states[3].speedMetersPerSecond == 0) {
+                //do not zero the wheel angle, just stop driving
+                m_frontLeftModule.set(0, m_frontLeftModule.getSteerAngle());
+                m_frontRightModule.set(0, m_frontRightModule.getSteerAngle());
+                m_backLeftModule.set(0, m_backLeftModule.getSteerAngle());
+                m_backRightModule.set(0, m_backRightModule.getSteerAngle());
+        } else { 
+                //we are moving
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
+                m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
+                m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
+                m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
 
-        odometry.update(
-                getGyroscopeRotation(),
-                states[0],
-                states[1],
-                states[2],
-                states[3]
-        );
+                odometry.update(
+                        getGyroscopeRotation(),
+                        states[0],
+                        states[1],
+                        states[2],
+                        states[3]
+                );
+        }
+
   }
 
   public SwerveDriveKinematics getKinematics() {
@@ -234,9 +249,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        SmartDashboard.putNumber("Gyro Angle", m_navx.getAngle());
         
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", lastwheelVelocity);
         SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+
   }
 }
