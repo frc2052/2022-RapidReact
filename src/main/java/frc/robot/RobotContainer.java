@@ -30,22 +30,21 @@ public class RobotContainer {
   private final HopperSubsystem grassHopper = new HopperSubsystem();
   private final PneumaticsSubsystem pneumatics = new PneumaticsSubsystem();
 
-  private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
-  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
+  private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
   
-  private final JoystickButton driveCommandSwitch = new JoystickButton(turnJoystick, 1);
+  private final JoystickButton visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
+  private final JoystickButton pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
   private final JoystickButton resetGyroButton = new JoystickButton(secondaryPannel, 1);
   private final JoystickButton intakeArmOutButton = new JoystickButton(driveJoystick, 2);
   private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
   private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
-
- 
+  
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
   // Slew rate limiters to make joystick inputs more gentle.
@@ -78,14 +77,25 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-	driveCommandSwitch.whenHeld(
-      new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-      drivetrainSubsystem,
-      () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      vision,
-      dashboardControlsSubsystem
-      ));
+    visionDriveCommandSwitch.whenHeld(
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+        drivetrainSubsystem,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        vision,
+        dashboardControlsSubsystem
+      )
+    );
+    
+    pixyDriveCommandSwitch.whenHeld(
+      new PixyCamDriveCommand(
+        drivetrainSubsystem,
+        pixyCamSubsystem,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        dashboardControlsSubsystem
+      )
+    );
     
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
