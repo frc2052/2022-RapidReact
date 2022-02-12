@@ -14,7 +14,7 @@ public class IntakeArmOutCommand extends CommandBase {
    *
    * @param intakeSubsystem The subsystem used by this command.
    */
-    public IntakeArmOut(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
+    public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
       // Maybe add dependencies   

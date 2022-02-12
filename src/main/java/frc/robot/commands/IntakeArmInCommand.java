@@ -7,7 +7,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeArmInCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
     private final HopperSubsystem grassHopper;
-    public IntakeArmIn(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
+    public IntakeArmInCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
       // Maybe add dependencies   

@@ -8,7 +8,7 @@ public class IntakeStopCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
     private final HopperSubsystem grassHopper;
 
-    public IntakeStop(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
+    public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
       // Maybe add dependencies   
