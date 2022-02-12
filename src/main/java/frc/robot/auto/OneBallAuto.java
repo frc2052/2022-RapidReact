@@ -14,19 +14,19 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class OneBallAuto extends AutoBase{
     //No starting position is needed, simply face the robot towards
     //target. This auto backs up to get the "off the trmac" point and shoots the preloaded ball
-    //This auto is a last resort, in case of inability to use limelight
-    //or other malfunctions. In normal or ideal cases, this auto should not be used
+    //This auto is a last resort, in case of inability to use limelight or other malfunctions.
 
-    public OneBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public OneBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IndexerSubsystem indexer) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
         Pose2d backUpPos = new Pose2d(Units.inchesToMeters(-50),0, Rotation2d.fromDegrees(0));
 
+        SwerveControllerCommand backUp = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, backUpPos);
 
-        //SwerveControllerCommand driveToBackUpPos
-
+        this.addCommands(backUp);
+        //shoot command
 
     }
 

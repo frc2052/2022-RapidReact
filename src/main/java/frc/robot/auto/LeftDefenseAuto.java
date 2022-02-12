@@ -38,6 +38,7 @@ public class LeftDefenseAuto extends AutoBase {
         VisionTurnInPlaceCommand turnAndAimCommand = new VisionTurnInPlaceCommand(drivetrain, vision);
         SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-90)), opponentBallPos, super.createRotationAngle(-90));
         TurnInPlaceCommand turnToHanger = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(135));
+        TurnInPlaceCommand turnToFirstTeleopBall = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(-170));
 
         IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
         IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
@@ -55,7 +56,9 @@ public class LeftDefenseAuto extends AutoBase {
         this.addCommands(driveToOpponentBallPos);   // intakeOpposingBall1
         this.addCommands(turnToHanger);
         // this.addCommands(launchCargoCommand);
+        this.addCommands(turnToFirstTeleopBall);
 
+        
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
