@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
-    public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase {
     private Solenoid outSolenoid;
     private Solenoid inSolenoid;
     private VictorSPX intakeMotor;
@@ -34,7 +34,7 @@ import frc.robot.Constants;
     public void hopperGo() {
         hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
     }
-
+    //stops the wheels of the intake
 
     public void hopperStop() {
         hopperMotor.set(ControlMode.PercentOutput, 0);

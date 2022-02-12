@@ -21,10 +21,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  // private final VisionSubsystem vision = new VisionSubsystem();
-  // private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-  // private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem();
+  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+  private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
+  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+  private final Intake intake = new Intake();
+  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
   private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
@@ -35,6 +38,8 @@ public class RobotContainer {
 
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
+  private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
+  private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -46,16 +51,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
-    // m_drivetrainSubsystem.setDefaultCommand(
-    //   new DefaultDriveCommand(
-    //     m_drivetrainSubsystem,
-    //     () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-    //     dashboardControlsSubsystem
-    //   )
-    // );
+//    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
+    m_drivetrainSubsystem.setDefaultCommand(
+      new DefaultDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        dashboardControlsSubsystem
+      )
+    );
 
     // Configure the button bindings
     configureButtonBindings();
@@ -68,19 +73,22 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // driveCommandSwitch.whenHeld(
-    //   new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-    //     m_drivetrainSubsystem,
-    //     () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     vision,
-    //     dashboardControlsSubsystem
-    //   )
-    // );
+    driveCommandSwitch.whenHeld(
+      new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        vision,
+        dashboardControlsSubsystem
+      )
+    );
 
-    // // TEMP to reset the gyro using a button on the secondary pannel to make 
-    // // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
-    // resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
+    // TEMP to reset the gyro using a button on the secondary pannel to make 
+    // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
+    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
+
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intake));
+    feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
   /**
@@ -89,35 +97,35 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return pixyCmd;
-    // // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
-    // switch(dashboardControlsSubsystem.getSelectedAuto()) {
-    //   case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
-    //     return new TestAuto1(m_drivetrainSubsystem);
-    //   case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
-    //     return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-    //   case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-    //     return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
-    //   case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
-    //     return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
-    //   case LEFT_TERMINAL: 
-    //     return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
-    //   case MIDDLE_TWO_DEFENSE:
-    //     return new Middle2CargoDefenseAuto(m_drivetrainSubsystem, vision);
-    //   case MIDDLE_DEFENSE:
-    //     return new MiddleDefenseAuto(m_drivetrainSubsystem, vision);
-    //   case MIDDLE_TERMINAL_3:
-    //     return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
-    //   case MIDDLE_TERMINAL_DEFENSE:
-    //     return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision);
-    //   case FIVE_BALL:
-    //     return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
-    //   default:
-    //     break;
-    // }
+//    return pixyCmd;
+    // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    switch(dashboardControlsSubsystem.getSelectedAuto()) {
+      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
+        return new TestAuto1(m_drivetrainSubsystem);
+      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
+      case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
+        return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
+      case LEFT_TERMINAL: 
+        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
+      case MIDDLE_TWO_DEFENSE:
+        return new Middle2CargoDefenseAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_DEFENSE:
+        return new MiddleDefenseAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_TERMINAL_3:
+        return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
+      case MIDDLE_TERMINAL_DEFENSE:
+        return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision);
+      case FIVE_BALL:
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
+      default:
+        break;
+    }
 
-    // System.err.println("NO VALID AUTO SELECTED");
-    // return null;
+    System.err.println("NO VALID AUTO SELECTED");
+    return null;
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
@@ -144,19 +152,19 @@ public class RobotContainer {
   }
 
   public void addSelectorsToSmartDashboard() {
-    //dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
   }
 
   public void checkSmartDashboardControls() {
-    //dashboardControlsSubsystem.checkSmartDashboardControls();
+    dashboardControlsSubsystem.checkSmartDashboardControls();
   }
 
   public void printToSmartDashboard() {
-    //m_drivetrainSubsystem.putToSmartDashboard();
-    //vision.putToSmartDashboard();
+    m_drivetrainSubsystem.putToSmartDashboard();
+    vision.putToSmartDashboard();
   }
 
   public void resetGyro() {
-    //m_drivetrainSubsystem.zeroGyroscope();
+    m_drivetrainSubsystem.zeroGyroscope();
   }
 }
