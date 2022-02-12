@@ -39,8 +39,8 @@ public class FiveBallDreamAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(-110));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(45));
         
-        IntakeArmIn intakeArmIn = new IntakeArmIn(intake, grassHopper);
-        IntakeArmOut intakeArmOut = new IntakeArmOut(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
 
         PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 
