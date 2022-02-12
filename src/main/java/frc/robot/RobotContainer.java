@@ -36,14 +36,14 @@ public class RobotContainer {
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
   
-  private final JoystickButton visionDriveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
-  private final JoystickButton pixyDriveCommandSwitch = new JoystickButton(m_turnJoystick, 3);
-  private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
-  private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
-  private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
-  private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
-  private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
-  private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
+  private final JoystickButton visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
+  private final JoystickButton pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
+  private final JoystickButton resetGyroButton = new JoystickButton(secondaryPannel, 1);
+  private final JoystickButton intakeArmOutButton = new JoystickButton(driveJoystick, 2);
+  private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
+  private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
+  private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
+  private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
   
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
@@ -77,7 +77,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveCommandSwitch.whenHeld(
+    visionDriveCommandSwitch.whenHeld(
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
         drivetrainSubsystem,
         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -89,10 +89,10 @@ public class RobotContainer {
     
     pixyDriveCommandSwitch.whenHeld(
       new PixyCamDriveCommand(
-        m_drivetrainSubsystem,
+        drivetrainSubsystem,
         pixyCamSubsystem,
-        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         dashboardControlsSubsystem
       )
     );
