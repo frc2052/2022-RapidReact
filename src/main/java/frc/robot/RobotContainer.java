@@ -21,35 +21,35 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
   private final VisionSubsystem vision = new VisionSubsystem();
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
-  private final Joystick m_driveJoystick = new Joystick(0);
-  private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryPannel = new Joystick(3);
+  private final Joystick driveJoystick = new Joystick(0);
+  private final Joystick turnJoystick = new Joystick(1);
+  private final Joystick secondaryPannel = new Joystick(3);
   
-  private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
-  private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
-  private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
-  private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
-  private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
+  private final JoystickButton driveCommandSwitch = new JoystickButton(turnJoystick, 1);
+  private final JoystickButton resetGyroButton = new JoystickButton(secondaryPannel, 1);
+  private final JoystickButton intakeArmOutButton = new JoystickButton(driveJoystick, 2);
+  private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
+  private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
   
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(1);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(1);
 
-  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+  private final UsbCameraSubsystem intakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+    drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+            drivetrainSubsystem,
+            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
             dashboardControlsSubsystem
     ));
 
@@ -65,14 +65,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driveCommandSwitch.whenHeld(new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      drivetrainSubsystem,
+      () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
       vision,
       dashboardControlsSubsystem
       ));
     
-    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
+    resetGyroButton.whenPressed(new ResetGyroCommand(drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
     intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
     intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
@@ -88,15 +88,15 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
-        return new TestAuto1(m_drivetrainSubsystem);
+        return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
-        return new Simple3BallAuto(m_drivetrainSubsystem, vision);
+        return new Simple3BallAuto(drivetrainSubsystem, vision);
       case THREE_BALL_TERMINAL: // TODO 3 Ball Auto using the closest cargo to the robot and the cargo positioned near the terminal.
         break;
       case FOUR_BALL:           // TODO Uses the preloaded cargo and 3 closest positioned around us (potential 5 ball auto if scored by human player).
         break;
       case FRONT_INTAKE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
-        return new Simple3BallAutoFrontIntake(m_drivetrainSubsystem, vision);
+        return new Simple3BallAutoFrontIntake(drivetrainSubsystem, vision);
       default:
         break;
     }
@@ -138,11 +138,11 @@ public class RobotContainer {
   }
 
   public void printToSmartDashboard() {
-    m_drivetrainSubsystem.putToSmartDashboard();
+    drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
   }
 
   public void resetGyro() {
-    m_drivetrainSubsystem.zeroGyroscope();
+    drivetrainSubsystem.zeroGyroscope();
   }
 }
