@@ -1,73 +1,95 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class HookClimberSubsystem extends SubsystemBase{
+    // DoubleSolenoid that controls both in and out solenoids for both climbing arms.
+    private final DoubleSolenoid climberSolenoid;
+    // Motor that controls the wenches for climbing.
+    private final TalonFX climberMotor;
+    private double desiredPositionTicks;
 
-    private Solenoid forward1Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
-            Constants.Solenoids.FORWARD_1_SOLENOID);
-    private Solenoid backward1Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
-            Constants.Solenoids.BACKWARD_1_SOLENOID);
-    private Solenoid forward2Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
-            Constants.Solenoids.FORWARD_2_SOLENOID);;
-    private Solenoid backward2Solenoid = new Solenoid(PneumaticsModuleType.REVPH,
-            Constants.Solenoids.BACKWARD_2_SOLENOID);
-    private TalonFX extendArmMotor = new TalonFX(Constants.MotorIDs.EXTEND_ARM_MOTOR);
-    private double desiredPosition;
-    // This extend the arm at a set speed
-    public void extendArm() {
-        extendArmMotor.set(ControlMode.PercentOutput, Constants.Arm.kArmSpeed);
+    public HookClimberSubsystem() {
+        climberSolenoid = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH, 
+            Constants.Solenoids.CLIMBER_FORWARD_SOLENOID,
+            Constants.Solenoids.CLIMBER_BACKWARD_SOLENOID
+        );
+
+        climberMotor = new TalonFX(Constants.MotorIDs.CLIMBER_MOTOR);
+        climberMotor.setNeutralMode(NeutralMode.Brake);
+        climberMotor.setInverted(false);
+        climberMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+        climberMotor.setSelectedSensorPosition(0, 0, 10);
     }
+
+    /**
+     * Extends the climbing arm at a set speed
+     */
+    public void manualExtendArm() {
+        if (climberMotor.getSelectedSensorPosition() <= Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS) {
+            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED);
+        } else {
+            System.out.println("Climber extended to (or past) the max height!");
+            climberMotor.set(ControlMode.PercentOutput, 0);
+        }
+    }
+
+    /**
+     * Retracts the climbing arm at a set speed
+     */
+    public void manualRetractArm() {
+        if (climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
+            climberMotor.set(ControlMode.PercentOutput, -Constants.Climber.CLIMBER_EXTENSION_SPEED);
+        } else {
+            System.out.println("Climber retracted to (or past) the min height!");
+            climberMotor.set(ControlMode.PercentOutput, 0);
+        }
+    }
+
+    /**
+     * Shifts climber arms into climbing ready position (verticle)
+     */
+    public void shiftClimberForward(){
+        climberSolenoid.set(Value.kForward);
+    }
+
+    /**
+     * Shifts climber arms into the relaxed or reaching position (angled)
+     */
+    public void shiftClimberBackward(){
+        climberSolenoid.set(Value.kReverse);
+    }
+
+    /**
+     * Stops all climber activity including solenoids and motors.
+     */
+    public void manualStop() {
+        climberMotor.set(ControlMode.PercentOutput, 0);
+        climberSolenoid.set(Value.kOff);
+    }
+
     public void setArmPostionInches(double inches){
         double ticks = heightInInchesToTicks(inches);
-        extendArmMotor.set(ControlMode.Position, ticks);
-        desiredPosition = ticks;
+        climberMotor.set(ControlMode.Position, ticks);
+        desiredPositionTicks = ticks;
     }
+
     public boolean isAtDesiredPosition(){
-        return extendArmMotor.getSelectedSensorPosition() == desiredPosition;
-    }
-
-    // This retract the arm at a set speed
-    public void retractArm() {
-        extendArmMotor.set(ControlMode.PercentOutput, -Constants.Arm.kArmSpeed);
-    }
-
-    // Stops the arm from moving
-    public void armStop() {
-        extendArmMotor.set(ControlMode.PercentOutput, 0);
-    }// shifts arm 1 down
-
-    public void shiftArm1Down() {
-        forward1Solenoid.set(false);
-        backward1Solenoid.set(true);
-    }
-
-    // shifts arm 1 up
-    public void shiftArm1Up() {
-        forward1Solenoid.set(true);
-        backward1Solenoid.set(false);
-    }
-
-    // shifts arm 2 down
-    public void shiftArm2Down() {
-        forward2Solenoid.set(false);
-        backward2Solenoid.set(true);
-    }
-
-    // shifts arm 2 up
-    public void shiftArm2Up() {
-        forward2Solenoid.set(true);
-        backward2Solenoid.set(false);
+        return climberMotor.getSelectedSensorPosition() == desiredPositionTicks;
     }
 
     private double heightInInchesToTicks(double inches) {
-        double numberOfRotaions = inches / Constants.Arm.WINCH_CIRCUMFERENCE_INCHES;
-        return numberOfRotaions * Constants.Arm.TICKS_PER_WINCH_ROTATION;
+        double numberOfRotaions = inches / Constants.Climber.WINCH_CIRCUMFERENCE_INCHES;
+        return numberOfRotaions * Constants.Climber.TICKS_PER_WINCH_ROTATION;
     }
 }

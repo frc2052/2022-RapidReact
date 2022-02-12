@@ -20,12 +20,12 @@ public class ClawClimberSubsystem {
 
       //Set the arms speed as it accends
       public void rotateArm(){
-            armMotor.set(ControlMode.PercentOutput, Constants.Arm.kArmSpeed);
+            armMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED);
            
       }
       //Set the arms speed as it descends 
       public void armReverse(){
-            armMotor.set(ControlMode.PercentOutput, -Constants.Arm.kArmSpeed);
+            armMotor.set(ControlMode.PercentOutput, -Constants.Climber.CLIMBER_EXTENSION_SPEED);
         }
       //Stops the arm from moving 
         public void armStop(){
