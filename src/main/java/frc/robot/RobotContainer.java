@@ -85,10 +85,7 @@ public class RobotContainer {
       vision,
       dashboardControlsSubsystem
       ));
-	// TEMP to reset the gyro using a button on the secondary pannel to make 
-    // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
     
-    resetGyroButton.whenPressed(new ResetGyroCommand(drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem));
@@ -111,8 +108,8 @@ public class RobotContainer {
       case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
         return new Simple3BallAuto(drivetrainSubsystem, vision);
       
-      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-        return new Simple3BallAutoTesting(drivetrainSubsystem, vision);
+      // case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+      //   return new Simple3BallAutoTesting(drivetrainSubsystem, vision);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
         return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
       case LEFT_TERMINAL: 
