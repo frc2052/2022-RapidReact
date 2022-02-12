@@ -17,6 +17,7 @@ public class HookClimberSubsystem extends SubsystemBase{
     // Motor that controls the wenches for climbing.
     private final TalonFX climberMotor;
     private double desiredPositionTicks;
+    private ClimberSolenoidState currentSolenoidState;
 
     public HookClimberSubsystem() {
         climberSolenoid = new DoubleSolenoid(
@@ -30,6 +31,8 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberMotor.setInverted(false);
         climberMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         climberMotor.setSelectedSensorPosition(0, 0, 10);
+
+        currentSolenoidState = ClimberSolenoidState.BACKWARD;
     }
 
     /**
@@ -57,10 +60,18 @@ public class HookClimberSubsystem extends SubsystemBase{
     }
 
     /**
+     * Stops all climber motor activity.
+     */
+    public void manualStop() {
+        climberMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    /**
      * Shifts climber arms into climbing ready position (verticle)
      */
     public void shiftClimberForward(){
         climberSolenoid.set(Value.kForward);
+        currentSolenoidState = ClimberSolenoidState.FORWARD;
     }
 
     /**
@@ -68,14 +79,11 @@ public class HookClimberSubsystem extends SubsystemBase{
      */
     public void shiftClimberBackward(){
         climberSolenoid.set(Value.kReverse);
+        currentSolenoidState = ClimberSolenoidState.BACKWARD;
     }
 
-    /**
-     * Stops all climber activity including solenoids and motors.
-     */
-    public void manualStop() {
-        climberMotor.set(ControlMode.PercentOutput, 0);
-        climberSolenoid.set(Value.kOff);
+    public ClimberSolenoidState getClimberSolenoidState() {
+        return currentSolenoidState;
     }
 
     public void setArmPostionInches(double inches){
@@ -91,5 +99,10 @@ public class HookClimberSubsystem extends SubsystemBase{
     private double heightInInchesToTicks(double inches) {
         double numberOfRotaions = inches / Constants.Climber.WINCH_CIRCUMFERENCE_INCHES;
         return numberOfRotaions * Constants.Climber.TICKS_PER_WINCH_ROTATION;
+    }
+
+    public static enum ClimberSolenoidState {
+        FORWARD,
+        BACKWARD;
     }
 }

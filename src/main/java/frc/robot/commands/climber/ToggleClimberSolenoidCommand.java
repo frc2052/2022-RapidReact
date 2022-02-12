@@ -6,22 +6,30 @@ package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem.ClimberSolenoidState;
 
-public class ClimberSolenoidBackCommand extends CommandBase {
+public class ToggleClimberSolenoidCommand extends CommandBase {
   private final HookClimberSubsystem climberSubsystem;
 
-  public ClimberSolenoidBackCommand(HookClimberSubsystem climbSubsystem) {
+  public ToggleClimberSolenoidCommand(HookClimberSubsystem climbSubsystem) {
       this.climberSubsystem = climbSubsystem;
 
       addRequirements(this.climberSubsystem);
   }
 
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {}
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // TODO: Slightly extend the climber then push the climber solenoid back.
-    climberSubsystem.setArmPostionInches(7.5);
-    climberSubsystem.shiftClimberForward();
+    if (climberSubsystem.getClimberSolenoidState() == ClimberSolenoidState.FORWARD) {
+      climberSubsystem.setArmPostionInches(7.5);
+      climberSubsystem.shiftClimberBackward();
+    } else {
+      climberSubsystem.shiftClimberForward();
+    }
   }
 
   // Returns true when the command should end.
