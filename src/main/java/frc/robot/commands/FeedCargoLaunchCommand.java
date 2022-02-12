@@ -21,15 +21,14 @@ public class FeedCargoLaunchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (twoWheelFly.isAtSpeed()) {
-      indexer.runPreload();  
+    if (twoWheelFly.isAtSpeed()) {  
       indexer.runFeeder();
     }
   }
 
   @Override
    public void end(boolean interrupted) {
-    indexer.stop();
+    indexer.stopFeeder();
   }
 
   // Returns true when the command should end.
