@@ -26,7 +26,9 @@ public class ToggleClimberSolenoidCommand extends CommandBase {
   public void execute() {
     if (climberSubsystem.getClimberSolenoidState() == ClimberSolenoidState.FORWARD) {
       climberSubsystem.setArmPostionInches(7.5);
-      climberSubsystem.shiftClimberBackward();
+      if (climberSubsystem.isAtDesiredPosition()) {
+        climberSubsystem.shiftClimberBackward();
+      }
     } else {
       climberSubsystem.shiftClimberForward();
     }

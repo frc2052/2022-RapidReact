@@ -16,7 +16,9 @@ public class StartClimbCommand extends CommandBase {
     public void execute() {
         // Climb to 2nd bar height then shift climber into forward position
         climberSubsystem.setArmPostionInches(60.25);
-        climberSubsystem.shiftClimberForward();
+        if (climberSubsystem.isAtDesiredPosition()) {
+            climberSubsystem.shiftClimberForward();
+        }
     }
 
     @Override
