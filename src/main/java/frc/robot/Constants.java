@@ -56,8 +56,6 @@ public final class Constants {
     public static final class PixyCamConstants {
         public static final double FOV = 60;
         public static final double IMAGE_WIDTH_PIXELS = 316;
-
-
     }
 
     public static final class DriveTrain{
