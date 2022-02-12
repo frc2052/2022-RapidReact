@@ -32,17 +32,17 @@ public class RobotContainer {
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
   private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
 
-  private final Joystick m_driveJoystick = new Joystick(0);
-  private final Joystick m_turnJoystick = new Joystick(1);
-  private final Joystick m_secondaryPannel = new Joystick(2);
+  private final Joystick driveJoystick = new Joystick(0);
+  private final Joystick turnJoystick = new Joystick(1);
+  private final Joystick secondaryPannel = new Joystick(2);
   
-  private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
-  private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
-  private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
-  private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
-  private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
-  private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
-  private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
+  private final JoystickButton driveCommandSwitch = new JoystickButton(turnJoystick, 1);
+  private final JoystickButton resetGyroButton = new JoystickButton(secondaryPannel, 1);
+  private final JoystickButton intakeArmOutButton = new JoystickButton(driveJoystick, 2);
+  private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
+  private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
+  private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
+  private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
 
  
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
@@ -59,9 +59,9 @@ public class RobotContainer {
     drivetrainSubsystem.setDefaultCommand(
       new DefaultDriveCommand(
             drivetrainSubsystem,
-            () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
             dashboardControlsSubsystem
 		)
     );
@@ -80,8 +80,8 @@ public class RobotContainer {
 	driveCommandSwitch.whenHeld(
       new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
       drivetrainSubsystem,
-      () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
       vision,
       dashboardControlsSubsystem
       ));
@@ -89,9 +89,9 @@ public class RobotContainer {
     // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
     
     resetGyroButton.whenPressed(new ResetGyroCommand(drivetrainSubsystem)); // TEMP to reset the gyro using a button on the secondary pannel to make resetting in teleop easier, should be moved to a Shuffleboard virtual toggle
-    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
-    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
-    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
+    intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem));
+    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem));
+    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem));
 
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
