@@ -29,14 +29,14 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
-  private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
-  private final PixyCamManualDriveCommand pixyCmd = new PixyCamManualDriveCommand(pixySub);
+  private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
   private final Joystick m_secondaryPannel = new Joystick(2);
   
-  private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
+  private final JoystickButton visionDriveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
+  private final JoystickButton pixyDriveCommandSwitch = new JoystickButton(m_turnJoystick, 3);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
   private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
   private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
@@ -77,15 +77,26 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveCommandSwitch.whenHeld(
+    visionDriveCommandSwitch.whenHeld(
       new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
         m_drivetrainSubsystem,
         () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         vision,
         dashboardControlsSubsystem
-      ));
+      )
+    );
     
+    pixyDriveCommandSwitch.whenHeld(
+      new PixyCamDriveCommand(
+        m_drivetrainSubsystem,
+        pixyCamSubsystem,
+        () -> -modifyAxis(m_driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        dashboardControlsSubsystem
+      )
+    );
+
     intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
     intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
