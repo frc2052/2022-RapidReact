@@ -22,7 +22,7 @@ public class LeftDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 
@@ -39,10 +39,10 @@ public class LeftDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-90)), opponentBallPos, super.createRotationAngle(-90));
         TurnInPlaceCommand turnToHanger = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(135));
 
-        IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
-        IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
+        IntakeArmIn intakeArmIn = new IntakeArmIn(intake, grassHopper);
+        IntakeArmOut intakeArmOut = new IntakeArmOut(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake, grassHopper);
         
         /*
         ParallelCommandGroup intakeBall1 = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);

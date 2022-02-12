@@ -108,7 +108,7 @@ public class RobotContainer {
     // Go ahead and hover over auto constructors for each auto's detailed description.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-      return new AutoTesting(m_drivetrainSubsystem, vision, intakeSubsystem);
+      return new AutoTesting(m_drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
       case TEST_AUTO_1:
         return new TestAuto1(m_drivetrainSubsystem);
       case SIMPLE_3_BALL:
@@ -120,15 +120,15 @@ public class RobotContainer {
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision);
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
+        return new LeftDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intakeSubsystem);
+        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
       case FIVE_BALL:
-        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
+        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       default:
         break;
     }
