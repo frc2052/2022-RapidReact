@@ -15,8 +15,16 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class ThreeballDriveAndShoot extends AutoBase {
+
+    /**
+    * Position A Start (Far Right Parallel with Outer Tarmac Line)
+    * Varient of Simple3BallAuto originally used for testing driving while aiming at UpperHub in auto.
+    * Curretnly only left for driving with horizontal offset aiming based on velocity.
+    * @param drivetrain
+    * @param vision
+    */
     public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        super(drivetrain);
+        super(drivetrain, vision);
 
         DrivetrainSubsystem m_drivetrain = drivetrain;
         VisionSubsystem m_vision = vision;
@@ -28,17 +36,17 @@ public class ThreeballDriveAndShoot extends AutoBase {
         Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
         Pose2d driveTowardsBall2 = new Pose2d(Units.inchesToMeters(18.33), Units.inchesToMeters(-80), Rotation2d.fromDegrees(-130)); // To stop at point along the way to the ball, can be figured out by making equation for the line
         Supplier<Rotation2d> aimAtHub = () -> { // Lambda that calls everything in the brackets every time the Suppier is accessed.
-            m_vision.updateLimelight();
+            vision.updateLimelight();
             Rotation2d rotation;
             if(m_vision.hasValidTarget()) {
-                rotation = m_drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())).minus(Rotation2d.fromDegrees(getHorizontalFiringOffsetAdvanced(drivetrain, vision)));
             } else {
-                rotation = Rotation2d.fromDegrees(179);
+                rotation = Rotation2d.fromDegrees(170);
             }
             return rotation;
         };
 
-        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130));
+        Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(-19.5), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130));
         Supplier<Rotation2d> spinToBall2 = () -> {   // TODO Get pixy cam to control this in the case we're not fully aligned with the ball
             return Rotation2d.fromDegrees(-130);
         };
@@ -47,13 +55,13 @@ public class ThreeballDriveAndShoot extends AutoBase {
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(135); };
 
         // Create SwerveControllerCommands
-        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, startPos2, driveTowardsBall2, aimAtHub);
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
+        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, startPos2, driveTowardsBall2, aimAtHub);
 
         //ParallelCommandGroup driveAndShootToBall2 = new ParallelCommandGroup(aimWhileDrivingToBall2/*, shooterCommand*/);
 
-        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.m_fastTrajectoryConfig, super.getLastEndingPosCreated(), arriveAtBall2, spinToBall2);
-        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(), arriveAtBall2, spinToBall2);
+        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
 
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
@@ -68,5 +76,18 @@ public class ThreeballDriveAndShoot extends AutoBase {
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 
+    public double getHorizontalFiringOffsetAdvanced(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+        if(drivetrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+          return 0.0;
+        }
+        // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
+        double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
+        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters, 2) + Math.pow(vision.xDistanceToUpperHub(), 2));
+        return Math.atan(Math.toRadians(vision.xDistanceToUpperHub()*drivetrain.getLastWheelVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
+    }
 
+    public double getHorizontalFiringOffsetBasic(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+        double linearOffsetMultiplier = 0.5;
+        return drivetrain.getLastWheelVelocity()*linearOffsetMultiplier;
+    }
 }

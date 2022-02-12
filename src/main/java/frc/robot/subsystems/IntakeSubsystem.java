@@ -7,6 +7,7 @@ import frc.robot.Constants.MotorIDs;
 import frc.robot.Constants.Solenoids;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -17,6 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private VictorSPX hopperMotor;
 
     private double intakePct;
+    private boolean isIntakeArmOut = false;
 
     public IntakeSubsystem() {
         outSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Solenoids.INTAKE_OUT_SOLENOID);
@@ -30,14 +32,13 @@ public class IntakeSubsystem extends SubsystemBase {
     public void intakeArmIn(){
         inSolenoid.set(true);
         outSolenoid.set(false);
-        isArmOut = false;
-        boolean isArmOut = false;
+        isIntakeArmOut = false;
     }
   
     public void intakeArmOut(){
         inSolenoid.set(false);
         outSolenoid.set(true);
-        isArmOut = true;
+        isIntakeArmOut = true;
     }
 
     public void intakeOn(){
@@ -71,5 +72,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public double getIntakeSpeed() {
         return intakePct;
+    }
+
+    public void putToSmartDashboard() {
+        SmartDashboard.putBoolean("Intake Arm Out", isIntakeArmOut);
     }
 }

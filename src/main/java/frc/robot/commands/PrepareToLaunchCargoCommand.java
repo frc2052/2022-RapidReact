@@ -23,7 +23,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     this.twoWheelFly = twoWheelFly;
     this.intake = intake;
   }
-
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -32,14 +32,14 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
       indexer.runPreload();
       intake.hopperGo();
     } else {
-      indexer.stop();
+        indexer.stop();
       if (limitSwitchTwo.get() == false) {
         indexer.runPreload();
         intake.hopperGo();
       } else {
         indexer.stop();
-      }
     }
+  }
   }
   // Called once the command ends or is interrupted.
   @Override

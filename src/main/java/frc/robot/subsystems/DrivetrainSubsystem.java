@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 //import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
@@ -247,9 +249,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        SmartDashboard.putNumber("Gyro Angle", m_navx.getAngle());
         
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", lastwheelVelocity);
         SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+
   }
 }
