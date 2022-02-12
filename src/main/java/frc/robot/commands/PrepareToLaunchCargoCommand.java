@@ -8,20 +8,24 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
+
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final IntakeSubsystem intake;
+  private final HopperSubsystem grassHopper;
   private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
   private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
+  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.indexer = indexer;
     this.twoWheelFly = twoWheelFly;
     this.intake = intake;
+    this.grassHopper = grassHopper;
   }
   
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,12 +34,12 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     twoWheelFly.runAtShootSpeed();
     if ( limitSwitch.get() == false ) {
       indexer.runPreload();
-      intake.hopperGo();
+      grassHopper.hopperGo();
     } else {
         indexer.stop();
       if (limitSwitchTwo.get() == false) {
         indexer.runPreload();
-        intake.hopperGo();
+        grassHopper.hopperGo();
       } else {
         indexer.stop();
     }
@@ -46,7 +50,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   public void end(boolean interrupted) {
     indexer.stop();
     twoWheelFly.stop();
-    intake.hopperStop();
+    grassHopper.hopperStop();
   }
 
   // Returns true when the command should end.
