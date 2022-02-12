@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmIn extends CommandBase {
-    private final Intake m_intakeSubsystem;
-    public IntakeArmIn(Intake subsystem) {
-      m_intakeSubsystem = subsystem;
+    private final IntakeSubsystem intakeSubsystem;
+    public IntakeArmIn(IntakeSubsystem intakeSubsystem) {
+      this.intakeSubsystem = intakeSubsystem;
       // Maybe add dependencies   
   }
       
@@ -16,9 +16,9 @@ public class IntakeArmIn extends CommandBase {
     }
     @Override
     public void execute() {
-        m_intakeSubsystem.intakeArmIn();
-        m_intakeSubsystem.intakeStop();
-        m_intakeSubsystem.hopperStop();
+        intakeSubsystem.intakeArmIn();
+        intakeSubsystem.intakeStop();
+        intakeSubsystem.hopperStop();
         //arm retracts and stops
     }
     @Override

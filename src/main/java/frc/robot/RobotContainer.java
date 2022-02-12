@@ -26,7 +26,7 @@ public class RobotContainer {
   private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
   private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final Intake intake = new Intake();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
@@ -35,19 +35,23 @@ public class RobotContainer {
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
   private final Joystick m_secondaryPannel = new Joystick(2);
-
+  
   private final JoystickButton driveCommandSwitch = new JoystickButton(m_turnJoystick, 1);
   private final JoystickButton resetGyroButton = new JoystickButton(m_secondaryPannel, 1);
+  private final JoystickButton intakeArmOutButton = new JoystickButton(m_driveJoystick, 2);
+  private final JoystickButton intakeArmInButton = new JoystickButton(m_driveJoystick, 3);
+  private final JoystickButton intakeStopButton = new JoystickButton(m_driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(m_secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(m_secondaryPannel, 3);
+
+ 
+  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
-
-  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -80,14 +84,15 @@ public class RobotContainer {
         () -> -modifyAxis(m_driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         vision,
         dashboardControlsSubsystem
-      )
-    );
+      ));
+    
+    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
+    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
+    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
 
-    // TEMP to reset the gyro using a button on the secondary pannel to make 
-    // resetting in teleop easier, should be moved to a Shuffleboard virtual toggle.
-    resetGyroButton.whenPressed(new ResetGyroCommand(m_drivetrainSubsystem));
-
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intake));
+    // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
+    resetGyroButton.whenPressed(() -> { this.resetGyro(); }); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
@@ -99,27 +104,30 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 //    return pixyCmd;
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    // Go ahead and hover over auto constructors for each auto's detailed description.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
-      case TEST_AUTO_1:         // Test Auto that currently just moves slow and tests swerve drive functions.
+      case AUTO_TESTING:
+      return new AutoTesting(m_drivetrainSubsystem, vision, intakeSubsystem);
+      case TEST_AUTO_1:
         return new TestAuto1(m_drivetrainSubsystem);
-      case SIMPLE_3_BALL:       // 3 Ball Auto using the two closest cargo near the tarmac.
+      case SIMPLE_3_BALL:
         return new Simple3BallAuto(m_drivetrainSubsystem, vision);
-      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
+//      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
+//        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
       case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
         return new ThreeballDriveAndShoot(m_drivetrainSubsystem, vision);
-      case LEFT_TERMINAL: 
-        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision); 
-      case MIDDLE_TWO_DEFENSE:
-        return new Middle2CargoDefenseAuto(m_drivetrainSubsystem, vision);
-      case MIDDLE_DEFENSE:
-        return new MiddleDefenseAuto(m_drivetrainSubsystem, vision);
-      case MIDDLE_TERMINAL_3:
+      case LEFT_TERMINAL_3_BALL: 
+        return new LeftTerminal3Cargo(m_drivetrainSubsystem, vision);
+      case LEFT_2_BALL_1_DEFENSE:
+        return new LeftDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
+      case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleTerminalDefenseAuto(m_drivetrainSubsystem, vision);
+        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intakeSubsystem);
       case FIVE_BALL:
-        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision);
+        return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
+      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+        return new MiddleRight5BallDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
       default:
         break;
     }
@@ -144,7 +152,8 @@ public class RobotContainer {
   // This code borrowed from the SwerverDriveSpecialist Sample code
   private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
-    value = deadband(value, 0.1);
+    value = deadband(value, 0.05);
+
     // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
     
@@ -162,6 +171,7 @@ public class RobotContainer {
   public void printToSmartDashboard() {
     m_drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
+    intakeSubsystem.putToSmartDashboard();
   }
 
   public void resetGyro() {
