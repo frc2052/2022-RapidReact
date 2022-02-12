@@ -15,8 +15,8 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final IntakeSubsystem intake;
-  private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
-  private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
+  // private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
+  // private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
   public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
     this.indexer = indexer;
@@ -28,18 +28,18 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   @Override
   public void execute() {
     twoWheelFly.runAtShootSpeed();
-    if ( limitSwitch.get() == false ) {
-      indexer.runPreload();
-      intake.hopperGo();
-    } else {
-        indexer.stop();
-      if (limitSwitchTwo.get() == false) {
-        indexer.runPreload();
-        intake.hopperGo();
-      } else {
-        indexer.stop();
-    }
-  }
+    // if ( limitSwitch.get() == false ) {
+    //   indexer.runPreload();
+    //   intake.hopperGo();
+    // } else {
+    //     indexer.stop();
+    //   if (limitSwitchTwo.get() == false) {
+    //     indexer.runPreload();
+    //     intake.hopperGo();
+    //   } else {
+    //     indexer.stop();
+    // }
+  //}
   }
   // Called once the command ends or is interrupted.
   @Override

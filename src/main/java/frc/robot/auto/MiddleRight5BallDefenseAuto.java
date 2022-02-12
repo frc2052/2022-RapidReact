@@ -47,8 +47,8 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         Pose2d driveBackToShoot = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(15), Rotation2d.fromDegrees(166));
         
         AutoTrajectoryConfig continousSpeedDriveEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
-        AutoTrajectoryConfig continousSpeedDriveStart2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
-        AutoTrajectoryConfig continousSpeedDriveStartEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
+        AutoTrajectoryConfig continousSpeedDriveStart2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 2, 0);
+        AutoTrajectoryConfig continousSpeedDriveStartEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 2, 2);
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveAndShootToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnSlowDriveTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplier(170));
