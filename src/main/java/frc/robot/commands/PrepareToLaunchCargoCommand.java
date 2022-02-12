@@ -18,8 +18,7 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final IntakeSubsystem intake;
   private final HopperSubsystem grassHopper;
-  private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
-  private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
+
 
   public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.indexer = indexer;
@@ -32,23 +31,23 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   @Override
   public void execute() {
     twoWheelFly.runAtShootSpeed();
-    if ( limitSwitch.get() == false ) {
+    if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == false) {
       indexer.runPreload();
       grassHopper.hopperGo();
-    } else {
-        indexer.stop();
-      if (limitSwitchTwo.get() == false) {
+    } else if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == true) {
+        indexer.stopFeeder();
         indexer.runPreload();
-        grassHopper.hopperGo();
-      } else {
-        indexer.stop();
+    } else {
+        indexer.stopFeeder();
+        indexer.stopPreload();
     }
   }
-  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stop();
+    indexer.stopFeeder();
+    indexer.stopPreload();
     twoWheelFly.stop();
     grassHopper.hopperStop();
   }
