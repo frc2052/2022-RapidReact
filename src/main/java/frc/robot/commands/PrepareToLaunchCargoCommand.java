@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
@@ -16,14 +14,12 @@ import frc.robot.subsystems.TwoWheelFlySubsystem;
 public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
-  private final IntakeSubsystem intake;
   private final HopperSubsystem grassHopper;
 
 
   public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.indexer = indexer;
     this.twoWheelFly = twoWheelFly;
-    this.intake = intake;
     this.grassHopper = grassHopper;
   }
   

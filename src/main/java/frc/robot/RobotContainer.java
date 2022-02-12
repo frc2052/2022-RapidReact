@@ -43,7 +43,8 @@ public class RobotContainer {
   private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
   private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
-  private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
+  private final JoystickButton feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 3);
+  private final JoystickButton feedOneCargoLaunch = new JoystickButton(secondaryPannel, 4);
 
  
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
@@ -92,7 +93,10 @@ public class RobotContainer {
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
 
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem, grassHopper));
-    feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+
+
   }
 
   /**
