@@ -15,7 +15,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private Solenoid inSolenoid;
     private boolean isArmOut;
     private VictorSPX intakeMotor;
-    private VictorSPX hopperMotor;
 
     private double intakePct;
     private boolean isIntakeArmOut = false;
@@ -26,7 +25,6 @@ public class IntakeSubsystem extends SubsystemBase {
         isArmOut = false;
         intakePct = 0;
         intakeMotor = new VictorSPX(MotorIDs.INTAKE_MOTOR);
-        hopperMotor = new VictorSPX(MotorIDs.HOPPER_MOTOR);
     }
 
     public void intakeArmIn(){
@@ -44,19 +42,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public void intakeOn(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
         intakePct =  Constants.Intake.kIntakeSpeed;
-    }
-   
-    public void hopperGo() {
-        hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
-    }
-    //stops the wheels of the intake
-
-    public void hopperStop() {
-        hopperMotor.set(ControlMode.PercentOutput, 0);
-    }
-
-    public void hopperReverse() {
-        hopperMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);
     }
 
     public void intakeReverse(){

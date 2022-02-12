@@ -27,6 +27,7 @@ public class RobotContainer {
   private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final HopperSubsystem grassHopper = new HopperSubsystem();
   private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
   private final PixyCamSubsystem pixySub = new PixyCamSubsystem();
@@ -86,13 +87,13 @@ public class RobotContainer {
         dashboardControlsSubsystem
       ));
     
-    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
-    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
-    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
+    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem, grassHopper));
+    intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem, grassHopper));
+    intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem, grassHopper));
 
     // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
     resetGyroButton.whenPressed(() -> { this.resetGyro(); }); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem, grassHopper));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
