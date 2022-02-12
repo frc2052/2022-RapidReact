@@ -73,17 +73,17 @@ public class RobotContainer {
 
   public void init() {
     // Subsystems
-    try { m_drivetrainSubsystem = new DrivetrainSubsystem(); }                    catch(Exception e) { m_drivetrainSubsystem = null; System.err.println("DRIVETRAIN FAIL"); }
-    try { vision = new VisionSubsystem(); }                                       catch(Exception e) { vision = null; System.err.println("VISION FAIL");}
-    try { dashboardControlsSubsystem = new DashboardControlsSubsystem(vision); }  catch(Exception e) { dashboardControlsSubsystem = null; System.err.println("DASHBOARD CONTROLS FAIL");}
-    try { intakeSubsystem = new IntakeSubsystem(); }                              catch(Exception e) { intakeSubsystem = null; System.err.println("INTAKE FAIL");}
-    try { twoWheelFlySubsystem = new TwoWheelFlySubsystem(); }                    catch(Exception e) { twoWheelFlySubsystem = null; System.err.println("SHOOTER FAIL");}
-    try { indexerSubsystem = new IndexerSubsystem(); }                            catch(Exception e) { indexerSubsystem = null; System.err.println("INDEXER FAIL");}
-    try { pnuematics = new PneumaticsSubsystem(); }                               catch(Exception e) { pnuematics = null; System.err.println("PNUEMATICS FAIL");}
-    try { pixyCamSubsystem = new PixyCamSubsystem(); }                            catch(Exception e) { pixyCamSubsystem = null; System.err.println("PIXY CAM FAIL"); }
+m_drivetrainSubsystem = new DrivetrainSubsystem();
+vision = new VisionSubsystem();
+dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+intakeSubsystem = new IntakeSubsystem();
+twoWheelFlySubsystem = new TwoWheelFlySubsystem();
+indexerSubsystem = new IndexerSubsystem();
+pnuematics = new PneumaticsSubsystem();
+pixyCamSubsystem = new PixyCamSubsystem();
 
     //Commands
-    try { pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem); }  catch(Exception e) { pixyCamManualDriveCommand = null; System.err.println("PIXY CAM COMMAND FAIL"); }
+pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem);
   }
 
   /**

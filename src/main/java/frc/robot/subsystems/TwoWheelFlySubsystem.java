@@ -71,7 +71,7 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
    * @return
    */
   public double calculateReqProjectileVelocity(double distanceMeters) {
-    double height = Constants.Field.kUpperHubHeightMeters;
+    double height = Constants.Field.kUpperHubHeightMeters - Constants.ShooterSub.kShooterMountHeight;
     double angleRadians = Math.toRadians(Constants.ShooterSub.kShooterFiringAngleDegrees); 
     return Math.sqrt(-9.8 * (Math.pow(distanceMeters, 2)) / (2 * Math.pow(Math.cos(angleRadians), 2) * (height - distanceMeters * Math.tan(angleRadians))));
   }
