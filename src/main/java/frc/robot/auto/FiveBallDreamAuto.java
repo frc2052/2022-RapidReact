@@ -22,7 +22,7 @@ public class FiveBallDreamAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public FiveBallDreamAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public FiveBallDreamAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
         
@@ -39,10 +39,10 @@ public class FiveBallDreamAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(-110));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(45));
         
-        IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
-        IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(vision, indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO add features for advanced timing control when the shooter or intake should be run during driving commands
         //ParallelCommandGroup aimAndShootPreloaded = new ParallelCommandGroup(aimAtHub, launchCargoCommand);

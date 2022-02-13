@@ -27,7 +27,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
@@ -45,10 +45,10 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
-        IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(vision, indexer, shooter, intake);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper);
 
         /*
         ParallelCommandGroup intakeEnemyBall1 = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
