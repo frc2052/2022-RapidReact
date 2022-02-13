@@ -82,8 +82,8 @@ public class ThreeballDriveAndShoot extends AutoBase {
         }
         // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
         double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
-        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters, 2) + Math.pow(vision.xDistanceToUpperHub(), 2));
-        return Math.atan(Math.toRadians(vision.xDistanceToUpperHub()*drivetrain.getLastWheelVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
+        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters, 2) + Math.pow(vision.getXDistanceToUpperHub(), 2));
+        return Math.atan(Math.toRadians(vision.getXDistanceToUpperHub()*drivetrain.getLastWheelVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.kDrivingAimAngleOffsetDegrees);
     }
 
     public double getHorizontalFiringOffsetBasic(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {

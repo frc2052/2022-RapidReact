@@ -50,6 +50,19 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
     return topIsOnTarget && bottomIsOnTarget;
   }
 
+  public void setTopWheelVelocity(double velocity) {
+    topWheelVelocity = velocity;
+  }
+
+  public void setBottomWheelVelocity(double velocity) {
+    bottomWheelVelocity = velocity;
+  }
+
+  public void setBothWheelVelocities(double velocity) {
+    topWheelVelocity = velocity;
+    bottomWheelVelocity = velocity;
+  }
+
   public void stop() {
     topMotor.set(ControlMode.Velocity, 0);
     bottomMotor.set(ControlMode.Velocity, 0);

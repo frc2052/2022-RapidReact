@@ -10,43 +10,56 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
-  private final IndexerSubsystem indexer;
-  private final TwoWheelFlySubsystem twoWheelFly; 
-  private final IntakeSubsystem intake;
+  private final VisionSubsystem m_vision;
+  private final IndexerSubsystem m_indexer;
+  private final TwoWheelFlySubsystem m_twoWheelFly; 
+  private final IntakeSubsystem m_intake;
   private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
   private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
-    this.indexer = indexer;
-    this.twoWheelFly = twoWheelFly;
-    this.intake = intake;
+  public PrepareToLaunchCargoCommand(VisionSubsystem vision, IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
+    m_vision = vision;
+    m_indexer = indexer;
+    m_twoWheelFly = twoWheelFly;
+    m_intake = intake;
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    twoWheelFly.runAtShootSpeed();
+    // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
+    if(m_vision.hasValidTarget()) {
+      double distance = m_vision.getXDistanceToUpperHub();
+      double reqVelocity = m_twoWheelFly.calculateReqProjectileVelocity(distance);
+      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.kFlywheelRadiusMeters;
+      //double reqRPM = m_twoWheelFly.calculateReqShooterRPM(reqVelocity);
+
+      m_twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
+    }
+
+    m_twoWheelFly.runAtShootSpeed();
     if ( limitSwitch.get() == false ) {
-      indexer.runPreload();
-      intake.hopperGo();
+      m_indexer.runPreload();
+      m_intake.hopperGo();
     } else {
-        indexer.stop();
+        m_indexer.stop();
       if (limitSwitchTwo.get() == false) {
-        indexer.runPreload();
-        intake.hopperGo();
+        m_indexer.runPreload();
+        m_intake.hopperGo();
       } else {
-        indexer.stop();
+        m_indexer.stop();
     }
   }
   }
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stop();
-    twoWheelFly.stop();
-    intake.hopperStop();
+    m_indexer.stop();
+    m_twoWheelFly.stop();
+    m_intake.hopperStop();
   }
 
   // Returns true when the command should end.

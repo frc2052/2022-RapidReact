@@ -42,7 +42,7 @@ public class FiveBallDreamAuto extends AutoBase {
         IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
         IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(vision, indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO add features for advanced timing control when the shooter or intake should be run during driving commands
         //ParallelCommandGroup aimAndShootPreloaded = new ParallelCommandGroup(aimAtHub, launchCargoCommand);

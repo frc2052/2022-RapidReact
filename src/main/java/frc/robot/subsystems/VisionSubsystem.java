@@ -140,12 +140,12 @@ public class VisionSubsystem extends SubsystemBase{
       }
     }
 
-    public double xDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
+    public double getXDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();
       return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + ty))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
-    public double xDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
+    public double getXDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
       return (Constants.Field.kUpperHubHeightMeters - Constants.Limelight.kMountHeightMeters) / (Math.tan(Math.toRadians(Constants.Limelight.kMountAngleDegrees + angle))) + Constants.Limelight.kDistanceCalcOffset;
     }
 
@@ -176,8 +176,8 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
         SmartDashboard.putBoolean("Enable Limelight LEDs", lledMode.getDouble(0.0) == 1.0 ? false : (lledMode.getDouble(0.0) == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
 
-        SmartDashboard.putNumber("xDistance away (Meters): ", xDistanceToUpperHub());
-        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(xDistanceToUpperHub()));
+        SmartDashboard.putNumber("xDistance away (Meters): ", getXDistanceToUpperHub());
+        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getXDistanceToUpperHub()));
 
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");

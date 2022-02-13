@@ -61,7 +61,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
         IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(vision, indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO probably use ParallelDeadlineGroup for continous SwerveControllerCommands to make sure the robot's not going to stop abruptly if the shooter doesn't fire in time.
 /*      ParallelCommandGroup driveAndIntakeFirstBall = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);

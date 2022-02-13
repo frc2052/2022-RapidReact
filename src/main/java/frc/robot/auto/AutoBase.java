@@ -249,8 +249,6 @@ public class AutoBase  extends SequentialCommandGroup {
         return new Pose2d(m_lastCreatedEndingPose.getTranslation(), rotation);
     }
 
-    
-
 //    public enum StartPos {
 //        PositionA,
 //        PositionB,

@@ -21,16 +21,16 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private DrivetrainSubsystem m_drivetrainSubsystem;
-  private VisionSubsystem vision;
-  private DashboardControlsSubsystem dashboardControlsSubsystem;
-  private TwoWheelFlySubsystem twoWheelFlySubsystem;
-  private IndexerSubsystem indexerSubsystem;
-  private IntakeSubsystem intakeSubsystem;
-  private PneumaticsSubsystem pnuematics;
+  private final DrivetrainSubsystem m_drivetrainSubsystem  = new DrivetrainSubsystem();
+  private final VisionSubsystem vision = new VisionSubsystem();
+  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+  private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
+  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final PneumaticsSubsystem pnuematics = new PneumaticsSubsystem();
 
-  private PixyCamSubsystem pixyCamSubsystem;
-  private PixyCamManualDriveCommand pixyCamManualDriveCommand;
+  private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
+  private final PixyCamManualDriveCommand pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem);
 
   private final Joystick m_driveJoystick = new Joystick(0);
   private final Joystick m_turnJoystick = new Joystick(1);
@@ -71,21 +71,6 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  public void init() {
-    // Subsystems
-m_drivetrainSubsystem = new DrivetrainSubsystem();
-vision = new VisionSubsystem();
-dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-intakeSubsystem = new IntakeSubsystem();
-twoWheelFlySubsystem = new TwoWheelFlySubsystem();
-indexerSubsystem = new IndexerSubsystem();
-pnuematics = new PneumaticsSubsystem();
-pixyCamSubsystem = new PixyCamSubsystem();
-
-    //Commands
-pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem);
-  }
-
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -103,16 +88,14 @@ pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem);
       ));
     
     //intakeStopButton.whenPressed( try { new IntakeStop(intakeSubsystem); } catch(Exception e) {System.err.println("IntakeStopButton FAIL");} );
-    try { intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem)); } catch(Exception e) {}
+    intakeStopButton.whenPressed(new IntakeStop(intakeSubsystem));
     intakeArmOutButton.whenPressed(new IntakeArmOut(intakeSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmIn(intakeSubsystem));
 
     // Button to reset gyro at any point to make resetting in teleop easier and possible correct for potential gyro drift.
     resetGyroButton.whenPressed(() -> { this.resetGyro(); }); // Uses a lambda as a Runnable to call this class's resetGyro method, and requires m_drivetrainSubsystem.
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(vision, indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
-
-    resetRobotButton.whenPressed(() -> { this.init(); });
   }
 
   /**
@@ -140,7 +123,7 @@ pixyCamManualDriveCommand = new PixyCamManualDriveCommand(pixyCamSubsystem);
       case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(m_drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, intakeSubsystem);
+        return new MiddleLeftTerminalDefenseAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
       case FIVE_BALL:
         return new FiveBallDreamAuto(m_drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
