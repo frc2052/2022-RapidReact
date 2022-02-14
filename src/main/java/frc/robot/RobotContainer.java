@@ -8,7 +8,18 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.auto.*;
-import frc.robot.commands.*;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.FeedCargoLaunchCommand;
+import frc.robot.commands.IntakeArmInCommand;
+import frc.robot.commands.IntakeArmOutCommand;
+import frc.robot.commands.IntakeStopCommand;
+import frc.robot.commands.PixyCamDriveCommand;
+import frc.robot.commands.PrepareToLaunchCargoCommand;
+import frc.robot.commands.VisionDriveCommand;
+import frc.robot.commands.climber.ExtendClimberCommand;
+import frc.robot.commands.climber.RetractClimberCommand;
+import frc.robot.commands.climber.StartClimbCommand;
+import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +40,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final HopperSubsystem grassHopper = new HopperSubsystem();
   private final PneumaticsSubsystem pneumatics = new PneumaticsSubsystem();
+  private final HookClimberSubsystem climberSubsystem = new HookClimberSubsystem();
 
   private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
@@ -46,6 +58,12 @@ public class RobotContainer {
   private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
   
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+
+  private final JoystickButton startClimbButton = new JoystickButton(secondaryPannel, 4);
+  private final JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
+  private final JoystickButton retractClimberButton = new JoystickButton(secondaryPannel, 6);
+  private final JoystickButton climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
+  private final JoystickButton climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -96,7 +114,18 @@ public class RobotContainer {
         dashboardControlsSubsystem
       )
     );
-    
+    startClimbButton.whenPressed(new StartClimbCommand(climberSubsystem));
+    extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
+    retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
+    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
+    climberLockToggleButton.whenPressed(() -> {
+      if (climberSubsystem.isLocked()) {
+        climberSubsystem.unlockClimber();
+      } else {
+        climberSubsystem.lockClimber();
+      }
+    });
+
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
