@@ -34,4 +34,20 @@ public class AutoTrajectoryConfig {
     public ProfiledPIDController getThetaController() {
         return m_thetaController;
     }
+
+    public AutoTrajectoryConfig withStartVelocity(double startVelocityMPS) {
+        return new AutoTrajectoryConfig(m_trajectoryConfig.setStartVelocity(startVelocityMPS), m_XYController, m_thetaController);
+    }
+
+    public AutoTrajectoryConfig withEndVelocity(double endVelocityMPS) {
+        return new AutoTrajectoryConfig(m_trajectoryConfig.setEndVelocity(endVelocityMPS), m_XYController, m_thetaController);
+    }
+
+    public AutoTrajectoryConfig withStartAndEndVelocity(double velocityMPS) {
+        return new AutoTrajectoryConfig(m_trajectoryConfig.setStartVelocity(velocityMPS).setEndVelocity(velocityMPS), m_XYController, m_thetaController);
+    }
+
+    public AutoTrajectoryConfig withStartAndEndVelocity(double startVelocityMPS, double endVelocityMPS) {
+        return new AutoTrajectoryConfig(m_trajectoryConfig.setStartVelocity(startVelocityMPS).setEndVelocity(endVelocityMPS), m_XYController, m_thetaController);
+    }
 }

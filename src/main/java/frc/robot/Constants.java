@@ -122,4 +122,8 @@ public final class Constants {
 
         public static final double kArmSpeed  = .75;
     }
+
+    public static final class LEDs {
+        public static final int kCANiferPort = 40;
+    }
 }

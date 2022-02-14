@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.subsystems.PixyCamSubsystem;
 //import frc.robot.subsystems.PixyCamSubsystem.BallColor;
 //import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
+import frc.robot.subsystems.LEDSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+    LEDSubsystem.onLoop();
     m_robotContainer.checkSmartDashboardControls();
     m_robotContainer.printToSmartDashboard();
   }

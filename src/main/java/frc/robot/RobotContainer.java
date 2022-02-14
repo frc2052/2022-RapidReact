@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -181,6 +182,12 @@ public class RobotContainer {
     vision.putToSmartDashboard();
     intakeSubsystem.putToSmartDashboard();
     twoWheelFlySubsystem.putToSmartDashboard();
+
+    // For testing
+    double reqProjectileVelocity = twoWheelFlySubsystem.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+    SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
+    SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.kFlywheelRadiusMeters);
+    SmartDashboard.putNumber("Required RPM", twoWheelFlySubsystem.calculateReqShooterRPM(reqProjectileVelocity));
   }
 
   public void resetGyro() {
