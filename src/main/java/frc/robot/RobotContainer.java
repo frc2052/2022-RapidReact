@@ -58,7 +58,7 @@ public class RobotContainer {
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
   
-  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+  private final UsbCameraSubsystem intakeCamera = new UsbCameraSubsystem();
 
   private final JoystickButton startClimbButton = new JoystickButton(secondaryPannel, 4);
   private final JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -84,6 +84,8 @@ public class RobotContainer {
             dashboardControlsSubsystem
 		)
     );
+
+    LEDSubsystem.getInstance();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -203,20 +205,16 @@ public class RobotContainer {
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
   }
 
-  public void checkSmartDashboardControls() {
-    dashboardControlsSubsystem.checkSmartDashboardControls();
-  }
-
   public void printToSmartDashboard() {
     drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
     intakeSubsystem.putToSmartDashboard();
     twoWheelFlySubsystem.putToSmartDashboard();
 
-    // For testing
+    // For Testing Velocity Calculations
     double reqProjectileVelocity = twoWheelFlySubsystem.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
     SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
-    SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.kFlywheelRadiusMeters);
+    SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
     SmartDashboard.putNumber("Required RPM", twoWheelFlySubsystem.calculateReqShooterRPM(reqProjectileVelocity));
   }
 

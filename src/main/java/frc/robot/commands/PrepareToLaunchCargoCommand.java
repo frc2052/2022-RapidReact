@@ -37,8 +37,8 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     if(vision.hasValidTarget()) {
       double distance = vision.getXDistanceToUpperHub();
       double reqVelocity = twoWheelFly.calculateReqProjectileVelocity(distance);
-      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.kFlywheelRadiusMeters;
-      //double reqRPM = m_twoWheelFly.calculateReqShooterRPM(reqVelocity);
+      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
+      //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
       twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
     }

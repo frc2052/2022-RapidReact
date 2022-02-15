@@ -2,14 +2,15 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 /** Subsystem for sending and checking toggles and selectable lists on the SmartDashboard */
-public class DashboardControlsSubsystem {
+public class DashboardControlsSubsystem extends SubsystemBase {
 
-    private VisionSubsystem m_vision;
+    private VisionSubsystem vision;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -24,7 +25,7 @@ public class DashboardControlsSubsystem {
     private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
-        m_vision = vision;
+        this.vision = vision;
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         lastLEDState = limelightLEDsEnabled;
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
@@ -62,23 +63,24 @@ public class DashboardControlsSubsystem {
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
     }
 
-    public void checkSmartDashboardControls() { // Method currently executed in robotPeriodic that checks toggles and performs subsystem methods as needed
+    @Override
+    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops.
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
 
         if(limelightLEDsEnabled && !lastLEDState) {
-            m_vision.setLED(LEDMode.ON);
+            vision.setLED(LEDMode.ON);
         } else if (!limelightLEDsEnabled && lastLEDState) {
-            m_vision.setLED(LEDMode.OFF);
+            vision.setLED(LEDMode.OFF);
         }
         lastLEDState = limelightLEDsEnabled;
 
         if(!limelightDriveCamToggle && lastCamState) {
-            m_vision.setCamMode(CamMode.VISION);
+            vision.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            m_vision.setCamMode(CamMode.DRIVER);
+            vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }
         lastCamState = limelightDriveCamToggle;
@@ -92,13 +94,13 @@ public class DashboardControlsSubsystem {
         
         /* 
         if(limelightCamModeSelector.getSelected() == CamMode.DRIVER && (lastCamMode == CamMode.VISION)) {
-            m_vision.setCamMode(CamMode.DRIVER);
+            vision.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
             limelightDriveCamToggle = true;
             lastCamState = true;
             SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
         } else if (limelightCamModeSelector.getSelected() == CamMode.VISION && (lastCamMode == CamMode.DRIVER)) {
-            m_vision.setCamMode(CamMode.VISION);
+            vision.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
             limelightDriveCamToggle = false;
             lastCamState = false;

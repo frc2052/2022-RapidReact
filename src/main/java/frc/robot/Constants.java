@@ -56,22 +56,22 @@ public final class Constants {
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
 
-        public static final double kShooterFiringAngleDegrees = 72.0;
-        public static final double kFlywheelRadiusMeters = Units.inchesToMeters(2);
+        public static final double SHOOTER_FIRING_ANGLE_DEGREES = 72.0;
+        public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);
 
-        public static final double kShooterMountHeight = Units.inchesToMeters(20);
+        public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
         public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
     }
     
     public static final class Field {
-        public static final double kUpperHubHeightMeters = 2.64;
+        public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
     }
 
     public static final class Limelight {
-        public static final double kMountHeightMeters = Units.inchesToMeters(19);
-        public static final double kMountAngleDegrees = 45;
+        public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(21); // ESTIMATE Based on Cad Model, update when robot is completed.
+        public static final double MOUNT_ANGLE_DEGREES = 45;
 
-        public static final double kDistanceCalcOffset = 0;
+        public static final double DISTANCE_CALCULATION_LINEAR_OFFSET = 0;
 
         public static final int DEFAULT_ASSUMED_DISTANCE = 0;
     }
@@ -116,8 +116,7 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 10;
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
 
-        public static final double kDrivingAimAngleOffsetDegrees = 0.0;
-        public static final double kDrivingInRangeAngleOffsetDegrees = 0.0;
+        public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }
     
     public static final class Intake{
@@ -140,6 +139,6 @@ public final class Constants {
     }
 
     public static final class LEDs {
-        public static final int kCANiferPort = 40;
+        public static final int CANIFIER_PORT = 40;
     }
 }

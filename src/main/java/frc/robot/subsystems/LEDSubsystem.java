@@ -22,7 +22,7 @@ public class LEDSubsystem extends SubsystemBase {
         return instance;
     }
 
-    private final CANifier canifer = new CANifier(Constants.LEDs.kCANiferPort);
+    private final CANifier canifer = new CANifier(Constants.LEDs.CANIFIER_PORT);
     private double [] rgb = new double[3];
 
     private double saturation = 1;

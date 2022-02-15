@@ -15,7 +15,7 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class MiddleLeftTerminalDefenseAuto extends AutoBase {
-    DrivetrainSubsystem m_drivetrain;
+    DrivetrainSubsystem drivetrain;
 
     /**
      * Position C Start (Middle Left Parallel with Outer Tarmac line) facing inwards towards the hub.
