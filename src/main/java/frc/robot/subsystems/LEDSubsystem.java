@@ -1,14 +1,16 @@
 package frc.robot.subsystems;
 
 import java.lang.reflect.Method;
+import java.util.Timer;
 
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.HsvToRgb;
 
-public class LEDSubsystem {
+public class LEDSubsystem extends SubsystemBase {
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere.
     private LEDSubsystem() {}
@@ -29,31 +31,43 @@ public class LEDSubsystem {
 
     private boolean useHSV;
 
-    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.RAINBOW;
+    private long lastOnChangeTime = 0;
+    private boolean areLedsOn = false;
 
-    public void onLoop() {
+    private boolean isGoingUp = true;
+//    private long timer = 0;
+
+    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.CLIMBING_DEFAULT;
+
+    @Override
+    public void periodic() {
+
+        //System.out.println(timer);
+
         runLEDStatusMode();
 
-        if (saturation > 1) {
-            saturation = 1;
-        } else if (saturation < 0) {
-            saturation = 0;
-        }
+        if (useHSV) {
+            if (saturation > 1) {
+                saturation = 1;
+            } else if (saturation < 0) {
+                saturation = 0;
+            }
 
-        if (value > 1) {
-            value = 1;
-        } else if (value < 0) {
-            value = 0;
-        }
+            if (value > 1) {
+                value = 1;
+            } else if (value < 0) {
+                value = 0;
+            }
 
         //Converts HSV (Hue Saturation Value) to RGB (Red Green Blue)
-        if (useHSV) {
+
             rgb = HsvToRgb.convert(hue, saturation, value);
         }
 
         canifer.setLEDOutput(rgb[0], LEDChannel.LEDChannelA);
         canifer.setLEDOutput(rgb[1], LEDChannel.LEDChannelB);
         canifer.setLEDOutput(rgb[2], LEDChannel.LEDChannelC);
+
     }
 
     public void setRgb(double red, double green, double blue) {
@@ -66,7 +80,7 @@ public class LEDSubsystem {
         currentLEDStatusMode = statusMode;
     }
 
-    public void runLEDStatusMode() {
+    private void runLEDStatusMode() {
         switch (currentLEDStatusMode) {
             case RAINBOW:
                 rainbowStatusMode();
@@ -74,12 +88,21 @@ public class LEDSubsystem {
             case OFF:
                 LEDsOffStatusMode();
                 break;
+            case BLINK_RED:
+                blinkingRedStatusMode();
+                break;
+            case VISION_TARGET_FOUND:
+                visionTargetFoundStatusMode();
+                break;
+            case CLIMBING_DEFAULT:
+                fadeInOutWhite();
+                break;
             default:
                 break;
         }
     }
 
-    public void rainbowStatusMode() {
+    private void rainbowStatusMode() {
         useHSV = true;
         hue += 1;
         saturation = 1;
@@ -90,16 +113,80 @@ public class LEDSubsystem {
         }
     }
 
-    public void LEDsOffStatusMode() {
+    private void LEDsOffStatusMode() {
         useHSV = false;
         rgb[0] = 0;
         rgb[1] = 0;
         rgb[2] = 0;
     }
 
+    private void blinkingRedStatusMode() {
+        useHSV = false;
+        evaluateOnOffInterval(2000, 1000);
+        if (areLedsOn) {
+            rgb[0] = 0;
+            rgb[1] = 200;
+            rgb[2] = 0;
+        } else {
+            rgb[0] = 0;
+            rgb[1] = 0;
+            rgb[2] = 0;
+        }
+    }
+
+    private void visionTargetFoundStatusMode() {
+        useHSV = false;
+        evaluateOnOffInterval(500, 500);
+        if (areLedsOn) {
+            rgb[0] = 255;
+            rgb[1] = 0;
+            rgb[2] = 0;
+        } else {
+            rgb[0] = 0;
+            rgb[1] = 0;
+            rgb[2] = 0;
+        }
+    }
+
+    private void fadeInOutWhite() {
+        useHSV = false;
+        //rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[0] += 0.01;
+            rgb[1] += 0.01;
+            rgb[2] += 0.01;
+        } else {
+            rgb[0] -= 0.01;
+            rgb[1] -= 0.01;
+            rgb[2] -= 0.01;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if ( rgb[0] <= 0 ) {
+            isGoingUp = true;
+        }
+        //rgb[0] = 0.01;
+        //rgb[1] = 0.01;
+        //rgb[2] = 0.01;
+    }
+
+    private void evaluateOnOffInterval(int onMs, int offMs) {
+        long timer = System.currentTimeMillis();
+        if (lastOnChangeTime + onMs + offMs < timer) { 
+            //should be off, turn back on
+            lastOnChangeTime = timer;
+            areLedsOn = true;
+
+        } else if (lastOnChangeTime + onMs < timer) {
+            areLedsOn = false;
+        }
+    }
+
     public enum LEDStatusMode {
         RAINBOW("Rainbow"),
         OFF("Off"),
+        BLINK_RED("Blink Red"),
         SOLID_RED("Solid Red"),
         SOLID_WHITE("Solid White"),
         AUTONOMOUS_DEFAULT("Autonomous Default"),
