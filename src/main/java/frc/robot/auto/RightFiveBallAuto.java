@@ -11,7 +11,7 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class FiveBallDreamAuto extends AutoBase {
+public class RightFiveBallAuto extends AutoBase {
 
     /**
      * Position A Start (Far Right Parallel with Outer Tarmac Line) Facing Towards the Hub.
@@ -22,7 +22,7 @@ public class FiveBallDreamAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public FiveBallDreamAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
         
@@ -30,14 +30,21 @@ public class FiveBallDreamAuto extends AutoBase {
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(-68), 0, Rotation2d.fromDegrees(0));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(-12), Units.inchesToMeters(96), Rotation2d.fromDegrees(-50)); //wheels should be pointing 90 degrees from straight ahead at end of path
         Pose2d shootPos = new Pose2d(Units.inchesToMeters(-18), Units.inchesToMeters(40), Rotation2d.fromDegrees(45)); //wheels should be pointing 90 degrees from straight ahead at end of path
+        Pose2d terminalBallMidPointPos = new Pose2d(0, Units.inchesToMeters(210), Rotation2d.fromDegrees(120));
         Pose2d terminalBallPos = new Pose2d(Units.inchesToMeters(-30), Units.inchesToMeters(210), Rotation2d.fromDegrees(-110));
 
+        AutoTrajectoryConfig continousSpeedDriveEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 0, 2);
+        AutoTrajectoryConfig continousSpeedDriveStart2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 2, 0);
+        AutoTrajectoryConfig continousSpeedDriveStartEnd2mpsTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10, 2, 2);
+
         VisionTurnInPlaceCommand aimAtHub = new VisionTurnInPlaceCommand(drivetrain, vision);
-        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.fastTurnSlowDriveTrajectoryConfig, startPos, ball1Pos, super.createRotationAngle(170));
-        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(-50), ball2Pos, super.createRotationAngle(-50));
-        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, super.createHubTrackingSupplier(45));
-        SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(-110));
-        SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(45));
+        TurnInPlaceCommand turnAround = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(170).minus(drivetrain.getPose().getRotation()));
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(50), ball2Pos, super.createRotationAngle(50));
+        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, super.createHubTrackingSupplier(-45));
+        SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(continousSpeedDriveEnd2mpsTrajectoryConfig, super.getLastEndingPosCreated(), terminalBallMidPointPos, super.createRotationAngle(120));
+        SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(continousSpeedDriveStart2mpsTrajectoryConfig, super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(110));
+        SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(-45));
         
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
@@ -52,10 +59,12 @@ public class FiveBallDreamAuto extends AutoBase {
         ParallelCommandGroup driveBackAndShoot2 = new ParallelCommandGroup(driveBackToShoot, intakeArmIn, launchCargoCommand); */
 
         this.addCommands(aimAtHub);
+        this.addCommands(turnAround);
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub\
-        this.addCommands(driveToTerminalBalls);
+        this.addCommands(driveToTerminalMidPoint);
+        this.addCommands(driveToTerminalBalls);//this is where the parallel intake terminal ball command will go.
         this.addCommands(driveBackToShoot);
 
         this.andThen(() -> drivetrain.stop(), drivetrain);
