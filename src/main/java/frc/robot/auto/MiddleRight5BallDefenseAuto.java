@@ -32,7 +32,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 
@@ -58,10 +58,10 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(continousSpeedDriveStart2mpsTrajectoryConfig, super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
         SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
-        IntakeArmIn intakeArmIn = new IntakeArmIn(intake);
-        IntakeArmOut intakeArmOut = new IntakeArmOut(intake);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(indexer, shooter, intake, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO probably use ParallelDeadlineGroup for continous SwerveControllerCommands to make sure the robot's not going to stop abruptly if the shooter doesn't fire in time.
 /*      ParallelCommandGroup driveAndIntakeFirstBall = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);

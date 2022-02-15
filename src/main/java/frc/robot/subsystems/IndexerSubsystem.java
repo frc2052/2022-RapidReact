@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,6 +18,8 @@ public class IndexerSubsystem extends SubsystemBase {
   
   private static VictorSPX largeIndexer;
   private static VictorSPX feederIndexer;
+  private final DigitalInput preStagedCargoDetector = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
+  private final DigitalInput stagedCargoDetector = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
   public IndexerSubsystem() {
     largeIndexer = new VictorSPX(MotorIDs.INDEXER_MOTOR);
@@ -35,8 +38,11 @@ public class IndexerSubsystem extends SubsystemBase {
     feederIndexer.set(ControlMode.PercentOutput, Constants.ShooterSub.FEEDER_SPEED);
   }
 
-  public void stop() {
+  public void stopPreload() {
     largeIndexer.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void stopFeeder() {
     feederIndexer.set(ControlMode.PercentOutput, 0);
   }
 
@@ -48,6 +54,14 @@ public class IndexerSubsystem extends SubsystemBase {
   public double getFeederIndexerSpeed() {
     double feederIndexerRunning = feederIndexer.getSelectedSensorVelocity();
     return feederIndexerRunning;
+  }
+
+  public boolean getCargoPreStagedDetected() {
+    return preStagedCargoDetector.get();
+  }
+
+  public boolean getCargoStagedDetected() {
+    return stagedCargoDetector.get();
   }
 
   @Override

@@ -8,45 +8,48 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
+
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final IntakeSubsystem intake;
-  // private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
-  // private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
+  private final HopperSubsystem grassHopper;
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake) {
+
+  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.indexer = indexer;
     this.twoWheelFly = twoWheelFly;
     this.intake = intake;
+    this.grassHopper = grassHopper;
   }
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     twoWheelFly.runAtShootSpeed();
-    // if ( limitSwitch.get() == false ) {
-    //   indexer.runPreload();
-    //   intake.hopperGo();
-    // } else {
-    //     indexer.stop();
-    //   if (limitSwitchTwo.get() == false) {
-    //     indexer.runPreload();
-    //     intake.hopperGo();
-    //   } else {
-    //     indexer.stop();
-    // }
-  //}
+    if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == false) {
+      indexer.runPreload();
+      grassHopper.hopperGo();
+    } else if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == true) {
+        indexer.stopFeeder();
+        indexer.runPreload();
+    } else {
+        indexer.stopFeeder();
+        indexer.stopPreload();
+    }
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stop();
+    indexer.stopFeeder();
+    indexer.stopPreload();
     twoWheelFly.stop();
-    intake.hopperStop();
+    grassHopper.hopperStop();
   }
 
   // Returns true when the command should end.
