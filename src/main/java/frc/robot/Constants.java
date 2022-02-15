@@ -54,20 +54,13 @@ public final class Constants {
         public static final double kDistanceCalcOffset = 0;
     }
 
-    public static final class DriveTrain{
-    /**
-     * The left-to-right distance between the drivetrain wheels
-     *
-     * Should be measured from center to center.
-     */
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
-    /**
-     * The front-to-back distance between the drivetrain wheels.
-     *
-     * Should be measured from center to center.
-     */
-    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
-
+    public static final class DriveTrain {
+        // The left-to-right distance between the drivetrain wheels
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
+        // The front-to-back distance between the drivetrain wheels.
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
@@ -93,14 +86,13 @@ public final class Constants {
         public static final double kDrivingInRangeAngleOffsetDegrees = 0.0;
     }
     
-    public static final class Intake{
+    public static final class Intake {
+        //sets the speed of the motors
         public static final double kIntakeSpeed = .75;
         public static final double kHopperSpeed = .75;
-        //sets the speed of the motors
-    
     }
 
-    public static final class Arm{
-
-        public static final double kArmSpeed  = .75;}
+    public static final class Arm {
+        public static final double kArmSpeed  = .75;
+    }
 }
