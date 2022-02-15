@@ -12,26 +12,38 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
  * Wrapper class for creating custom TrajectoryConfigs for max velocity, accelaration, PID control of XY and turn, as well as start and end velocity all in auto.
  */
 public class AutoTrajectoryConfig {
-    private final TrajectoryConfig m_trajectoryConfig;
-    private final PIDController m_XYController;
-    private final ProfiledPIDController m_thetaController;
+    private final TrajectoryConfig trajectoryConfig;
+    private final PIDController XYController;
+    private final ProfiledPIDController thetaController;
 
     public AutoTrajectoryConfig(TrajectoryConfig trajectoryConfig, PIDController XYController, ProfiledPIDController thetController) {
-        this.m_trajectoryConfig = trajectoryConfig;
-        this.m_XYController = XYController;
-        this.m_thetaController = thetController;
-        m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        this.trajectoryConfig = trajectoryConfig;
+        this.XYController = XYController;
+        this.thetaController = thetController;
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public TrajectoryConfig getTrajectoryConfig() {
-        return m_trajectoryConfig;
+        return trajectoryConfig;
     }
 
     public PIDController getXYController() {
-        return m_XYController;
+        return XYController;
     }
 
     public ProfiledPIDController getThetaController() {
-        return m_thetaController;
+        return thetaController;
+    }
+
+    public AutoTrajectoryConfig withStartVelocity(double startVelocityMPS) {
+        return new AutoTrajectoryConfig(trajectoryConfig.setStartVelocity(startVelocityMPS), XYController, thetaController);
+    }
+
+    public AutoTrajectoryConfig withEndVelocity(double endVelocityMPS) {
+        return new AutoTrajectoryConfig(trajectoryConfig.setEndVelocity(endVelocityMPS), XYController, thetaController);
+    }
+
+    public AutoTrajectoryConfig withStartAndEndVelocity(double startVelocityMPS, double endVelocityMPS) {
+        return new AutoTrajectoryConfig(trajectoryConfig.setStartVelocity(startVelocityMPS).setEndVelocity(endVelocityMPS), XYController, thetaController);
     }
 }

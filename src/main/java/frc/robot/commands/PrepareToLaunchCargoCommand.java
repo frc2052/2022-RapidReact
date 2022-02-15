@@ -11,18 +11,21 @@ import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
-  private final IndexerSubsystem indexer;
   private final TwoWheelFlySubsystem twoWheelFly; 
+  private final IndexerSubsystem indexer;
+  private final VisionSubsystem vision;
   private final IntakeSubsystem intake;
   private final HopperSubsystem grassHopper;
 
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
-    this.indexer = indexer;
+  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.twoWheelFly = twoWheelFly;
+    this.indexer = indexer;
+    this.vision = vision;
     this.intake = intake;
     this.grassHopper = grassHopper;
   }
@@ -30,6 +33,16 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
+    if(vision.hasValidTarget()) {
+      double distance = vision.getXDistanceToUpperHub();
+      double reqVelocity = twoWheelFly.calculateReqProjectileVelocity(distance);
+      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
+      //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
+
+      twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
+    }
+
     twoWheelFly.runAtShootSpeed();
     if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == false) {
       indexer.runPreload();

@@ -12,6 +12,7 @@ import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -57,7 +58,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
           Math.hypot(Constants.DriveTrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DriveTrain.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+  private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
           // Front left
           new Translation2d(Constants.DriveTrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DriveTrain.DRIVETRAIN_WHEELBASE_METERS / 2.0),
           // Front right
@@ -71,15 +72,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // By default we use a Pigeon for our gyroscope. But if you use another gyroscope, like a NavX, you can change this.
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
-  private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+  private final AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(m_kinematics, m_navx.getRotation2d());
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
 
   // These are our modules. We initialize them in the constructor.
-  private final SwerveModule m_frontLeftModule;
-  private final SwerveModule m_frontRightModule;
-  private final SwerveModule m_backLeftModule;
-  private final SwerveModule m_backRightModule;
+  private final SwerveModule frontLeftModule;
+  private final SwerveModule frontRightModule;
+  private final SwerveModule backLeftModule;
+  private final SwerveModule backRightModule;
+
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private double lastwheelVelocity;
   
@@ -105,7 +110,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // By default we will use Falcon 500s in standard configuration. But if you use a different configuration or motors
     // you MUST change it. If you do not, your code will crash on startup.
-    m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+    frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
             // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
@@ -123,7 +128,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
 
     // We will do the same for the other modules
-    m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(2, 0),
@@ -134,7 +139,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.FRONT_RIGHT_MODULE_STEER_OFFSET
     );
 
-    m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+    backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(4, 0),
@@ -145,7 +150,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.BACK_LEFT_MODULE_STEER_OFFSET
     );
 
-    m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    backRightModule = Mk3SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(6, 0),
@@ -165,22 +170,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   // TODO: Check if gyro has a startup time on reset
   public void zeroGyroscope() {
-    m_navx.zeroYaw();
+    navx.zeroYaw();
     odometry.resetPosition(new Pose2d(0.0, 0.0, new Rotation2d()), getGyroscopeRotation());
   }
 
   public Rotation2d getGyroscopeRotation() {
-   if (m_navx.isMagnetometerCalibrated()) {
+   if (navx.isMagnetometerCalibrated()) {
      // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+     return Rotation2d.fromDegrees(navx.getFusedHeading());
    }
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   return Rotation2d.fromDegrees(360.0 - navx.getYaw());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+        SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
         setModuleStates(states);
   }
 
@@ -203,16 +208,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
                         && states[2].speedMetersPerSecond == 0
                         && states[3].speedMetersPerSecond == 0) {
                 //do not zero the wheel angle, just stop driving
-                m_frontLeftModule.set(0, m_frontLeftModule.getSteerAngle());
-                m_frontRightModule.set(0, m_frontRightModule.getSteerAngle());
-                m_backLeftModule.set(0, m_backLeftModule.getSteerAngle());
-                m_backRightModule.set(0, m_backRightModule.getSteerAngle());
+                frontLeftModule.set(0, frontLeftModule.getSteerAngle());
+                frontRightModule.set(0, frontRightModule.getSteerAngle());
+                backLeftModule.set(0, backLeftModule.getSteerAngle());
+                backRightModule.set(0, backRightModule.getSteerAngle());
         } else { 
                 //we are moving
-                m_frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
-                m_frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
-                m_backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
-                m_backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
+                frontLeftModule.set(states[0].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[0].angle.getRadians());
+                frontRightModule.set(states[1].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[1].angle.getRadians());
+                backLeftModule.set(states[2].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[2].angle.getRadians());
+                backRightModule.set(states[3].speedMetersPerSecond / maxVelocity * MAX_VOLTAGE, states[3].angle.getRadians());
 
                 odometry.update(
                         getGyroscopeRotation(),
@@ -226,7 +231,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public SwerveDriveKinematics getKinematics() {
-        return m_kinematics;
+        return kinematics;
   }
 
   public Pose2d getPose() {
@@ -235,7 +240,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getGyroVelocity() {
         // Gets X and Y velocity from the navx and gets their resulting velocity vector - Probably innaccurate, but is to be tested
-        return Math.sqrt(Math.pow(m_navx.getVelocityY(), 2) * Math.pow(m_navx.getVelocityX(), 2));
+        return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
   }
 
   public double getLastWheelVelocity() {
@@ -243,13 +248,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void putToSmartDashboard() {
-        SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(m_frontLeftModule.getSteerAngle()));
-        SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(m_frontRightModule.getSteerAngle()));
-        SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(m_backLeftModule.getSteerAngle()));
-        SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(m_backRightModule.getSteerAngle()));
+        SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
+        SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));
+        SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(backLeftModule.getSteerAngle()));
+        SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
-        SmartDashboard.putNumber("Gyro Angle", m_navx.getAngle());
+        SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
         
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", lastwheelVelocity);

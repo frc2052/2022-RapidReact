@@ -30,8 +30,8 @@ public class AutoTesting extends AutoBase {
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
         
-        Pose2d start2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(12), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130)); //wheels should be pointing 90 degrees from straight ahead at end of path
+        Pose2d testPos = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(-130), Rotation2d.fromDegrees(-130));
         Supplier<Rotation2d> aimNeg130DegreesRight = () -> { return Rotation2d.fromDegrees(-130); };
 
         Pose2d shootPos = new Pose2d(Units.inchesToMeters(24), Units.inchesToMeters(-60), Rotation2d.fromDegrees(-45)); //wheels should be pointing 90 degrees from straight ahead at end of path
@@ -39,7 +39,8 @@ public class AutoTesting extends AutoBase {
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(-45); };
 
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(-130), ball2Pos, super.createRotationAngle(-130));
+        SwerveControllerCommand driveToTestPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(-130), testPos, super.createRotationAngle(-130));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, midpoints, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
@@ -50,6 +51,7 @@ public class AutoTesting extends AutoBase {
 
         this.addCommands(getBall1);
         this.addCommands(driveToBall2);
+        this.addCommands(driveToTestPos);
         this.addCommands(driveToShoot);
         this.addCommands(autoAim);
 
