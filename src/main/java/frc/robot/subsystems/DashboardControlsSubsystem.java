@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -13,12 +14,14 @@ public class DashboardControlsSubsystem {
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
     private SendableChooser<CamMode> limelightCamModeSelector;
+    private SendableChooser<LEDStatusMode> LEDStatusModeSelector;
 
     private boolean limelightLEDsEnabled;
     private boolean lastLEDState;
     private boolean limelightDriveCamToggle;
     private boolean lastCamState;
     private CamMode lastCamMode;
+    private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
         m_vision = vision;
@@ -27,6 +30,7 @@ public class DashboardControlsSubsystem {
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         lastCamState = limelightDriveCamToggle;
         lastCamMode = CamMode.VISION;
+        lastLEDStatusMode = LEDStatusMode.RAINBOW;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -34,7 +38,12 @@ public class DashboardControlsSubsystem {
 
         autoSelector.setDefaultOption(Autos.values()[0].name, Autos.values()[0]);
         for(int i = 1; i < Autos.values().length; i++) {
-            autoSelector.setDefaultOption(Autos.values()[i].name, Autos.values()[i]);
+            autoSelector.addOption(Autos.values()[i].name, Autos.values()[i]);
+        }
+
+        LEDStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
+        for (int i = 1; i < LEDStatusMode.values().length; i++) {
+            LEDStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
     
         driveModeSelector.setDefaultOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
@@ -49,12 +58,14 @@ public class DashboardControlsSubsystem {
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
+        SmartDashboard.putData("LED Status Modes", LEDStatusModeSelector);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
     }
 
     public void checkSmartDashboardControls() { // Method currently executed in robotPeriodic that checks toggles and performs subsystem methods as needed
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
 
         if(limelightLEDsEnabled && !lastLEDState) {
             m_vision.setLED(LEDMode.ON);
@@ -71,6 +82,11 @@ public class DashboardControlsSubsystem {
             lastCamMode = CamMode.DRIVER;
         }
         lastCamState = limelightDriveCamToggle;
+
+        if(selectedLEDStatusMode != lastLEDStatusMode) {
+            LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            lastLEDStatusMode = selectedLEDStatusMode;
+        }
 
         //Logic for having a selection list for limelight modes, unworking and uneeded for now...
         
@@ -97,6 +113,10 @@ public class DashboardControlsSubsystem {
 
     public DriveMode getSelectedDriveMode() {
         return driveModeSelector.getSelected();
+    }
+
+    public LEDStatusMode getSelectedLEDStatusMode() {
+        return LEDStatusModeSelector.getSelected();
     }
 
     public void setLastLEDState(boolean state) {
