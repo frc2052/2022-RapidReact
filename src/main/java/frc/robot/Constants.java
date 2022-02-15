@@ -60,6 +60,7 @@ public final class Constants {
         public static final double kFlywheelRadiusMeters = Units.inchesToMeters(2);
 
         public static final double kShooterMountHeight = Units.inchesToMeters(20);
+        public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
     }
     
     public static final class Field {
@@ -71,6 +72,8 @@ public final class Constants {
         public static final double kMountAngleDegrees = 45;
 
         public static final double kDistanceCalcOffset = 0;
+
+        public static final int DEFAULT_ASSUMED_DISTANCE = 0;
     }
 
     public static final class PixyCamConstants {
