@@ -1,26 +1,29 @@
 package frc.robot.auto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+// A version of Simple3BallAuto to be used and abused for testing and learning !
+
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.IntakeArmInCommand;
+import frc.robot.commands.IntakeArmOutCommand;
 import frc.robot.commands.VisionTurnInPlaceCommand;
-import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class Simple3BallAuto extends AutoBase {
-
-     /**
-     * Position A Start (Far Right parallel with outer Tarmac line)
-     * Simple auto to score 3 alliance cargo.
-     * @param drivetrain
-     * @param vision
-     */
-    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+public class AutoTesting extends AutoBase {
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         
@@ -32,21 +35,23 @@ public class Simple3BallAuto extends AutoBase {
         Supplier<Rotation2d> aimNeg130DegreesRight = () -> { return Rotation2d.fromDegrees(-130); };
 
         Pose2d shootPos = new Pose2d(Units.inchesToMeters(24), Units.inchesToMeters(-60), Rotation2d.fromDegrees(-45)); //wheels should be pointing 90 degrees from straight ahead at end of path
+        List<Translation2d> midpoints = List.of(new Translation2d(20, -140));
         Supplier<Rotation2d> aimNeg45DegreesRight = () -> { return Rotation2d.fromDegrees(-45); };
 
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, start2, ball2Pos, aimNeg130DegreesRight);
-        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
+        SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, midpoints, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        //TODO: extend intake and turn on intake motors
-        this.addCommands(driveToBall1); // Drives to the closest ball to the robot
-        //TOOD: shoot 2 balls
-        //TODO: is there  a way to force the wheels to point 90 immediately before it starts to drive? 
-        this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
-        this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
-        this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
-        //TODO: shoot ball
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+
+        ParallelCommandGroup getBall1 = new ParallelCommandGroup(driveToBall1, intakeArmOut);
+
+        this.addCommands(getBall1);
+        this.addCommands(driveToBall2);
+        this.addCommands(driveToShoot);
+        this.addCommands(autoAim);
 
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
