@@ -55,6 +55,8 @@ public final class Constants {
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = .75;
+
+        public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
     }
     
     public static final class Field {
@@ -66,6 +68,8 @@ public final class Constants {
         public static final double kMountAngleDegrees = 45;
 
         public static final double kDistanceCalcOffset = 0;
+
+        public static final int DEFAULT_ASSUMED_DISTANCE = 0;
     }
 
     public static final class PixyCamConstants {
