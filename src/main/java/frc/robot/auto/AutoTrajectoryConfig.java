@@ -43,10 +43,6 @@ public class AutoTrajectoryConfig {
         return new AutoTrajectoryConfig(trajectoryConfig.setEndVelocity(endVelocityMPS), XYController, thetaController);
     }
 
-    public AutoTrajectoryConfig withStartAndEndVelocity(double velocityMPS) {
-        return new AutoTrajectoryConfig(trajectoryConfig.setStartVelocity(velocityMPS).setEndVelocity(velocityMPS), XYController, thetaController);
-    }
-
     public AutoTrajectoryConfig withStartAndEndVelocity(double startVelocityMPS, double endVelocityMPS) {
         return new AutoTrajectoryConfig(trajectoryConfig.setStartVelocity(startVelocityMPS).setEndVelocity(endVelocityMPS), XYController, thetaController);
     }

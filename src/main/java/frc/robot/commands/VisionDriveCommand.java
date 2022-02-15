@@ -3,7 +3,9 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
@@ -54,6 +56,12 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         } else {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             visionRotation = 0;
+        }
+
+        if (isLinedUp) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+        } else {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
         }
         return visionRotation;
     }

@@ -22,6 +22,7 @@ import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -107,6 +108,8 @@ public class RobotContainer {
         dashboardControlsSubsystem
       )
     );
+
+    visionDriveCommandSwitch.whenReleased(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT)); // Probably a better way to do this...
     
     pixyDriveCommandSwitch.whenHeld(
       new PixyCamDriveCommand(

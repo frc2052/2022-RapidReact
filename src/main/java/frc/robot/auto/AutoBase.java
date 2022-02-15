@@ -82,6 +82,23 @@ public class AutoBase  extends SequentialCommandGroup {
             );
     }
 
+    /**
+     * Creates a custom Trajectory Config from AutoTrajectoryConfig without a specific start and end velocity.
+     * @param maxXYVelocityMPS - Max driving velocity in meters per second
+     * @param maxAccelarationMPS - Max driving accelaration in meters per second
+     * @param xyP - Driving P (Proportional) value in PID. Increasing makes driving actions happen faster and decreasing makes them slower.
+     * @param turnP - Driving P value. Increasing makes turning actions happen faster and decreasing makes them slower.
+     * @param turnProfileContraintsMultiplier - Amount PI will be multiplied by in the TrapezoidalProfile.Constrains of the turning PID controller
+     * @return AutoTrajectoryConfig
+     */
+    protected AutoTrajectoryConfig createTrajectoryConfig(double maxXYVelocityMPS, double maxAccelarationMPS, double xyP, double turnP, double turnProfileContraintsMultiplier) {
+        return new AutoTrajectoryConfig(
+            new TrajectoryConfig(maxXYVelocityMPS, maxAccelarationMPS),
+            new PIDController(xyP, 0, 0),
+            new ProfiledPIDController(turnP, 0, 0, new TrapezoidProfile.Constraints(turnProfileContraintsMultiplier*Math.PI, turnProfileContraintsMultiplier*Math.PI))
+            );
+    }
+
     // Most basic deafult swerve command, automatically using slowTrajectoryConfig.
     protected SwerveControllerCommand createSwerveTrajectoryCommand(
         Pose2d startPose, 
@@ -177,49 +194,6 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
-    // protected SwerveControllerCommand CreateSlowDriveSlowTurnSwerveTrajectoryCommand(Pose2d startPose, Pose2d endPose) {
-    //     lastCreatedEndingPose = endPose;
-
-    //     SwerveControllerCommand cmd = new SwerveControllerCommand(
-    //         TrajectoryGenerator.generateTrajectory(
-    //             startPose,
-    //             new ArrayList<Translation2d>(), //no midpoints in path (S curve)
-    //             endPose,
-    //             slowTrajectoryConfig
-    //         ),
-    //       drivetrain::getPose,
-    //       swerveDriveKinematics,
-    //       slowXYController,
-    //       slowXYController,
-    //       slowThetaController, 
-    //       drivetrain::setModuleStates,
-    //       drivetrain);
-
-    //       return cmd;
-    // }
-
-    // protected SwerveControllerCommand CreateSlowDriveSlowTurnSwerveTrajectoryCommand(Pose2d startPose, Pose2d endPose, Supplier<Rotation2d> rotationSupplier) {
-    //     lastCreatedEndingPose = endPose;
-
-    //     SwerveControllerCommand cmd = new SwerveControllerCommand(
-    //         TrajectoryGenerator.generateTrajectory(
-    //             startPose,
-    //             new ArrayList<Translation2d>(), //no midpoints in path (S curve)
-    //             endPose,
-    //             slowTrajectoryConfig
-    //         ), 
-    //       drivetrain::getPose, 
-    //       swerveDriveKinematics,
-    //       slowXYController,
-    //       slowXYController,
-    //       slowThetaController, 
-    //       rotationSupplier,
-    //       drivetrain::setModuleStates,
-    //       drivetrain);
-
-    //       return cmd;
-    // }
-
     protected Supplier<Rotation2d> createRotationAngle(double angle) {
         return () -> { return Rotation2d.fromDegrees(angle); };
     }
@@ -248,11 +222,4 @@ public class AutoBase  extends SequentialCommandGroup {
     protected Pose2d getLastEndingPosCreated(Rotation2d rotation) {
         return new Pose2d(lastCreatedEndingPose.getTranslation(), rotation);
     }
-
-//    public enum StartPos {
-//        PositionA,
-//        PositionB,
-//        PositionC,
-//        PositionD,
-//  }
 }

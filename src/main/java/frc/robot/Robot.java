@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.subsystems.PixyCamSubsystem.BallColor;
 //import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
     robotContainer.resetGyro();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
