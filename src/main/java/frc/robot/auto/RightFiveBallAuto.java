@@ -22,7 +22,7 @@ public class RightFiveBallAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer) {
+    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
         
