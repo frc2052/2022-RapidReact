@@ -37,7 +37,7 @@ public class LEDSubsystem extends SubsystemBase {
     private boolean isGoingUp = true;
 //    private long timer = 0;
 
-    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.CLIMBING_DEFAULT;
+    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.CLIMBING_TRAVERSAL;
 
     @Override
     public void periodic() {
@@ -86,7 +86,7 @@ public class LEDSubsystem extends SubsystemBase {
                 rainbowStatusMode();
                 break;
             case OFF:
-                LEDsOffStatusMode();
+                offStatusMode();
                 break;
             case BLINK_RED:
                 blinkingRedStatusMode();
@@ -96,6 +96,9 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_DEFAULT:
                 fadeInOutWhite();
+                break;
+            case CLIMBING_TRAVERSAL:
+                fadeInOutWhiteTraversalBar();
                 break;
             default:
                 break;
@@ -113,7 +116,7 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    private void LEDsOffStatusMode() {
+    private void offStatusMode() {
         useHSV = false;
         rgb[0] = 0;
         rgb[1] = 0;
@@ -125,7 +128,7 @@ public class LEDSubsystem extends SubsystemBase {
         evaluateOnOffInterval(2000, 1000);
         if (areLedsOn) {
             rgb[0] = 0;
-            rgb[1] = 200;
+            rgb[1] = 1;
             rgb[2] = 0;
         } else {
             rgb[0] = 0;
@@ -138,7 +141,7 @@ public class LEDSubsystem extends SubsystemBase {
         useHSV = false;
         evaluateOnOffInterval(500, 500);
         if (areLedsOn) {
-            rgb[0] = 255;
+            rgb[0] = 1;
             rgb[1] = 0;
             rgb[2] = 0;
         } else {
@@ -150,25 +153,34 @@ public class LEDSubsystem extends SubsystemBase {
 
     private void fadeInOutWhite() {
         useHSV = false;
-        //rgb[0] = rgb[1] = rgb[2];
+        rgb[0] = rgb[1] = rgb[2];
         if (isGoingUp) {
-            rgb[0] += 0.01;
-            rgb[1] += 0.01;
             rgb[2] += 0.01;
         } else {
-            rgb[0] -= 0.01;
-            rgb[1] -= 0.01;
             rgb[2] -= 0.01;
         }
 
         if (rgb[0] >= 1) {
             isGoingUp = false;
-        } else if ( rgb[0] <= 0 ) {
+        } else if (rgb[0] <= 0) {
             isGoingUp = true;
         }
-        //rgb[0] = 0.01;
-        //rgb[1] = 0.01;
-        //rgb[2] = 0.01;
+    }
+
+    private void fadeInOutWhiteTraversalBar() {
+        useHSV = false;
+        rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[2] += 0.15;
+        } else {
+            rgb[2] -= 0.15;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
     }
 
     private void evaluateOnOffInterval(int onMs, int offMs) {
