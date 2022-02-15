@@ -9,37 +9,19 @@ package frc.robot.vision;
  * used by {@link VisionCalculator} to store values for motor percents.
  */
 public class VisionDistance {
-    private int distanceMappingInches;
+    private int distanceInches;
     private double ty;
-    private double ta;
-    private double ts;
-    private double thor;
 
-    public VisionDistance(int distanceMappingInches, double ty, double ta, double ts, double thor) {
-        this.distanceMappingInches = distanceMappingInches;
+    public VisionDistance(int distanceMappingInches, double ty) {
+        this.distanceInches = distanceMappingInches;
         this.ty = ty;
-        this.ta = ta;
-        this.ts = ts;
-        this.thor = thor;
     }
 
-    public int getDistanceMappingInches() {
-        return distanceMappingInches;
+    public int getDistanceInches() {
+        return distanceInches;
     }
 
     public double getTY() {
         return ty;
-    }
-
-    public double getTA() {
-        return ta;
-    }
-
-    public double getTS() {
-        return ts;
-    }
-
-    public double getTHOR() {
-        return thor;
     }
 }

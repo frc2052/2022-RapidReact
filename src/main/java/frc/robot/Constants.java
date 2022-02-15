@@ -41,6 +41,8 @@ public final class Constants {
         public static final double TOPWHEELSPEED = 5;
         public static final double BOTTOMWHEELSPEED = 5;
         public static final double FEEDER_SPEED = .75;
+
+        public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
     }
     
     public static final class Field {
@@ -52,6 +54,8 @@ public final class Constants {
         public static final double kMountAngleDegrees = 45;
 
         public static final double kDistanceCalcOffset = 0;
+
+        public static final int DEFAULT_ASSUMED_DISTANCE = 0;
     }
 
     public static final class DriveTrain{

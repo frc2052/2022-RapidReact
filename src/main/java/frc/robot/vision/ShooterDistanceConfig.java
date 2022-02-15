@@ -10,24 +10,24 @@ package frc.robot.vision;
  */
 public class ShooterDistanceConfig {
     private final int distanceInches;
-    private final double topMotorPct;
     private final double bottomMotorPct; 
+    private final double topMotorPct;
 
-    public ShooterDistanceConfig(int distanceInches, double topMotorPct, double bottomMotorPct) {
+    public ShooterDistanceConfig(int distanceInches, double bottomMotorPct, double topMotorPct) {
         this.distanceInches = distanceInches;
-        this.topMotorPct = topMotorPct;
         this.bottomMotorPct = bottomMotorPct;
+        this.topMotorPct = topMotorPct;
     }
 
     public int getDistanceInches() {
         return this.distanceInches;
     }
 
-    public double getTopMotorPct() {
-        return topMotorPct;
-    }
-
     public double getBottomMotorPct() {
         return bottomMotorPct;
+    }
+
+    public double getTopMotorPct() {
+        return topMotorPct;
     }
 }
