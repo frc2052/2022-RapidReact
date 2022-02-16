@@ -43,7 +43,7 @@ public class LeftDefenseAuto extends AutoBase {
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper);
         
         /*
         ParallelCommandGroup intakeBall1 = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);
