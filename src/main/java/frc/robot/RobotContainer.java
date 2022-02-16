@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.FeedCargoLaunchCommand;
@@ -21,6 +22,7 @@ import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -57,7 +59,7 @@ public class RobotContainer {
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
   
-  private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
+  private final UsbCameraSubsystem intakeCamera = new UsbCameraSubsystem();
 
   private final JoystickButton startClimbButton = new JoystickButton(secondaryPannel, 4);
   private final JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -84,6 +86,8 @@ public class RobotContainer {
 		)
     );
 
+    LEDSubsystem.getInstance();
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -104,6 +108,8 @@ public class RobotContainer {
         dashboardControlsSubsystem
       )
     );
+
+    visionDriveCommandSwitch.whenReleased(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT)); // Probably a better way to do this...
     
     pixyDriveCommandSwitch.whenHeld(
       new PixyCamDriveCommand(
@@ -114,6 +120,9 @@ public class RobotContainer {
         dashboardControlsSubsystem
       )
     );
+
+    resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    
     startClimbButton.whenPressed(new StartClimbCommand(climberSubsystem));
     extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
     retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
@@ -130,7 +139,7 @@ public class RobotContainer {
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem, grassHopper));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, intakeSubsystem, grassHopper));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
   }
 
@@ -149,9 +158,7 @@ public class RobotContainer {
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
         return new Simple3BallAuto(drivetrainSubsystem, vision);
-//      case SIMPLE_3_BALL_TESTING:  // Version of Simple 3 Ball but for testing new autos and things.
-//        return new Simple3BallAutoTesting(m_drivetrainSubsystem, vision);
-      case THREE_BALL_DRIVE_AND_SHOOT:  // A three ball auto that drives and shoots.
+      case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(drivetrainSubsystem, vision);
@@ -160,9 +167,9 @@ public class RobotContainer {
       case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
+        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case FIVE_BALL:
-        return new FiveBallDreamAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new RightFiveBallAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
         return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       default:
@@ -201,13 +208,17 @@ public class RobotContainer {
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
   }
 
-  public void checkSmartDashboardControls() {
-    dashboardControlsSubsystem.checkSmartDashboardControls();
-  }
-
   public void printToSmartDashboard() {
     drivetrainSubsystem.putToSmartDashboard();
     vision.putToSmartDashboard();
+    intakeSubsystem.putToSmartDashboard();
+    twoWheelFlySubsystem.putToSmartDashboard();
+
+    // For Testing Velocity Calculations
+    double reqProjectileVelocity = twoWheelFlySubsystem.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+    SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
+    SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
+    SmartDashboard.putNumber("Required RPM", twoWheelFlySubsystem.calculateReqShooterRPM(reqProjectileVelocity));
   }
 
   public void resetGyro() {
