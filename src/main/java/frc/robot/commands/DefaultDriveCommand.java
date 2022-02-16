@@ -10,48 +10,48 @@ import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
-    private final DashboardControlsSubsystem m_dashboardControlsSubsystem;
+    private final DrivetrainSubsystem drivetrainSubsystem;
+    private final DashboardControlsSubsystem dashboardControlsSubsystem;
 
-    private final DoubleSupplier m_translationXSupplier;
-    private final DoubleSupplier m_translationYSupplier;
-    private final DoubleSupplier m_rotationSupplier;
+    private final DoubleSupplier translationXSupplier;
+    private final DoubleSupplier translationYSupplier;
+    private final DoubleSupplier rotationSupplier;
 
     public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
                                DoubleSupplier translationYSupplier,
                                DoubleSupplier rotationSupplier,
                                DashboardControlsSubsystem dashboard) {
-        this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_translationXSupplier = translationXSupplier;
-        this.m_translationYSupplier = translationYSupplier;
-        this.m_rotationSupplier = rotationSupplier;
+        this.drivetrainSubsystem = drivetrainSubsystem;
+        this.translationXSupplier = translationXSupplier;
+        this.translationYSupplier = translationYSupplier;
+        this.rotationSupplier = rotationSupplier;
 
-        m_dashboardControlsSubsystem = dashboard;
+        dashboardControlsSubsystem = dashboard;
 
         addRequirements(drivetrainSubsystem);
     }
 
     protected double getTurnValue() {
-        return m_rotationSupplier.getAsDouble();
+        return rotationSupplier.getAsDouble();
     }
 
     @Override
     public void execute() {
-        if(m_dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
-            m_drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
+        if(dashboardControlsSubsystem.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {    // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to 
+            drivetrainSubsystem.drive(                                                        // be checking each time, but there hasn't been any issues yet and should be just fine.
                 ChassisSpeeds.fromFieldRelativeSpeeds(                                      // It also allows us to switch drive modes at any point during the match.
-                    m_translationXSupplier.getAsDouble(),
-                    m_translationYSupplier.getAsDouble(),
+                    translationXSupplier.getAsDouble(),
+                    translationYSupplier.getAsDouble(),
                     getTurnValue(),
-                    m_drivetrainSubsystem.getGyroscopeRotation()
+                    drivetrainSubsystem.getGyroscopeRotation()
                 )
             );
         } else {
-            m_drivetrainSubsystem.drive(
+            drivetrainSubsystem.drive(
                 new ChassisSpeeds(
-                    m_translationXSupplier.getAsDouble(), 
-                    m_translationYSupplier.getAsDouble(), 
+                    translationXSupplier.getAsDouble(), 
+                    translationYSupplier.getAsDouble(), 
                     getTurnValue()
                 )
             );
@@ -60,6 +60,6 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_drivetrainSubsystem.stop();
+        drivetrainSubsystem.stop();
     }
 }

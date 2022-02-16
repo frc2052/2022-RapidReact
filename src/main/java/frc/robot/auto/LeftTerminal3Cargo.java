@@ -28,7 +28,7 @@ public class LeftTerminal3Cargo extends AutoBase {
         Pose2d leftmostBallPos = new Pose2d(Units.inchesToMeters(48),Units.inchesToMeters(84),Rotation2d.fromDegrees(0));
         Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(-130); };
         
-        //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
+        //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos);
         SwerveControllerCommand driveToleftmostBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, firstBallPos, leftmostBallPos);
 
