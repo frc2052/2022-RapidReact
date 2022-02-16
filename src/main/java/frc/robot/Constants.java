@@ -61,6 +61,9 @@ public final class Constants {
 
         public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
         public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
+
+        public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
+        public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
     }
     
     public static final class Field {

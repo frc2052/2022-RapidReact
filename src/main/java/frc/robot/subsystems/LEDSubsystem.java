@@ -106,7 +106,6 @@ public class LEDSubsystem extends SubsystemBase {
             case AUTONOMOUS_FINISHED:
                 break;
             case TELEOP_DEFAULT:
-                //rgb[0] = 100;
                 break;    
             case VISION_TARGETING:
                 break;
@@ -134,13 +133,16 @@ public class LEDSubsystem extends SubsystemBase {
                 rainbowStatusMode();
                 break;
             case OFF:
+                LEDsOff();
                 break;
             case BLINK_RED:
                 blinkingRedStatusMode();
                 break;
             case SOLID_WHITE:
+                LEDsOnWhite();
                 break;
             case AUTONOMOUS_DEFAULT:
+                autonomousDefaultStatusMode();
                 break;
             case AUTONOMOUS_FINISHED:
                 autonomousFinishedStatusMode();
@@ -217,6 +219,8 @@ public class LEDSubsystem extends SubsystemBase {
             LEDsOff();
         }
     }
+
+    private void autonomousDefaultStatusMode() {}
 
     private void autonomousFinishedStatusMode() {
         if (isGoingUp) {
@@ -340,6 +344,12 @@ public class LEDSubsystem extends SubsystemBase {
         rgb[0] = 0;
         rgb[1] = 0;
         rgb[2] = 0;
+    }
+
+    private void LEDsOnWhite() {
+        rgb[0] = 1;
+        rgb[1] = 1;
+        rgb[2] = 1;
     }
 
     private void setRGBfromHSV() {

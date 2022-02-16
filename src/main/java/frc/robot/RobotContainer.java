@@ -215,7 +215,7 @@ public class RobotContainer {
     intakeSubsystem.putToSmartDashboard();
     twoWheelFlySubsystem.putToSmartDashboard();
 
-    // For Testing Velocity Calculations
+    // For Testing Velocity Calculations - to be moved to other locations after being dicussed
     double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
     SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
     SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
