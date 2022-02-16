@@ -23,6 +23,7 @@ import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.util.ProjectileCalculator;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -215,10 +216,10 @@ public class RobotContainer {
     twoWheelFlySubsystem.putToSmartDashboard();
 
     // For Testing Velocity Calculations
-    double reqProjectileVelocity = twoWheelFlySubsystem.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+    double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
     SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
     SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-    SmartDashboard.putNumber("Required RPM", twoWheelFlySubsystem.calculateReqShooterRPM(reqProjectileVelocity));
+    SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
   }
 
   public void resetGyro() {

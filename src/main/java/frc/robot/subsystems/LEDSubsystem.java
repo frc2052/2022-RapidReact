@@ -33,14 +33,15 @@ public class LEDSubsystem extends SubsystemBase {
     private double saturation = 1;
     private double hue = 0;
     private double value = 1;
+    private double counter = 0;
 
     private long lastOnChangeTime = 0;
 
     private boolean areLedsOn = false;
     private boolean isGoingUp = true;
 
-    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.RAINBOW; // Default Modes
-    private LEDStatusMode lastLEDStatusMode = LEDStatusMode.RAINBOW;
+    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT; // Default Modes
+    private LEDStatusMode lastLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
 
     
     public enum LEDStatusMode {
@@ -74,6 +75,7 @@ public class LEDSubsystem extends SubsystemBase {
     public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot
 
         if (currentLEDStatusMode != lastLEDStatusMode) {
+            counter = 0;
             LEDsOff();
             runLEDStatusModeInitial();
             lastLEDStatusMode = currentLEDStatusMode;
@@ -104,6 +106,7 @@ public class LEDSubsystem extends SubsystemBase {
             case AUTONOMOUS_FINISHED:
                 break;
             case TELEOP_DEFAULT:
+                //rgb[0] = 100;
                 break;    
             case VISION_TARGETING:
                 break;
@@ -114,6 +117,8 @@ public class LEDSubsystem extends SubsystemBase {
             case CLIMBING_LOW_BAR:
                 break;
             case CLIMBING_MID_BAR:
+                break;
+            case CLIMBING_HIGH_BAR:
                 break;
             case CLIMBING_TRAVERSAL:
                 break;          
@@ -141,6 +146,7 @@ public class LEDSubsystem extends SubsystemBase {
                 autonomousFinishedStatusMode();
                 break;
             case TELEOP_DEFAULT:
+                fireFlyStatusMode();
                 break;    
             case VISION_TARGETING:
                 visionTargetingStatusMode();
@@ -149,14 +155,19 @@ public class LEDSubsystem extends SubsystemBase {
                 visionTargetFoundStatusMode();
                 break;
             case CLIMBING_DEFAULT:
-                fadeInOutWhite();
+                climbingDefaultStatusMode();
                 break;
             case CLIMBING_LOW_BAR:
+                lowBarStatusMode();
                 break;
             case CLIMBING_MID_BAR:
+                midBarStatusMode();
+                break;
+            case CLIMBING_HIGH_BAR:
+                highBarStatusMode();
                 break;
             case CLIMBING_TRAVERSAL:
-                fadeInOutWhiteTraversalBar();
+                traversalBarStatusMode();
                 break;          
             default:
             System.err.println("LED STATUS MODE SWITCH FELL THROUGH");
@@ -221,7 +232,7 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    private void fadeInOutWhite() {
+    private void climbingDefaultStatusMode() {
         rgb[0] = rgb[1] = rgb[2];
         if (isGoingUp) {
             rgb[2] += 0.01;
@@ -236,7 +247,52 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    private void fadeInOutWhiteTraversalBar() {
+    private void lowBarStatusMode() {
+        rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[2] += 0.05;
+        } else {
+            rgb[2] -= 0.05;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void midBarStatusMode() {
+        rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[2] += 0.08;
+        } else {
+            rgb[2] -= 0.08;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void highBarStatusMode() {
+        rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[2] += 0.11;
+        } else {
+            rgb[2] -= 0.11;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void traversalBarStatusMode() {
         rgb[0] = rgb[1] = rgb[2];
         if (isGoingUp) {
             rgb[2] += 0.15;
@@ -247,6 +303,23 @@ public class LEDSubsystem extends SubsystemBase {
         if (rgb[0] >= 1) {
             isGoingUp = false;
         } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void fireFlyStatusMode() {
+        if (isGoingUp) {
+            counter += 0.4;
+        } else {
+            counter -= 0.4;
+        }
+
+        rgb[1] = 0.0003 * Math.pow(counter, 2) - 0.2;
+        rgb[0] = rgb[1] * 0.2;
+
+        if (counter >= 60) {
+            isGoingUp = false;
+        } else if (counter <= 0) {
             isGoingUp = true;
         }
     }
