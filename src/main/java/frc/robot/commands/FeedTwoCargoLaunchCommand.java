@@ -13,28 +13,28 @@ public class FeedTwoCargoLaunchCommand extends CommandBase {
   private final ShooterSubsystem shooterSubsystem;
   private final IndexerSubsystem indexerSubsystem;
 
-  public FeedTwoCargoLaunchCommand (ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem) {
+  public FeedTwoCargoLaunchCommand(ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
-  } 
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute () {
-    if (shooterSubsystem.isAtSpeed ()) {  
-      indexerSubsystem.runFeeder ();
-      indexerSubsystem.runPreload ();
+  public void execute() {
+    if (shooterSubsystem.isAtSpeed()) {
+      indexerSubsystem.runFeeder();
+      indexerSubsystem.runPreload();
     }
   }
 
   @Override
-   public void end (boolean interrupted) {
-    indexerSubsystem.stopFeeder ();
-    indexerSubsystem.stopPreload ();
+  public void end(boolean interrupted) {
+    indexerSubsystem.stopFeeder();
+    indexerSubsystem.stopPreload();
   }
 
   @Override
-  public boolean isFinished () {
+  public boolean isFinished() {
     return false;
   }
 }
