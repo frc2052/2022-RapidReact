@@ -10,7 +10,7 @@ public class IntakeArmInCommand extends CommandBase {
     public IntakeArmInCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
-      // Maybe add dependencies   
+      // Maybe add dependencies idk that's what they did in 2020
   }
       
     @Override
@@ -18,12 +18,14 @@ public class IntakeArmInCommand extends CommandBase {
         
     }
     @Override
+    
+    //arm retracts and stops
     public void execute() {
         intakeSubsystem.intakeArmIn();
         intakeSubsystem.intakeStop();
         grassHopper.hopperStop();
-        //arm retracts and stops
     }
+
     @Override
     public boolean isFinished(){
         return true;

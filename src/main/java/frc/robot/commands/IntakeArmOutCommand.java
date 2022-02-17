@@ -17,17 +17,19 @@ public class IntakeArmOutCommand extends CommandBase {
     public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
-      // Maybe add dependencies   
     }
       
     @Override
+    
+    //arm extends and spins the wheels
     public void execute() {
       intakeSubsystem.intakeArmOut();
       intakeSubsystem.intakeOn();
       grassHopper.hopperGo();
-      //arm extends and spins the wheels
     }
+
     @Override
+
     public boolean isFinished(){
       return true;
     }

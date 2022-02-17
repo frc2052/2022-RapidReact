@@ -11,16 +11,18 @@ public class IntakeStopCommand extends CommandBase {
     public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.grassHopper = grassHopper;
-      // Maybe add dependencies   
   }
   
     @Override
+
+    //stops the intake
     public void execute() {
         intakeSubsystem.intakeStop();
         grassHopper.hopperStop();
-        //stops the intake
     }
+
     @Override
+
     public boolean isFinished(){
         return true;
     }
