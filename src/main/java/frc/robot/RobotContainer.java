@@ -10,12 +10,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FeedCargoLaunchCommand;
+import frc.robot.commands.FeedOneCargoLaunchCommand;
+import frc.robot.commands.FeedTwoCargoLaunchCommand;
+import frc.robot.commands.PrepareToLaunchCargoCommand;
 import frc.robot.commands.IntakeArmInCommand;
 import frc.robot.commands.IntakeArmOutCommand;
 import frc.robot.commands.IntakeStopCommand;
 import frc.robot.commands.PixyCamDriveCommand;
-import frc.robot.commands.PrepareToLaunchCargoCommand;
 import frc.robot.commands.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
@@ -58,8 +59,8 @@ public class RobotContainer {
   private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
   private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
-  private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
-  
+  private final JoystickButton feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 3);
+  private final JoystickButton feedOneCargoLaunch = new JoystickButton(secondaryPannel, 4);
   private final UsbCameraSubsystem intakeCamera = new UsbCameraSubsystem();
 
   private final JoystickButton startClimbButton = new JoystickButton(secondaryPannel, 4);
@@ -140,8 +141,11 @@ public class RobotContainer {
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, intakeSubsystem, grassHopper));
-    feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, grassHopper));
+    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
+
+
   }
 
   /**

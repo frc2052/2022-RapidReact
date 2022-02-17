@@ -26,7 +26,7 @@ public final class Constants {
         public static final int CLIMBER_MOTOR = 88;
         public static final int INTAKE_MOTOR = 76;
         public static final int HOPPER_MOTOR = 77;
-    } 
+    }
     public static final class Solenoids {
         // Used for claw climber.
         // public static final int CLOSE_A_SOLENOID = 0;
@@ -41,14 +41,14 @@ public final class Constants {
 
         public static final int INTAKE_OUT_SOLENOID = 5;
         public static final int INTAKE_IN_SOLENOID = 0;
-    } 
+    }
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
         public static final int INDEXER_PRELOAD = 0;
         public static final int INDEXER_FEEDER = 1;
-    
-    } 
+
+    }
 
     public static final class ShooterSub {
         public static final double INDEXER_SPEED = .75;
@@ -65,7 +65,7 @@ public final class Constants {
         public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
         public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
     }
-    
+
     public static final class Field {
         public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
     }
@@ -84,20 +84,13 @@ public final class Constants {
         public static final double IMAGE_WIDTH_PIXELS = 316;
     }
 
-    public static final class DriveTrain{
-    /**
-     * The left-to-right distance between the drivetrain wheels
-     *
-     * Should be measured from center to center.
-     */
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
-    /**
-     * The front-to-back distance between the drivetrain wheels.
-     *
-     * Should be measured from center to center.
-     */
-    public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
-
+    public static final class DriveTrain {
+        // The left-to-right distance between the drivetrain wheels
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
+        // The front-to-back distance between the drivetrain wheels.
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 5;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
@@ -121,16 +114,14 @@ public final class Constants {
 
         public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }
-    
-    public static final class Intake{
+
+    public static final class Intake {
+        //sets the speed of the motors
         public static final double kIntakeSpeed = .75;
         public static final double kHopperSpeed = .75;
-        //sets the speed of the motors
-    
     }
 
     public static final class Climber {
-
         public static final double CLIMBER_EXTENSION_SPEED  = .75;
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
         // our gearbox ratio is 12
