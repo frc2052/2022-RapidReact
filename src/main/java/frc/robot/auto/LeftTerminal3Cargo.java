@@ -26,6 +26,6 @@ public class LeftTerminal3Cargo extends AutoBase {
     public LeftTerminal3Cargo(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(drivetrain, vision);
 
-
+        
     }
 }

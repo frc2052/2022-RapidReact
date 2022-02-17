@@ -170,7 +170,7 @@ public class RobotContainer {
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_3_BALL:
-        return new MiddleTerminal3CargoAuto(drivetrainSubsystem, vision);
+        return new MiddleRightTerminal3CargoAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_DEFENSE:
         return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case FIVE_BALL:
