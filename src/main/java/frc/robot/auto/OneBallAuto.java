@@ -16,7 +16,7 @@ public class OneBallAuto extends AutoBase{
     //target. This auto backs up to get the "off the trmac" point and shoots the preloaded ball
     //This auto is a last resort, in case of inability to use limelight or other malfunctions.
 
-    public OneBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IndexerSubsystem indexer) {
+    public OneBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IndexerSubsystem indexer) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 

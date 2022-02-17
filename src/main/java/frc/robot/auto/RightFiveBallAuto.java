@@ -11,6 +11,7 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class RightFiveBallAuto extends AutoBase {
@@ -24,7 +25,7 @@ public class RightFiveBallAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
         
