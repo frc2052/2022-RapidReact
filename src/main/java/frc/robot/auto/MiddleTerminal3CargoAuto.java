@@ -12,8 +12,8 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class MiddleTerminal3CargoAuto extends AutoBase {
     public MiddleTerminal3CargoAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        super(drivetrain);
-        vision.setLED(LEDMode.OFF);
+        super(drivetrain, vision);
+        vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         //Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(0));
@@ -22,8 +22,8 @@ public class MiddleTerminal3CargoAuto extends AutoBase {
         Supplier<Rotation2d> aim = () -> { return Rotation2d.fromDegrees(-130); };
         
         //SwerveControllerCommand driveToBall1 = super.ceateSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, startPos, firstBallPos);
-        SwerveControllerCommand driveToleftmostBallPos = super.createSwerveTrajectoryCommand(super.m_slowTrajectoryConfig, firstBallPos, leftmostBallPos);
+        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos);
+        SwerveControllerCommand driveToleftmostBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, firstBallPos, leftmostBallPos);
 
 
         //TODO: extend intake and turn on intake motors
