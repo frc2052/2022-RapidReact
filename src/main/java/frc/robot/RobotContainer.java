@@ -45,7 +45,7 @@ public class RobotContainer {
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
-  private final PneumaticsSubsystem pneumatics = new PneumaticsSubsystem();
+  private final PneumaticsSubsystem pneumaticsSubsystem = new PneumaticsSubsystem();
   private final HookClimberSubsystem climberSubsystem = new HookClimberSubsystem();
   private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
