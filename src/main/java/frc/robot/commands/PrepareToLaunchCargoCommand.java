@@ -8,62 +8,62 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 
 public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
-  private final VisionSubsystem vision;
+  private final VisionSubsystem visionSubsystem;
 
-  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem hopper) {
-    super(twoWheelFly, indexer, hopper);
-    this.vision = vision;
+  public PrepareToLaunchCargoCommand (ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem, VisionSubsystem visionSubsystem, HopperSubsystem hopperSubsystem) {
+    super(shooterSubsystem, indexerSubsystem, hopperSubsystem);
+    this.visionSubsystem = visionSubsystem;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
-    if(vision.hasValidTarget()) {
-      double distance = vision.getXDistanceToUpperHub();
-      double reqVelocity = twoWheelFly.calculateReqProjectileVelocity(distance);
-      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
+    if (visionSubsystem.hasValidTarget ()) {
+      double distance = visionSubsystem.getXDistanceToUpperHub ();
+      double reqVelocity = shooterSubsystem.calculateReqProjectileVelocity (distance);
+      double reqAngularVelocity = reqVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
       //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
-      twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
+      shooterSubsystem.setBothWheelVelocities (reqAngularVelocity);
     }
 
-    twoWheelFly.runAtShootSpeed();
-    if (!indexer.getCargoStagedDetected()) {
+    shooterSubsystem.runAtShootSpeed ();
+    if (!indexerSubsystem.getCargoStagedDetected ()) {
       //Keep running all the wheels until all the balls are staged
-      indexer.runPreload();
-      indexer.runFeeder();
-      grassHopper.hopperGo();
-    } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
+      indexerSubsystem.runPreload ();
+      indexerSubsystem.runFeeder ();
+      hopperSubsystem.hopperGo ();
+    } else if (indexerSubsystem.getCargoStagedDetected () && !indexerSubsystem.getCargoPreStagedDetected ()) {
       //The staged detector shows a ball ready to be fired but no second ball is detected
-      indexer.stopFeeder();
-      indexer.runPreload();
-      grassHopper.hopperGo();
+      indexerSubsystem.stopFeeder ();
+      indexerSubsystem.runPreload ();
+      hopperSubsystem.hopperGo ();
     } else {
       //Two balls are loaded and no more can be taken
-      indexer.stopFeeder();
-      indexer.stopPreload();
-      grassHopper.hopperStop();
+      indexerSubsystem.stopFeeder ();
+      indexerSubsystem.stopPreload ();
+      hopperSubsystem.hopperStop ();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    indexer.stopFeeder();
-    indexer.stopPreload();
-    twoWheelFly.stop();
-    grassHopper.hopperStop();
+  public void end (boolean interrupted) {
+    indexerSubsystem.stopFeeder ();
+    indexerSubsystem.stopPreload ();
+    shooterSubsystem.stop ();
+    hopperSubsystem.hopperStop ();
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished () {
     return false;
   }
 }

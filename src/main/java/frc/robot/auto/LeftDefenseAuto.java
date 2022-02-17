@@ -24,7 +24,7 @@ public class LeftDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 

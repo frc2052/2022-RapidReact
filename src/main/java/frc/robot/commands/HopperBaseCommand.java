@@ -7,18 +7,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class HopperBaseCommand extends CommandBase {
-  protected final TwoWheelFlySubsystem twoWheelFly; 
-  protected final IndexerSubsystem indexer;
-  protected final HopperSubsystem hopper;
+  protected final ShooterSubsystem shooterSubsystem; 
+  protected final IndexerSubsystem indexerSubsystem;
+  protected final HopperSubsystem hopperSubsystem;
   
   /** Creates a new HopperBaseCommand. */
-  public HopperBaseCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, HopperSubsystem hopper) {
-    this.twoWheelFly = twoWheelFly;
-    this.indexer = indexer;
-    this.hopper = hopper;
+  public HopperBaseCommand(ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem, HopperSubsystem hopperSubsystem) {
+    this.shooterSubsystem = shooterSubsystem;
+    this.indexerSubsystem = indexerSubsystem;
+    this.hopperSubsystem = hopperSubsystem;
   }
 
   // Called when the command is initially scheduled.

@@ -29,7 +29,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
