@@ -203,7 +203,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         lastwheelVelocity = states[0].speedMetersPerSecond;
 
-        if (states[0].speedMetersPerSecond == 0
+        if (false && states[0].speedMetersPerSecond == 0
                         && states[1].speedMetersPerSecond == 0 
                         && states[2].speedMetersPerSecond == 0
                         && states[3].speedMetersPerSecond == 0) {

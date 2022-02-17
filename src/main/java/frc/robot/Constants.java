@@ -91,23 +91,23 @@ public final class Constants {
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 5;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(36.241150 + 180);
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 5; // Third // Second // First
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(37.216187 + 180); // -Math.toRadians(38.575745 + 180); //-Math.toRadians(36.241150 + 180);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 9;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 8;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(355.187988 + 180);
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(357.047424 + 180); // -Math.toRadians(2.210999 + 180); //-Math.toRadians(355.187988 + 180);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(42.942810 + 180);
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(226.441956 + 180); // -Math.toRadians(182.565308 + 180); //-Math.toRadians(42.942810 + 180);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 12;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(240.614319 + 180); // -Math.toRadians(60.048523 + 180); //-Math.toRadians(241.136169 + 180);
 
         public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }

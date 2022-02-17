@@ -84,7 +84,7 @@ public class RobotContainer {
     pixyCamSubsystem = new PixyCamSubsystem();    
 
     // //The following subsystems have a dependency on CAN
-    // drivetrainSubsystem = new DrivetrainSubsystem();
+    drivetrainSubsystem = new DrivetrainSubsystem();
     // twoWheelFlySubsystem = new TwoWheelFlySubsystem();
     // indexerSubsystem = new IndexerSubsystem();
     // intakeSubsystem = new IntakeSubsystem();
@@ -93,15 +93,15 @@ public class RobotContainer {
     // climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
 
-    // drivetrainSubsystem.setDefaultCommand(
-    //   new DefaultDriveCommand(
-    //         drivetrainSubsystem,
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-    //         dashboardControlsSubsystem
-		// )
-    // );
+    drivetrainSubsystem.setDefaultCommand(
+      new DefaultDriveCommand(
+            drivetrainSubsystem,
+            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            dashboardControlsSubsystem
+		)
+    );
 
     // configureButtonBindings();
   }
