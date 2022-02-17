@@ -10,7 +10,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 /** Subsystem for sending and checking toggles and selectable lists on the SmartDashboard */
 public class DashboardControlsSubsystem extends SubsystemBase {
 
-    private VisionSubsystem vision;
+    private VisionSubsystem visionSubsystem;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -25,7 +25,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
-        this.vision = vision;
+        this.visionSubsystem = vision;
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         lastLEDState = limelightLEDsEnabled;
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
@@ -70,17 +70,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
 
         if(limelightLEDsEnabled && !lastLEDState) {
-            vision.setLED(LEDMode.ON);
+            visionSubsystem.setLED(LEDMode.ON);
         } else if (!limelightLEDsEnabled && lastLEDState) {
-            vision.setLED(LEDMode.OFF);
+            visionSubsystem.setLED(LEDMode.OFF);
         }
         lastLEDState = limelightLEDsEnabled;
 
         if(!limelightDriveCamToggle && lastCamState) {
-            vision.setCamMode(CamMode.VISION);
+            visionSubsystem.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            vision.setCamMode(CamMode.DRIVER);
+            visionSubsystem.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }
         lastCamState = limelightDriveCamToggle;
