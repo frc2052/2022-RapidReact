@@ -50,7 +50,7 @@ public class RobotContainer {
   private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
   private final Joystick driveJoystick = new Joystick(0);
-  private final Joystick turnJoystick = new Joystick (1);
+  private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPanel = new Joystick(2);
 
   private final JoystickButton visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
