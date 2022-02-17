@@ -30,14 +30,14 @@ public class IntakeSubsystem {
         hopperMotor = new VictorSPX(MotorIDs.HOPPER_MOTOR);
     }
 
-    public void intakeArmIn(){
+    public void intakeArmOut(){
         inSolenoid.set(true);
         outSolenoid.set(false);
         isArmOut = false;
         boolean isarmOut = false;
     }
   
-    public void intakeArmOut(){
+    public void intakeArmIn(){
         inSolenoid.set(false);
         outSolenoid.set(true);
         isArmOut = true;
