@@ -20,8 +20,11 @@ public class FeedOneCargoLaunchCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (twoWheelFly.isAtSpeed() && indexer.getCargoStagedDetected() == true);
+    if (twoWheelFly.isAtSpeed()) {
+      //Only the first ball in the shooter should be touching the feed wheel
+      //If we have a second ball it should only be touching the green indexer wheel
       indexer.runFeeder();
+    }
   }
 
   @Override

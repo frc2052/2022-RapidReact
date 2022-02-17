@@ -12,18 +12,12 @@ import frc.robot.subsystems.TwoWheelFlySubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 
-public class PrepareToLaunchCargoCommand extends CommandBase {
-  private final TwoWheelFlySubsystem twoWheelFly; 
-  private final IndexerSubsystem indexer;
+public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   private final VisionSubsystem vision;
-  private final HopperSubsystem grassHopper;
 
-
-  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem grassHopper) {
-    this.twoWheelFly = twoWheelFly;
-    this.indexer = indexer;
+  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem hopper) {
+    super(twoWheelFly, indexer, hopper);
     this.vision = vision;
-    this.grassHopper = grassHopper;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,15 +34,21 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
     }
 
     twoWheelFly.runAtShootSpeed();
-    if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == false) {
+    if (!indexer.getCargoStagedDetected()) {
+      //Keep running all the wheels until all the balls are staged
+      indexer.runPreload();
+      indexer.runFeeder();
+      grassHopper.hopperGo();
+    } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
+      //The staged detector shows a ball ready to be fired but no second ball is detected
+      indexer.stopFeeder();
       indexer.runPreload();
       grassHopper.hopperGo();
-    } else if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == true) {
-        indexer.stopFeeder();
-        indexer.runPreload();
     } else {
-        indexer.stopFeeder();
-        indexer.stopPreload();
+      //Two balls are loaded and no more can be taken
+      indexer.stopFeeder();
+      indexer.stopPreload();
+      grassHopper.hopperStop();
     }
   }
 
