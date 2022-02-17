@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FeedOneCargoLaunchCommand;
-import frc.robot.commands.FeedTwoCargoLaunchCommand;
-import frc.robot.commands.PrepareToLaunchCargoCommand;
 import frc.robot.commands.PixyCamDriveCommand;
 import frc.robot.commands.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
@@ -22,6 +19,9 @@ import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
+import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
+import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
+import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import edu.wpi.first.cscore.UsbCamera;
@@ -50,7 +50,7 @@ public class RobotContainer {
   private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
 
   private final Joystick driveJoystick = new Joystick(0);
-  private final Joystick turnJoystick = new Joystick (1));
+  private final Joystick turnJoystick = new Joystick (1);
   private final Joystick secondaryPanel = new Joystick(2);
 
   private final JoystickButton visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
@@ -112,7 +112,7 @@ public class RobotContainer {
             drivetrainSubsystem,
             () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            vision,
+            visionSubsystem,
             dashboardControlsSubsystem));
 
     visionDriveCommandSwitch
@@ -148,8 +148,7 @@ public class RobotContainer {
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, hopperSubsystem));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, hopperSubsystem));
 
-    prepareToLaunch.whileHeld(
-        new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, visionSubsystem, hopperSubsystem));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, visionSubsystem, hopperSubsystem));
     feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
     feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
 
