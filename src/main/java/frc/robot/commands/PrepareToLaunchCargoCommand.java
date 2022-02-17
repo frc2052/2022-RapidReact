@@ -4,9 +4,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -18,18 +16,16 @@ public class PrepareToLaunchCargoCommand extends CommandBase {
   private final TwoWheelFlySubsystem twoWheelFly; 
   private final IndexerSubsystem indexer;
   private final VisionSubsystem vision;
-  private final IntakeSubsystem intake;
   private final HopperSubsystem grassHopper;
 
 
-  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
+  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem grassHopper) {
     this.twoWheelFly = twoWheelFly;
     this.indexer = indexer;
     this.vision = vision;
-    this.intake = intake;
     this.grassHopper = grassHopper;
   }
-  
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

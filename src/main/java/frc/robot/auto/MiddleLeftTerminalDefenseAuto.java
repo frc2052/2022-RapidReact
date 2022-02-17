@@ -48,7 +48,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper);
 
         /*
         ParallelCommandGroup intakeEnemyBall1 = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);

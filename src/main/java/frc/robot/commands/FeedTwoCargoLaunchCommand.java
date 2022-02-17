@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.TwoWheelFlySubsystem;
 
-public class FeedCargoLaunchCommand extends CommandBase {
+public class FeedTwoCargoLaunchCommand extends CommandBase {
 
   private final TwoWheelFlySubsystem twoWheelFly;
   private final IndexerSubsystem indexer;
 
-  public FeedCargoLaunchCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer) {
+  public FeedTwoCargoLaunchCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer) {
     this.twoWheelFly = twoWheelFly;
     this.indexer = indexer;
   } 
@@ -31,7 +31,6 @@ public class FeedCargoLaunchCommand extends CommandBase {
     indexer.stopFeeder();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

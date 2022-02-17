@@ -49,7 +49,7 @@ public class RightFiveBallAuto extends AutoBase {
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO add features for advanced timing control when the shooter or intake should be run during driving commands
         //ParallelCommandGroup aimAndShootPreloaded = new ParallelCommandGroup(aimAtHub, launchCargoCommand);
