@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.commands.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -67,6 +68,7 @@ public class RightFiveBallAuto extends AutoBase {
         this.addCommands(driveToTerminalBalls);//this is where the parallel intake terminal ball command will go.
         this.addCommands(driveBackToShoot);
 
+        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }

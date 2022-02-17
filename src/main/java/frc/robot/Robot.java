@@ -68,7 +68,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
     robotContainer.resetGyro();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -76,6 +75,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
   }
 
   /** This function is called periodically during autonomous. */
@@ -112,6 +112,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
   /** This function is called periodically during operator control. */
@@ -123,6 +124,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }
 
   /** This function is called periodically during test mode. */

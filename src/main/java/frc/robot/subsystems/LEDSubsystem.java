@@ -58,7 +58,8 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_LOW_BAR("Climbing Low Bar"),
         CLIMBING_MID_BAR("Climbing Middle Bar"),
         CLIMBING_HIGH_BAR("Climbing High Bar"),
-        CLIMBING_TRAVERSAL("Climbing Traversal Bar");
+        CLIMBING_TRAVERSAL("Climbing Traversal Bar"),
+        TEST_MODE("Test Mode");
 
         public String name;
 
@@ -120,7 +121,9 @@ public class LEDSubsystem extends SubsystemBase {
             case CLIMBING_HIGH_BAR:
                 break;
             case CLIMBING_TRAVERSAL:
-                break;          
+                break;
+            case TEST_MODE:
+                break;
             default:
                 System.err.println("LED INITIAL SWITCH FELL THROUGH");
                 break;
@@ -170,7 +173,10 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_TRAVERSAL:
                 traversalBarStatusMode();
-                break;          
+                break;
+            case TEST_MODE:
+                testStatusMode();
+                break;
             default:
             System.err.println("LED STATUS MODE SWITCH FELL THROUGH");
                 break;
@@ -325,6 +331,16 @@ public class LEDSubsystem extends SubsystemBase {
             isGoingUp = false;
         } else if (counter <= 0) {
             isGoingUp = true;
+        }
+    }
+    
+    private void testStatusMode() {
+        evaluateOnOffInterval(1000, 1000);
+        if (areLedsOn) {
+            rgb[0] = 1;
+            rgb[1] = 0.2;
+        } else {
+            LEDsOff();
         }
     }
 

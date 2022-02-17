@@ -1,18 +1,23 @@
 package frc.robot.auto;
 
-// Starts at position C (Left tarmac closest to center and parallel with outermost line) and should score 2 balls (3 if we program for human player to pass ball)
-// and shoot an enemy ball into the hanger.
-
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
+
+import frc.robot.commands.IntakeArmInCommand;
+import frc.robot.commands.IntakeArmOutCommand;
+import frc.robot.commands.PrepareToLaunchCargoCommand;
+
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MiddleLeftTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;
@@ -65,6 +70,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         this.addCommands(drivebackToShootPos);   // returnToShoot
 //      this.addCommands(launchCargoCommand);
 
+        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
