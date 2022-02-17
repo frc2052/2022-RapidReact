@@ -14,15 +14,18 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   private final VisionSubsystem vision;
+  protected final TwoWheelFlySubsystem twoWheelFly; 
 
   public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem hopper) {
-    super(twoWheelFly, indexer, hopper);
+    super(indexer, hopper);
     this.vision = vision;
+    this.twoWheelFly = twoWheelFly;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    super.execute();
     // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
     if(vision.hasValidTarget()) {
       double distance = vision.getXDistanceToUpperHub();
@@ -31,39 +34,20 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
       //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
       twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
-    }
-
-    twoWheelFly.runAtShootSpeed();
-    if (!indexer.getCargoStagedDetected()) {
-      //Keep running all the wheels until all the balls are staged
-      indexer.runPreload();
-      indexer.runFeeder();
-      grassHopper.hopperGo();
-    } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
-      //The staged detector shows a ball ready to be fired but no second ball is detected
-      indexer.stopFeeder();
-      indexer.runPreload();
-      grassHopper.hopperGo();
-    } else {
-      //Two balls are loaded and no more can be taken
-      indexer.stopFeeder();
-      indexer.stopPreload();
-      grassHopper.hopperStop();
+      twoWheelFly.runAtShootSpeed();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stopFeeder();
-    indexer.stopPreload();
+    super.end(interrupted);
     twoWheelFly.stop();
-    grassHopper.hopperStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return super.isFinished();
   }
 }

@@ -59,8 +59,8 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
         SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
 
         PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 

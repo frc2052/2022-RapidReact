@@ -42,8 +42,8 @@ public class LeftDefenseAuto extends AutoBase {
         TurnInPlaceCommand turnToHanger = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(135));
         TurnInPlaceCommand turnToFirstTeleopBall = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(-170));
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
 
         PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper);
         

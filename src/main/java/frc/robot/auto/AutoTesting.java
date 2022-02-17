@@ -18,12 +18,13 @@ import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoTesting extends AutoBase {
-    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexerSubsystem) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         
@@ -44,8 +45,8 @@ public class AutoTesting extends AutoBase {
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, midpoints, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexerSubsystem);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexerSubsystem);
 
         ParallelCommandGroup getBall1 = new ParallelCommandGroup(driveToBall1, intakeArmOut);
 

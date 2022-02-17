@@ -41,7 +41,7 @@ public class RobotContainer {
   private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final HopperSubsystem grassHopper = new HopperSubsystem();
+  private final HopperSubsystem hopperSubsystem = new HopperSubsystem();
   private final PneumaticsSubsystem pneumatics = new PneumaticsSubsystem();
   private final HookClimberSubsystem climberSubsystem = new HookClimberSubsystem();
 
@@ -136,11 +136,11 @@ public class RobotContainer {
       }
     });
 
-    intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
-    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
-    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
+    intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, hopperSubsystem));
+    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, hopperSubsystem, indexerSubsystem));
+    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, hopperSubsystem, indexerSubsystem));
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, grassHopper));
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, hopperSubsystem));
     feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
     feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
 
@@ -157,7 +157,7 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-      return new AutoTesting(drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
+      return new AutoTesting(drivetrainSubsystem, vision, intakeSubsystem, hopperSubsystem, indexerSubsystem);
       case TEST_AUTO_1:
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
@@ -167,15 +167,15 @@ public class RobotContainer {
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(drivetrainSubsystem, vision);
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new LeftDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, hopperSubsystem);
       case MIDDLE_TERMINAL_3_BALL:
         return new MiddleTerminal3CargoAuto(drivetrainSubsystem, vision);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, hopperSubsystem);
       case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new RightFiveBallAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, hopperSubsystem);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, hopperSubsystem);
       default:
         break;
     }
