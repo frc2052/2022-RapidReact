@@ -95,7 +95,7 @@ public class RobotContainer {
     indexerSubsystem = new IndexerSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     grassHopper = new HopperSubsystem();
-    // pneumatics = new PneumaticsSubsystem();
+    pneumatics = new PneumaticsSubsystem();
     // climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
 
