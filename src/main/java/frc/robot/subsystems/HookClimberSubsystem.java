@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class HookClimberSubsystem extends SubsystemBase{
     // DoubleSolenoid that controls both in and out solenoids for both climbing arms.
@@ -50,9 +51,11 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void manualExtendArm() {
         if (climberMotor.getSelectedSensorPosition() <= Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS) {
             climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
         } else {
             System.out.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         }
     }
 

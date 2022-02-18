@@ -9,8 +9,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.ShooterSub;
-import frc.robot.auto.*;
+
+import frc.robot.auto.AutoTesting;
+import frc.robot.auto.LeftDefenseAuto;
+import frc.robot.auto.LeftTerminal3Cargo;
+import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
+import frc.robot.auto.MiddleRight5BallDefenseAuto;
+import frc.robot.auto.MiddleRightTerminal3CargoAuto;
+import frc.robot.auto.RightFiveBallAuto;
+import frc.robot.auto.Simple3BallAuto;
+import frc.robot.auto.TestAuto1;
+import frc.robot.auto.ThreeballDriveAndShoot;
+
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PixyCamDriveCommand;
 import frc.robot.commands.VisionDriveCommand;
@@ -25,8 +35,20 @@ import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
 import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
 import frc.robot.commands.shooter.ManualShooterCommand;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
-import frc.robot.subsystems.*;
+
+import frc.robot.subsystems.DashboardControlsSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PixyCamSubsystem;
+import frc.robot.subsystems.PneumaticsSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.UsbCameraSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.vision.ShooterDistanceConfig;
 import edu.wpi.first.cscore.UsbCamera;

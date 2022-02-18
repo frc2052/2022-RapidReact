@@ -57,6 +57,10 @@ public class LEDSubsystem extends SubsystemBase {
         VISION_TARGET_FOUND("Vision Target Found"),
         ENG_GAME_WARNING("End Game Warning - 10 Seconds Till End Game"),
         CLIMBING_DEFAULT("Climbing Default"),
+        CLIMBER_EXTENDING("Climber Extending"),
+        CLIMBER_RETRACTING("Climber Retracting"),
+        CLIMBER_MAX_EXTENSION("Climber Max Extension"),
+        CLIMBER_MIN_EXTENSION("Climber Min Extension"),
         CLIMBING_LOW_BAR("Climbing Low Bar"),
         CLIMBING_MID_BAR("Climbing Middle Bar"),
         CLIMBING_HIGH_BAR("Climbing High Bar"),
@@ -116,10 +120,22 @@ public class LEDSubsystem extends SubsystemBase {
                 rgb[2] = 0.5;
                 break;
             case VISION_TARGET_FOUND:
+                rgb[0] = 0.5;
                 break;
             case ENG_GAME_WARNING:
                 break;
             case CLIMBING_DEFAULT:
+                break;
+            case CLIMBER_EXTENDING:
+                break;
+            case CLIMBER_RETRACTING:
+                rgb[1] = 0.5;
+                rgb[2] = rgb[1] * 0.2;
+                break;
+            case CLIMBER_MAX_EXTENSION:
+                rgb[2] = 0.5;
+                break;
+            case CLIMBER_MIN_EXTENSION:
                 break;
             case CLIMBING_LOW_BAR:
                 break;
@@ -174,6 +190,17 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_DEFAULT:
                 climbingDefaultStatusMode();
+                break;
+            case CLIMBER_EXTENDING:
+                climberExtendingStatusMode();
+                break;
+            case CLIMBER_RETRACTING:
+                climberRetractingStatusMode();
+                break;
+            case CLIMBER_MAX_EXTENSION:
+                climberMaxExtensionStatusMode();
+                break;
+            case CLIMBER_MIN_EXTENSION:
                 break;
             case CLIMBING_LOW_BAR:
                 lowBarStatusMode();
@@ -314,6 +341,50 @@ public class LEDSubsystem extends SubsystemBase {
         if (rgb[0] >= 1) {
             isGoingUp = false;
         } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberExtendingStatusMode() {
+        if (isGoingUp) {
+            rgb[2] += 0.1;
+        } else {
+            rgb[2] -= 0.1;
+        }
+
+        if (rgb[2] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[2] <= 0.5) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberRetractingStatusMode() {
+        if (isGoingUp) {
+            rgb[1] += 0.1;
+            rgb[2] = rgb[1] * 0.2;
+        } else {
+            rgb[2] -= 0.1;
+            rgb[2] = rgb[1] * 0.2;
+        }
+
+        if (rgb[2] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[2] <= 0.5) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberMaxExtensionStatusMode() {
+        if (isGoingUp) {
+            rgb[0] += 0.1;
+        } else {
+            rgb[0] -= 0.1;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0.5) {
             isGoingUp = true;
         }
     }
