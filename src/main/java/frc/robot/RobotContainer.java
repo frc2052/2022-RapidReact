@@ -10,18 +10,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.FeedOneCargoLaunchCommand;
-import frc.robot.commands.FeedTwoCargoLaunchCommand;
-import frc.robot.commands.PrepareToLaunchCargoCommand;
-import frc.robot.commands.IntakeArmInCommand;
-import frc.robot.commands.IntakeArmOutCommand;
-import frc.robot.commands.IntakeStopCommand;
 import frc.robot.commands.PixyCamDriveCommand;
 import frc.robot.commands.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
+import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.intake.IntakeStopCommand;
+import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
+import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
+import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.util.ProjectileCalculator;
@@ -36,38 +36,36 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-  private final VisionSubsystem vision = new VisionSubsystem();
-  private final DashboardControlsSubsystem dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-  private final TwoWheelFlySubsystem twoWheelFlySubsystem = new TwoWheelFlySubsystem();
-  private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  private final HopperSubsystem grassHopper = new HopperSubsystem();
-  private final PneumaticsSubsystem pneumatics = new PneumaticsSubsystem();
-  private final HookClimberSubsystem climberSubsystem = new HookClimberSubsystem();
-
-  private final PixyCamSubsystem pixyCamSubsystem = new PixyCamSubsystem();
+  private DrivetrainSubsystem drivetrainSubsystem;
+  private VisionSubsystem vision;
+  private DashboardControlsSubsystem dashboardControlsSubsystem;
+  private ShooterSubsystem shooterSubsystem;
+  private IndexerSubsystem indexerSubsystem;
+  private IntakeSubsystem intakeSubsystem;
+  private HopperSubsystem grassHopper;
+  private PneumaticsSubsystem pneumatics;
+  private HookClimberSubsystem climberSubsystem;
+  private UsbCameraSubsystem intakeCamera;
+  private PixyCamSubsystem pixyCamSubsystem;
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
   
-  private final JoystickButton visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
-  private final JoystickButton pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
-  private final JoystickButton resetGyroButton = new JoystickButton(secondaryPannel, 1);
-  private final JoystickButton intakeArmOutButton = new JoystickButton(driveJoystick, 2);
-  private final JoystickButton intakeArmInButton = new JoystickButton(driveJoystick, 3);
-  private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
-  private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
-  private final JoystickButton feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 3);
-  private final JoystickButton feedOneCargoLaunch = new JoystickButton(secondaryPannel, 4);
-  private final UsbCameraSubsystem intakeCamera = new UsbCameraSubsystem();
-
-  private final JoystickButton startClimbButton = new JoystickButton(secondaryPannel, 4);
-  private final JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
-  private final JoystickButton retractClimberButton = new JoystickButton(secondaryPannel, 6);
-  private final JoystickButton climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
-  private final JoystickButton climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
+  private JoystickButton visionDriveCommandSwitch;
+  private JoystickButton pixyDriveCommandSwitch;
+  private JoystickButton resetGyroButton;
+  private JoystickButton intakeArmOutButton;
+  private JoystickButton intakeArmInButton;
+  private JoystickButton intakeStopButton;
+  private JoystickButton prepareToLaunch;
+  private JoystickButton feedOneCargoLaunch;
+  private JoystickButton feedTwoCargoLaunch;
+  private JoystickButton startClimbButton;
+  private JoystickButton extendClimberButton;
+  private JoystickButton retractClimberButton;
+  private JoystickButton climberSolenoidToggleButton;
+  private JoystickButton climberLockToggleButton;
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -78,21 +76,39 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 //    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
-    drivetrainSubsystem.setDefaultCommand(
-      new DefaultDriveCommand(
-            drivetrainSubsystem,
-            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-            dashboardControlsSubsystem
-		)
-    );
 
-    LEDSubsystem.getInstance();
-
-    // Configure the button bindings
-    configureButtonBindings();
+    init();
   }
+
+  private void init() {
+    vision = new VisionSubsystem();
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+    intakeCamera = new UsbCameraSubsystem();
+    pixyCamSubsystem = new PixyCamSubsystem();    
+
+    // //The following subsystems have a dependency on CAN
+    // drivetrainSubsystem = new DrivetrainSubsystem();
+    // twoWheelFlySubsystem = new TwoWheelFlySubsystem();
+    // indexerSubsystem = new IndexerSubsystem();
+    // intakeSubsystem = new IntakeSubsystem();
+    // grassHopper = new HopperSubsystem();
+    // pneumatics = new PneumaticsSubsystem();
+    // climberSubsystem = new HookClimberSubsystem();
+    //LEDSubsystem.getInstance();
+
+    // drivetrainSubsystem.setDefaultCommand(
+    //   new DefaultDriveCommand(
+    //         drivetrainSubsystem,
+    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+    //         dashboardControlsSubsystem
+		// )
+    // );
+
+    // configureButtonBindings();
+  }
+
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -101,6 +117,22 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
+    pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
+    resetGyroButton = new JoystickButton(secondaryPannel, 1);
+    intakeArmOutButton = new JoystickButton(driveJoystick, 2);
+    intakeArmInButton = new JoystickButton(driveJoystick, 3);
+    intakeStopButton = new JoystickButton(driveJoystick, 5);
+    prepareToLaunch = new JoystickButton(secondaryPannel, 2);
+    feedOneCargoLaunch = new JoystickButton(secondaryPannel, 3);
+    feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 9);
+    startClimbButton = new JoystickButton(secondaryPannel, 4);
+    extendClimberButton = new JoystickButton(secondaryPannel, 5);
+    retractClimberButton = new JoystickButton(secondaryPannel, 6);
+    climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
+    climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
+
     visionDriveCommandSwitch.whenHeld(
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
         drivetrainSubsystem,
@@ -138,14 +170,12 @@ public class RobotContainer {
     });
 
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
-    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
-    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
+    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper, indexerSubsystem));
+    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper, indexerSubsystem));
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(twoWheelFlySubsystem, indexerSubsystem, vision, grassHopper));
-    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
-    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));
-
-
+    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
+    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
+    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
   }
 
   /**
@@ -158,25 +188,25 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-      return new AutoTesting(drivetrainSubsystem, vision, intakeSubsystem, grassHopper);
+      return new AutoTesting(drivetrainSubsystem, vision, intakeSubsystem, grassHopper, indexerSubsystem);
       case TEST_AUTO_1:
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new Simple3BallAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
         return new LeftTerminal3Cargo(drivetrainSubsystem, vision);
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new LeftDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleRightTerminal3CargoAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new RightFiveBallAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, twoWheelFlySubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       default:
         break;
     }
@@ -214,16 +244,24 @@ public class RobotContainer {
   }
 
   public void printToSmartDashboard() {
-    drivetrainSubsystem.putToSmartDashboard();
-    vision.putToSmartDashboard();
-    intakeSubsystem.putToSmartDashboard();
-    twoWheelFlySubsystem.putToSmartDashboard();
-
-    // For Testing Velocity Calculations - to be moved to other locations after being dicussed
-    double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
-    SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
-    SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-    SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+    if (drivetrainSubsystem != null) {
+      drivetrainSubsystem.putToSmartDashboard();
+    }
+    if (vision != null) {
+      vision.putToSmartDashboard();
+    }
+    if (intakeSubsystem != null) {
+      intakeSubsystem.putToSmartDashboard();
+    }
+    if (shooterSubsystem != null) {
+      shooterSubsystem.putToSmartDashboard();
+      
+      // For Testing Velocity Calculations
+      double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+      SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
+      SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
+      SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+    }
   }
 
   public void resetGyro() {

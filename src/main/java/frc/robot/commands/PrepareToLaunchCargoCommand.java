@@ -8,19 +8,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.ProjectileCalculator;
 
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
-  private final TwoWheelFlySubsystem twoWheelFly; 
+  private final ShooterSubsystem twoWheelFly; 
   private final IndexerSubsystem indexer;
   private final VisionSubsystem vision;
   private final HopperSubsystem grassHopper;
 
 
-  public PrepareToLaunchCargoCommand(TwoWheelFlySubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem grassHopper) {
+  public PrepareToLaunchCargoCommand(ShooterSubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem grassHopper) {
     this.twoWheelFly = twoWheelFly;
     this.indexer = indexer;
     this.vision = vision;

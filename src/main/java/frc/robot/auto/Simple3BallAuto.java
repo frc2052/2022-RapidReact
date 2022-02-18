@@ -7,19 +7,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.FeedOneCargoLaunchCommand;
-import frc.robot.commands.FeedTwoCargoLaunchCommand;
-import frc.robot.commands.IntakeArmInCommand;
-import frc.robot.commands.IntakeArmOutCommand;
+
+import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
+import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
+import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.commands.VisionTurnInPlaceCommand;
 import frc.robot.commands.climber.StartClimbCommand;
+
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -32,7 +34,7 @@ public class Simple3BallAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.OFF);
         
@@ -52,8 +54,8 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, grassHopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, grassHopper, indexer);
+        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, grassHopper, indexer);
 
         FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer);
         FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer);

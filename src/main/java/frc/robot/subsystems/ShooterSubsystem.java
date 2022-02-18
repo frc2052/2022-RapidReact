@@ -12,27 +12,27 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.MotorIDs; 
+import frc.robot.Constants.MotorIDs;
 
-public class TwoWheelFlySubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
   private final TalonSRX topMotor;
   private final TalonSRX bottomMotor;
   private double topWheelVelocity;
   private double bottomWheelVelocity;
 
-  public TwoWheelFlySubsystem() {
+  public ShooterSubsystem() {
     topMotor = new TalonSRX(MotorIDs.TOP_SHOOTER_MOTOR);
     topMotor.configFactoryDefault();
     topMotor.setNeutralMode(NeutralMode.Coast);
     topMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    topMotor.setSelectedSensorPosition(0, 0, 10); 
+    topMotor.setSelectedSensorPosition(0, 0, 10);
 
     bottomMotor = new TalonSRX(MotorIDs.BOTTOM_SHOOTER_MOTOR);
     bottomMotor.configFactoryDefault();
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
     bottomMotor.setSelectedSensorPosition(0, 0, 10);
-  } 
+  }
 
   public void runAtShootSpeed() {
     topMotor.set(ControlMode.Velocity, topWheelVelocity);
@@ -40,12 +40,12 @@ public class TwoWheelFlySubsystem extends SubsystemBase {
   }
 
   public boolean isAtSpeed() {
-    //Consider the shooter on target if we are within 5% of target speeds 
-    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelVelocity * .95 
-      && topMotor.getSelectedSensorVelocity() < topWheelVelocity * 1.05;
+    // Consider the shooter on target if we are within 5% of target speeds
+    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelVelocity * .95
+        && topMotor.getSelectedSensorVelocity() < topWheelVelocity * 1.05;
 
     boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelVelocity * .95
-      && bottomMotor.getSelectedSensorVelocity() < bottomWheelVelocity * 1.05; 
+        && bottomMotor.getSelectedSensorVelocity() < bottomWheelVelocity * 1.05;
 
     return topIsOnTarget && bottomIsOnTarget;
   }

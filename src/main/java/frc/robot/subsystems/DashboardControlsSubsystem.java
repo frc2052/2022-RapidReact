@@ -10,22 +10,23 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 /** Subsystem for sending and checking toggles and selectable lists on the SmartDashboard */
 public class DashboardControlsSubsystem extends SubsystemBase {
 
-    private VisionSubsystem vision;
+    private VisionSubsystem visionSubsystem;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
     private SendableChooser<CamMode> limelightCamModeSelector;
-    private SendableChooser<LEDStatusMode> LEDStatusModeSelector;
+    private SendableChooser<LEDStatusMode> ledStatusModeSelector;
 
     private boolean limelightLEDsEnabled;
     private boolean lastLEDState;
     private boolean limelightDriveCamToggle;
     private boolean lastCamState;
     private CamMode lastCamMode;
+
     private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
-        this.vision = vision;
+        this.visionSubsystem = vision;
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         lastLEDState = limelightLEDsEnabled;
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
@@ -36,15 +37,16 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
         limelightCamModeSelector = new SendableChooser<CamMode>();
+        ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
 
         autoSelector.setDefaultOption(Autos.values()[0].name, Autos.values()[0]);
         for(int i = 1; i < Autos.values().length; i++) {
             autoSelector.addOption(Autos.values()[i].name, Autos.values()[i]);
         }
 
-        LEDStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
+        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
         for (int i = 1; i < LEDStatusMode.values().length; i++) {
-            LEDStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
+            ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
     
         driveModeSelector.setDefaultOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
@@ -59,7 +61,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
-        SmartDashboard.putData("LED Status Modes", LEDStatusModeSelector);
+        SmartDashboard.putData("LED Status Modes", ledStatusModeSelector);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
     }
 
@@ -70,17 +72,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
 
         if(limelightLEDsEnabled && !lastLEDState) {
-            vision.setLED(LEDMode.ON);
+            visionSubsystem.setLED(LEDMode.ON);
         } else if (!limelightLEDsEnabled && lastLEDState) {
-            vision.setLED(LEDMode.OFF);
+            visionSubsystem.setLED(LEDMode.OFF);
         }
         lastLEDState = limelightLEDsEnabled;
 
         if(!limelightDriveCamToggle && lastCamState) {
-            vision.setCamMode(CamMode.VISION);
+            visionSubsystem.setCamMode(CamMode.VISION);
             lastCamMode = CamMode.VISION;
         } else if (limelightDriveCamToggle && !lastCamState) {
-            vision.setCamMode(CamMode.DRIVER);
+            visionSubsystem.setCamMode(CamMode.DRIVER);
             lastCamMode = CamMode.DRIVER;
         }
         lastCamState = limelightDriveCamToggle;
@@ -118,7 +120,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public LEDStatusMode getSelectedLEDStatusMode() {
-        return LEDStatusModeSelector.getSelected();
+        return ledStatusModeSelector.getSelected();
     }
 
     public void setLastLEDState(boolean state) {
