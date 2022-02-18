@@ -34,6 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.setSelectedSensorPosition(0, 0, 10);
   }
 
+
   public void runAtShootSpeed() {
     topMotor.set(ControlMode.Velocity, topWheelVelocity);
     bottomMotor.set(ControlMode.Velocity, bottomWheelVelocity);
@@ -66,6 +67,11 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stop() {
     topMotor.set(ControlMode.Velocity, 0);
     bottomMotor.set(ControlMode.Velocity, 0);
+  }
+
+  public void runByPercentage(double bottomWheelPercent, double topWheelPercent) {
+    topMotor.set(ControlMode.PercentOutput, topWheelPercent);
+    bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent);
   }
 
   public void putToSmartDashboard() {

@@ -11,8 +11,9 @@ public class IntakeStopCommand extends CommandBase {
     public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopper) {
       this.intakeSubsystem = intakeSubsystem;
       this.hopper = hopper;
-      // Maybe add dependencies   
-  }
+
+      addRequirements(intakeSubsystem, hopper);
+    }
   
     @Override
     public void execute() {
