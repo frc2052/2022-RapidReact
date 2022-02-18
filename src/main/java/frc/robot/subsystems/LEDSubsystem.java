@@ -49,11 +49,13 @@ public class LEDSubsystem extends SubsystemBase {
         OFF("Off"),
         BLINK_RED("Blink Red"),
         SOLID_WHITE("Solid White"),
+        AUTONOMOUS_INTAKE_ON("Autonomous Intake On"),
         AUTONOMOUS_DEFAULT("Autonomous Default"),
         AUTONOMOUS_FINISHED("Autonomous Finished"),
         TELEOP_DEFAULT("Teleop Default"),
         VISION_TARGETING("Vision Targeting"),
         VISION_TARGET_FOUND("Vision Target Found"),
+        ENG_GAME_WARNING("End Game Warning - 10 Seconds Till End Game"),
         CLIMBING_DEFAULT("Climbing Default"),
         CLIMBING_LOW_BAR("Climbing Low Bar"),
         CLIMBING_MID_BAR("Climbing Middle Bar"),
@@ -104,13 +106,18 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case AUTONOMOUS_DEFAULT:
                 break;
+            case AUTONOMOUS_INTAKE_ON:
+                break;
             case AUTONOMOUS_FINISHED:
                 break;
             case TELEOP_DEFAULT:
                 break;    
             case VISION_TARGETING:
+                rgb[2] = 0.5;
                 break;
             case VISION_TARGET_FOUND:
+                break;
+            case ENG_GAME_WARNING:
                 break;
             case CLIMBING_DEFAULT:
                 break;
@@ -144,6 +151,9 @@ public class LEDSubsystem extends SubsystemBase {
             case SOLID_WHITE:
                 LEDsOnWhite();
                 break;
+            case AUTONOMOUS_INTAKE_ON:
+                intakeOnStatusMode();
+                break;
             case AUTONOMOUS_DEFAULT:
                 autonomousDefaultStatusMode();
                 break;
@@ -158,6 +168,9 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case VISION_TARGET_FOUND:
                 visionTargetFoundStatusMode();
+                break;
+            case ENG_GAME_WARNING:
+                endGameWarningStatusMode();
                 break;
             case CLIMBING_DEFAULT:
                 climbingDefaultStatusMode();
@@ -205,25 +218,53 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     private void visionTargetingStatusMode() {
-        evaluateOnOffInterval(500, 500);
+        if (isGoingUp) {
+            rgb[2] += 0.1;
+        } else {
+            rgb[2] -= 0.1;
+        }
+
+        if (rgb[2] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[2] <= 0.5) {
+            isGoingUp = true;
+        }
+
+        /*evaluateOnOffInterval(500, 500);
         if (areLedsOn) {
             rgb[0] = 0;
             rgb[1] = 1;
             rgb[2] = 0;
         } else {
             LEDsOff();
-        }
+        }*/
     }
 
     private void visionTargetFoundStatusMode() {
-        evaluateOnOffInterval(300, 300);
+        if (isGoingUp) {
+            rgb[1] += 0.2;
+        } else {
+            rgb[1] -= 0.2;
+        }
+
+        if (rgb[1] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[1] <= 0.5) {
+            isGoingUp = true;
+        }
+        /*evaluateOnOffInterval(300, 300);
         if (areLedsOn) {
             rgb[0] = 1;
             rgb[1] = 0;
             rgb[2] = 0;
         } else {
             LEDsOff();
-        }
+        }*/
+    }
+
+    private void intakeOnStatusMode() {
+        rgb[1] = 1;
+        rgb[0] = 0.2;
     }
 
     private void autonomousDefaultStatusMode() {}
@@ -239,6 +280,26 @@ public class LEDSubsystem extends SubsystemBase {
             isGoingUp = false;
         } else if (rgb[0] <= 0) {
             isGoingUp = true;
+        }
+    }
+
+    private void endGameWarningStatusMode() {
+        rgb[0] = rgb[1] = rgb[2];
+        if (isGoingUp) {
+            rgb[2] += 0.15;
+        } else {
+            rgb[2] -= 0.15;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+            counter++;
+        }
+
+        if (counter == 5) {
+            currentLEDStatusMode = LEDStatusMode.CLIMBING_DEFAULT;
         }
     }
 

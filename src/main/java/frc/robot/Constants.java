@@ -133,6 +133,6 @@ public final class Constants {
     }
 
     public static final class LEDs {
-        public static final int CANIFIER_PORT = 40;
+        public static final int CANIFIER_PORT = 21;
     }
 }
