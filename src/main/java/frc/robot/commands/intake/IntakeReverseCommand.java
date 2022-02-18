@@ -20,7 +20,8 @@ public class IntakeReverseCommand extends CommandBase {
   public IntakeReverseCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem) {
     this.intakeSubsystem = intakeSubsystem;
     this.hopperSubsystem = hopperSubsystem;
-    // Maybe add dependencies   
+
+    addRequirements(intakeSubsystem, hopperSubsystem);
   }
     
   @Override

@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ShooterSub;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PixyCamDriveCommand;
@@ -21,10 +22,12 @@ import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
 import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
 import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
+import frc.robot.commands.shooter.ManualShooterCommand;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.util.ProjectileCalculator;
+import frc.robot.vision.ShooterDistanceConfig;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -66,6 +69,7 @@ public class RobotContainer {
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
   private JoystickButton climberLockToggleButton;
+  private JoystickButton manualShootButton;
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -88,10 +92,10 @@ public class RobotContainer {
 
     // //The following subsystems have a dependency on CAN
     // drivetrainSubsystem = new DrivetrainSubsystem();
-    // twoWheelFlySubsystem = new TwoWheelFlySubsystem();
-    // indexerSubsystem = new IndexerSubsystem();
-    // intakeSubsystem = new IntakeSubsystem();
-    // grassHopper = new HopperSubsystem();
+    shooterSubsystem = new ShooterSubsystem();
+    indexerSubsystem = new IndexerSubsystem();
+    intakeSubsystem = new IntakeSubsystem();
+    grassHopper = new HopperSubsystem();
     // pneumatics = new PneumaticsSubsystem();
     // climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
@@ -106,7 +110,7 @@ public class RobotContainer {
 		// )
     // );
 
-    // configureButtonBindings();
+    configureButtonBindings();
   }
 
 
@@ -118,56 +122,57 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
-    pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
-    resetGyroButton = new JoystickButton(secondaryPannel, 1);
+    // visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
+    // pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
+    // resetGyroButton = new JoystickButton(secondaryPannel, 1);
     intakeArmOutButton = new JoystickButton(driveJoystick, 2);
     intakeArmInButton = new JoystickButton(driveJoystick, 3);
     intakeStopButton = new JoystickButton(driveJoystick, 5);
     prepareToLaunch = new JoystickButton(secondaryPannel, 2);
     feedOneCargoLaunch = new JoystickButton(secondaryPannel, 3);
     feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 9);
-    startClimbButton = new JoystickButton(secondaryPannel, 4);
-    extendClimberButton = new JoystickButton(secondaryPannel, 5);
-    retractClimberButton = new JoystickButton(secondaryPannel, 6);
-    climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
-    climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
+    manualShootButton = new JoystickButton(secondaryPannel, 1);
+    // startClimbButton = new JoystickButton(secondaryPannel, 4);
+    // extendClimberButton = new JoystickButton(secondaryPannel, 5);
+    // retractClimberButton = new JoystickButton(secondaryPannel, 6);
+    // climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
+    // climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
 
-    visionDriveCommandSwitch.whenHeld(
-        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-        drivetrainSubsystem,
-        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        vision,
-        dashboardControlsSubsystem
-      )
-    );
+    // visionDriveCommandSwitch.whenHeld(
+    //     new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+    //     drivetrainSubsystem,
+    //     () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     vision,
+    //     dashboardControlsSubsystem
+    //   )
+    // );
 
-    visionDriveCommandSwitch.whenReleased(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT)); // Probably a better way to do this...
+    // visionDriveCommandSwitch.whenReleased(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT)); // Probably a better way to do this...
     
-    pixyDriveCommandSwitch.whenHeld(
-      new PixyCamDriveCommand(
-        drivetrainSubsystem,
-        pixyCamSubsystem,
-        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        dashboardControlsSubsystem
-      )
-    );
+    // pixyDriveCommandSwitch.whenHeld(
+    //   new PixyCamDriveCommand(
+    //     drivetrainSubsystem,
+    //     pixyCamSubsystem,
+    //     () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+    //     dashboardControlsSubsystem
+    //   )
+    // );
 
-    resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    // resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
-    startClimbButton.whenPressed(new StartClimbCommand(climberSubsystem));
-    extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
-    retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
-    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
-    climberLockToggleButton.whenPressed(() -> {
-      if (climberSubsystem.isLocked()) {
-        climberSubsystem.unlockClimber();
-      } else {
-        climberSubsystem.lockClimber();
-      }
-    });
+    // startClimbButton.whenPressed(new StartClimbCommand(climberSubsystem));
+    // extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
+    // retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
+    // climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
+    // climberLockToggleButton.whenPressed(() -> {
+    //   if (climberSubsystem.isLocked()) {
+    //     climberSubsystem.unlockClimber();
+    //   } else {
+    //     climberSubsystem.lockClimber();
+    //   }
+    // });
 
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper, indexerSubsystem));
@@ -176,6 +181,7 @@ public class RobotContainer {
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
     feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
     feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
+    manualShootButton.whileHeld(new ManualShooterCommand(shooterSubsystem, indexerSubsystem));
   }
 
   /**

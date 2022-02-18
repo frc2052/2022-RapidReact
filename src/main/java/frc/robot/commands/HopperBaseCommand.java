@@ -26,6 +26,9 @@ public class HopperBaseCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    System.err.println("********************************" + indexerSubsystem.getCargoStagedDetected() + " ** " + indexerSubsystem.getCargoPreStagedDetected());
+
     if (!indexerSubsystem.getCargoStagedDetected()) {
       //Keep running all the wheels until all the balls are staged
       indexerSubsystem.runPreload();
