@@ -34,6 +34,8 @@ public final class Constants {
         // public static final int OPEN_A_SOLENOID = 1;
         // public static final int OPEN_B_SOLENOID = 3;
 
+        public static final int COMPRESSOR_MODULE_ID = 13;
+
         public static final int CLIMBER_FORWARD_SOLENOID = 0;
         public static final int CLIMBER_BACKWARD_SOLENOID = 1;
         public static final int CLIMBER_LOCK_SOLENOID = 2;
