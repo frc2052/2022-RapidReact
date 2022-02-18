@@ -42,7 +42,7 @@ public final class Constants {
         public static final int CLIMBER_UNLOCK_SOLENOID = 3;
 
         public static final int INTAKE_OUT_SOLENOID = 5;
-        public static final int INTAKE_IN_SOLENOID = 0;
+        public static final int INTAKE_IN_SOLENOID = 4;
     }
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
@@ -63,6 +63,9 @@ public final class Constants {
 
         public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
         public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
+
+        public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
+        public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
     }
 
     public static final class Field {
@@ -86,30 +89,30 @@ public final class Constants {
     public static final class DriveTrain {
         // The left-to-right distance between the drivetrain wheels
         // Should be measured from center to center.
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(16);
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.5);
         // The front-to-back distance between the drivetrain wheels.
         // Should be measured from center to center.
-        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(25.5);
+        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(23.25);
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 5;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(36.241150 + 180);
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(218.1);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 9;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 8;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(355.187988 + 180);
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(176.5);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(42.942810 + 180);
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(45.9);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 12;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(241.136169 + 180);
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(61.1);
 
         public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }

@@ -10,6 +10,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.util.ProjectileCalculator;
 
 
 public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
@@ -29,7 +30,7 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
     // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
     if(visionSubsystem.hasValidTarget()) {
       double distance = visionSubsystem.getXDistanceToUpperHub();
-      double reqVelocity = shooterSubsystem.calculateReqProjectileVelocity(distance);
+      double reqVelocity = ProjectileCalculator.calculateReqProjectileVelocity(distance);
       double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
       //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
