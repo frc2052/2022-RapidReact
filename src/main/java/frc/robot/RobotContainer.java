@@ -180,8 +180,8 @@ public class RobotContainer {
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper, indexerSubsystem));
 
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
-    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
-    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
+    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem, vision));
+    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem, vision));
     manualShootButton.whileHeld(new ManualShooterCommand(shooterSubsystem, indexerSubsystem));
   }
 

@@ -50,8 +50,8 @@ public class AutoTesting extends AutoBase {
         IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, grassHopper, indexer);
         IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, grassHopper, indexer);
 
-        FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer);
-        FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer);
+        FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer, vision);
+        FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer, vision);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, intakeArmOutCommand);
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(driveToShoot, intakeArmInCommand);

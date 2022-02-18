@@ -64,6 +64,8 @@ public final class Constants {
 
         public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
         public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
+
+        public static final double CALCULATED_VELOCITY_OFFSET_MPS = 0.0;
     }
 
     public static final class Field {

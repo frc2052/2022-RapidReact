@@ -54,8 +54,8 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, grassHopper, indexer);
         IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, grassHopper, indexer);
 
-        FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer);
-        FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer);
+        FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer, vision);
+        FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer, vision);
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);

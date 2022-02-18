@@ -40,6 +40,11 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.Velocity, bottomWheelVelocity);
   }
 
+  public void runAtVelocities(double topVelocity, double bottomVelocity) {
+    topMotor.set(ControlMode.Velocity, topVelocity);
+    bottomMotor.set(ControlMode.Velocity, bottomVelocity);
+  }
+
   public boolean isAtSpeed() {
     // Consider the shooter on target if we are within 5% of target speeds
     boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelVelocity * .95
