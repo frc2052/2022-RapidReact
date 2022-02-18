@@ -85,5 +85,6 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLED(LEDMode.OFF);
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
     }
 }

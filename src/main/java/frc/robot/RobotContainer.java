@@ -27,6 +27,7 @@ import frc.robot.commands.shooter.ManualShooterCommand;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.util.ProjectileCalculator;
 import frc.robot.vision.ShooterDistanceConfig;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -194,11 +195,11 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-      return new AutoTesting(drivetrainSubsystem, vision, intakeSubsystem, grassHopper, indexerSubsystem);
+      return new AutoTesting(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
       case TEST_AUTO_1:
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrainSubsystem, vision);
+        return new Simple3BallAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
@@ -206,7 +207,7 @@ public class RobotContainer {
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_3_BALL:
-        return new MiddleTerminal3CargoAuto(drivetrainSubsystem, vision);
+        return new MiddleRightTerminal3CargoAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_DEFENSE:
         return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case FIVE_BALL:
@@ -263,10 +264,10 @@ public class RobotContainer {
       shooterSubsystem.putToSmartDashboard();
       
       // For Testing Velocity Calculations
-      double reqProjectileVelocity = shooterSubsystem.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+      double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
       SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
       SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-      SmartDashboard.putNumber("Required RPM", shooterSubsystem.calculateReqShooterRPM(reqProjectileVelocity));
+      SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
     }
   }
 

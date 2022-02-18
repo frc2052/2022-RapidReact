@@ -179,6 +179,8 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("xDistance away (Meters): ", getXDistanceToUpperHub());
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getXDistanceToUpperHub()));
 
+        SmartDashboard.putBoolean("Is In Range?", getXDistanceToUpperHub() < Constants.ShooterSub.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (getXDistanceToUpperHub() > Constants.ShooterSub.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
+
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
         //SmartDashboard.putString("Horizontal Bounding Box Sidelength", thor + " pixels");

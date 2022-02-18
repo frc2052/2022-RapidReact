@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -25,6 +26,7 @@ public class OneBallAuto extends AutoBase{
 
         SwerveControllerCommand backUp = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, backUpPos);
 
+        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.addCommands(backUp);
         //shoot command
 

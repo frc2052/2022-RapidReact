@@ -2,6 +2,8 @@ package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class StartClimbCommand extends CommandBase {
     private final HookClimberSubsystem climberSubsystem;
@@ -10,6 +12,11 @@ public class StartClimbCommand extends CommandBase {
         this.climberSubsystem = climberSubsystem;
         
         addRequirements(this.climberSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_DEFAULT);
     }
 
     @Override
