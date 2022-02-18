@@ -10,12 +10,8 @@ public class IntakeArmInCommand extends HopperBaseCommand {
     public IntakeArmInCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem, IndexerSubsystem indexerSubsystem) {
       super(indexerSubsystem, hopperSubsystem);
       this.intakeSubsystem = intakeSubsystem;
-      // Maybe add dependencies   
-    }
 
-    @Override
-    public void execute() {
-        end(false);
+      addRequirements(intakeSubsystem, hopperSubsystem);
     }
 
     @Override

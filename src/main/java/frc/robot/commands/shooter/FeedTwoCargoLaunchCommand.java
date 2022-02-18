@@ -21,6 +21,7 @@ public class FeedTwoCargoLaunchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooterSubsystem.runAtShootSpeed();
     if (shooterSubsystem.isAtSpeed()) {
       indexerSubsystem.runFeeder();
       indexerSubsystem.runPreload();

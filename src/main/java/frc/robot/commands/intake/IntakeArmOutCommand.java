@@ -18,7 +18,8 @@ public class IntakeArmOutCommand extends HopperBaseCommand {
   public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem, IndexerSubsystem indexerSubsystem) {
     super(indexerSubsystem, hopperSubsystem);
     this.intakeSubsystem = intakeSubsystem;
-      // Maybe add dependencies   
+
+    addRequirements(intakeSubsystem, hopperSubsystem);
     }
       
   @Override
@@ -30,7 +31,13 @@ public class IntakeArmOutCommand extends HopperBaseCommand {
   }
   @Override
   public boolean isFinished(){
-    return true;
+    return super.isFinished();
+  }
+
+  @Override 
+  public void end(boolean interrupted){
+    super.end(interrupted);
+    intakeSubsystem.intakeStop();
   }
 
 }
