@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ShooterSub;
 import frc.robot.auto.*;
@@ -91,24 +92,24 @@ public class RobotContainer {
     pixyCamSubsystem = new PixyCamSubsystem();    
 
     // //The following subsystems have a dependency on CAN
-    // drivetrainSubsystem = new DrivetrainSubsystem();
+    drivetrainSubsystem = new DrivetrainSubsystem();
     shooterSubsystem = new ShooterSubsystem();
     indexerSubsystem = new IndexerSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     grassHopper = new HopperSubsystem();
-    // pneumatics = new PneumaticsSubsystem();
+    pneumatics = new PneumaticsSubsystem();
     // climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
 
-    // drivetrainSubsystem.setDefaultCommand(
-    //   new DefaultDriveCommand(
-    //         drivetrainSubsystem,
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-    //         dashboardControlsSubsystem
-		// )
-    // );
+    drivetrainSubsystem.setDefaultCommand(
+      new DefaultDriveCommand(
+            drivetrainSubsystem,
+            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+            dashboardControlsSubsystem
+		)
+    );
 
     configureButtonBindings();
   }

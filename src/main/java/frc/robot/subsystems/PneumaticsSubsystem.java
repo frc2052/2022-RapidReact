@@ -7,10 +7,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PneumaticsSubsystem extends SubsystemBase {
     private Compressor compressor;
-    public PneumaticsSubsystem() {
 
+    public PneumaticsSubsystem() {
         compressor = new Compressor(1, PneumaticsModuleType.REVPH);
     }
+    
     @Override
     public void periodic() {
       double currentPressure = compressor.getPressure();

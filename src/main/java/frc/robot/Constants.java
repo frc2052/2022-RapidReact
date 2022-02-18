@@ -40,7 +40,7 @@ public final class Constants {
         public static final int CLIMBER_UNLOCK_SOLENOID = 3;
 
         public static final int INTAKE_OUT_SOLENOID = 5;
-        public static final int INTAKE_IN_SOLENOID = 0;
+        public static final int INTAKE_IN_SOLENOID = 4;
     }
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
