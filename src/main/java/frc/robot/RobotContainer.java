@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.*;
 import frc.robot.commands.DefaultDriveCommand;
@@ -89,7 +90,7 @@ public class RobotContainer {
     // indexerSubsystem = new IndexerSubsystem();
     // intakeSubsystem = new IntakeSubsystem();
     // grassHopper = new HopperSubsystem();
-    // pneumatics = new PneumaticsSubsystem();
+    pneumatics = new PneumaticsSubsystem();
     // climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
 
