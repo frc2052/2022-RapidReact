@@ -14,6 +14,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.*;
+import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -33,7 +36,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, TwoWheelFlySubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
         vision.setLED(LEDMode.ON);
 
@@ -57,10 +60,10 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
         SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, intake, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO probably use ParallelDeadlineGroup for continous SwerveControllerCommands to make sure the robot's not going to stop abruptly if the shooter doesn't fire in time.
 /*      ParallelCommandGroup driveAndIntakeFirstBall = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);

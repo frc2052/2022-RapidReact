@@ -45,8 +45,8 @@ public final class Constants {
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
-        public static final int INDEXER_PRELOAD = 0;
-        public static final int INDEXER_FEEDER = 1;
+        public static final int INDEXER_PRELOAD = 9;
+        public static final int INDEXER_FEEDER = 8;
 
     }
 
@@ -54,7 +54,7 @@ public final class Constants {
         public static final double INDEXER_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
-        public static final double FEEDER_SPEED = .75;
+        public static final double FEEDER_SPEED = 1;
 
         public static final double SHOOTER_FIRING_ANGLE_DEGREES = 72.0;
         public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);
