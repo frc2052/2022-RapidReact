@@ -26,10 +26,12 @@ import frc.robot.commands.PixyCamDriveCommand;
 import frc.robot.commands.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
-import frc.robot.commands.climber.StartClimbCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.intake.IntakeArmToggleCommand;
+import frc.robot.commands.intake.IntakeInCommand;
+import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
 import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
 import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
@@ -81,17 +83,19 @@ public class RobotContainer {
   private JoystickButton visionDriveCommandSwitch;
   private JoystickButton pixyDriveCommandSwitch;
   private JoystickButton resetGyroButton;
-  private JoystickButton intakeArmOutButton;
-  private JoystickButton intakeArmInButton;
-  private JoystickButton intakeStopButton;
+
+  private JoystickButton intakeArmToggleButton;
+  private JoystickButton intakeInButton;
+  private JoystickButton intakeReverseButton;
+
   private JoystickButton prepareToLaunch;
   private JoystickButton feedOneCargoLaunch;
   private JoystickButton feedTwoCargoLaunch;
-  private JoystickButton startClimbButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
-  private JoystickButton climberLockToggleButton;
+  private JoystickButton climberLockButton;
+  private JoystickButton climberUnlockButton;
   private JoystickButton manualShootButton;
 
   // Slew rate limiters to make joystick inputs more gentle.
@@ -110,7 +114,7 @@ public class RobotContainer {
   private void init() {
     vision = new VisionSubsystem();
     dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-    intakeCamera = new UsbCameraSubsystem();
+    // intakeCamera = new UsbCameraSubsystem();
     pixyCamSubsystem = new PixyCamSubsystem();    
 
     // //The following subsystems have a dependency on CAN
@@ -120,17 +124,17 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem();
     grassHopper = new HopperSubsystem();
     pneumatics = new PneumaticsSubsystem();
-    // climberSubsystem = new HookClimberSubsystem();
+    climberSubsystem = new HookClimberSubsystem();
     //LEDSubsystem.getInstance();
 
     drivetrainSubsystem.setDefaultCommand(
       new DefaultDriveCommand(
-            drivetrainSubsystem,
-            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-            dashboardControlsSubsystem
-		)
+        drivetrainSubsystem,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        dashboardControlsSubsystem
+		  )
     );
 
     configureButtonBindings();
@@ -147,19 +151,25 @@ public class RobotContainer {
 
     // visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
     // pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
-    // resetGyroButton = new JoystickButton(secondaryPannel, 1);
-    intakeArmOutButton = new JoystickButton(driveJoystick, 2);
-    intakeArmInButton = new JoystickButton(driveJoystick, 3);
-    intakeStopButton = new JoystickButton(driveJoystick, 5);
+    resetGyroButton = new JoystickButton(driveJoystick, 11);
+
+    intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
+    intakeInButton = new JoystickButton(secondaryPannel, 7);
+    intakeReverseButton = new JoystickButton(secondaryPannel, 6);
+
     prepareToLaunch = new JoystickButton(secondaryPannel, 2);
     feedOneCargoLaunch = new JoystickButton(secondaryPannel, 3);
     feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 9);
-    manualShootButton = new JoystickButton(secondaryPannel, 1);
-    // startClimbButton = new JoystickButton(secondaryPannel, 4);
-    // extendClimberButton = new JoystickButton(secondaryPannel, 5);
-    // retractClimberButton = new JoystickButton(secondaryPannel, 6);
-    // climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 7);
-    // climberLockToggleButton = new JoystickButton(secondaryPannel, 8);
+    manualShootButton = new JoystickButton(driveJoystick, 8);
+    
+    // Climber Buttons
+    extendClimberButton = new JoystickButton(secondaryPannel, 5);
+    retractClimberButton = new JoystickButton(secondaryPannel, 3);
+
+    climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
+   
+    climberUnlockButton = new JoystickButton(secondaryPannel, 11);
+    climberLockButton = new JoystickButton(secondaryPannel, 12);
 
     // visionDriveCommandSwitch.whenHeld(
     //     new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
@@ -183,27 +193,23 @@ public class RobotContainer {
     //   )
     // );
 
-    // resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
     // startClimbButton.whenPressed(new StartClimbCommand(climberSubsystem));
-    // extendClimberButton.whenPressed(new ExtendClimberCommand(climberSubsystem));
-    // retractClimberButton.whenPressed(new RetractClimberCommand(climberSubsystem));
-    // climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
-    // climberLockToggleButton.whenPressed(() -> {
-    //   if (climberSubsystem.isLocked()) {
-    //     climberSubsystem.unlockClimber();
-    //   } else {
-    //     climberSubsystem.lockClimber();
-    //   }
-    // });
+    extendClimberButton.whileHeld(new ExtendClimberCommand(climberSubsystem));
+    retractClimberButton.whileHeld(new RetractClimberCommand(climberSubsystem));
+    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
 
-    intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
-    intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper, indexerSubsystem));
-    intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper, indexerSubsystem));
+    climberUnlockButton.whenPressed(() -> { climberSubsystem.unlockClimber(); });
+    climberLockButton.whenPressed(() -> { climberSubsystem.lockClimber(); });
 
-    prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
-    feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
-    feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
+    intakeArmToggleButton.whenPressed(new IntakeArmToggleCommand(intakeSubsystem, indexerSubsystem, grassHopper));
+    intakeInButton.whileHeld(new IntakeInCommand(intakeSubsystem, indexerSubsystem, grassHopper));
+    intakeReverseButton.whileHeld(new IntakeReverseCommand(intakeSubsystem, grassHopper));
+
+    // prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
+    // feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
+    // feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
     manualShootButton.whileHeld(new ManualShooterCommand(shooterSubsystem, indexerSubsystem));
   }
 
@@ -281,6 +287,9 @@ public class RobotContainer {
     }
     if (intakeSubsystem != null) {
       intakeSubsystem.putToSmartDashboard();
+    }
+    if (climberSubsystem != null) {
+      climberSubsystem.putToSmartDashboard();
     }
     if (shooterSubsystem != null) {
       shooterSubsystem.putToSmartDashboard();

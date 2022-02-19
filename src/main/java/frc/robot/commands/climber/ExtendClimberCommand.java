@@ -15,7 +15,11 @@ public class ExtendClimberCommand extends CommandBase {
     @Override
     public void execute() {
         // Climber extends. 
-        climberSubsystem.manualExtendArm();
+        if (!climberSubsystem.isLocked()) {
+            climberSubsystem.manualExtendArm();
+        } else {
+            System.err.println("Climber locked!");
+        }
     }
 
      @Override

@@ -26,14 +26,20 @@ public class IntakeReverseCommand extends CommandBase {
     
   @Override
   public void execute() {
+    // arm extends and spins the wheels
     intakeSubsystem.intakeArmOut();
     intakeSubsystem.intakeReverse();
     hopperSubsystem.hopperReverse();
-    //arm extends and spins the wheels
-  }
-  @Override
-  public boolean isFinished(){
-    return true;
   }
 
+  @Override
+  public void end(boolean interrupted) {
+    intakeSubsystem.intakeStop();
+    hopperSubsystem.hopperStop();
+  }
+
+  @Override
+  public boolean isFinished(){
+    return false;
+  }
 }

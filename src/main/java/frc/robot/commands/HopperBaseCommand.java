@@ -17,17 +17,14 @@ public class HopperBaseCommand extends CommandBase {
   public HopperBaseCommand(IndexerSubsystem indexerSubsystem, HopperSubsystem hopperSubsystem) {
     this.indexerSubsystem = indexerSubsystem;
     this.hopperSubsystem = hopperSubsystem;
-  }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+    addRequirements(indexerSubsystem, hopperSubsystem);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    System.err.println("********************************" + indexerSubsystem.getCargoStagedDetected() + " ** " + indexerSubsystem.getCargoPreStagedDetected());
+    // System.err.println("********************************" + indexerSubsystem.getCargoStagedDetected() + " ** " + indexerSubsystem.getCargoPreStagedDetected());
 
     if (!indexerSubsystem.getCargoStagedDetected()) {
       //Keep running all the wheels until all the balls are staged
@@ -57,6 +54,6 @@ public class HopperBaseCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return indexerSubsystem.getCargoStagedDetected() && indexerSubsystem.getCargoPreStagedDetected();
   }
 }
