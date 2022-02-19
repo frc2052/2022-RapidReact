@@ -8,25 +8,25 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 
 public class IntakeArmOutCommand extends HopperBaseCommand {
-  private final IntakeSubsystem intakeSubsystem;
+  private final IntakeSubsystem intake;
 
   /**
    * Creates a new ArmToggle.
    *
    * @param intakeSubsystem The subsystem used by this command.
    */
-  public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem, IndexerSubsystem indexerSubsystem) {
-    super(indexerSubsystem, hopperSubsystem);
-    this.intakeSubsystem = intakeSubsystem;
+  public IntakeArmOutCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+    super(indexer, hopper);
+    this.intake = intake;
 
-    addRequirements(intakeSubsystem, hopperSubsystem);
-    }
+    addRequirements(intake);
+  }
       
   @Override
   public void execute() {
     super.execute();
-    intakeSubsystem.intakeArmOut();
-    intakeSubsystem.intakeOn();
+    intake.intakeArmOut();
+    intake.intakeOn();
       //arm extends and spins the wheels
   }
   @Override
@@ -37,7 +37,6 @@ public class IntakeArmOutCommand extends HopperBaseCommand {
   @Override 
   public void end(boolean interrupted){
     super.end(interrupted);
-    intakeSubsystem.intakeStop();
+    intake.intakeStop();
   }
-
 }

@@ -21,23 +21,25 @@ import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
 import frc.robot.auto.ThreeballDriveAndShoot;
 
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.PixyCamDriveCommand;
-import frc.robot.commands.VisionDriveCommand;
+import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.PixyCamDriveCommand;
+import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
+import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.PixyCamDriveCommand;
+import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.IntakeStopCommand;
-import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
-import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
-import frc.robot.commands.shooter.ManualShooterCommand;
+import frc.robot.commands.shooter.TuneShooterCommand;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
-
+import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -52,7 +54,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 import frc.robot.util.ProjectileCalculator;
-import frc.robot.vision.ShooterDistanceConfig;
+import frc.robot.util.vision.ShooterDistanceConfig;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -96,7 +98,7 @@ public class RobotContainer {
   private JoystickButton climberSolenoidToggleButton;
   private JoystickButton climberLockButton;
   private JoystickButton climberUnlockButton;
-  private JoystickButton manualShootButton;
+  private JoystickButton tuneShooterButton;
 
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
@@ -158,9 +160,9 @@ public class RobotContainer {
     intakeReverseButton = new JoystickButton(secondaryPannel, 6);
 
     prepareToLaunch = new JoystickButton(secondaryPannel, 2);
-    feedOneCargoLaunch = new JoystickButton(secondaryPannel, 3);
-    feedTwoCargoLaunch = new JoystickButton(secondaryPannel, 9);
-    manualShootButton = new JoystickButton(driveJoystick, 8);
+    feedOneCargoLaunch = new JoystickButton(turnJoystick, 1);
+    feedTwoCargoLaunch = new JoystickButton(driveJoystick, 1);
+    tuneShooterButton = new JoystickButton(driveJoystick, 8);
     
     // Climber Buttons
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -208,9 +210,9 @@ public class RobotContainer {
     intakeReverseButton.whileHeld(new IntakeReverseCommand(intakeSubsystem, grassHopper));
 
     // prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
-    // feedOneCargoLaunch.whileHeld(new FeedOneCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
-    // feedTwoCargoLaunch.whileHeld(new FeedTwoCargoLaunchCommand(shooterSubsystem, indexerSubsystem));
-    manualShootButton.whileHeld(new ManualShooterCommand(shooterSubsystem, indexerSubsystem));
+    feedOneCargoLaunch.whileHeld(new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, vision));
+    feedTwoCargoLaunch.whileHeld(new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, vision));
+    tuneShooterButton.whileHeld(new TuneShooterCommand(shooterSubsystem, indexerSubsystem, intakeSubsystem));
   }
 
   /**

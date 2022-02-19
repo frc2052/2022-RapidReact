@@ -7,18 +7,23 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ManualShooterCommand extends CommandBase {
-  /** Creates a new ManualShooterCommand. */
+public class TuneShooterCommand extends CommandBase {
   private ShooterSubsystem shooter;
-  private final IndexerSubsystem indexerSubsystem;
-  public ManualShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer) {
+  private final IndexerSubsystem indexer;
+  private final IntakeSubsystem intake;
+
+  public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake) {
     this.shooter = shooter;
-    this.indexerSubsystem = indexer;
+    this.indexer = indexer;
+    this.intake = intake;
+
     SmartDashboard.putNumber("Top shooter wheel percentage", 0);
     SmartDashboard.putNumber("Bottom shooter wheel percentage", 0);
-    // Use addRequirements() here to declare subsystem dependencies.
+    
+    addRequirements(shooter, indexer, intake);
   }
 
   // Called when the command is initially scheduled.
@@ -31,16 +36,19 @@ public class ManualShooterCommand extends CommandBase {
     double topPercent = SmartDashboard.getNumber("Top shooter wheel percentage", 0);
     double bottomPercent = SmartDashboard.getNumber("Bottom shooter wheel percentage", 0);
     shooter.runByPercentage(bottomPercent, topPercent);
-    indexerSubsystem.runFeeder();
-    indexerSubsystem.runPreload();
+    indexer.runFeeder();
+    indexer.runPreload();
+    intake.intakeArmOut();
+    intake.intakeOn();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     shooter.runByPercentage(0, 0);
-    indexerSubsystem.stopFeeder();
-    indexerSubsystem.stopPreload();
+    indexer.stopFeeder();
+    indexer.stopPreload();
+    intake.intakeStop();
   }
 
   // Returns true when the command should end.

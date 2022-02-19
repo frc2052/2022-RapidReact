@@ -8,11 +8,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-import frc.robot.commands.shooter.FeedOneCargoLaunchCommand;
-import frc.robot.commands.shooter.FeedTwoCargoLaunchCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
-
+import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -51,11 +50,11 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(150));
         SwerveControllerCommand driveBackToShoot2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, grassHopper, indexer);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, grassHopper, indexer);
+        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, grassHopper);
 
-        FeedOneCargoLaunchCommand shoot1CargoCommand = new FeedOneCargoLaunchCommand(shooter, indexer);
-        FeedTwoCargoLaunchCommand shoot2CargoCommand = new FeedTwoCargoLaunchCommand(shooter, indexer);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, vision);
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);

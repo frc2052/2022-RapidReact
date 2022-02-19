@@ -50,10 +50,10 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, grassHopper, vision);
 
         /*
         ParallelCommandGroup intakeEnemyBall1 = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);

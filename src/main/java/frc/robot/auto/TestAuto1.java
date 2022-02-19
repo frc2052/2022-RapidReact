@@ -12,7 +12,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.TurnInPlaceCommand;
+import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
