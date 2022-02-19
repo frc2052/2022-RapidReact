@@ -21,6 +21,7 @@ public class UsbCameraSubsystem extends SubsystemBase {
     // Creates the CvSource and MjpegServer [2] and connects them
     CvSource outputStream = CameraServer.putVideo("Intake", 640, 480);
     
+    
   }
 
 }

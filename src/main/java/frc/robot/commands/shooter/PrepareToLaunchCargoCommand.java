@@ -36,8 +36,8 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
       double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
       //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
-      shooter.setBothWheelVelocities(reqAngularVelocity);
-      shooter.runAtShootSpeed();
+      // shooter.setBothWheelVelocities(reqAngularVelocity);
+      // shooter.runAtShootSpeed();
     }
   }
 

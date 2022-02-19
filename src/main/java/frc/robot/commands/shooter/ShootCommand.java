@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -30,6 +31,8 @@ public class ShootCommand extends CommandBase {
 
     visionCalculator = new VisionCalculator();
 
+    SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
+
     addRequirements(shooter, indexer);
   }
 
@@ -39,12 +42,24 @@ public class ShootCommand extends CommandBase {
     int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
     ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches);
 
-    shooter.runAtShootSpeed(
-      shooterConfig.getTopMotorVelocityTicksPerSecond(),
-      shooterConfig.getBottomMotorVelocityTicksPerSecond()
+    double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
+    if (shooterBoost < 0) {
+      shooterBoost = 0;
+    } else if (shooterBoost > 0.1) {
+      shooterBoost = 0.1;
+    }
+
+    System.err.println("LIMELIGHT DISTANCE INCHES: " + distanceInches);
+    System.err.println("DISTANCE INCHES: " + shooterConfig.getDistanceInches());
+    System.err.println("TOP MOTOR VELOCITY: " + shooterConfig.getTopMotorVelocityTicksPerSecond());
+    System.err.println("BOTTOM MOTOR VELOCITY: " + shooterConfig.getBottomMotorVelocityTicksPerSecond());
+
+    shooter.shootAtSpeed(
+      shooterConfig.getTopMotorVelocityTicksPerSecond() * (shooterBoost + 1), // Boost the shooter velocity by a max of 110%
+      shooterConfig.getBottomMotorVelocityTicksPerSecond() * (shooterBoost + 1)
     );
 
-    if (shooter.isAtSpeed()) {
+    if (shooter.isAtSpeed() && vision.isLinedUp()) {
       indexer.runFeeder();
       if (shootMode == ShootMode.SHOOT_ALL) {
         indexer.runPreload();
@@ -54,6 +69,7 @@ public class ShootCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    shooter.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
   }

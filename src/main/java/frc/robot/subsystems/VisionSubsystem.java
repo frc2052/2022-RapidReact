@@ -34,6 +34,8 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // True active pipeline index of camera 0 through 9.
     private NetworkTableEntry lpipeline = table.getEntry("pipeline"); // NetworkTableEntry needed for setting pipeline value.
 
+    private NetworkTableEntry lstream = table.getEntry("stream"); 
+
     /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
     private NetworkTableEntry lstream = table.getEntry("stream");   // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
@@ -82,6 +84,10 @@ public class VisionSubsystem extends SubsystemBase{
     public double getCamMode() {return this.camMode;}
     public double getGetpipe() {return this.getpipe;}
     
+    public boolean isLinedUp() {
+      return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
+    }
+
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
     }
@@ -140,6 +146,8 @@ public class VisionSubsystem extends SubsystemBase{
       }
     }
 
+
+
     public double getXDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();
       return (Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS) / (Math.tan(Math.toRadians(Constants.Limelight.MOUNT_ANGLE_DEGREES + ty))) + Constants.Limelight.DISTANCE_CALCULATION_LINEAR_OFFSET;
@@ -180,6 +188,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getXDistanceToUpperHub()));
 
         SmartDashboard.putBoolean("Is In Range?", getXDistanceToUpperHub() < Constants.ShooterSub.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (getXDistanceToUpperHub() > Constants.ShooterSub.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
+        SmartDashboard.putNumber("Stream Mode ", lstream.getDouble(0.0));
 
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");

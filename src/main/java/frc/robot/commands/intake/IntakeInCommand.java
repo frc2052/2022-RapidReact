@@ -28,7 +28,9 @@ public class IntakeInCommand extends HopperBaseCommand {
   public void initialize() {
     // Arm extends and spins the wheels
     intake.intakeArmOut();
-    intake.intakeOn();
+    if (!isFinished()) {
+      intake.intakeOn();
+    }
   }
 
   @Override

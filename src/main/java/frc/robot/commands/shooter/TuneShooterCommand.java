@@ -6,6 +6,7 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -14,16 +15,18 @@ public class TuneShooterCommand extends CommandBase {
   private ShooterSubsystem shooter;
   private final IndexerSubsystem indexer;
   private final IntakeSubsystem intake;
+  private final HopperSubsystem grassHopper;
 
-  public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake) {
+  public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.shooter = shooter;
     this.indexer = indexer;
     this.intake = intake;
+    this.grassHopper = grassHopper;
 
-    SmartDashboard.putNumber("Top shooter wheel percentage", 0);
-    SmartDashboard.putNumber("Bottom shooter wheel percentage", 0);
+    SmartDashboard.putNumber("Top shooter wheel percentage", 0.45);
+    SmartDashboard.putNumber("Bottom shooter wheel percentage", 0.45);
     
-    addRequirements(shooter, indexer, intake);
+    addRequirements(shooter, indexer, intake, grassHopper);
   }
 
   // Called when the command is initially scheduled.
@@ -40,6 +43,7 @@ public class TuneShooterCommand extends CommandBase {
     indexer.runPreload();
     intake.intakeArmOut();
     intake.intakeOn();
+    grassHopper.hopperGo();
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +53,7 @@ public class TuneShooterCommand extends CommandBase {
     indexer.stopFeeder();
     indexer.stopPreload();
     intake.intakeStop();
+    grassHopper.hopperStop();
   }
 
   // Returns true when the command should end.
