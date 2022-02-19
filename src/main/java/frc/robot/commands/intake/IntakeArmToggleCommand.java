@@ -10,27 +10,27 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmToggleCommand extends HopperBaseCommand {
-  private final IntakeSubsystem intakeSubsystem;
+  private final IntakeSubsystem intake;
 
   /** Creates a new IntakeArmToggleCommand. */
-  public IntakeArmToggleCommand(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, HopperSubsystem hopperSubsystem) {
-    super(indexerSubsystem, hopperSubsystem);
-    this.intakeSubsystem = intakeSubsystem;
+  public IntakeArmToggleCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+    super(indexer, hopper);
+    this.intake = intake;
 
-    addRequirements(intakeSubsystem);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexerSubsystem.stopFeeder();
-    indexerSubsystem.stopPreload();
-    hopperSubsystem.hopperStop();
+    indexer.stopFeeder();
+    indexer.stopPreload();
+    grassHopper.hopperStop();
 
-    if (intakeSubsystem.isIntakeArmOut()) {
-      intakeSubsystem.intakeArmIn();
+    if (intake.isIntakeArmOut()) {
+      intake.intakeArmIn();
     } else {
-      intakeSubsystem.intakeArmOut();
+      intake.intakeArmOut();
     }
   }
 

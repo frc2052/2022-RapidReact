@@ -14,13 +14,15 @@ import frc.robot.util.ProjectileCalculator;
 
 
 public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
-  private final VisionSubsystem visionSubsystem;
-  protected final ShooterSubsystem shooterSubsystem; 
+  protected final ShooterSubsystem shooter;
+  private final VisionSubsystem vision;
 
-  public PrepareToLaunchCargoCommand(ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem, VisionSubsystem visionSubsystem, HopperSubsystem hopperSubsystem) {
-    super(indexerSubsystem, hopperSubsystem);
-    this.visionSubsystem = visionSubsystem;
-    this.shooterSubsystem = shooterSubsystem;
+  public PrepareToLaunchCargoCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, VisionSubsystem vision) {
+    super(indexer, hopper);
+    this.shooter = shooter;
+    this.vision = vision;
+
+    addRequirements(shooter);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,14 +30,14 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   public void execute() {
     super.execute();
     // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
-    if(visionSubsystem.hasValidTarget()) {
-      double distance = visionSubsystem.getXDistanceToUpperHub();
+    if(vision.hasValidTarget()) {
+      double distance = vision.getXDistanceToUpperHub();
       double reqVelocity = ProjectileCalculator.calculateReqProjectileVelocity(distance);
       double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
       //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
-      shooterSubsystem.setBothWheelVelocities(reqAngularVelocity);
-      shooterSubsystem.runAtShootSpeed();
+      shooter.setBothWheelVelocities(reqAngularVelocity);
+      shooter.runAtShootSpeed();
     }
   }
 
@@ -43,7 +45,7 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    shooterSubsystem.stop();
+    shooter.stop();
   }
 
   // Returns true when the command should end.

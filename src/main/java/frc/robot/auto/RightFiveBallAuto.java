@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.commands.*;
+import frc.robot.commands.drive.TurnInPlaceCommand;
+import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
@@ -50,10 +52,10 @@ public class RightFiveBallAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(continousSpeedDriveStart2mpsTrajectoryConfig, super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(110));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(-45));
         
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper); // Adjust when ready to shoot either 1 or 2 cargo individually
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, grassHopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
 
         // TODO add features for advanced timing control when the shooter or intake should be run during driving commands
         //ParallelCommandGroup aimAndShootPreloaded = new ParallelCommandGroup(aimAtHub, launchCargoCommand);

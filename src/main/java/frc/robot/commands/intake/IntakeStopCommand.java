@@ -5,21 +5,21 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeStopCommand extends CommandBase {
-    private final IntakeSubsystem intakeSubsystem;
+    private final IntakeSubsystem intake;
     private final HopperSubsystem hopper;
 
-    public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopper) {
-      this.intakeSubsystem = intakeSubsystem;
+    public IntakeStopCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
+      this.intake = intake;
       this.hopper = hopper;
 
-      addRequirements(intakeSubsystem, hopper);
+      addRequirements(intake, hopper);
     }
   
     @Override
     public void execute() {
-        intakeSubsystem.intakeStop();
+        intake.intakeStop();
         hopper.hopperStop();
-        //stops the intake
+        // stops the intake
     }
     @Override
     public boolean isFinished(){

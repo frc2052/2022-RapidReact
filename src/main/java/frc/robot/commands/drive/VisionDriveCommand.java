@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.DashboardControlsSubsystem;
@@ -17,19 +17,23 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     private double horizontalAngle;
     private boolean isLinedUp;
 
-    public VisionDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
-                               DoubleSupplier translationXSupplier,
-                               DoubleSupplier translationYSupplier,
-                               VisionSubsystem vision,
-                               DashboardControlsSubsystem dashboard) {
-        super(drivetrainSubsystem,
-        translationXSupplier,
-        translationYSupplier,
-        () -> { return 0.0; }, //this value will not be used because getTurnWillBeOverriden
-        dashboard);
+    public VisionDriveCommand(
+        DrivetrainSubsystem drivetrain,
+        DoubleSupplier translationXSupplier,
+        DoubleSupplier translationYSupplier,
+        VisionSubsystem vision,
+        DashboardControlsSubsystem dashboard
+    ) {
+        super(
+            drivetrain,
+            translationXSupplier,
+            translationYSupplier,
+            () -> { return 0.0; }, // This value will not be used because getTurn will be overriden.
+            dashboard
+        );
 
         this.vision = vision;
-        this.driveTrain = drivetrainSubsystem;
+        this.driveTrain = drivetrain;
     }
 
     @Override
@@ -79,7 +83,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         double lineToHub = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS,2) + Math.pow(vision.getXDistanceToUpperHub(), 2));
         double radiansOffset = Math.atan(Math.toRadians(vision.getXDistanceToUpperHub()*driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
         return Math.toDegrees(radiansOffset);
-      }
+    }
 
     @Override
     public void end(boolean interrupted) {

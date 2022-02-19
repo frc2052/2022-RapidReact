@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 // Command for simply rotating the robot to aim at the horizontal center of the upper hub. Similar to VisionDriveCommand.
 
@@ -10,18 +10,18 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class VisionTurnInPlaceCommand extends CommandBase {
 
-    private final DrivetrainSubsystem drivetrainSubsystem;
+    private final DrivetrainSubsystem drivetrain;
     private final VisionSubsystem vision;
 
     private double visionRotation = 0;
     private double tx;
     private boolean isLinedUp;
 
-    public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrainSubsystem, VisionSubsystem vision) {
-        this.drivetrainSubsystem = drivetrainSubsystem;
+    public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+        this.drivetrain = drivetrain;
         this.vision = vision;
 
-        addRequirements(drivetrainSubsystem);
+        addRequirements(this.drivetrain);
     }
 
     @Override
@@ -58,12 +58,12 @@ public class VisionTurnInPlaceCommand extends CommandBase {
         }
 
         //if(vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
-            drivetrainSubsystem.drive(
+            drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     0,
                     0,
                     visionRotation,
-                    drivetrainSubsystem.getGyroscopeRotation()
+                    drivetrain.getGyroscopeRotation()
                 )
             );
             //visionRotation = vision.getRotationSpeedToTarget();
@@ -77,7 +77,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         vision.setLED(LEDMode.OFF);
-        drivetrainSubsystem.stop();
+        drivetrain.stop();
         LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
     }
 
