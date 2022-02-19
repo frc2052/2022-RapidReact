@@ -59,6 +59,8 @@ public final class Constants {
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double FEEDER_SPEED = 1;
 
+        public static final double SHOOTER_TOLERANCE = 0.05;
+
         public static final double SHOOTER_FIRING_ANGLE_DEGREES = 72.0;
         public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);
 
@@ -77,9 +79,11 @@ public final class Constants {
         public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(21); // ESTIMATE Based on Cad Model, update when robot is completed.
         public static final double MOUNT_ANGLE_DEGREES = 45;
 
+        public static final double LINED_UP_THRESHOLD = 2;
+
         public static final double DISTANCE_CALCULATION_LINEAR_OFFSET = 0;
 
-        public static final int DEFAULT_ASSUMED_DISTANCE = 0;
+        public static final int DEFAULT_ASSUMED_DISTANCE = 7;
     }
 
     public static final class PixyCamConstants {
@@ -125,16 +129,16 @@ public final class Constants {
     }
 
     public static final class Climber {
-        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.1; // .5
-        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.1; // .75
+        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.3; // .5
+        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.3; // .75
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
         // our gearbox ratio is 12
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
         // TODO: These Value Needs To Change
-        public static final double MIN_CLIMBER_HEIGHT_TICKS = 0;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 10000;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 11000;
+        public static final double MIN_CLIMBER_HEIGHT_TICKS = 1000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 151000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 209000;
     }
 
     public static final class LEDs {
