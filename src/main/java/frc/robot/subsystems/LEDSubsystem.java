@@ -117,6 +117,7 @@ public class LEDSubsystem extends SubsystemBase {
                 rgb[2] = 0.5;
                 break;
             case VISION_TARGET_FOUND:
+                rgb[0] = 0.5;
                 break;
             case ENG_GAME_WARNING:
                 break;
@@ -248,14 +249,14 @@ public class LEDSubsystem extends SubsystemBase {
 
     private void visionTargetFoundStatusMode() {
         if (isGoingUp) {
-            rgb[1] += 0.2;
+            rgb[0] += 0.2;
         } else {
-            rgb[1] -= 0.2;
+            rgb[0] -= 0.2;
         }
 
-        if (rgb[1] >= 1) {
+        if (rgb[0] >= 1) {
             isGoingUp = false;
-        } else if (rgb[1] <= 0.5) {
+        } else if (rgb[0] <= 0.5) {
             isGoingUp = true;
         }
         /*evaluateOnOffInterval(300, 300);
