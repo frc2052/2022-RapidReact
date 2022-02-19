@@ -89,7 +89,7 @@ public class VisionCalculator {
     }
 
 
-    public ShooterDistanceConfig getShooterConfig(int distanceInches){
+    public ShooterDistanceConfig getShooterConfig(int distanceInches) {
         // Lower bound of the estimated shooter configuration given the distance from the target.
         ShooterDistanceConfig lowerDistanceConfig = null;
         // Upper bound of the estimated shooter configuration given the distance from the target.
@@ -118,22 +118,22 @@ public class VisionCalculator {
         // The percentage of offsetInches that is deltaInches.
         double pct = offsetInches / deltaInches;
 
-        // Calculate the difference between the two top motor percents from the lookup table entries.
-        double deltaTopMotorPercent = upperDistanceConfig.getTopMotorPct() - lowerDistanceConfig.getTopMotorPct();
-        // Multiple the difference of top motor percents by the percentage of offsetInches and deltaInches. 
-        double offsetTopMotorPercent = deltaTopMotorPercent * pct;
+        // Calculate the difference between the two top motor velocities from the lookup table entries.
+        double deltaTopMotorVelocityTicksPerSecond = upperDistanceConfig.getTopMotorVelocityTicksPerSecond() - lowerDistanceConfig.getTopMotorVelocityTicksPerSecond();
+        // Multiple the difference of top motor velocities by the percentage of offsetInches and deltaInches. 
+        double offsetTopMotorVelocityTicksPerSecond = deltaTopMotorVelocityTicksPerSecond * pct;
 
-        // Calculate the difference between the two bottom motor percents from the lookup table entries.
-        double deltaBottomMotorPercent = upperDistanceConfig.getTopMotorPct() - lowerDistanceConfig.getTopMotorPct();
-        // Multiple the difference of bottom motor percents by the percentage of offsetInches and deltaInches. 
-        double offsetBottomMotorPercent = deltaBottomMotorPercent * pct;
+        // Calculate the difference between the two bottom motor velocities from the lookup table entries.
+        double deltaBottomMotorVelocityTicksPerSecond = upperDistanceConfig.getTopMotorVelocityTicksPerSecond() - lowerDistanceConfig.getTopMotorVelocityTicksPerSecond();
+        // Multiple the difference of bottom motor velocities by the percentage of offsetInches and deltaInches. 
+        double offsetBottomMotorVelocityTicksPerSecond = deltaBottomMotorVelocityTicksPerSecond * pct;
 
         return new ShooterDistanceConfig(
             distanceInches,
             // Add the final offsets to our lower distance so the bottom shooter cofniguration can safely be assumed.
-            lowerDistanceConfig.getBottomMotorPct() + offsetBottomMotorPercent,
+            lowerDistanceConfig.getBottomMotorVelocityTicksPerSecond() + offsetBottomMotorVelocityTicksPerSecond,
             // Add the final offsets to our lower distance so the top shooter cofniguration can safely be assumed.
-            lowerDistanceConfig.getTopMotorPct() + offsetTopMotorPercent
+            lowerDistanceConfig.getTopMotorVelocityTicksPerSecond() + offsetTopMotorVelocityTicksPerSecond
         );
     }
 }

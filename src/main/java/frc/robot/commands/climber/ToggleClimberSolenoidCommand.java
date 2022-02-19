@@ -25,10 +25,8 @@ public class ToggleClimberSolenoidCommand extends CommandBase {
   @Override
   public void execute() {
     if (climberSubsystem.getClimberSolenoidState() == ClimberSolenoidState.FORWARD) {
-      climberSubsystem.setArmPostionInches(7.5);
-      if (climberSubsystem.isAtDesiredPosition()) {
-        climberSubsystem.shiftClimberBackward();
-      }
+      // TODO: Add safety to check if climber arm is high enough before moving the solenoid.
+      climberSubsystem.shiftClimberBackward();
     } else {
       climberSubsystem.shiftClimberForward();
     }

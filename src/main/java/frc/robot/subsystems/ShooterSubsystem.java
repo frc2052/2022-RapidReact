@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -34,10 +33,15 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.setSelectedSensorPosition(0, 0, 10);
   }
 
-
   public void runAtShootSpeed() {
     topMotor.set(ControlMode.Velocity, topWheelVelocity);
     bottomMotor.set(ControlMode.Velocity, bottomWheelVelocity);
+  }
+
+  public void runAtShootSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
+    setTopWheelVelocity(topVelocityTicksPerSeconds);
+    setBottomWheelVelocity(bottomVelocityTicksPerSeconds);
+    runAtShootSpeed();
   }
 
   public boolean isAtSpeed() {
