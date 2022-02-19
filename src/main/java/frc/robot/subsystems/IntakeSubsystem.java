@@ -27,34 +27,40 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor = new VictorSPX(MotorIDs.INTAKE_MOTOR);
     }
 
-    public void intakeArmIn(){
+    //solenoid in = arm out
+    public void intakeArmOut(){
         inSolenoid.set(true);
         outSolenoid.set(false);
-        isIntakeArmOut = false;
-    }
-  
-    public void intakeArmOut(){
-        inSolenoid.set(false);
-        outSolenoid.set(true);
         isIntakeArmOut = true;
     }
 
+    //solenoid out = arm in
+    public void intakeArmIn(){
+        inSolenoid.set(false);
+        outSolenoid.set(true);
+        isIntakeArmOut = false;
+    }
+    
+    //intake takes in
     public void intakeOn(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
         intakePct =  Constants.Intake.kIntakeSpeed;
     }
 
+    //intake untakes in
     public void intakeReverse(){
         intakeMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);
         intakePct = -Constants.Intake.kIntakeSpeed;
        
     }
    
+    //intake stops
     public void intakeStop(){
         intakeMotor.set(ControlMode.PercentOutput, 0);
         intakePct = 0;
     }
 
+    //so we know what's going on
     public double getIntakeSpeed() {
         return intakePct;
     }

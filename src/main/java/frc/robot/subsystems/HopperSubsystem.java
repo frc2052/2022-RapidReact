@@ -13,14 +13,17 @@ public class HopperSubsystem extends SubsystemBase {
         hopperMotor = new VictorSPX(MotorIDs.HOPPER_MOTOR);
     }
 
+    //the hopper goes
     public void hopperGo() {
         hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
     }
 
+    //the hopper stops
     public void hopperStop() {
         hopperMotor.set(ControlMode.PercentOutput, 0);
     }
 
+    //the hopper goes in reverse
     public void hopperReverse() {
         hopperMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);
     }
