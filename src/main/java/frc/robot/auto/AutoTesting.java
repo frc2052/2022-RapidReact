@@ -1,15 +1,9 @@
 package frc.robot.auto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // A version of Simple3BallAuto to be used and abused for testing and learning !
-
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -21,6 +15,7 @@ import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
+
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -29,7 +24,6 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoTesting extends AutoBase {
     public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexer) {
@@ -57,7 +51,7 @@ public class AutoTesting extends AutoBase {
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(driveToShoot, intakeArmInCommand);
 
         this.addCommands(autoAim);
-        this.addCommands(shoot1CargoCommand.withTimeout(2));
+        this.addCommands(shoot1CargoCommand.withTimeout(3));
         this.addCommands(turnToBall1);
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON));
         this.addCommands(intakeBall1); // Drives to the closest ball to the robot
@@ -65,7 +59,7 @@ public class AutoTesting extends AutoBase {
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT));
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
-        this.addCommands(shoot2CargoCommand.withTimeout(2));
+        this.addCommands(shoot2CargoCommand.withTimeout(3));
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
