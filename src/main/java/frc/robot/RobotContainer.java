@@ -44,8 +44,7 @@ public class RobotContainer {
   private final JoystickButton intakeStopButton = new JoystickButton(driveJoystick, 5);
   private final JoystickButton prepareToLaunch = new JoystickButton(secondaryPannel, 2);
   private final JoystickButton feedCargoLaunch = new JoystickButton(secondaryPannel, 3);
-
- 
+  private final JoystickButton isIntakeOutButton = new JoystickButton(secondaryPannel, 4); 
   private final UsbCameraSubsystem m_intakeCamera = new UsbCameraSubsystem();
 
   // Slew rate limiters to make joystick inputs more gentle.
@@ -90,6 +89,7 @@ public class RobotContainer {
     intakeStopButton.whenPressed(new IntakeStopCommand(intakeSubsystem, grassHopper));
     intakeArmOutButton.whenPressed(new IntakeArmOutCommand(intakeSubsystem, grassHopper));
     intakeArmInButton.whenPressed(new IntakeArmInCommand(intakeSubsystem, grassHopper));
+    isIntakeOutButton.whenPressed(new IsIntakeOutCommand(intakeSubsystem));
 
     prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(indexerSubsystem, twoWheelFlySubsystem, intakeSubsystem, grassHopper));
     feedCargoLaunch.whileHeld(new FeedCargoLaunchCommand(twoWheelFlySubsystem, indexerSubsystem));

@@ -58,6 +58,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getIntakeSpeed() {
         return intakePct;
     }
+    
+    public boolean isArmOut() {
+        return isArmOut;
+    }
 
     public void putToSmartDashboard() {
         SmartDashboard.putBoolean("Intake Arm Out", isIntakeArmOut);
