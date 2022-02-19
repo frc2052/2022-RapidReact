@@ -174,6 +174,7 @@ public class VisionSubsystem extends SubsystemBase{
 
     public void putToSmartDashboard() {
         updateLimelight();
+        SmartDashboard.putBoolean("Is lined up?", isLinedUp());
         SmartDashboard.putBoolean("Has target?", hasValidTarget);
         SmartDashboard.putString("Vertical Distance from Crosshair: ", ty + " degrees");
         SmartDashboard.putString("Horizontal Distance from Crosshair: ", tx + " degrees");

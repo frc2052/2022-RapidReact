@@ -136,9 +136,9 @@ public final class Constants {
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
         // TODO: These Value Needs To Change
-        public static final double MIN_CLIMBER_HEIGHT_TICKS = 1000;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 151000;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 209000;
+        public static final double MIN_CLIMBER_HEIGHT_TICKS = 5000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 250000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 335000;
     }
 
     public static final class LEDs {
