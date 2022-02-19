@@ -7,7 +7,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmOutCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
-    private final HopperSubsystem grassHopper;
+    private final HopperSubsystem hopperSubsystem;
 
   /**
    * Creates a new ArmToggle.
@@ -16,7 +16,7 @@ public class IntakeArmOutCommand extends CommandBase {
    */
     public IntakeArmOutCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
       this.intakeSubsystem = intakeSubsystem;
-      this.grassHopper = grassHopper;
+      this.hopperSubsystem = grassHopper;
     }
       
     @Override
@@ -25,7 +25,7 @@ public class IntakeArmOutCommand extends CommandBase {
     public void execute() {
       intakeSubsystem.intakeArmOut();
       intakeSubsystem.intakeOn();
-      grassHopper.hopperGo();
+      hopperSubsystem.hopperGo();
     }
 
     @Override
