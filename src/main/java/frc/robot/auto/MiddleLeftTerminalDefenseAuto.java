@@ -1,24 +1,26 @@
 package frc.robot.auto;
 
-// Starts at position C (Left tarmac closest to center and parallel with outermost line) and should score 2 balls (3 if we program for human player to pass ball)
-// and shoot an enemy ball into the hanger.
-
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.IntakeArmOutCommand;
+
+import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
+
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MiddleLeftTerminalDefenseAuto extends AutoBase {
-    DrivetrainSubsystem m_drivetrain;
+    DrivetrainSubsystem drivetrain;
 
     /**
      * Position C Start (Middle Left Parallel with Outer Tarmac line) facing inwards towards the hub.
@@ -30,7 +32,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, IntakeSubsystem intake, HopperSubsystem grassHopper) {
+    public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
         super(drivetrain, vision);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
@@ -48,18 +50,27 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper);
+        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, grassHopper, indexer);
+        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, grassHopper, indexer);
 
-        //ParallelCommandGroup driveAndShootPreloaded = new ParallelCommandGroup(driveToShoot1st, ShooterCommand);
-        //ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand);
-        //ParallelCommandGroup getEnemyBall1CommandGroup = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
+        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, vision, grassHopper);
 
-        this.addCommands(driveToShootPreloaded); // change to driveAndShootPreloaded when shooter command ready.
-        this.addCommands(driveToEnemyBall1);
-        this.addCommands(approachBall2Command); // change to driveAndShootEnemyBall1 when shooter command ready
-        this.addCommands(arriveAtBall2Command);
-        this.addCommands(drivebackToShootPos);
+        /*
+        ParallelCommandGroup intakeEnemyBall1 = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
+        ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand, intakeArmIn);
+        ParallelCommandGroup intakeBall2 = new ParallelCommandGroup(arriveAtBall2, intakeArmOut);
+        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn);
+        */
 
+        this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded
+//      this.addCommands(launchCargoCommand);
+        this.addCommands(driveToEnemyBall1);     // intakeEnemyBall1
+        this.addCommands(approachBall2Command);  // driveAndShootEnemyBall1
+        this.addCommands(arriveAtBall2Command);  // intakeBall2
+        this.addCommands(drivebackToShootPos);   // returnToShoot
+//      this.addCommands(launchCargoCommand);
+
+        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }

@@ -5,20 +5,21 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class VisionTurnInPlaceCommand extends CommandBase {
 
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
-    private final VisionSubsystem m_vision;
+    private final DrivetrainSubsystem drivetrainSubsystem;
+    private final VisionSubsystem vision;
 
     private double visionRotation = 0;
     private double tx;
     private boolean isLinedUp;
 
     public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrainSubsystem, VisionSubsystem vision) {
-        this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_vision = vision;
+        this.drivetrainSubsystem = drivetrainSubsystem;
+        this.vision = vision;
 
         addRequirements(drivetrainSubsystem);
     }
@@ -26,17 +27,17 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        m_vision.setLED(LEDMode.ON);
+        vision.setLED(LEDMode.ON);
     }
 
     @Override
     public void execute() {
-        m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
-        //double rotation = m_vision.getRotationToTarget();
-        tx = m_vision.getTx();
+        vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
+        //double rotation = vision.getRotationToTarget();
+        tx = vision.getTx();
         isLinedUp = false;
 
-        if(m_vision.hasValidTarget()) {
+        if(vision.hasValidTarget()) {
             // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(this.tx) > 5) {
               visionRotation = -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
@@ -50,27 +51,34 @@ public class VisionTurnInPlaceCommand extends CommandBase {
             visionRotation = Math.PI;
           }
 
-        //if(m_vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
-            m_drivetrainSubsystem.drive(
+        if (isLinedUp) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+        } else {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+        }
+
+        //if(vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
+            drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     0,
                     0,
                     visionRotation,
-                    m_drivetrainSubsystem.getGyroscopeRotation()
+                    drivetrainSubsystem.getGyroscopeRotation()
                 )
             );
-            //visionRotation = m_vision.getRotationSpeedToTarget();
+            //visionRotation = vision.getRotationSpeedToTarget();
         /*} else {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
-            m_drivetrainSubsystem.stop();
+            drivetrainSubsystem.stop();
             isLinedUp = true;
         }*/
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_vision.setLED(LEDMode.OFF);
-        m_drivetrainSubsystem.stop();
+        vision.setLED(LEDMode.OFF);
+        drivetrainSubsystem.stop();
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
     }
 
     @Override

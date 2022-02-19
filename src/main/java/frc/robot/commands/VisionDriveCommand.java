@@ -3,14 +3,16 @@ package frc.robot.commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 import java.util.function.DoubleSupplier;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
-    private VisionSubsystem m_vision;
-    private DrivetrainSubsystem m_driveTrain;
+    private VisionSubsystem vision;
+    private DrivetrainSubsystem driveTrain;
     private double visionRotation = 0;
     private double horizontalAngle;
     private boolean isLinedUp;
@@ -26,23 +28,23 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         () -> { return 0.0; }, //this value will not be used because getTurnWillBeOverriden
         dashboard);
 
-        this.m_vision = vision;
-        this.m_driveTrain = drivetrainSubsystem;
+        this.vision = vision;
+        this.driveTrain = drivetrainSubsystem;
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        m_vision.setLED(LEDMode.ON);
+        vision.setLED(LEDMode.ON);
     }
 
     @Override
     protected double getTurnValue() {
-        m_vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
-        horizontalAngle = m_vision.getTx() + drivingHorizontalFiringOffsetAngle();      // Horizontal offset from the Limelight's crosshair to target.
+        vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
+        horizontalAngle = vision.getTx() + drivingHorizontalFiringOffsetAngleRadians();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 
-        if(m_vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
+        if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(horizontalAngle) > 5) {
                 visionRotation = -Math.copySign(Math.toRadians(horizontalAngle * 9) , horizontalAngle); // Dynamically changes rotation speed to be faster at a larger tx,
             } else if(Math.abs(horizontalAngle) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
@@ -55,6 +57,12 @@ public class VisionDriveCommand extends DefaultDriveCommand {
             // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             visionRotation = 0;
         }
+
+        if (isLinedUp) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+        } else {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+        }
         return visionRotation;
     }
 
@@ -62,19 +70,21 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         return isLinedUp;
     }
 
-    private double drivingHorizontalFiringOffsetAngle() {
-        if(m_driveTrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+    private double drivingHorizontalFiringOffsetAngleRadians() {
+        if(driveTrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
             return 0.0;
         }
         // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
         double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
-        double lineToHub = Math.sqrt(Math.pow(Constants.Field.kUpperHubHeightMeters,2) + Math.pow(m_vision.xDistanceToUpperHub(), 2));
-        return Math.atan(Math.toRadians(m_vision.xDistanceToUpperHub()*m_driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
+        double lineToHub = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS,2) + Math.pow(vision.getXDistanceToUpperHub(), 2));
+        double radiansOffset = Math.atan(Math.toRadians(vision.getXDistanceToUpperHub()*driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
+        return Math.toDegrees(radiansOffset);
       }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        m_vision.setLED(LEDMode.OFF);
+        vision.setLED(LEDMode.OFF);
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
     }
 }

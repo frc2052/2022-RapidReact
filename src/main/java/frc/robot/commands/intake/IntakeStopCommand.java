@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
@@ -6,19 +6,22 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeStopCommand extends CommandBase {
     private final IntakeSubsystem intakeSubsystem;
-    private final HopperSubsystem grassHopper;
+    private final HopperSubsystem hopper;
 
-    public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem grassHopper) {
+    public IntakeStopCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopper) {
       this.intakeSubsystem = intakeSubsystem;
-      this.grassHopper = grassHopper;
-  }
+      this.hopper = hopper;
+
+      addRequirements(intakeSubsystem, hopper);
+    }
   
     @Override
 
     //stops the intake
     public void execute() {
         intakeSubsystem.intakeStop();
-        grassHopper.hopperStop();
+        hopper.hopperStop();
+        //stops the intake
     }
 
     @Override
@@ -26,5 +29,5 @@ public class IntakeStopCommand extends CommandBase {
     public boolean isFinished(){
         return true;
     }
-  
+
 }

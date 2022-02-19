@@ -4,51 +4,60 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.TwoWheelFlySubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.util.ProjectileCalculator;
 
 
 public class PrepareToLaunchCargoCommand extends CommandBase {
+  private final ShooterSubsystem twoWheelFly; 
   private final IndexerSubsystem indexer;
-  private final TwoWheelFlySubsystem twoWheelFly; 
-  private final IntakeSubsystem intake;
+  private final VisionSubsystem vision;
   private final HopperSubsystem grassHopper;
-  private final DigitalInput limitSwitch = new DigitalInput(Constants.LimitSwitch.INDEXER_PRELOAD);
-  private final DigitalInput limitSwitchTwo = new DigitalInput(Constants.LimitSwitch.INDEXER_FEEDER);
 
-  public PrepareToLaunchCargoCommand(IndexerSubsystem indexer, TwoWheelFlySubsystem twoWheelFly, IntakeSubsystem intake, HopperSubsystem grassHopper) {
-    this.indexer = indexer;
+
+  public PrepareToLaunchCargoCommand(ShooterSubsystem twoWheelFly, IndexerSubsystem indexer, VisionSubsystem vision, HopperSubsystem grassHopper) {
     this.twoWheelFly = twoWheelFly;
-    this.intake = intake;
+    this.indexer = indexer;
+    this.vision = vision;
     this.grassHopper = grassHopper;
   }
-  
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
+    if(vision.hasValidTarget()) {
+      double distance = vision.getXDistanceToUpperHub();
+      double reqVelocity = ProjectileCalculator.calculateReqProjectileVelocity(distance);
+      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
+      //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
+
+      twoWheelFly.setBothWheelVelocities(reqAngularVelocity);
+    }
+
     twoWheelFly.runAtShootSpeed();
-    if ( limitSwitch.get() == false ) {
+    if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == false) {
       indexer.runPreload();
       grassHopper.hopperGo();
-    } else {
-        indexer.stop();
-      if (limitSwitchTwo.get() == false) {
+    } else if (indexer.getCargoPreStagedDetected() == false && indexer.getCargoStagedDetected() == true) {
+        indexer.stopFeeder();
         indexer.runPreload();
-        grassHopper.hopperGo();
-      } else {
-        indexer.stop();
+    } else {
+        indexer.stopFeeder();
+        indexer.stopPreload();
     }
   }
-  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stop();
+    indexer.stopFeeder();
+    indexer.stopPreload();
     twoWheelFly.stop();
     grassHopper.hopperStop();
   }
