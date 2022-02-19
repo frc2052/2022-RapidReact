@@ -10,15 +10,15 @@ import frc.robot.subsystems.IndexerSubsystem;
 
 
 public class HopperBaseCommand extends CommandBase {
-  protected final IndexerSubsystem indexerSubsystem;
-  protected final HopperSubsystem hopperSubsystem;
+  protected final IndexerSubsystem indexer;
+  protected final HopperSubsystem grassHopper;
   
   /** Creates a new HopperBaseCommand. */
-  public HopperBaseCommand(IndexerSubsystem indexerSubsystem, HopperSubsystem hopperSubsystem) {
-    this.indexerSubsystem = indexerSubsystem;
-    this.hopperSubsystem = hopperSubsystem;
+  public HopperBaseCommand(IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    this.indexer = indexer;
+    this.grassHopper = grassHopper;
 
-    addRequirements(indexerSubsystem, hopperSubsystem);
+    addRequirements(indexer, grassHopper);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -26,34 +26,34 @@ public class HopperBaseCommand extends CommandBase {
   public void execute() {
     // System.err.println("********************************" + indexerSubsystem.getCargoStagedDetected() + " ** " + indexerSubsystem.getCargoPreStagedDetected());
 
-    if (!indexerSubsystem.getCargoStagedDetected()) {
+    if (!indexer.getCargoStagedDetected()) {
       //Keep running all the wheels until all the balls are staged
-      indexerSubsystem.runPreload();
-      indexerSubsystem.runFeeder();
-      hopperSubsystem.hopperGo();
-    } else if (indexerSubsystem.getCargoStagedDetected() && !indexerSubsystem.getCargoPreStagedDetected()) {
+      indexer.runPreload();
+      indexer.runFeeder();
+      grassHopper.hopperGo();
+    } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       //The staged detector shows a ball ready to be fired but no second ball is detected
-      indexerSubsystem.stopFeeder();
-      indexerSubsystem.runPreload();
-      hopperSubsystem.hopperGo();
+      indexer.stopFeeder();
+      indexer.runPreload();
+      grassHopper.hopperGo();
     } else {
       //Two balls are loaded and no more can be taken
-      indexerSubsystem.stopFeeder();
-      indexerSubsystem.stopPreload();
-      hopperSubsystem.hopperStop();
+      indexer.stopFeeder();
+      indexer.stopPreload();
+      grassHopper.hopperStop();
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    indexerSubsystem.stopFeeder();
-    indexerSubsystem.stopPreload();
-    hopperSubsystem.hopperStop();
+    indexer.stopFeeder();
+    indexer.stopPreload();
+    grassHopper.hopperStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexerSubsystem.getCargoStagedDetected() && indexerSubsystem.getCargoPreStagedDetected();
+    return indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected();
   }
 }

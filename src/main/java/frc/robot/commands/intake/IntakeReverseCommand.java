@@ -9,33 +9,33 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeReverseCommand extends CommandBase {
-  private final IntakeSubsystem intakeSubsystem;
-  private final HopperSubsystem hopperSubsystem;
+  private final IntakeSubsystem intake;
+  private final HopperSubsystem hopper;
 
 /**
  * Creates a new ArmToggle.
  *
  * @param intakeSubsystem The subsystem used by this command.
  */
-  public IntakeReverseCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem) {
-    this.intakeSubsystem = intakeSubsystem;
-    this.hopperSubsystem = hopperSubsystem;
+  public IntakeReverseCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
+    this.intake = intake;
+    this.hopper = hopper;
 
-    addRequirements(intakeSubsystem, hopperSubsystem);
+    addRequirements(intake, hopper);
   }
     
   @Override
   public void execute() {
     // arm extends and spins the wheels
-    intakeSubsystem.intakeArmOut();
-    intakeSubsystem.intakeReverse();
-    hopperSubsystem.hopperReverse();
+    intake.intakeArmOut();
+    intake.intakeReverse();
+    hopper.hopperReverse();
   }
 
   @Override
   public void end(boolean interrupted) {
-    intakeSubsystem.intakeStop();
-    hopperSubsystem.hopperStop();
+    intake.intakeStop();
+    hopper.hopperStop();
   }
 
   @Override

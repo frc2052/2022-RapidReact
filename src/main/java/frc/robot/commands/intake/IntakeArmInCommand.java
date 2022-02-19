@@ -6,13 +6,13 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmInCommand extends HopperBaseCommand {
-    private final IntakeSubsystem intakeSubsystem;
+    private final IntakeSubsystem intake;
     
-    public IntakeArmInCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem, IndexerSubsystem indexerSubsystem) {
-      super(indexerSubsystem, hopperSubsystem);
-      this.intakeSubsystem = intakeSubsystem;
+    public IntakeArmInCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+        super(indexer, hopper);
+        this.intake = intake;
 
-      addRequirements(intakeSubsystem, hopperSubsystem);
+        addRequirements(intake);
     }
 
     @Override
@@ -23,8 +23,9 @@ public class IntakeArmInCommand extends HopperBaseCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        intakeSubsystem.intakeArmIn();
-        intakeSubsystem.intakeStop();
-        //arm retracts and stops
+
+        // Arm retracts and stops.
+        intake.intakeArmIn();
+        intake.intakeStop();
     }
 }
