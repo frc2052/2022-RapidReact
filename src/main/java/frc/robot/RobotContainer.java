@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -55,8 +56,8 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.vision.ShooterDistanceConfig;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -91,15 +92,14 @@ public class RobotContainer {
   private JoystickButton intakeReverseButton;
 
   private JoystickButton prepareToLaunch;
-  private JoystickButton feedOneCargoLaunch;
-  private JoystickButton feedTwoCargoLaunch;
+  private JoystickButton shootSingleButton;
+  private JoystickButton shootAllButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
   private JoystickButton climberLockButton;
   private JoystickButton climberUnlockButton;
   private JoystickButton tuneShooterButton;
-
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
@@ -109,14 +109,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 //    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
-
     init();
   }
 
   private void init() {
     vision = new VisionSubsystem();
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
-    // intakeCamera = new UsbCameraSubsystem();
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climberSubsystem);
+    //intakeCamera = new UsbCameraSubsystem();
     pixyCamSubsystem = new PixyCamSubsystem();    
 
     // //The following subsystems have a dependency on CAN
@@ -142,7 +141,6 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -160,8 +158,8 @@ public class RobotContainer {
     intakeReverseButton = new JoystickButton(secondaryPannel, 6);
 
     prepareToLaunch = new JoystickButton(secondaryPannel, 2);
-    feedOneCargoLaunch = new JoystickButton(turnJoystick, 1);
-    feedTwoCargoLaunch = new JoystickButton(driveJoystick, 1);
+    shootSingleButton = new JoystickButton(turnJoystick, 1);
+    shootAllButton = new JoystickButton(driveJoystick, 1);
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     
     // Climber Buttons
@@ -210,9 +208,32 @@ public class RobotContainer {
     intakeReverseButton.whileHeld(new IntakeReverseCommand(intakeSubsystem, grassHopper));
 
     // prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
-    feedOneCargoLaunch.whileHeld(new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, vision));
-    feedTwoCargoLaunch.whileHeld(new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, vision));
-    tuneShooterButton.whileHeld(new TuneShooterCommand(shooterSubsystem, indexerSubsystem, intakeSubsystem));
+    shootSingleButton.whileHeld(
+      new ParallelCommandGroup(
+        new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, vision),
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+          drivetrainSubsystem,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          vision,
+          dashboardControlsSubsystem
+        )
+      )
+    );
+    shootAllButton.whileHeld(
+      new ParallelCommandGroup(
+        new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, vision),
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+          drivetrainSubsystem,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          vision,
+          dashboardControlsSubsystem
+        )
+      )
+    );
+
+    tuneShooterButton.whileHeld(new TuneShooterCommand(shooterSubsystem, indexerSubsystem, intakeSubsystem, grassHopper));
   }
 
   /**

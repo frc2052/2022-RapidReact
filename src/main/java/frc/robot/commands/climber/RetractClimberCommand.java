@@ -15,7 +15,7 @@ public class RetractClimberCommand extends CommandBase {
     @Override
     public void execute() {
         // Climber retracts.
-        if (!climberSubsystem.isLocked()) {
+        if (!climberSubsystem.getIsLocked()) {
             climberSubsystem.manualRetractArm();
         } else {
             System.err.println("Climber locked!");

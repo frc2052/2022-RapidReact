@@ -69,6 +69,7 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_MID_BAR("Climbing Middle Bar"),
         CLIMBING_HIGH_BAR("Climbing High Bar"),
         CLIMBING_TRAVERSAL("Climbing Traversal Bar"),
+        CLIMBING_LOCK_ENGAGED("Climber Lock Engaged"),
         TEST_MODE("Test Mode");
 
         public String name;
@@ -153,6 +154,8 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_TRAVERSAL:
                 break;
+            case CLIMBING_LOCK_ENGAGED:
+                break;
             case TEST_MODE:
                 break;
             default:
@@ -221,6 +224,9 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_TRAVERSAL:
                 traversalBarStatusMode();
+                break;
+            case CLIMBING_LOCK_ENGAGED:
+                climbingLockEngagedStatusMode();
                 break;
             case TEST_MODE:
                 testStatusMode();
@@ -471,6 +477,15 @@ public class LEDSubsystem extends SubsystemBase {
             isGoingUp = false;
         } else if (counter <= 0) {
             isGoingUp = true;
+        }
+    }
+
+    private void climbingLockEngagedStatusMode() {
+        evaluateOnOffInterval(500, 500);
+        if (areLedsOn) {
+            rgb[1] = 1;
+        } else {
+            rgb[0] = 0;
         }
     }
     

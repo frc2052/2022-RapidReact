@@ -24,6 +24,8 @@ public class IntakeReverseCommand extends CommandBase {
     addRequirements(intake, hopper);
   }
     
+  // TODO: Implement Full Flush System
+
   @Override
   public void execute() {
     // arm extends and spins the wheels

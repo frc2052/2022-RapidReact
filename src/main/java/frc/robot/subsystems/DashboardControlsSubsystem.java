@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class DashboardControlsSubsystem extends SubsystemBase {
 
     private VisionSubsystem visionSubsystem;
+    private HookClimberSubsystem climber;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -25,11 +27,13 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean limelightDriveCamToggle;
     private boolean lastCamState;
     private CamMode lastCamMode;
+    private boolean climberEncoderResetButton;
 
     private LEDStatusMode lastLEDStatusMode;
 
-    public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
+    public DashboardControlsSubsystem(VisionSubsystem vision, HookClimberSubsystem climber) { // Adds values and items to selectors and toggles.
         this.visionSubsystem = vision;
+        this.climber = climber;
 
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         lastLEDBrightness = ledBrightness;
@@ -64,6 +68,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
+        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
+        SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);

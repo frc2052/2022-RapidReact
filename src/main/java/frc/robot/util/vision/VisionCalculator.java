@@ -32,9 +32,18 @@ public class VisionCalculator {
      * and the top and bottom motor percent values.
      */
     private void setupShooterDistanceConfigs() {
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(0 * 12, 0.0, 0.0));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(1 * 12, 0.0, 0.0));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 0.0, 0.0));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 7800, 7800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7800, 7800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 8500, 8500));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 9000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9700, 8800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 8800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 11000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 12000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 12700, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 13300, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 14400, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15700, 9100));
     }
 
     /**
@@ -42,7 +51,19 @@ public class VisionCalculator {
      * and what {@link VisionSubsystem} values for that distance should be.
      */
     private void setupVisionDistances() {
-        visionDistances.add(new VisionDistance(0 * 12, 0.0));
+        // Center Targeted
+        visionDistances.add(new VisionDistance(2 * 12,  6.637419700622559));
+        visionDistances.add(new VisionDistance(3 * 12,  1.673193931579590));
+        visionDistances.add(new VisionDistance(4 * 12, -3.041108131408691));
+        visionDistances.add(new VisionDistance(5 * 12, -6.792672157287598));
+        visionDistances.add(new VisionDistance(6 * 12, -10.15470218658447));
+        visionDistances.add(new VisionDistance(7 * 12, -13.33554172515869));
+        visionDistances.add(new VisionDistance(8 * 12, -15.87055301666260));
+        visionDistances.add(new VisionDistance(9 * 12, -18.17145729064941));
+        visionDistances.add(new VisionDistance(10 * 12, -20.06331825256348));
+        visionDistances.add(new VisionDistance(11 * 12, -21.58301734924316));
+        visionDistances.add(new VisionDistance(12 * 12, -23.56243324279785));
+        visionDistances.add(new VisionDistance(13 * 12, -24.5762882232666));
     }
 
     /**
@@ -57,6 +78,8 @@ public class VisionCalculator {
         // Upper bound of the estimated distance from the target.
         VisionDistance upperDistance = null;
 
+        System.err.println("TY Val:" + ty);
+
         // Finds the upper and lower distance bounds to more accurately find a distance.
         for (int i = 0; i < visionDistances.size(); i++) {
             if (visionDistances.get(i).getTY() > ty) {
@@ -69,6 +92,7 @@ public class VisionCalculator {
 
         // Returns a default distance if either of the bounds are null.
         if (lowerDistance == null || upperDistance == null) {
+            System.err.println("IT BROKEN!!!!!!!!!!!!!!!!!!!!!!");
             return visionDistances.get(Constants.Limelight.DEFAULT_ASSUMED_DISTANCE).getDistanceInches();
         }
 
@@ -97,7 +121,7 @@ public class VisionCalculator {
 
         // Finds the upper and lower distance configuration bounds to more accurately find a shooter configuration.
         for (int i = 0; i < shooterDistanceConfigs.size(); i++) {
-            if (shooterDistanceConfigs.get(i).getDistanceInches() > distanceInches) {
+            if (shooterDistanceConfigs.get(i).getDistanceInches() < distanceInches) {
                 lowerDistanceConfig = shooterDistanceConfigs.get(i);
             } else {
                 upperDistanceConfig = shooterDistanceConfigs.get(i);
@@ -107,6 +131,7 @@ public class VisionCalculator {
 
         // Returns a default shooter configuration if either of the bounds are null
         if (lowerDistanceConfig == null || upperDistanceConfig == null) {
+            //System.err.println("IT ALSO SHOOTER BROKEN!!!!!!!!!!!!!!!!!!!!!!");
             return shooterDistanceConfigs.get(Constants.ShooterSub.DEFAULT_ASSUMED_SHOOTER_CONFIG);
         }
 

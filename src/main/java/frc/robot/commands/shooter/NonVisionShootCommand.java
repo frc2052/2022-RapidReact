@@ -36,7 +36,7 @@ public class NonVisionShootCommand extends CommandBase {
   @Override
   public void execute() {
 
-    shooter.runAtShootSpeed(topWheelVelocity, bottomWheelVelocity);
+    shooter.shootAtSpeed(topWheelVelocity, bottomWheelVelocity);
 
     if (shooter.isAtSpeed()) {
       indexer.runFeeder();

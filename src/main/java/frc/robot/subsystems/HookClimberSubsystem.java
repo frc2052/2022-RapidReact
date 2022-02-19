@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.swing.plaf.basic.BasicTreeUI.TreeCancelEditingAction;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -49,6 +51,7 @@ public class HookClimberSubsystem extends SubsystemBase{
             Constants.Solenoids.CLIMBER_UNLOCK_SOLENOID
         );
         isLocked = lockSolenoid.get() == Value.kReverse;
+        isVertical = true;
         unlockClimber();
     }
 
@@ -110,6 +113,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         System.err.println("************************ LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
     public void unlockClimber() {
@@ -118,7 +122,11 @@ public class HookClimberSubsystem extends SubsystemBase{
         isLocked = false;
     }
 
-    public boolean isLocked() {
+    public void ZeroClimberEncoder() {
+        climberMotor.setSelectedSensorPosition(0);
+    }
+
+    public boolean getIsLocked() {
         return isLocked;
     }
 
