@@ -4,11 +4,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
+import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -49,19 +52,19 @@ public class LeftDefenseAuto extends AutoBase {
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, grassHopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, vision);
         
-        /*
-        ParallelCommandGroup intakeBall1 = new ParallelCommandGroup(driveToFirstBallPos, intakeArmOut);
-        ParallelCommandGroup shootBall1 = new ParallelCommandGroup(driveAndTurnToShoot, intakeArmIn, launchCargoCommand);
-        ParallelCommandGroup intakeOpposingBall1 = new ParallelCommandGroup(driveToOpponentBallPos, intakeArmOut);
-        */
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, intakeArmOut);
+        ParallelCommandGroup turnToShoot = new ParallelCommandGroup(turnAndAimCommand, intakeArmIn);
+        ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, intakeArmOut);
+        
 
-        this.addCommands(driveToFirstBallPos);      // intakeBall1
-        this.addCommands(turnAndAimCommand);        // shootBall1
-        this.addCommands(driveToOpponentBallPos);   // intakeOpposingBall1
+        this.addCommands(intakeBall1);
+        this.addCommands(turnToShoot);
+        this.addCommands(shoot1CargoCommand);
+        this.addCommands(intakeOpposingBall1);
         this.addCommands(turnToHanger);
-        // this.addCommands(launchCargoCommand);
+        // TODO shoot into hanger command?
         this.addCommands(turnToFirstTeleopBall);
 
         

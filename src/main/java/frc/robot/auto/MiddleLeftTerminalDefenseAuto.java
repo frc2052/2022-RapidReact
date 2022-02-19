@@ -4,11 +4,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
-import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand;
+import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -41,34 +45,34 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         Pose2d approachBall2 = new Pose2d(Units.inchesToMeters(-140), Units.inchesToMeters(-93), Rotation2d.fromDegrees(-150));
         Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(-160),Units.inchesToMeters(-100),Rotation2d.fromDegrees(-170));
 
-        AutoTrajectoryConfig drivingToBall2Config2mpsStart = super.createTrajectoryConfig(3, 2, 1, 5, 2, 2, 0);
-        AutoTrajectoryConfig drivingToBall2Config2mpsEnd = super.createTrajectoryConfig(3, 2, 1, 5, 2, 0, 2);
+        AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 2);
 
         SwerveControllerCommand driveToShootPreloaded = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, shootPreloadedPos, super.createHubTrackingSupplier(0));
         SwerveControllerCommand driveToEnemyBall1 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-130)), enemyBall1Pos, super.createRotationAngle(-130));
-        SwerveControllerCommand approachBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsEnd, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-150)), approachBall2, super.createRotationAngle(120));
-        SwerveControllerCommand arriveAtBall2Command = super.createSwerveTrajectoryCommand(drivingToBall2Config2mpsStart, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
+        SwerveControllerCommand driveTowardsBall2 = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-150)), approachBall2, super.createRotationAngle(120));
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
 
-        PrepareToLaunchCargoCommand launchCargoCommand = new PrepareToLaunchCargoCommand(shooter, indexer, grassHopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, vision);
 
-        /*
-        ParallelCommandGroup intakeEnemyBall1 = new ParallelCommandGroup(driveToEnemyBall1, intakeArmOut);
-        ParallelCommandGroup driveAndShootEnemyBall1 = new ParallelCommandGroup(approachBall2Command, ShooterCommand, intakeArmIn);
-        ParallelCommandGroup intakeBall2 = new ParallelCommandGroup(arriveAtBall2, intakeArmOut);
+        NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, 6000, 6000);
+
+        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, intakeArmOut);
+        ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command, intakeArmIn);
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, intakeArmOut);
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn);
-        */
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded
-//      this.addCommands(launchCargoCommand);
-        this.addCommands(driveToEnemyBall1);     // intakeEnemyBall1
-        this.addCommands(approachBall2Command);  // driveAndShootEnemyBall1
-        this.addCommands(arriveAtBall2Command);  // intakeBall2
-        this.addCommands(drivebackToShootPos);   // returnToShoot
-//      this.addCommands(launchCargoCommand);
+        this.addCommands(shoot1CargoCommand.withTimeout(3));
+        this.addCommands(intakeEnemyBall1);     // intakeEnemyBall1
+        this.addCommands(driveAndShootEnemyBall1);  // driveAndShootEnemyBall1
+        this.addCommands(intakeBall2);  // intakeBall2
+        this.addCommands(returnToShoot);   // returnToShoot
+        this.addCommands(shoot2CargoCommand.withTimeout(3));
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);

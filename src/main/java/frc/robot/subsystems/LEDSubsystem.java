@@ -8,6 +8,7 @@ import java.util.Timer;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.HsvToRgb;
@@ -16,9 +17,12 @@ public class LEDSubsystem extends SubsystemBase {
 
     private final CANifier canifier;
 
+    private double externalBrightnessModifier;
+
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
         canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
+        externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
     public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
@@ -57,6 +61,10 @@ public class LEDSubsystem extends SubsystemBase {
         VISION_TARGET_FOUND("Vision Target Found"),
         ENG_GAME_WARNING("End Game Warning - 10 Seconds Till End Game"),
         CLIMBING_DEFAULT("Climbing Default"),
+        CLIMBER_EXTENDING("Climber Extending"),
+        CLIMBER_RETRACTING("Climber Retracting"),
+        CLIMBER_MAX_EXTENSION("Climber Max Extension"),
+        CLIMBER_MIN_EXTENSION("Climber Min Extension"),
         CLIMBING_LOW_BAR("Climbing Low Bar"),
         CLIMBING_MID_BAR("Climbing Middle Bar"),
         CLIMBING_HIGH_BAR("Climbing High Bar"),
@@ -75,6 +83,10 @@ public class LEDSubsystem extends SubsystemBase {
         currentLEDStatusMode = statusMode;
     }
 
+    public void setBrightness(double brightness) {
+        externalBrightnessModifier = (int)(brightness - 100) / 100.0;
+    }
+
     @Override
     public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot
 
@@ -87,9 +99,9 @@ public class LEDSubsystem extends SubsystemBase {
 
         runLEDStatusMode();
 
-        canifier.setLEDOutput(rgb[0], LEDChannel.LEDChannelA);  // G (Green)
-        canifier.setLEDOutput(rgb[1], LEDChannel.LEDChannelB);  // R (Red)
-        canifier.setLEDOutput(rgb[2], LEDChannel.LEDChannelC);  // B (Blue)
+        canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
+        canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
+        canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
     }
 
     private void runLEDStatusModeInitial() {
@@ -122,6 +134,17 @@ public class LEDSubsystem extends SubsystemBase {
             case ENG_GAME_WARNING:
                 break;
             case CLIMBING_DEFAULT:
+                break;
+            case CLIMBER_EXTENDING:
+                break;
+            case CLIMBER_RETRACTING:
+                rgb[1] = 0.5;
+                rgb[2] = rgb[1] * 0.2;
+                break;
+            case CLIMBER_MAX_EXTENSION:
+                rgb[2] = 0.5;
+                break;
+            case CLIMBER_MIN_EXTENSION:
                 break;
             case CLIMBING_LOW_BAR:
                 break;
@@ -178,6 +201,17 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case CLIMBING_DEFAULT:
                 climbingDefaultStatusMode();
+                break;
+            case CLIMBER_EXTENDING:
+                climberExtendingStatusMode();
+                break;
+            case CLIMBER_RETRACTING:
+                climberRetractingStatusMode();
+                break;
+            case CLIMBER_MAX_EXTENSION:
+                climberMaxExtensionStatusMode();
+                break;
+            case CLIMBER_MIN_EXTENSION:
                 break;
             case CLIMBING_LOW_BAR:
                 lowBarStatusMode();
@@ -321,6 +355,50 @@ public class LEDSubsystem extends SubsystemBase {
         if (rgb[0] >= 1) {
             isGoingUp = false;
         } else if (rgb[0] <= 0) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberExtendingStatusMode() {
+        if (isGoingUp) {
+            rgb[2] += 0.1;
+        } else {
+            rgb[2] -= 0.1;
+        }
+
+        if (rgb[2] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[2] <= 0.5) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberRetractingStatusMode() {
+        if (isGoingUp) {
+            rgb[1] += 0.1;
+            rgb[2] = rgb[1] * 0.2;
+        } else {
+            rgb[2] -= 0.1;
+            rgb[2] = rgb[1] * 0.2;
+        }
+
+        if (rgb[2] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[2] <= 0.5) {
+            isGoingUp = true;
+        }
+    }
+
+    private void climberMaxExtensionStatusMode() {
+        if (isGoingUp) {
+            rgb[0] += 0.1;
+        } else {
+            rgb[0] -= 0.1;
+        }
+
+        if (rgb[0] >= 1) {
+            isGoingUp = false;
+        } else if (rgb[0] <= 0.5) {
             isGoingUp = true;
         }
     }
