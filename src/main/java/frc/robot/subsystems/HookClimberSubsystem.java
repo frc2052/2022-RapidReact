@@ -48,11 +48,7 @@ public class HookClimberSubsystem extends SubsystemBase{
             Constants.Solenoids.CLIMBER_UNLOCK_SOLENOID
         );
         isLocked = lockSolenoid.get() == Value.kReverse;
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Climber Height Ticks", climberMotor.getSelectedSensorPosition());
+        unlockClimber();
     }
 
     /**
@@ -62,7 +58,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         if (climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED)) {
             climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
         } else {
-            System.out.println("Climber extended to (or past) the max height!");
+            System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
         }
     }
@@ -74,7 +70,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         if (climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
             climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
         } else {
-            System.out.println("Climber retracted to (or past) the min height!");
+            System.err.println("Climber retracted to (or past) the min height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
         }
     }
@@ -137,6 +133,11 @@ public class HookClimberSubsystem extends SubsystemBase{
     private double heightInInchesToTicks(double inches) {
         double numberOfRotaions = inches / Constants.Climber.WINCH_CIRCUMFERENCE_INCHES;
         return numberOfRotaions * Constants.Climber.TICKS_PER_WINCH_ROTATION;
+    }
+
+    public void putToSmartDashboard() {
+        SmartDashboard.putNumber("Climber Height Ticks", climberMotor.getSelectedSensorPosition());
+        SmartDashboard.putBoolean("Climber Locked", isLocked);
     }
 
     public static enum ClimberSolenoidState {

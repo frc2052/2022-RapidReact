@@ -266,6 +266,9 @@ public class RobotContainer {
     if (intakeSubsystem != null) {
       intakeSubsystem.putToSmartDashboard();
     }
+    if (climberSubsystem != null) {
+      climberSubsystem.putToSmartDashboard();
+    }
     if (shooterSubsystem != null) {
       shooterSubsystem.putToSmartDashboard();
       

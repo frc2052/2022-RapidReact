@@ -424,9 +424,9 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     private void LEDsOnWhite() {
-        rgb[0] = 1;
-        rgb[1] = 1;
-        rgb[2] = 1;
+        rgb[0] = 0.3;
+        rgb[1] = 0.3;
+        rgb[2] = 0.3;
     }
 
     private void setRGBfromHSV() {
