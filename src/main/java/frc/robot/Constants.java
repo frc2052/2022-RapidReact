@@ -36,10 +36,11 @@ public final class Constants {
 
         public static final int COMPRESSOR_MODULE_ID = 13;
 
-        public static final int CLIMBER_FORWARD_SOLENOID = 0;
-        public static final int CLIMBER_BACKWARD_SOLENOID = 1;
-        public static final int CLIMBER_LOCK_SOLENOID = 2;
-        public static final int CLIMBER_UNLOCK_SOLENOID = 3;
+        public static final int CLIMBER_FORWARD_SOLENOID = 2;
+        public static final int CLIMBER_BACKWARD_SOLENOID = 3;
+        
+        public static final int CLIMBER_LOCK_SOLENOID = 0;
+        public static final int CLIMBER_UNLOCK_SOLENOID = 1;
 
         public static final int INTAKE_OUT_SOLENOID = 5;
         public static final int INTAKE_IN_SOLENOID = 4;
@@ -124,14 +125,16 @@ public final class Constants {
     }
 
     public static final class Climber {
-        public static final double CLIMBER_EXTENSION_SPEED  = .75;
+        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.1; // .5
+        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.1; // .75
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
         // our gearbox ratio is 12
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
         // TODO: These Value Needs To Change
-        public static final double MIN_CLIMBER_HEIGHT_TICKS = 0;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS = 100;
+        public static final double MIN_CLIMBER_HEIGHT_TICKS = -1000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 10000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 11000;
     }
 
     public static final class LEDs {

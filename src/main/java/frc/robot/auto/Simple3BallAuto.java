@@ -14,7 +14,6 @@ import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.commands.VisionTurnInPlaceCommand;
-import frc.robot.commands.climber.StartClimbCommand;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;

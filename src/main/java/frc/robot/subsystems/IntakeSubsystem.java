@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-//    private Solenoid outSolenoid;
-//    private Solenoid inSolenoid;
+    private final Solenoid outSolenoid;
+    private final Solenoid inSolenoid;
     private boolean isArmOut;
     private TalonSRX intakeMotor;
 
@@ -20,23 +20,35 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean isIntakeArmOut = false;
 
     public IntakeSubsystem() {
-//        outSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Solenoids.INTAKE_OUT_SOLENOID);
-//        inSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Solenoids.INTAKE_IN_SOLENOID);
+        outSolenoid = new Solenoid(
+            Constants.Solenoids.COMPRESSOR_MODULE_ID, 
+            PneumaticsModuleType.REVPH, 
+            Solenoids.INTAKE_OUT_SOLENOID
+        );
+        inSolenoid = new Solenoid(
+            Constants.Solenoids.COMPRESSOR_MODULE_ID, 
+            PneumaticsModuleType.REVPH, 
+            Solenoids.INTAKE_IN_SOLENOID
+        );
         isArmOut = false;
         intakePct = 0;
         intakeMotor = new TalonSRX(MotorIDs.INTAKE_MOTOR);
     }
 
     public void intakeArmIn(){
-//        inSolenoid.set(true);
-//        outSolenoid.set(false);
+        inSolenoid.set(true);
+        outSolenoid.set(false);
         isIntakeArmOut = false;
     }
   
     public void intakeArmOut(){
-  //      inSolenoid.set(false);
-  //      outSolenoid.set(true);
+        inSolenoid.set(false);
+        outSolenoid.set(true);
         isIntakeArmOut = true;
+    }
+
+    public boolean isIntakeArmOut() {
+        return isIntakeArmOut;
     }
 
     public void intakeOn(){

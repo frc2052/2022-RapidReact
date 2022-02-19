@@ -7,6 +7,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmInCommand extends HopperBaseCommand {
     private final IntakeSubsystem intakeSubsystem;
+    
     public IntakeArmInCommand(IntakeSubsystem intakeSubsystem, HopperSubsystem hopperSubsystem, IndexerSubsystem indexerSubsystem) {
       super(indexerSubsystem, hopperSubsystem);
       this.intakeSubsystem = intakeSubsystem;
