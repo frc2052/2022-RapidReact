@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
 
     robotContainer.addSelectorsToSmartDashboard();
+
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);
   }
 
   /**

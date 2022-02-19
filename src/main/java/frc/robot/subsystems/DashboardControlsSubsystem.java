@@ -17,8 +17,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private SendableChooser<CamMode> limelightCamModeSelector;
     private SendableChooser<LEDStatusMode> ledStatusModeSelector;
 
-    private double ledBrightness;
-    private double lastLEDBrightness;
+    private int ledBrightness;
+    private int lastLEDBrightness;
 
     private boolean limelightLEDsEnabled;
     private boolean lastLEDState;
@@ -31,7 +31,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
         this.visionSubsystem = vision;
 
-        ledBrightness = SmartDashboard.getNumber("LED Brightness", 0.0);
+        ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         lastLEDBrightness = ledBrightness;
 
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
@@ -80,7 +80,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
-        ledBrightness = SmartDashboard.getNumber("LED Brightness", 0.0);
+        ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
 
         if(limelightLEDsEnabled && !lastLEDState) {
             visionSubsystem.setLED(LEDMode.ON);
@@ -104,6 +104,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if(ledBrightness != lastLEDBrightness) {
+            //System.out.println("Changing brightness to " + ledBrightness);
             LEDSubsystem.getInstance().setBrightness(ledBrightness);
             lastLEDBrightness = ledBrightness;
         }

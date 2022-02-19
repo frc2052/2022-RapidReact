@@ -22,7 +22,7 @@ public class LEDSubsystem extends SubsystemBase {
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
         canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
-        externalBrightnessModifier = SmartDashboard.getNumber("LED Brightness", 0.0);
+        externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
     public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
@@ -83,7 +83,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void setBrightness(double brightness) {
-        externalBrightnessModifier = brightness;
+        externalBrightnessModifier = (int)(brightness - 100) / 100.0;
     }
 
     @Override
@@ -98,9 +98,9 @@ public class LEDSubsystem extends SubsystemBase {
 
         runLEDStatusMode();
 
-        canifier.setLEDOutput(rgb[0], LEDChannel.LEDChannelA);  // G (Green)
-        canifier.setLEDOutput(rgb[1], LEDChannel.LEDChannelB);  // R (Red)
-        canifier.setLEDOutput(rgb[2], LEDChannel.LEDChannelC);  // B (Blue)
+        canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
+        canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
+        canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
     }
 
     private void runLEDStatusModeInitial() {
