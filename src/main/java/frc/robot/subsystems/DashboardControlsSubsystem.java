@@ -17,6 +17,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private SendableChooser<CamMode> limelightCamModeSelector;
     private SendableChooser<LEDStatusMode> ledStatusModeSelector;
 
+    private double ledBrightness;
+    private double lastLEDBrightness;
+
     private boolean limelightLEDsEnabled;
     private boolean lastLEDState;
     private boolean limelightDriveCamToggle;
@@ -27,6 +30,10 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
         this.visionSubsystem = vision;
+
+        ledBrightness = SmartDashboard.getNumber("LED Brightness", 0.0);
+        lastLEDBrightness = ledBrightness;
+
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         lastLEDState = limelightLEDsEnabled;
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
@@ -57,12 +64,15 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
-        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
         SmartDashboard.putData("LED Status Modes", ledStatusModeSelector);
+
+        SmartDashboard.putNumber("LED Brightness", ledBrightness);
+
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
+        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
     }
 
     @Override
@@ -70,6 +80,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
+        ledBrightness = SmartDashboard.getNumber("LED Brightness", 0.0);
 
         if(limelightLEDsEnabled && !lastLEDState) {
             visionSubsystem.setLED(LEDMode.ON);
@@ -90,6 +101,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         if(selectedLEDStatusMode != lastLEDStatusMode) {
             LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
             lastLEDStatusMode = selectedLEDStatusMode;
+        }
+
+        if(ledBrightness != lastLEDBrightness) {
+            LEDSubsystem.getInstance().setBrightness(ledBrightness);
+            lastLEDBrightness = ledBrightness;
         }
 
         //Logic for having a selection list for limelight modes, unworking and uneeded for now...

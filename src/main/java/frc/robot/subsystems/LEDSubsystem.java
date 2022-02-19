@@ -8,6 +8,7 @@ import java.util.Timer;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.HsvToRgb;
@@ -16,9 +17,12 @@ public class LEDSubsystem extends SubsystemBase {
 
     private final CANifier canifier;
 
+    private double externalBrightnessModifier;
+
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
         canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
+        externalBrightnessModifier = SmartDashboard.getNumber("LED Brightness", 0.0);
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
     public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
@@ -76,6 +80,10 @@ public class LEDSubsystem extends SubsystemBase {
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
         currentLEDStatusMode = statusMode;
+    }
+
+    public void setBrightness(double brightness) {
+        externalBrightnessModifier = brightness;
     }
 
     @Override
