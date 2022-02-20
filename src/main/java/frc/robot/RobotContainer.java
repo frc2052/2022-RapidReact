@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.AutoTesting;
+import frc.robot.auto.AutoTesting2;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
 import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
@@ -210,7 +211,7 @@ public class RobotContainer {
     // prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooterSubsystem, indexerSubsystem, vision, grassHopper));
     shootSingleButton.whileHeld(
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, vision),
+        new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, grassHopper, vision),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrainSubsystem,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -222,7 +223,7 @@ public class RobotContainer {
     );
     shootAllButton.whileHeld(
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, vision),
+        new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, grassHopper, vision),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrainSubsystem,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -246,7 +247,9 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-      return new AutoTesting(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
+        return new AutoTesting(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
+      case TEST2:
+        return new AutoTesting2(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
       case TEST_AUTO_1:
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
@@ -254,7 +257,7 @@ public class RobotContainer {
       case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
       case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrainSubsystem, vision);
+        return new LeftTerminal3Cargo(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
       case MIDDLE_TERMINAL_3_BALL:
