@@ -91,9 +91,12 @@ public class VisionCalculator {
         }
 
         // Returns a default distance if either of the bounds are null.
-        if (lowerDistance == null || upperDistance == null) {
-            System.err.println("IT BROKEN!!!!!!!!!!!!!!!!!!!!!!");
+        if (lowerDistance == null && upperDistance == null) {
             return visionDistances.get(Constants.Limelight.DEFAULT_ASSUMED_DISTANCE).getDistanceInches();
+        } else if (lowerDistance == null) {
+            return upperDistance.getDistanceInches();
+        } else if (upperDistance == null) {
+            return lowerDistance.getDistanceInches();
         }
 
         // deltaY is the difference between the lower and upper pre-measured ty values.
@@ -130,9 +133,12 @@ public class VisionCalculator {
         }
 
         // Returns a default shooter configuration if either of the bounds are null
-        if (lowerDistanceConfig == null || upperDistanceConfig == null) {
-            //System.err.println("IT ALSO SHOOTER BROKEN!!!!!!!!!!!!!!!!!!!!!!");
+        if (lowerDistanceConfig == null && upperDistanceConfig == null) {
             return shooterDistanceConfigs.get(Constants.ShooterSub.DEFAULT_ASSUMED_SHOOTER_CONFIG);
+        } else if (lowerDistanceConfig == null) {
+            return upperDistanceConfig;
+        } else if (upperDistanceConfig == null) {
+            return lowerDistanceConfig;
         }
 
         // deltaInches is the difference between the lower and upper pre-measured inches values.
