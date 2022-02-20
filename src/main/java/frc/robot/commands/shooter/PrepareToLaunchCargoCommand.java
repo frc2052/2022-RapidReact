@@ -10,6 +10,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 import frc.robot.util.ProjectileCalculator;
 
 
@@ -23,6 +24,11 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
     this.vision = vision;
 
     addRequirements(shooter);
+  }
+
+  @Override
+  public void initialize() {
+      vision.setLED(LEDMode.ON);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +52,7 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     shooter.stop();
+    vision.setLED(LEDMode.OFF);
   }
 
   // Returns true when the command should end.
