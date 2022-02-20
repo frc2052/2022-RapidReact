@@ -67,12 +67,12 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn);
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded
-        this.addCommands(shoot1CargoCommand.withTimeout(3));
+        this.addCommands(shoot1CargoCommand.withTimeout(1.5));
         this.addCommands(intakeEnemyBall1);     // intakeEnemyBall1
         this.addCommands(driveAndShootEnemyBall1);  // driveAndShootEnemyBall1
         this.addCommands(intakeBall2);  // intakeBall2
         this.addCommands(returnToShoot);   // returnToShoot
-        this.addCommands(shoot2CargoCommand.withTimeout(3));
+        this.addCommands(shoot2CargoCommand.withTimeout(2.5));
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);

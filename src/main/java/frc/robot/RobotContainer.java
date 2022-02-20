@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.AutoTesting;
-import frc.robot.auto.AutoTesting2;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
 import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
@@ -248,8 +247,6 @@ public class RobotContainer {
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
         return new AutoTesting(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
-      case TEST2:
-        return new AutoTesting2(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
       case TEST_AUTO_1:
         return new TestAuto1(drivetrainSubsystem);
       case SIMPLE_3_BALL:
