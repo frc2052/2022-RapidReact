@@ -64,11 +64,6 @@ public class ShootCommand extends CommandBase {
       shooterBoost = 0.1;
     }
 
-    System.err.println("LIMELIGHT DISTANCE INCHES: " + distanceInches);
-    System.err.println("DISTANCE INCHES: " + shooterConfig.getDistanceInches());
-    System.err.println("TOP MOTOR VELOCITY: " + shooterConfig.getTopMotorVelocityTicksPerSecond());
-    System.err.println("BOTTOM MOTOR VELOCITY: " + shooterConfig.getBottomMotorVelocityTicksPerSecond());
-
     SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     shooter.shootAtSpeed(
@@ -91,6 +86,7 @@ public class ShootCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    // Stop the shooter, feeder, and preloader.
     shooter.stop();
     grassHopper.hopperStop();
     indexer.stopFeeder();

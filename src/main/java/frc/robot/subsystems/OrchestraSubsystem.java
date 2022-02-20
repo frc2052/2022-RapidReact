@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
@@ -11,12 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class OrchestraSubsystem extends SubsystemBase {
   private final Orchestra orchestra;
-  private SONGS song;
+  private Songs currentSong;
 
   /** Creates a new OrchestraSubsystem. */
   public OrchestraSubsystem() {
     orchestra = new Orchestra();
-    song = SONGS.DEFINITELY_NOT_A_RICK_ROLL;
+    currentSong = Songs.DEFINITELY_NOT_A_RICK_ROLL;
   }
 
   public void addInstrument(TalonFX instrument) {
@@ -24,11 +25,20 @@ public class OrchestraSubsystem extends SubsystemBase {
   }
 
   public void playSong() {
-    
+    orchestra.loadMusic(currentSong.getFileName());
+    if (orchestra.play() != ErrorCode.OK) {
+      System.err.println("The orchestra didn't feel like playing today! :(");
+    }
   }
 
-  public void setSong(SONGS song) {
-    this.song = song;
+  public void stopSong() {
+    if (orchestra.stop() != ErrorCode.OK) {
+      System.err.println("The orchestra has an encore!");
+    }
+  }
+
+  public void setSong(Songs song) {
+    this.currentSong = song;
   }
 
   @Override
@@ -36,7 +46,17 @@ public class OrchestraSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public static enum SONGS {
-    DEFINITELY_NOT_A_RICK_ROLL
+  public static enum Songs {
+    DEFINITELY_NOT_A_RICK_ROLL("RickRoll");
+
+    private final String fileName;
+
+    private Songs(String fileName) {
+      this.fileName = fileName;
+    }
+
+    public String getFileName() {
+      return fileName;
+    }
   }
 }
