@@ -49,8 +49,8 @@ public class RightFiveBallAuto extends AutoBase {
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, intakeArmOut);
         ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, shoot2CargoCommand, intakeArmIn);

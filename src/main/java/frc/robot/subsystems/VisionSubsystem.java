@@ -93,10 +93,10 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile').
-        if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines.
-          lpipeline.setDouble((double) pipeline);
-        else
-          System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
+      if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines.
+        lpipeline.setDouble((double) pipeline);
+      else
+        System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
     }
 
     public void setLED(LEDMode mode) {
@@ -145,8 +145,6 @@ public class VisionSubsystem extends SubsystemBase{
           return LEDMode.PIPELINE;
       }
     }
-
-
 
     public double getXDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       updateLimelight();

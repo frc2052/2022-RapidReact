@@ -48,7 +48,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
               isLinedUp = true;
             }
           } else {
-            visionRotation = Math.PI;
+            visionRotation = 0;
           }
 
         if (isLinedUp) {
