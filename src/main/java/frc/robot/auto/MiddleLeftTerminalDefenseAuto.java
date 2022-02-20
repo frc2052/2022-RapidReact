@@ -54,7 +54,9 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
         IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        IntakeArmOutCommand intakeArmOut1 = new IntakeArmOutCommand(intake, indexer, grassHopper);
         IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
+        IntakeArmInCommand intakeArmIn1 = new IntakeArmInCommand(intake, indexer, grassHopper);
 
         ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision);
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
@@ -62,13 +64,14 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, 6000, 6000);
 
         ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, intakeArmOut);
-        ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command, intakeArmIn);
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, intakeArmOut);
-        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn);
+        ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command);
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, intakeArmOut1);
+        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn1);
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded
         this.addCommands(shoot1CargoCommand.withTimeout(1.5));
         this.addCommands(intakeEnemyBall1);     // intakeEnemyBall1
+        this.addCommands(intakeArmIn);
         this.addCommands(driveAndShootEnemyBall1);  // driveAndShootEnemyBall1
         this.addCommands(intakeBall2);  // intakeBall2
         this.addCommands(returnToShoot);   // returnToShoot
