@@ -5,23 +5,15 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class UsbCameraSubsystem extends SubsystemBase {
-  /** Creates a new UsbCameraSubsystem. */
   public UsbCameraSubsystem() {
-    // Creates UsbCamera and MjpegServer [1] and connects them
+    // Creates UsbCamera and MjpegServer [1] and connects to it.
     CameraServer.startAutomaticCapture();
-
     // Creates the CvSink and connects it to the UsbCamera
-    CvSink cvSink = CameraServer.getVideo();
-
+    CameraServer.getVideo();
     // Creates the CvSource and MjpegServer [2] and connects them
-    CvSource outputStream = CameraServer.putVideo("Intake", 640, 480);
-    
-    
+    CameraServer.putVideo("Intake", 640, 480);
   }
-
 }

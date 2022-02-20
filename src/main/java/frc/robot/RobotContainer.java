@@ -37,7 +37,6 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PixyCamSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -62,7 +61,7 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private HopperSubsystem grassHopper;
   private HookClimberSubsystem climberSubsystem;
-  private PixyCamSubsystem pixyCamSubsystem;
+  // private PixyCamSubsystem pixyCamSubsystem;
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
@@ -96,7 +95,7 @@ public class RobotContainer {
 
   private void init() {
     vision = new VisionSubsystem();
-    pixyCamSubsystem = new PixyCamSubsystem();  
+    // pixyCamSubsystem = new PixyCamSubsystem();  
     dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climberSubsystem);  
 
     // The following subsystems have a dependency on CAN
