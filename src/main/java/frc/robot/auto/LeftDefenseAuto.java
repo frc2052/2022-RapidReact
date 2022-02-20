@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
-import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.commands.drive.TurnInPlaceCommand;

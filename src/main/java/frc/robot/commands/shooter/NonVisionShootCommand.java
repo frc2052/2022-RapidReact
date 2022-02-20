@@ -7,9 +7,6 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.util.vision.ShooterDistanceConfig;
-import frc.robot.util.vision.VisionCalculator;
 
 public class NonVisionShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;

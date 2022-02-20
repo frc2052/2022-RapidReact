@@ -1,13 +1,13 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+// import com.ctre.phoenix.motorcontrol.ControlMode;
+// import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+// import edu.wpi.first.wpilibj.DigitalInput;
+// import edu.wpi.first.wpilibj.PneumaticsModuleType;
+// import edu.wpi.first.wpilibj.Solenoid;
 
-import frc.robot.Constants;
+// import frc.robot.Constants;
 
 public class ClawClimberSubsystem {
       // private Solenoid closeASolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Solenoids.CLOSE_A_SOLENOID);

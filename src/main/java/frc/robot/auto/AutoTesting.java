@@ -5,7 +5,6 @@ package frc.robot.auto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
@@ -26,7 +25,6 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class AutoTesting extends AutoBase {
-
     /**
      * Position A Start (Far Right parallel with outer Tarmac line) Facing Inward Towards Hub.
      * Simple auto to score 3 alliance cargo.
