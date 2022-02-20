@@ -33,10 +33,9 @@ public class ShootCommand extends CommandBase {
 
     SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 
-    addRequirements(shooter, indexer);
+    addRequirements(this.shooter, this.indexer);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
@@ -48,11 +47,6 @@ public class ShootCommand extends CommandBase {
     } else if (shooterBoost > 0.1) {
       shooterBoost = 0.1;
     }
-
-    System.err.println("LIMELIGHT DISTANCE INCHES: " + distanceInches);
-    System.err.println("DISTANCE INCHES: " + shooterConfig.getDistanceInches());
-    System.err.println("TOP MOTOR VELOCITY: " + shooterConfig.getTopMotorVelocityTicksPerSecond());
-    System.err.println("BOTTOM MOTOR VELOCITY: " + shooterConfig.getBottomMotorVelocityTicksPerSecond());
 
     shooter.shootAtSpeed(
       shooterConfig.getTopMotorVelocityTicksPerSecond() * (shooterBoost + 1), // Boost the shooter velocity by a max of 110%
@@ -69,6 +63,7 @@ public class ShootCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    // Stop the shooter, feeder, and preloader.
     shooter.stop();
     indexer.stopFeeder();
     indexer.stopPreload();

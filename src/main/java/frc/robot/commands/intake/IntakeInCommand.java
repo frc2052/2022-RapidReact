@@ -4,7 +4,6 @@
 
 package frc.robot.commands.intake;
 
-import frc.robot.commands.HopperBaseCommand;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -12,23 +11,19 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeInCommand extends HopperBaseCommand {
   private final IntakeSubsystem intake;
 
-  /**
-   * Creates a new ArmToggle.
-   *
-   * @param intakeSubsystem The subsystem used by this command.
-   */
-  public IntakeInCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
-    super(indexer, hopper);
+  public IntakeInCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
+    super(indexer, grassHopper);
     this.intake = intake;
     
-    addRequirements(intake);
+    addRequirements(this.intake);
   }
     
   @Override
   public void initialize() {
-    // Arm extends and spins the wheels
-    intake.intakeArmOut();
-    if (!isFinished()) {
+    // Extend intake arm and spin the intake wheels.
+    intake.intakeArmOut(); // TODO: Remove this line!
+    // Don't allow more balls to be picked up if both the stage and prestage are full.
+    if (!isFinished() && !indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       intake.intakeOn();
     }
   }
@@ -38,7 +33,7 @@ public class IntakeInCommand extends HopperBaseCommand {
     super.end(interrupted);
     intake.intakeStop();
   }
-
+  
   @Override
   public boolean isFinished() {
     return super.isFinished();

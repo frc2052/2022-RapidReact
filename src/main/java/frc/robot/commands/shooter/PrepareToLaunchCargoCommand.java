@@ -5,7 +5,7 @@
 package frc.robot.commands.shooter;
 
 import frc.robot.Constants;
-import frc.robot.commands.HopperBaseCommand;
+import frc.robot.commands.intake.HopperBaseCommand;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
