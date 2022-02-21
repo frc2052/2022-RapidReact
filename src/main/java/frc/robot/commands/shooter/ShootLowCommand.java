@@ -22,7 +22,7 @@ public class ShootLowCommand extends CommandBase {
   @Override
   public void execute() {
     // Run the shooter at 20% while running the feeder and preloader.
-    shooter.shootAtPercentage(20, 20);
+    shooter.shootAtPercentage(30, 30);
     indexer.runFeeder();
     indexer.runPreload();
   }

@@ -32,18 +32,26 @@ public class VisionCalculator {
      * and the top and bottom motor percent values.
      */
     private void setupShooterDistanceConfigs() {
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 7800, 7800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 5000, 10000));
         shooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7800, 7800));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 8500, 8500));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 9000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9700, 8800));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 8800));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 11000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 12000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 12700, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 13300, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 14400, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15700, 9100));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 7900, 7900));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 8500, 8500));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 11500, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 16000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 16000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 17000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 18000, 9000));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 19000, 9000));
+        // shooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 15700, 9000));
+        // shooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
+        // shooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
     }
 
     /**
@@ -52,18 +60,26 @@ public class VisionCalculator {
      */
     private void setupVisionDistances() {
         // Center Targeted
-        visionDistances.add(new VisionDistance(2 * 12,  6.637419700622559));
-        visionDistances.add(new VisionDistance(3 * 12,  1.673193931579590));
-        visionDistances.add(new VisionDistance(4 * 12, -3.041108131408691));
-        visionDistances.add(new VisionDistance(5 * 12, -6.792672157287598));
-        visionDistances.add(new VisionDistance(6 * 12, -10.15470218658447));
-        visionDistances.add(new VisionDistance(7 * 12, -13.33554172515869));
-        visionDistances.add(new VisionDistance(8 * 12, -15.87055301666260));
-        visionDistances.add(new VisionDistance(9 * 12, -18.17145729064941));
-        visionDistances.add(new VisionDistance(10 * 12, -20.06331825256348));
-        visionDistances.add(new VisionDistance(11 * 12, -21.58301734924316));
-        visionDistances.add(new VisionDistance(12 * 12, -23.56243324279785));
-        visionDistances.add(new VisionDistance(13 * 12, -24.5762882232666));
+        visionDistances.add(new VisionDistance(2 * 12,  21.1));
+        visionDistances.add(new VisionDistance(3 * 12,  14.32));
+        visionDistances.add(new VisionDistance(4 * 12, 8.84));
+        visionDistances.add(new VisionDistance(5 * 12, 4.58));
+        visionDistances.add(new VisionDistance(6 * 12, 0.82));
+        visionDistances.add(new VisionDistance(7 * 12, -2.2));
+        visionDistances.add(new VisionDistance(8 * 12, -4.79));
+        visionDistances.add(new VisionDistance(9 * 12, -7.07));
+        visionDistances.add(new VisionDistance(10 * 12, -8.95));
+        visionDistances.add(new VisionDistance(11 * 12, -10.66));
+        visionDistances.add(new VisionDistance(12 * 12, -12.68));
+        visionDistances.add(new VisionDistance(13 * 12, -14.35));
+        visionDistances.add(new VisionDistance(14 * 12, -15.49));
+        visionDistances.add(new VisionDistance(15 * 12, -16.56));
+        visionDistances.add(new VisionDistance(16 * 12, -17.50));
+        visionDistances.add(new VisionDistance(17 * 12, -18.63));
+        visionDistances.add(new VisionDistance(18 * 12, -19.79));
+        visionDistances.add(new VisionDistance(19 * 12, -20.59));
+        visionDistances.add(new VisionDistance(20 * 12, -21.33));
+        visionDistances.add(new VisionDistance(21 * 12, -22.44));
     }
 
     /**

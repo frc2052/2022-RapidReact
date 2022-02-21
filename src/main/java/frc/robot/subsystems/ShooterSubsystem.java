@@ -97,10 +97,10 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public void shootAtPercentage(double bottomWheelPercent, double topWheelPercent) {
+  public void shootAtPercentage(double topWheelPercent, double bottomWheelPercent) {
     System.err.println("***************************** RUN BY PERCENT SHOOTER");
-    topMotor.set(ControlMode.PercentOutput, topWheelPercent);
-    bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent);
+    topMotor.set(ControlMode.PercentOutput, topWheelPercent/100);
+    bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }
 
   public void putToSmartDashboard() {

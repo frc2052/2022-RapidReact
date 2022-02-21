@@ -31,6 +31,7 @@ import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.shooter.TuneShooterCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.ShootLowCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -75,6 +76,7 @@ public class RobotContainer {
 
   private JoystickButton shootSingleButton;
   private JoystickButton shootAllButton;
+  private JoystickButton shootLowGoalButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
@@ -139,6 +141,7 @@ public class RobotContainer {
     shootSingleButton = new JoystickButton(turnJoystick, 1);
     shootAllButton = new JoystickButton(driveJoystick, 1);
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
+    shootLowGoalButton = new JoystickButton(driveJoystick, 5);
     
     // Climber Buttons Bindings
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -191,6 +194,8 @@ public class RobotContainer {
       )
     );
     tuneShooterButton.whileHeld(new TuneShooterCommand(shooterSubsystem, indexerSubsystem, intakeSubsystem, grassHopper));
+
+    shootLowGoalButton.whileHeld(new ShootLowCommand(shooterSubsystem, indexerSubsystem));
 
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climberSubsystem));
