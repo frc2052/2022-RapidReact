@@ -53,7 +53,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         isLinedUp = false;
 
         if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
-            if(Math.abs(horizontalAngle) > 5) {
+            if(Math.abs(horizontalAngle) > 4) {
                 visionRotation = -Math.copySign(Math.toRadians(horizontalAngle * 9) , horizontalAngle); // Dynamically changes rotation speed to be faster at a larger tx,
             } else if(Math.abs(horizontalAngle) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
                 visionRotation = -Math.copySign(Math.PI /4, horizontalAngle);
