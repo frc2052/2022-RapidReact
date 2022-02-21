@@ -23,7 +23,7 @@ public class IntakeInCommand extends HopperBaseCommand {
     // Extend intake arm and spin the intake wheels.
     intake.intakeArmOut(); // TODO: Remove this line!
     // Don't allow more balls to be picked up if both the stage and prestage are full.
-    if (!isFinished() && !indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
+    if (!isFinished()) {
       intake.intakeOn();
     }
   }

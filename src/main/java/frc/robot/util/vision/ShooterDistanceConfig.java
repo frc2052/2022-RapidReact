@@ -6,17 +6,21 @@ package frc.robot.util.vision;
 
 /** 
  * Wrapper class for a pair of shooter motor percents, 
- * used by {@link VisionCalculator} to store values for motor percents.
+ * used by {@link VisionCalculator} to store values for motor percents. Top motor velocity first then bottom
  */
 public class ShooterDistanceConfig {
     private final int distanceInches;
-    private final double bottomMotorVelocityTicksPerSecond; 
     private final double topMotorVelocityTicksPerSecond;
+    private final double bottomMotorVelocityTicksPerSecond; 
 
-    public ShooterDistanceConfig(int distanceInches, double bottomMotorVelocityTicksPerSecond, double topMotorVelocityTicksPerSecond) {
+    public ShooterDistanceConfig(int distanceInches, double topMotorVelocityTicksPerSecond, double bottomMotorVelocityTicksPerSecond) {
         this.distanceInches = distanceInches;
-        this.bottomMotorVelocityTicksPerSecond = bottomMotorVelocityTicksPerSecond;
         this.topMotorVelocityTicksPerSecond = topMotorVelocityTicksPerSecond;
+        this.bottomMotorVelocityTicksPerSecond = bottomMotorVelocityTicksPerSecond;
+    }
+
+    public double getTopMotorVelocityTicksPerSecond() {
+        return topMotorVelocityTicksPerSecond;
     }
 
     public int getDistanceInches() {
@@ -25,9 +29,5 @@ public class ShooterDistanceConfig {
 
     public double getBottomMotorVelocityTicksPerSecond() {
         return bottomMotorVelocityTicksPerSecond;
-    }
-
-    public double getTopMotorVelocityTicksPerSecond() {
-        return topMotorVelocityTicksPerSecond;
     }
 }

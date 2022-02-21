@@ -23,8 +23,8 @@ public class TuneShooterCommand extends CommandBase {
     this.intake = intake;
     this.grassHopper = grassHopper;
 
-    SmartDashboard.putNumber("Top shooter wheel percentage", 0.45);
-    SmartDashboard.putNumber("Bottom shooter wheel percentage", 0.45);
+    SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 1000);
+    SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 1000);
     
     addRequirements(shooter, indexer, intake, grassHopper);
   }
@@ -36,14 +36,20 @@ public class TuneShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double topPercent = SmartDashboard.getNumber("Top shooter wheel percentage", 0);
-    double bottomPercent = SmartDashboard.getNumber("Bottom shooter wheel percentage", 0);
-    shooter.shootAtPercentage(bottomPercent, topPercent);
-    indexer.runFeeder();
-    indexer.runPreload();
-    intake.intakeArmOut();
-    intake.intakeOn();
-    grassHopper.hopperGo();
+    double topSpeedTP100MS = SmartDashboard.getNumber("Top shooter wheel speed TP100MS", 0);
+    double bottomSpeedTP100MS = SmartDashboard.getNumber("Bottom shooter wheel speed TP100MS", 0);
+    shooter.shootAtSpeed(topSpeedTP100MS, bottomSpeedTP100MS);
+
+    if (shooter.isAtSpeed()) {
+      indexer.runFeeder();
+      grassHopper.hopperGo();
+      indexer.runPreload();
+    } else {
+      grassHopper.hopperStop();
+      indexer.stopFeeder();
+      indexer.stopPreload();
+    }
+
   }
 
   // Called once the command ends or is interrupted.
