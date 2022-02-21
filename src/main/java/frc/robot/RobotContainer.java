@@ -197,7 +197,7 @@ public class RobotContainer {
     );
     tuneShooterButton.whileHeld(new TuneShooterCommand(shooter, indexer, intake, hopper));
 
-    shootLowGoalButton.whileHeld(new ShootLowCommand(shooterSubsystem, indexerSubsystem));
+    shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
 
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climber));
