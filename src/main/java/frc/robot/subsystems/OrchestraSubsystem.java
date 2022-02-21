@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class OrchestraSubsystem extends SubsystemBase {
   private final Orchestra orchestra;
   private Songs currentSong;
-
   /** Creates a new OrchestraSubsystem. */
   public OrchestraSubsystem() {
     orchestra = new Orchestra();
