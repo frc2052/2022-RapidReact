@@ -32,8 +32,8 @@ public class Simple3BallAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
+    public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer);
         vision.setLED(LEDMode.OFF);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -52,11 +52,11 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, grassHopper);
+        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, hopper);
+        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, hopper);
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision);
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1, intakeArmOutCommand);
 

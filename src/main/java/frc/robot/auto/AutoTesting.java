@@ -34,7 +34,8 @@ public class AutoTesting extends AutoBase {
      * @param vision
      */
     public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexer) {
-        super(drivetrain, vision);
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-175));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(-50), Units.inchesToMeters(-6), Rotation2d.fromDegrees(-175));
         Pose2d ball2Pos = new Pose2d(Units.inchesToMeters(-16), Units.inchesToMeters(98), Rotation2d.fromDegrees(70)); //wheels should be pointing 90 degrees from straight ahead at end of path
@@ -50,29 +51,21 @@ public class AutoTesting extends AutoBase {
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
         VisionTurnInPlaceCommand autoAim2 = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmOutCommand intakeArmOutCommand2 = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmOutCommand intakeArmOutCommand3 = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, grassHopper);
-
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision);
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
-
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, intakeArmOutCommand);
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, intakeArmOutCommand2);
-        ParallelDeadlineGroup returnToShoot = new ParallelDeadlineGroup(driveToShoot, intakeArmOutCommand3);
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup returnToShoot = new ParallelDeadlineGroup(driveToShoot, super.newIntakeArmOutCommand());
 
         this.addCommands(autoAim);
-        this.addCommands(shoot1CargoCommand.withTimeout(1.5));
+        this.addCommands(super.newShoot1Command().withTimeout(1.5));
         this.addCommands(turnToBall1);
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON));
         this.addCommands(intakeBall1); // Drives to the closest ball to the robot
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT));
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
-        this.addCommands(intakeArmInCommand);
+        this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(autoAim2);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
-        this.addCommands(shoot2CargoCommand.withTimeout(3));
+        this.addCommands(super.newShootAllCommand().withTimeout(3));
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);

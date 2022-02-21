@@ -42,8 +42,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param indexer
      */
     public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
-        vision.setLED(LEDMode.ON);
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(55), Units.inchesToMeters(5), Rotation2d.fromDegrees(0));
@@ -65,31 +64,24 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
         SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        NonVisionShootCommand nonVisionShoot1CargoCommand = super.newNonVisionShoot1Command(3000, 3000);
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
-
-        NonVisionShootCommand nonVisionShoot1CargoCommand = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, 7000, 7000);
-
-        ParallelDeadlineGroup driveAndIntakeFirstBall = new ParallelDeadlineGroup(driveToFirstBallPos, intakeArmOut);
-        ParallelDeadlineGroup driveAndShootBall1 = new ParallelDeadlineGroup(driveAndShootToBall2, shoot2CargoCommand, intakeArmIn);
-        ParallelDeadlineGroup intakeBall2AndOpposingBall1 = new ParallelDeadlineGroup(driveToBall2AndOpposing, intakeArmOut);
-        ParallelDeadlineGroup driveAndShootBall2 = new ParallelDeadlineGroup(driveAndAimBall2, shoot1CargoCommand, intakeArmIn);
+        ParallelDeadlineGroup driveAndIntakeFirstBall = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveAndShootBall1 = new ParallelDeadlineGroup(driveAndShootToBall2, super.newShootAllCommand(), super.newIntakeArmInCommand());
+        ParallelDeadlineGroup intakeBall2AndOpposingBall1 = new ParallelDeadlineGroup(driveToBall2AndOpposing, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveAndShootBall2 = new ParallelDeadlineGroup(driveAndAimBall2, super.newShoot1Command(), super.newIntakeArmInCommand());
         ParallelDeadlineGroup shootEnemyBall1ToHanger = new ParallelDeadlineGroup(hangerShootToTerminalBall, nonVisionShoot1CargoCommand);
-        ParallelDeadlineGroup intakeBall3 = new ParallelDeadlineGroup(driveToBall3, intakeArmOut);
-        ParallelCommandGroup goBackToShootFinalBall = new ParallelCommandGroup(driveBackToShootFinal, intakeArmIn);
+        ParallelDeadlineGroup intakeBall3 = new ParallelDeadlineGroup(driveToBall3, super.newIntakeArmOutCommand());
+        ParallelCommandGroup goBackToShootFinalBall = new ParallelCommandGroup(driveBackToShootFinal, super.newIntakeArmInCommand());
 
-        // Replace with parallel command groups when subsystems on robot are ready
-        this.addCommands(driveAndIntakeFirstBall);      // driveAndIntakeFirstBall
-        this.addCommands(driveAndShootBall1);     // driveAndShootBall1
-        this.addCommands(intakeBall2AndOpposingBall1);  // intakeBall2AndOpposingBall1
-        this.addCommands(driveAndShootBall2);         // driveAndShootBall2
-        this.addCommands(shootEnemyBall1ToHanger);// shootEnemyBall1ToHanger
-        this.addCommands(intakeBall3);             // intakeBall3
-        this.addCommands(goBackToShootFinalBall);    // shootFinalBall
-        this.addCommands(shoot2CargoCommand.withTimeout(3));
+        this.addCommands(driveAndIntakeFirstBall);
+        this.addCommands(driveAndShootBall1);
+        this.addCommands(intakeBall2AndOpposingBall1);
+        this.addCommands(driveAndShootBall2);
+        this.addCommands(shootEnemyBall1ToHanger);
+        this.addCommands(intakeBall3);
+        this.addCommands(goBackToShootFinalBall);
+        this.addCommands(super.newShootAllCommand().withTimeout(3));
         
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);

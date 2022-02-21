@@ -26,7 +26,7 @@ public class RightFiveBallAuto extends AutoBase {
      * @param vision
      */
     public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
         vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));

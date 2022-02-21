@@ -151,18 +151,16 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public enum Autos {
-        AUTO_TESTING("(A) Class for Testing Auto Actions and Paths"),
-        TEST_AUTO_1("TestAuto1"),
-        SIMPLE_1_BALL("Any Position Start, Simple 1 Ball"),
-        SIMPLE_3_BALL("Far Right Start (A), Simple 3 Ball"),
-        THREE_BALL_DRIVE_AND_SHOOT("Far Right Start (A), 3 Ball Drive and Shoot"),
-        LEFT_TERMINAL_3_BALL("Far Left Start (D), 3 Ball Including Terminal Cargo"),
-        LEFT_2_BALL_1_DEFENSE("Far Left Start (D), Shoot Two and Move Opponent Ball"),
-        MIDDLE_TERMINAL_3_BALL("Center Start, ball, then terminal ball"),
-        MIDDLE_TERMINAL_DEFENSE("center start, terminal cargo and defense"),
-        FIVE_BALL("Far Right Start (A), Five Ball Auto"),
-        RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense"),
-        TEST2("Test 2");
+        AUTO_TESTING("Auto Testing"),
+        ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
+        SIMPLE_3_BALL("Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
+        THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
+        LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Towards Hub"),
+        LEFT_2_BALL_1_DEFENSE("2 Ball and 1 Defence - Far Left Start (D) Facing Away From Hub"),
+        MIDDLE_RIGHT_TERMINAL_3_BALL("Terminal 3 Ball - Middle Right Start (B) Facing Away From Hub"),
+        MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
+        FIVE_BALL("Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
+        RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
 
         public String name;
 
