@@ -4,11 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.AutoTesting;
@@ -24,23 +22,15 @@ import frc.robot.auto.TestAuto1;
 import frc.robot.auto.ThreeballDriveAndShoot;
 
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.PixyCamDriveCommand;
 import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
-import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.PixyCamDriveCommand;
-import frc.robot.commands.drive.VisionDriveCommand;
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
-import frc.robot.commands.intake.IntakeStopCommand;
 import frc.robot.commands.shooter.TuneShooterCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
-import frc.robot.commands.shooter.PrepareToLaunchCargoCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -48,15 +38,11 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PixyCamSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.UsbCameraSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 import frc.robot.util.ProjectileCalculator;
-import frc.robot.util.vision.ShooterDistanceConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -77,22 +63,17 @@ public class RobotContainer {
   private HopperSubsystem hopper;
   private PneumaticsSubsystem pneumatics;
   private HookClimberSubsystem climber;
-  private UsbCameraSubsystem intakeCamera;
-  private PixyCamSubsystem pixyCamSubsystem;
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
   
-  private JoystickButton visionDriveCommandSwitch;
-  private JoystickButton pixyDriveCommandSwitch;
   private JoystickButton resetGyroButton;
 
   private JoystickButton intakeArmToggleButton;
   private JoystickButton intakeInButton;
   private JoystickButton intakeReverseButton;
 
-  private JoystickButton prepareToLaunch;
   private JoystickButton shootSingleButton;
   private JoystickButton shootAllButton;
   private JoystickButton extendClimberButton;
@@ -109,15 +90,14 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-//    pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
+    // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
     init();
   }
 
   private void init() {
     vision = new VisionSubsystem();
     dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climber);
-    //intakeCamera = new UsbCameraSubsystem();
-    pixyCamSubsystem = new PixyCamSubsystem();    
+    //intakeCamera = new UsbCameraSubsystem();  
 
     // //The following subsystems have a dependency on CAN
     drivetrain = new DrivetrainSubsystem();
@@ -149,41 +129,26 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    // visionDriveCommandSwitch = new JoystickButton(turnJoystick, 1);
-    // pixyDriveCommandSwitch = new JoystickButton(turnJoystick, 3);
+    // Drivetrain Button Bindings
     resetGyroButton = new JoystickButton(driveJoystick, 11);
 
+    // Intake Buttons Bindings
     intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
     intakeInButton = new JoystickButton(secondaryPannel, 7);
     intakeReverseButton = new JoystickButton(secondaryPannel, 6);
 
-    prepareToLaunch = new JoystickButton(secondaryPannel, 2);
+    // Shooter Buttons Bindings
     shootSingleButton = new JoystickButton(turnJoystick, 1);
     shootAllButton = new JoystickButton(driveJoystick, 1);
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     
-    // Climber Buttons
+    // Climber Buttons Bindings
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
     retractClimberButton = new JoystickButton(secondaryPannel, 3);
-
     climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
-   
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
 
-    // visionDriveCommandSwitch.whenHeld(
-    //     new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-    //     drivetrain,
-    //     () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //     vision,
-    //     dashboardControlsSubsystem
-    //   )
-    // );
-
-    // visionDriveCommandSwitch.whenReleased(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT)); // Probably a better way to do this...
-    
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
     //     drivetrain,
@@ -194,21 +159,15 @@ public class RobotContainer {
     //   )
     // );
 
+    // Drivetrain Button Command Bindings
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
-    // startClimbButton.whenPressed(new StartClimbCommand(climber));
-    extendClimberButton.whileHeld(new ExtendClimberCommand(climber));
-    retractClimberButton.whileHeld(new RetractClimberCommand(climber));
-    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
-
-    climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
-    climberLockButton.whenPressed(() -> { climber.lockClimber(); });
-
+    // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(new IntakeArmToggleCommand(intake, indexer, hopper));
     intakeInButton.whileHeld(new IntakeInCommand(intake, indexer, hopper));
     intakeReverseButton.whileHeld(new IntakeReverseCommand(intake, hopper));
 
-    // prepareToLaunch.whileHeld(new PrepareToLaunchCargoCommand(shooter, indexer, vision, hopper));
+    // Shooter Button Command Bindings
     shootSingleButton.whileHeld(
       new ParallelCommandGroup(
         new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
@@ -233,8 +192,14 @@ public class RobotContainer {
         )
       )
     );
-
     tuneShooterButton.whileHeld(new TuneShooterCommand(shooter, indexer, intake, hopper));
+
+    // Climber Button Command Bindings
+    extendClimberButton.whileHeld(new ExtendClimberCommand(climber));
+    retractClimberButton.whileHeld(new RetractClimberCommand(climber));
+    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
+    climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
+    climberLockButton.whenPressed(() -> { climber.lockClimber(); });
   }
 
   /**
@@ -243,7 +208,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-//    return pixyCmd;
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
@@ -291,7 +255,6 @@ public class RobotContainer {
   private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
     value = deadband(value, 0.05);
-
     // Square the axis for finer control at lower values
     value = limiter.calculate(Math.copySign(value * value, value));
     

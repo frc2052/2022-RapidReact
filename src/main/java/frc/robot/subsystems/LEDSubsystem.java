@@ -2,9 +2,6 @@ package frc.robot.subsystems;
 
 // Subsystem to Control CANifier LED Controller
 
-import java.lang.reflect.Method;
-import java.util.Timer;
-
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 

@@ -4,7 +4,6 @@
 
 package frc.robot.commands.intake;
 
-import frc.robot.commands.HopperBaseCommand;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -17,16 +16,12 @@ public class IntakeArmToggleCommand extends HopperBaseCommand {
     super(indexer, hopper);
     this.intake = intake;
 
-    addRequirements(intake);
+    addRequirements(this.intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexer.stopFeeder();
-    indexer.stopPreload();
-    grassHopper.hopperStop();
-
     if (intake.isIntakeArmOut()) {
       intake.intakeArmIn();
     } else {

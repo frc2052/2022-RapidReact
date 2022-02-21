@@ -10,34 +10,28 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeReverseCommand extends CommandBase {
   private final IntakeSubsystem intake;
-  private final HopperSubsystem hopper;
+  private final HopperSubsystem grassHopper;
 
-/**
- * Creates a new ArmToggle.
- *
- * @param intakeSubsystem The subsystem used by this command.
- */
-  public IntakeReverseCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
+  public IntakeReverseCommand(IntakeSubsystem intake, HopperSubsystem grassHopper) {
     this.intake = intake;
-    this.hopper = hopper;
+    this.grassHopper = grassHopper;
 
-    addRequirements(intake, hopper);
+    addRequirements(this.intake, this.grassHopper);
   }
     
-  // TODO: Implement Full Flush System
-
+  // TODO: If the stage or prestages are full run them in reverse to flush the system.
   @Override
   public void execute() {
-    // arm extends and spins the wheels
-    intake.intakeArmOut();
+    // Extends intake arm and spin the intake wheels in reverse.
+    intake.intakeArmOut(); // TODO: Remove this line!
     intake.intakeReverse();
-    hopper.hopperReverse();
+    grassHopper.hopperReverse();
   }
 
   @Override
   public void end(boolean interrupted) {
     intake.intakeStop();
-    hopper.hopperStop();
+    grassHopper.hopperStop();
   }
 
   @Override

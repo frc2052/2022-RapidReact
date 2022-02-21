@@ -38,7 +38,7 @@ public class TuneShooterCommand extends CommandBase {
   public void execute() {
     double topPercent = SmartDashboard.getNumber("Top shooter wheel percentage", 0);
     double bottomPercent = SmartDashboard.getNumber("Bottom shooter wheel percentage", 0);
-    shooter.runByPercentage(bottomPercent, topPercent);
+    shooter.shootAtPercentage(bottomPercent, topPercent);
     indexer.runFeeder();
     indexer.runPreload();
     intake.intakeArmOut();
@@ -49,7 +49,7 @@ public class TuneShooterCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.runByPercentage(0, 0);
+    shooter.shootAtPercentage(0, 0);
     indexer.stopFeeder();
     indexer.stopPreload();
     intake.intakeStop();
