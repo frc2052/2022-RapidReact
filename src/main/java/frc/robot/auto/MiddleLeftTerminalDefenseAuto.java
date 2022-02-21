@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
@@ -37,7 +35,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * @param intake
      */
     public MiddleLeftTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
         Pose2d shootPreloadedPos = new Pose2d(Units.inchesToMeters(-24), Units.inchesToMeters(24), Rotation2d.fromDegrees(0));
@@ -53,22 +51,21 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtBall2, super.createRotationAngle(-170));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
 
         ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision);
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
 
         NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, 6000, 6000);
 
-        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, intakeArmOut);
-        ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command, intakeArmIn);
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, intakeArmOut);
-        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, intakeArmIn);
+        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command);
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded
         this.addCommands(shoot1CargoCommand.withTimeout(1.5));
         this.addCommands(intakeEnemyBall1);     // intakeEnemyBall1
+        this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(driveAndShootEnemyBall1);  // driveAndShootEnemyBall1
         this.addCommands(intakeBall2);  // intakeBall2
         this.addCommands(returnToShoot);   // returnToShoot

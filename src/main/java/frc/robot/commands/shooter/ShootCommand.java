@@ -39,7 +39,7 @@ public class ShootCommand extends CommandBase {
     this.vision = vision;
     this.shootMode = shootMode;
 
-    visionCalculator = new VisionCalculator();
+    visionCalculator = VisionCalculator.getInstance();
 
     SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 

@@ -15,6 +15,12 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand;
+import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -25,6 +31,11 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AutoBase  extends SequentialCommandGroup {
     private DrivetrainSubsystem drivetrain;
     private VisionSubsystem vision;
+    private ShooterSubsystem shooter;
+    private IntakeSubsystem intake;
+    private HopperSubsystem hopper;
+    private IndexerSubsystem indexer;
+
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
 
@@ -37,9 +48,14 @@ public class AutoBase  extends SequentialCommandGroup {
     protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
     protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
-    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision/*, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexer*/) {
+    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer) {
         this.drivetrain = drivetrain;
         this.vision = vision;
+        this.shooter = shooter;
+        this.intake = intake;
+        this.hopper = hopper;
+        this.indexer = indexer;
+
         swerveDriveKinematics = drivetrain.getKinematics();
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
@@ -65,6 +81,30 @@ public class AutoBase  extends SequentialCommandGroup {
             new PIDController(1, 0, 0),
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
         );
+    }
+
+    protected ShootCommand newShoot1Command() {
+        return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+    }
+
+    protected ShootCommand newShootAllCommand() {
+        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+    }
+
+    protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected IntakeArmOutCommand newIntakeArmOutCommand() {
+        return new IntakeArmOutCommand(intake, indexer, hopper);
+    }
+
+    protected IntakeArmInCommand newIntakeArmInCommand() {
+        return new IntakeArmInCommand(intake, indexer, hopper);
     }
 
     /**

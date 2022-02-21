@@ -35,8 +35,8 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
      * @param indexer
      * @param grassHopper
      */
-    public MiddleRightTerminal3CargoAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
+    public MiddleRightTerminal3CargoAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
         Pose2d shootPreloadedPos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(-20), Rotation2d.fromDegrees(30));
@@ -50,11 +50,11 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(150));
         SwerveControllerCommand driveBackToShoot2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, grassHopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, grassHopper);
+        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, hopper);
+        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, hopper);
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision);
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);

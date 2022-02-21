@@ -19,12 +19,20 @@ public class VisionCalculator {
     // Map of limelight values to distances (inches)
     private final List<VisionDistance> visionDistances;
 
-    public VisionCalculator() {
+    // Singleton pattern for making sure only one instance of this class exists that can be accessed easily from anywhere.
+    private VisionCalculator() {
         shooterDistanceConfigs = new ArrayList<ShooterDistanceConfig>();
         setupShooterDistanceConfigs();
 
         visionDistances = new ArrayList<VisionDistance>();
         setupVisionDistances();
+    }
+    private static VisionCalculator instance;
+    public static VisionCalculator getInstance() {
+        if (instance == null) {
+            instance = new VisionCalculator();
+        }
+        return instance;
     }
 
     /**

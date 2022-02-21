@@ -7,8 +7,12 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.util.vision.ShooterDistanceConfig;
+import frc.robot.util.vision.VisionCalculator;
 
 import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.util.Units;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
     private VisionSubsystem vision;
@@ -45,7 +49,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     @Override
     protected double getTurnValue() {
         vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
-        horizontalAngle = vision.getTx() + drivingHorizontalFiringOffsetAngleRadians();      // Horizontal offset from the Limelight's crosshair to target.
+        horizontalAngle = vision.getTx() + drivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 
         if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
@@ -74,15 +78,20 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         return isLinedUp;
     }
 
-    private double drivingHorizontalFiringOffsetAngleRadians() {
+    private double drivingHorizontalFiringOffsetAngleDegrees() {
         if(driveTrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
             return 0.0;
         }
-        // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
-        double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
-        double lineToHub = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS,2) + Math.pow(vision.getXDistanceToUpperHub(), 2));
-        double radiansOffset = Math.atan(Math.toRadians(vision.getXDistanceToUpperHub()*driveTrain.getLastWheelVelocity()/firingVelocity/lineToHub));
-        return Math.toDegrees(radiansOffset);
+        // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.
+        int distanceInches = VisionCalculator.getInstance().getDistanceInches(vision.getTy());
+        double distanceMeters = Units.inchesToMeters(distanceInches);
+        ShooterDistanceConfig shooterDistanceConfig = VisionCalculator.getInstance().getShooterConfig(distanceInches);
+        double averageFiringVelocityTP100MS = (shooterDistanceConfig.getTopMotorVelocityTicksPerSecond() + shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond()) / 2;
+        double averageFiringVelocityMPS = 0; // TODO Figure out how to convert from ticks per 100 miliseconds to Meters per second
+        double lineToHubDistanceMeters = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS,2) + Math.pow(distanceMeters, 2));
+        double currentWheelVelocityMPS = driveTrain.getLastWheelVelocity();
+        double offsetRadians = Math.atan(Math.toRadians(distanceMeters*currentWheelVelocityMPS/averageFiringVelocityMPS/lineToHubDistanceMeters));
+        return Math.toDegrees(offsetRadians);
     }
 
     @Override

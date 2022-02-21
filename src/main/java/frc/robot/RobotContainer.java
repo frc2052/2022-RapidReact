@@ -15,6 +15,7 @@ import frc.robot.auto.LeftTerminal3Cargo;
 import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
 import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
+import frc.robot.auto.OneBallAuto;
 import frc.robot.auto.RightFiveBallAuto;
 import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
@@ -54,15 +55,15 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private DrivetrainSubsystem drivetrainSubsystem;
+  private DrivetrainSubsystem drivetrain;
   private VisionSubsystem vision;
   private DashboardControlsSubsystem dashboardControlsSubsystem;
-  private ShooterSubsystem shooterSubsystem;
-  private IndexerSubsystem indexerSubsystem;
-  private IntakeSubsystem intakeSubsystem;
-  private HopperSubsystem grassHopper;
-  private HookClimberSubsystem climberSubsystem;
-  // private PixyCamSubsystem pixyCamSubsystem;
+  private ShooterSubsystem shooter;
+  private IndexerSubsystem indexer;
+  private IntakeSubsystem intake;
+  private HopperSubsystem hopper;
+  private PneumaticsSubsystem pneumatics;
+  private HookClimberSubsystem climber;
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
@@ -97,21 +98,22 @@ public class RobotContainer {
 
   private void init() {
     vision = new VisionSubsystem();
-    // pixyCamSubsystem = new PixyCamSubsystem();  
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climberSubsystem);  
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climber);
+    //intakeCamera = new UsbCameraSubsystem();  
 
-    // The following subsystems have a dependency on CAN
-    drivetrainSubsystem = new DrivetrainSubsystem();
-    shooterSubsystem = new ShooterSubsystem();
-    indexerSubsystem = new IndexerSubsystem();
-    intakeSubsystem = new IntakeSubsystem();
-    grassHopper = new HopperSubsystem();
-    climberSubsystem = new HookClimberSubsystem();
-    new PneumaticsSubsystem();
+    // //The following subsystems have a dependency on CAN
+    drivetrain = new DrivetrainSubsystem();
+    shooter = new ShooterSubsystem();
+    indexer = new IndexerSubsystem();
+    intake = new IntakeSubsystem();
+    hopper = new HopperSubsystem();
+    pneumatics = new PneumaticsSubsystem();
+    climber = new HookClimberSubsystem();
+    //LEDSubsystem.getInstance();
 
-    drivetrainSubsystem.setDefaultCommand(
+    drivetrain.setDefaultCommand(
       new DefaultDriveCommand(
-        drivetrainSubsystem,
+        drivetrain,
         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
@@ -152,7 +154,7 @@ public class RobotContainer {
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
-    //     drivetrainSubsystem,
+    //     drivetrain,
     //     pixyCamSubsystem,
     //     () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
     //     () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -164,16 +166,16 @@ public class RobotContainer {
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
-    intakeArmToggleButton.whenPressed(new IntakeArmToggleCommand(intakeSubsystem, indexerSubsystem, grassHopper));
-    intakeInButton.whileHeld(new IntakeInCommand(intakeSubsystem, indexerSubsystem, grassHopper));
-    intakeReverseButton.whileHeld(new IntakeReverseCommand(intakeSubsystem, grassHopper));
+    intakeArmToggleButton.whenPressed(new IntakeArmToggleCommand(intake, indexer, hopper));
+    intakeInButton.whileHeld(new IntakeInCommand(intake, indexer, hopper));
+    intakeReverseButton.whileHeld(new IntakeReverseCommand(intake, hopper));
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_SINGLE, shooterSubsystem, indexerSubsystem, grassHopper, vision),
+        new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-          drivetrainSubsystem,
+          drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
@@ -183,9 +185,9 @@ public class RobotContainer {
     );
     shootAllButton.whileHeld(
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_ALL, shooterSubsystem, indexerSubsystem, grassHopper, vision),
+        new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-          drivetrainSubsystem,
+          drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
@@ -193,16 +195,16 @@ public class RobotContainer {
         )
       )
     );
-    tuneShooterButton.whileHeld(new TuneShooterCommand(shooterSubsystem, indexerSubsystem, intakeSubsystem, grassHopper));
+    tuneShooterButton.whileHeld(new TuneShooterCommand(shooter, indexer, intake, hopper));
 
-    shootLowGoalButton.whileHeld(new ShootLowCommand(shooterSubsystem, indexerSubsystem));
+    shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
 
     // Climber Button Command Bindings
-    extendClimberButton.whileHeld(new ExtendClimberCommand(climberSubsystem));
-    retractClimberButton.whileHeld(new RetractClimberCommand(climberSubsystem));
-    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climberSubsystem));
-    climberUnlockButton.whenPressed(() -> { climberSubsystem.unlockClimber(); });
-    climberLockButton.whenPressed(() -> { climberSubsystem.lockClimber(); });
+    extendClimberButton.whileHeld(new ExtendClimberCommand(climber));
+    retractClimberButton.whileHeld(new RetractClimberCommand(climber));
+    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
+    climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
+    climberLockButton.whenPressed(() -> { climber.lockClimber(); });
   }
 
   /**
@@ -214,25 +216,25 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-        return new AutoTesting(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, grassHopper, indexerSubsystem);
-      case TEST_AUTO_1:
-        return new TestAuto1(drivetrainSubsystem);
+        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer);
+      case ONE_BALL:
+        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper);
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case THREE_BALL_DRIVE_AND_SHOOT:
-        return new ThreeballDriveAndShoot(drivetrainSubsystem, vision);
+        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer);
       case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper);
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
-      case MIDDLE_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
-      case MIDDLE_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+      case MIDDLE_RIGHT_TERMINAL_3_BALL:
+        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+      case MIDDLE_LEFT_TERMINAL_DEFENSE:
+        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrainSubsystem, vision, shooterSubsystem, intakeSubsystem, indexerSubsystem, grassHopper);
+        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       default:
         break;
     }
@@ -269,20 +271,20 @@ public class RobotContainer {
   }
 
   public void printToSmartDashboard() {
-    if (drivetrainSubsystem != null) {
-      drivetrainSubsystem.putToSmartDashboard();
+    if (drivetrain != null) {
+      drivetrain.putToSmartDashboard();
     }
     if (vision != null) {
       vision.putToSmartDashboard();
     }
-    if (intakeSubsystem != null) {
-      intakeSubsystem.putToSmartDashboard();
+    if (intake != null) {
+      intake.putToSmartDashboard();
     }
-    if (climberSubsystem != null) {
-      climberSubsystem.putToSmartDashboard();
+    if (climber != null) {
+      climber.putToSmartDashboard();
     }
-    if (shooterSubsystem != null) {
-      shooterSubsystem.putToSmartDashboard();
+    if (shooter != null) {
+      shooter.putToSmartDashboard();
       
       // For Testing Velocity Calculations
       double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
@@ -293,6 +295,6 @@ public class RobotContainer {
   }
 
   public void resetGyro() {
-    drivetrainSubsystem.zeroGyroscope();
+    drivetrain.zeroGyroscope();
   }
 }

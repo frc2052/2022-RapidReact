@@ -10,8 +10,6 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -26,7 +24,7 @@ public class RightFiveBallAuto extends AutoBase {
      * @param vision
      */
     public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision);
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
         vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -46,16 +44,15 @@ public class RightFiveBallAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(), terminalBallMidPointPos, super.createRotationAngle(120));
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(110));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(-45));
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        
 
         ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
 
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, intakeArmOut);
-        ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, shoot2CargoCommand, intakeArmIn);
-        ParallelDeadlineGroup intakeTerminalBall = new ParallelDeadlineGroup(driveToTerminalBalls, intakeArmOut);
-        ParallelCommandGroup driveBackAndShoot2 = new ParallelCommandGroup(driveBackToShoot, intakeArmIn);
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, shoot2CargoCommand, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup intakeTerminalBall = new ParallelDeadlineGroup(driveToTerminalBalls, super.newIntakeArmOutCommand());
+        ParallelCommandGroup driveBackAndShoot2 = new ParallelCommandGroup(driveBackToShoot, super.newIntakeArmInCommand());
 
         this.addCommands(aimAtHub);
         this.addCommands(shoot1CargoCommand.withTimeout(3));
