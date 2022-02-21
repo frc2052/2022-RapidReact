@@ -51,12 +51,13 @@ public class LeftTerminal3Cargo extends AutoBase {
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup intakeShootPos = new ParallelDeadlineGroup(driveToEndShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(intakeBall1);
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(shoot2CargoCommand);
+        this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(terminalMidPoint);
         this.addCommands(driveToTerminalPos);
         this.addCommands(intakeShootPos);
