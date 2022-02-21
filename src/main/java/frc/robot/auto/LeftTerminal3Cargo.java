@@ -1,15 +1,11 @@
 package frc.robot.auto;
 
-import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -50,17 +46,16 @@ public class LeftTerminal3Cargo extends AutoBase {
         SwerveControllerCommand driveToTerminalPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), terminalBallPos, super.createRotationAngle(70));
         SwerveControllerCommand driveToEndShootPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), endShootPos, super.createRotationAngle(210));
 
-        IntakeArmInCommand intakeArmIn = new IntakeArmInCommand(intake, indexer, grassHopper);
-        IntakeArmOutCommand intakeArmOut = new IntakeArmOutCommand(intake, indexer, grassHopper);
+        
 
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
 
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, intakeArmOut);
-        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, intakeArmOut);
-        ParallelDeadlineGroup intakeShootPos = new ParallelDeadlineGroup(driveToEndShootPos, intakeArmIn);
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup intakeShootPos = new ParallelDeadlineGroup(driveToEndShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(intakeBall1);
-        this.addCommands(intakeArmIn);
+        this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(shoot2CargoCommand);
         this.addCommands(terminalMidPoint);
         this.addCommands(driveToTerminalPos);

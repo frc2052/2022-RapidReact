@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.intake.IntakeArmInCommand;
@@ -52,21 +53,22 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, aimNeg45DegreesRight);
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, hopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, hopper);
+;
 
         ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
         ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
-    //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1, intakeArmOutCommand);
+        ParallelDeadlineGroup intakeBall1 =  new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
+        ParallelCommandGroup driveAndIntakeUp = new ParallelCommandGroup(driveToShoot, super.newIntakeArmInCommand());
 
-    //  this.addCommands(shoot1CargoCommand);
+        this.addCommands(shoot1CargoCommand);
         this.addCommands(driveToBall1); // Drives to the closest ball to the robot
         this.addCommands(turnToBall1);
+        this.addCommands(intakeBall1);
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
-        this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
+        this.addCommands(driveAndIntakeUp); // Drives and rotates to position to shoot ball into upper hub, and puts up intake
         this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
-    //  this.addCommands(shoot2CargoCommand);
+        this.addCommands(shoot2CargoCommand);
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
