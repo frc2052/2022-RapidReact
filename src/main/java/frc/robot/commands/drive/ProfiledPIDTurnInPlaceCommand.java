@@ -33,7 +33,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
                 new TrapezoidProfile.Constraints(Math.PI / 2, Math.PI)
             ),
             // This should return the measurement
-            () -> drivetrain.getPose().getRotation().getRadians(),
+            () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
             // This should return the goal (can also be a constant)
             deltaAngleSupplier.get().getRadians(),
             // This uses the output
@@ -43,8 +43,6 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             },
             drivetrain
         );
-        // Use addRequirements() here to declare subsystem dependencies.
-        // Configure additional PID options by calling `getController` here.
         this.drivetrain = drivetrain;
 
         // Set the controller to be continuous (because it is an angle controller)
@@ -54,7 +52,6 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
         getController().setTolerance(Units.degreesToRadians(5), Units.degreesToRadians(10));
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // Stop the drivetrain when isFinished() returns true.
