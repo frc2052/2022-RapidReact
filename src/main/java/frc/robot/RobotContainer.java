@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +23,7 @@ import frc.robot.auto.TestAuto1;
 import frc.robot.auto.ThreeballDriveAndShoot;
 
 import frc.robot.commands.drive.DefaultDriveCommand;
+import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
 import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
@@ -84,6 +86,9 @@ public class RobotContainer {
   private JoystickButton climberLockButton;
   private JoystickButton climberUnlockButton;
   private JoystickButton tuneShooterButton;
+
+  private JoystickButton pidTestingButton;
+
   // Slew rate limiters to make joystick inputs more gentle.
   // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
@@ -152,6 +157,8 @@ public class RobotContainer {
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
 
+    pidTestingButton = new JoystickButton(secondaryPannel, 2);
+
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
     //     drivetrain,
@@ -205,6 +212,9 @@ public class RobotContainer {
     climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
     climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
+
+    // TODO: Delete this when done
+    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
   }
 
   /**
