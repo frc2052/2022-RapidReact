@@ -216,7 +216,7 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer);
+        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       case ONE_BALL:
         return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper);
       case SIMPLE_3_BALL:
