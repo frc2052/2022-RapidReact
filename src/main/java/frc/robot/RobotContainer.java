@@ -228,23 +228,23 @@ public class RobotContainer {
       case AUTO_TESTING:
         return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       case ONE_BALL:
-        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper);
+        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
       case SIMPLE_3_BALL:
         return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case THREE_BALL_DRIVE_AND_SHOOT:
-        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer);
+        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_RIGHT_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
         break;
     }

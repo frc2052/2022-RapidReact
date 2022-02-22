@@ -11,6 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveTrain;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -28,8 +29,8 @@ public class ThreeballDriveAndShoot extends AutoBase {
     * @param drivetrain
     * @param vision
     */
-    public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer) {
-        super(drivetrain, vision, shooter, intake, hopper, indexer);
+    public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         // Positions and rotations
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));

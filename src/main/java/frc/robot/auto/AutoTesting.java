@@ -34,8 +34,8 @@ public class AutoTesting extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-175));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(-50), Units.inchesToMeters(-6), Rotation2d.fromDegrees(-175));

@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
@@ -23,6 +24,7 @@ import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -36,6 +38,7 @@ public class AutoBase  extends SequentialCommandGroup {
     private IntakeSubsystem intake;
     private HopperSubsystem hopper;
     private IndexerSubsystem indexer;
+    private HookClimberSubsystem climber;
 
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
@@ -49,13 +52,14 @@ public class AutoBase  extends SequentialCommandGroup {
     protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
     protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
-    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer) {
+    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.shooter = shooter;
         this.intake = intake;
         this.hopper = hopper;
         this.indexer = indexer;
+        this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
 
@@ -110,6 +114,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
         return new VisionTurnInPlaceCommand(drivetrain, vision);
+    }
+
+    protected ClimberArmsBackCommand newClimberArmsBackCommand() {
+        return new ClimberArmsBackCommand(climber);
     }
 
     /**

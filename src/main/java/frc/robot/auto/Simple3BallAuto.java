@@ -36,7 +36,7 @@ public class Simple3BallAuto extends AutoBase {
      * @param vision
      */
     public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
-        super(drivetrain, vision, shooter, intake, hopper, indexer);
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 //         vision.setLED(LEDMode.OFF);
         
 //         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -99,16 +99,16 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(autoAim);
         this.addCommands(super.newShoot1Command().withTimeout(1.5));
         this.addCommands(turnToBall1);
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON));
-        this.addCommands(intakeBall1); // Drives to the closest ball to the robot
+    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON));
+        this.addCommands(intakeBall1); // Drives and intakes the closest ball to the robot
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT));
+    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT));
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(autoAim2);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
         this.addCommands(super.newShootAllCommand().withTimeout(3));
 
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
+    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
