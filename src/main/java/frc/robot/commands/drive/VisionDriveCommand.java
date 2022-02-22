@@ -80,7 +80,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     }
 
     private double drivingHorizontalFiringOffsetAngleDegrees() {
-        if(driveTrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+        if(driveTrain.getIntendedCurrentVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
             return 0.0;
         }
         // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.
@@ -90,7 +90,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         double averageFiringVelocityTP100MS = (shooterDistanceConfig.getTopMotorVelocityTicksPerSecond() + shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond()) / 2;
         double averageFiringVelocityMPS = 0; // TODO Figure out how to convert from ticks per 100 miliseconds to Meters per second
         double lineToHubDistanceMeters = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS,2) + Math.pow(distanceMeters, 2));
-        double currentWheelVelocityMPS = driveTrain.getLastWheelVelocity();
+        double currentWheelVelocityMPS = driveTrain.getIntendedCurrentVelocity();
         double offsetRadians = Math.atan(Math.toRadians(distanceMeters*currentWheelVelocityMPS/averageFiringVelocityMPS/lineToHubDistanceMeters));
         return Math.toDegrees(offsetRadians);
     }

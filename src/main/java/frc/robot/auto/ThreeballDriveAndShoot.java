@@ -38,16 +38,6 @@ public class ThreeballDriveAndShoot extends AutoBase {
         
         Pose2d startPos2 = new Pose2d(Units.inchesToMeters(50), 0, Rotation2d.fromDegrees(-130));
         Pose2d driveTowardsBall2 = new Pose2d(Units.inchesToMeters(18.33), Units.inchesToMeters(-80), Rotation2d.fromDegrees(-130)); // To stop at point along the way to the ball, can be figured out by making equation for the line
-        Supplier<Rotation2d> aimAtHub = () -> { // Lambda that calls everything in the brackets every time the Suppier is accessed.
-            vision.updateLimelight();
-            Rotation2d rotation;
-            if(vision.hasValidTarget()) {
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx())).minus(Rotation2d.fromDegrees(getHorizontalFiringOffsetAdvanced(drivetrain, vision)));
-            } else {
-                rotation = Rotation2d.fromDegrees(170);
-            }
-            return rotation;
-        };
 
         Pose2d arriveAtBall2 = new Pose2d(Units.inchesToMeters(-19.5), Units.inchesToMeters(-96), Rotation2d.fromDegrees(-130));
         Supplier<Rotation2d> spinToBall2 = () -> {   // TODO Get pixy cam to control this in the case we're not fully aligned with the ball
@@ -59,7 +49,7 @@ public class ThreeballDriveAndShoot extends AutoBase {
 
         // Create SwerveControllerCommands
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
-        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, startPos2, driveTowardsBall2, aimAtHub);
+        SwerveControllerCommand aimWhileDrivingToBall2 = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, startPos2, driveTowardsBall2, super.createHubTrackingSupplier(170));
 
         //ParallelCommandGroup driveAndShootToBall2 = new ParallelCommandGroup(aimWhileDrivingToBall2/*, shooterCommand*/);
 
@@ -78,20 +68,5 @@ public class ThreeballDriveAndShoot extends AutoBase {
 
         this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
-    }
-
-    public double getHorizontalFiringOffsetAdvanced(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        if(drivetrain.getLastWheelVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
-          return 0.0;
-        }
-        // TODO calculate horizontal firing angle offset using driveTrain.getVelocity() using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2))
-        double firingVelocity = 8.0; // [TEMP VALUE] TODO make this get the value calculated for firing the shooter 
-        double lineToHub = Math.sqrt(Math.pow(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS, 2) + Math.pow(vision.getXDistanceToUpperHub(), 2));
-        return Math.atan(Math.toRadians(vision.getXDistanceToUpperHub()*drivetrain.getLastWheelVelocity()/firingVelocity/lineToHub)) + Math.toRadians(Constants.DriveTrain.DRIVING_AIM_ANGLE_OFFSET_DEGREES);
-    }
-
-    public double getHorizontalFiringOffsetBasic(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
-        double linearOffsetMultiplier = 0.5;
-        return drivetrain.getLastWheelVelocity()*linearOffsetMultiplier;
     }
 }
