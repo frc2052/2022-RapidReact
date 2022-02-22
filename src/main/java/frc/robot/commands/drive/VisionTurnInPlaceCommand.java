@@ -40,7 +40,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
         if(vision.hasValidTarget()) {
             // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(this.tx) > 5) {
-              visionRotation = -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
+              visionRotation = -Math.copySign(Math.toRadians(this.tx * 8) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
             } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
               visionRotation =  -Math.copySign(Math.PI /4, this.tx);
             } else {

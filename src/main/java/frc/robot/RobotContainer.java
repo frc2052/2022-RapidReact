@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoTesting;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
-import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
+import frc.robot.auto.MiddleLeft3BallTerminalDefenseAuto;
 import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
 import frc.robot.auto.OneBallAuto;
@@ -240,7 +240,7 @@ public class RobotContainer {
       case MIDDLE_RIGHT_TERMINAL_3_BALL:
         return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case MIDDLE_LEFT_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case FIVE_BALL:
         return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
