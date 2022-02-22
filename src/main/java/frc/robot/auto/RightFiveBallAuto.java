@@ -23,8 +23,8 @@ public class RightFiveBallAuto extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
@@ -46,8 +46,8 @@ public class RightFiveBallAuto extends AutoBase {
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(-45));
         
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, grassHopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, shoot2CargoCommand, super.newIntakeArmInCommand());

@@ -36,8 +36,8 @@ public class LeftDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper, HookClimberSubsystem climber) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));

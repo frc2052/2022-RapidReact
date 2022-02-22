@@ -13,6 +13,7 @@ import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -34,8 +35,8 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, grassHopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-150));
         Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-140), Units.inchesToMeters(-93), Rotation2d.fromDegrees(-150));

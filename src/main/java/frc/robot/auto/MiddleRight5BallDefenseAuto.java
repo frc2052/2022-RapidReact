@@ -17,6 +17,7 @@ import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -41,8 +42,8 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param intake
      * @param indexer
      */
-    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(55), Units.inchesToMeters(5), Rotation2d.fromDegrees(0));
