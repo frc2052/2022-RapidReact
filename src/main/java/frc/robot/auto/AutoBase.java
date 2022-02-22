@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
@@ -105,6 +106,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
         return new IntakeArmInCommand(intake, indexer, hopper);
+    }
+
+    protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
+        return new VisionTurnInPlaceCommand(drivetrain, vision);
     }
 
     /**

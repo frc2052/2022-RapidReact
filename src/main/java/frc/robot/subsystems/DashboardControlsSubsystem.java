@@ -155,7 +155,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
         SIMPLE_3_BALL("Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
         THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
-        LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Towards Hub"),
+        LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
         LEFT_2_BALL_1_DEFENSE("2 Ball and 1 Defence - Far Left Start (D) Facing Away From Hub"),
         MIDDLE_RIGHT_TERMINAL_3_BALL("Terminal 3 Ball - Middle Right Start (B) Facing Away From Hub"),
         MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),

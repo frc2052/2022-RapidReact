@@ -26,11 +26,11 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             // The ProfiledPIDController used by the command
             new ProfiledPIDController(
                 // The PID gains
-                1.0, // Kp
+                5.0, // Kp
                 0.0, // Ki
                 0.0, // Kd
                 // The motion profile constraints
-                new TrapezoidProfile.Constraints(Math.PI / 2, Math.PI)
+                new TrapezoidProfile.Constraints(Math.PI, 2 * Math.PI)
             ),
             // This should return the measurement
             () -> drivetrain.getPose().getRotation().getRadians(),

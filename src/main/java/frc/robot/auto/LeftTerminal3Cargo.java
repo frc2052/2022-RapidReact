@@ -56,7 +56,7 @@ public class LeftTerminal3Cargo extends AutoBase {
 
         this.addCommands(intakeBall1);
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(shoot2CargoCommand);
+        this.addCommands(super.newShootAllCommand());
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(terminalMidPoint);
         this.addCommands(driveToTerminalPos);

@@ -230,7 +230,7 @@ public class RobotContainer {
       case ONE_BALL:
         return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper);
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case THREE_BALL_DRIVE_AND_SHOOT:
         return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer);
       case LEFT_TERMINAL_3_BALL: 
@@ -306,5 +306,9 @@ public class RobotContainer {
 
   public void resetGyro() {
     drivetrain.zeroGyroscope();
+  }
+
+  public void resetRobot() {
+    drivetrain.stop();
   }
 }

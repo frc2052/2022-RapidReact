@@ -40,8 +40,8 @@ public class LeftDefenseAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, grassHopper, indexer);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
-        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(25), Rotation2d.fromDegrees(30));
-        Pose2d opponentBallPos = new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-15), Rotation2d.fromDegrees(-90));
+        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
+        Pose2d opponentBallPos = new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-25), Rotation2d.fromDegrees(-90));
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
         TurnInPlaceCommand turnToHub = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(175));
@@ -63,6 +63,7 @@ public class LeftDefenseAuto extends AutoBase {
         this.addCommands(intakeBall1);
         this.addCommands(turnToHub);
         this.addCommands(turnAndAimCommand);
+        this.addCommands(super.newVisionTurnInPlaceCommand());
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(super.newShootAllCommand().withTimeout(4));
         this.addCommands(intakeOpposingBall1);
