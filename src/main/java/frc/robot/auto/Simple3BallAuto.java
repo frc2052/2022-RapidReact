@@ -22,6 +22,7 @@ public class Simple3BallAuto extends AutoBase {
      /**
      * Position A Start (Far Right parallel with outer Tarmac line)
      * Simple auto to score 3 alliance cargo.
+     * TUNED AND WORKING
      * @param drivetrain
      * @param vision
      */

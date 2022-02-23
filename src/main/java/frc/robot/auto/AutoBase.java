@@ -22,6 +22,7 @@ import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
@@ -92,6 +93,14 @@ public class AutoBase  extends SequentialCommandGroup {
             new PIDController(1, 0, 0),
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
         );
+    }
+
+    protected AutoShootCommand newAutoShoot1Command() {
+        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+    }
+
+    protected AutoShootCommand newAutoShootAllCommand() {
+        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
     }
 
     protected ShootCommand newShoot1Command() {

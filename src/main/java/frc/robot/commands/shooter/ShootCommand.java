@@ -16,7 +16,7 @@ import frc.robot.util.vision.VisionCalculator;
 
 public class ShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
-  private final IndexerSubsystem indexer;
+  protected final IndexerSubsystem indexer;
   private final HopperSubsystem grassHopper;
   private final VisionSubsystem vision;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)

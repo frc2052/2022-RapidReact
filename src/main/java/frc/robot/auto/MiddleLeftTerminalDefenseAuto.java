@@ -31,6 +31,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
      * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
+     * INTAKES ENEMY BALL - UNTUNED
      * @param drivetrain
      * @param vision
      * @param intake

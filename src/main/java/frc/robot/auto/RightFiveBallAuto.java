@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.drive.TurnInPlaceCommand;
@@ -35,7 +36,6 @@ public class RightFiveBallAuto extends AutoBase {
      */
     public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
-        vision.setLED(LEDMode.ON);
         
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(-68), 0, Rotation2d.fromDegrees(0));
@@ -46,26 +46,22 @@ public class RightFiveBallAuto extends AutoBase {
 
         AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(1, 0.5, 1, 3, 1);
 
-        VisionTurnInPlaceCommand aimAtHub = new VisionTurnInPlaceCommand(drivetrain, vision);
-        TurnInPlaceCommand turnAround = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(170).minus(drivetrain.getPose().getRotation()));
+        TurnInPlaceCommand turnAround = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(175).minus(drivetrain.getPose().getRotation())); // Probably replace with ProfilePIDTurnInPlace when ready
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, ball1Pos);
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(50), ball2Pos, super.createRotationAngle(50));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(), shootPos, super.createHubTrackingSupplier(-45));
         SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(), terminalBallMidPointPos, super.createRotationAngle(120));
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(-110), terminalBallPos, super.createRotationAngle(110));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(66), shootPos, createHubTrackingSupplier(-45));
-        
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision); // Adjust when ready to shoot either 1 or 2 cargo individually
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
-
+        ParallelDeadlineGroup aimAndShootPreloaded = new ParallelDeadlineGroup(super.newAutoShoot1Command(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, shoot2CargoCommand, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup shoot2Balls = new ParallelDeadlineGroup(driveToShoot, super.newShootAllCommand(), super.newIntakeArmInCommand());
         ParallelDeadlineGroup intakeTerminalBall = new ParallelDeadlineGroup(driveToTerminalBalls, super.newIntakeArmOutCommand());
         ParallelCommandGroup driveBackAndShoot2 = new ParallelCommandGroup(driveBackToShoot, super.newIntakeArmInCommand());
 
-        this.addCommands(aimAtHub);
-        this.addCommands(shoot1CargoCommand.withTimeout(1));
+        this.addCommands(super.newClimberArmsBackCommand());
+        this.addCommands(aimAndShootPreloaded);
         this.addCommands(turnAround);
         this.addCommands(intakeBall1); // Drives to the closest ball to the robot
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
@@ -73,7 +69,7 @@ public class RightFiveBallAuto extends AutoBase {
         this.addCommands(driveToTerminalMidPoint);
         this.addCommands(intakeTerminalBall);
         this.addCommands(driveBackAndShoot2);
-        this.addCommands(shoot2CargoCommand.withTimeout(3));
+        this.addCommands(super.newShootAllCommand().withTimeout(3));
 
         //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
