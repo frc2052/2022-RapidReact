@@ -20,20 +20,38 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
     private final DrivetrainSubsystem drivetrain;
 
-    /** Creates a new ProfiledPIDTurnInPlaceCommand. */
-    public ProfiledPIDTurnInPlaceCommand(DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
-        super(
-            // The ProfiledPIDController used by the command
+    public ProfiledPIDTurnInPlaceCommand(
+        DrivetrainSubsystem drivetrain, 
+        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> deltaAngleSupplier
+    ) {
+        this(
+            drivetrain,
+            // The default ProfiledPIDController used by the command
             new ProfiledPIDController(
                 // The PID gains
-                1.0, // Kp
+                5.0, // Kp
                 0.0, // Ki
                 0.0, // Kd
                 // The motion profile constraints
-                new TrapezoidProfile.Constraints(Math.PI / 2, Math.PI)
+                new TrapezoidProfile.Constraints(Math.PI, 2 * Math.PI)
             ),
+            originalGyroAngle,
+            deltaAngleSupplier
+        );
+    }
+
+    public ProfiledPIDTurnInPlaceCommand(
+        DrivetrainSubsystem drivetrain, 
+        ProfiledPIDController profiledPIDController, 
+        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> deltaAngleSupplier
+    ) {
+        super(
+            // The ProfiledPIDController used by the command
+            profiledPIDController,
             // This should return the measurement
-            () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
+            () -> drivetrain.getPose().getRotation().minus(originalGyroAngle).getRadians(),
             // This should return the goal (can also be a constant)
             deltaAngleSupplier.get().getRadians(),
             // This uses the output
@@ -52,6 +70,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
         getController().setTolerance(Units.degreesToRadians(5), Units.degreesToRadians(10));
     }
 
+    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // Stop the drivetrain when isFinished() returns true.
