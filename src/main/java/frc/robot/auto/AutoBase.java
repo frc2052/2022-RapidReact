@@ -13,6 +13,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
@@ -28,8 +31,10 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoBase  extends SequentialCommandGroup {
@@ -105,8 +110,8 @@ public class AutoBase  extends SequentialCommandGroup {
         return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected IntakeArmOutCommand newIntakeArmOutCommand() {
-        return new IntakeArmOutCommand(intake, indexer, hopper);
+    protected ParallelCommandGroup newIntakeArmOutCommand() {
+        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
@@ -119,6 +124,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected ClimberArmsBackCommand newClimberArmsBackCommand() {
         return new ClimberArmsBackCommand(climber);
+    }
+
+    protected Command autonomousFinishedCommandGroup() {
+        return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED)).andThen(() -> drivetrain.stop(), drivetrain);
     }
 
     /**

@@ -33,7 +33,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
      * 
-     * WIP
+     * WIP - Currently on MiddleLeft3BallTerminalDefense sped up.
      * 
      * @param drivetrain
      * @param vision
@@ -46,7 +46,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-160), Units.inchesToMeters(-105), Rotation2d.fromDegrees(-160));
         List<Translation2d> kickBallMidpoint = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
         Pose2d arriveAtTerminalBalls = new Pose2d(Units.inchesToMeters(-177),Units.inchesToMeters(-128),Rotation2d.fromDegrees(-135));
-        //List<Translation2d> hangerMidpoint1 = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
+        //List<Translation2d> hangerMidpoint1 = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));   // Midpoints for going around hanger post
         //List<Translation2d> hangerMidpoint2 = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
         //Pose2d shootPos = new Pose2d(Units.inchesToMeters(-50), Units.inchesToMeters(70), Rotation2d.fromDegrees(30));
         Pose2d shootPos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(-12), Rotation2d.fromDegrees(30));

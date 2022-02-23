@@ -50,6 +50,7 @@ public class LEDSubsystem extends SubsystemBase {
         OFF("Off"),
         BLINK_RED("Blink Red"),
         SOLID_WHITE("Solid White"),
+        CURRENT_DEFAULT("Current Default Mode for Game Stage"),
         AUTONOMOUS_INTAKE_ON("Autonomous Intake On"),
         AUTONOMOUS_DEFAULT("Autonomous Default"),
         AUTONOMOUS_FINISHED("Autonomous Finished"),

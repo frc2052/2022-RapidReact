@@ -6,13 +6,23 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
+
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+
 public class RightFiveBallAuto extends AutoBase {
     /**
      * Position A Start (Far Right Parallel with Outer Tarmac Line) Facing Towards the Hub.
@@ -55,7 +65,7 @@ public class RightFiveBallAuto extends AutoBase {
         ParallelCommandGroup driveBackAndShoot2 = new ParallelCommandGroup(driveBackToShoot, super.newIntakeArmInCommand());
 
         this.addCommands(aimAtHub);
-        this.addCommands(shoot1CargoCommand.withTimeout(3));
+        this.addCommands(shoot1CargoCommand.withTimeout(1));
         this.addCommands(turnAround);
         this.addCommands(intakeBall1); // Drives to the closest ball to the robot
         this.addCommands(driveToBall2); // Drives and rotates to the second ball near the Tarmac
@@ -64,7 +74,8 @@ public class RightFiveBallAuto extends AutoBase {
         this.addCommands(intakeTerminalBall);
         this.addCommands(driveBackAndShoot2);
         this.addCommands(shoot2CargoCommand.withTimeout(3));
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
+
+        //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
