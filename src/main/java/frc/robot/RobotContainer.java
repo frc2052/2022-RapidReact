@@ -215,7 +215,7 @@ public class RobotContainer {
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
 
     // TODO: Delete this when done
-    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, drivetrain.getGyroscopeRotation(), () -> { return Rotation2d.fromDegrees(180); }));
   }
 
   /**
@@ -243,7 +243,7 @@ public class RobotContainer {
       case MIDDLE_LEFT_TERMINAL_DEFENSE:
         return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
-        return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case FIVE_BALL:
         return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:

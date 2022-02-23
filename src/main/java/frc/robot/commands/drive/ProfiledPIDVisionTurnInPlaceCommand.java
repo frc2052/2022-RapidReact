@@ -18,8 +18,9 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
 
     public ProfiledPIDVisionTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(
+            drivetrain,
             profiledPIDController,
-            drivetrain, 
+            drivetrain.getGyroscopeRotation(),
             () -> { return Rotation2d.fromDegrees(-vision.getTx()); }
         );
         this.vision = vision;
@@ -28,6 +29,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
     public ProfiledPIDVisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(
             drivetrain, 
+            drivetrain.getPose().getRotation(),
             () -> { return Rotation2d.fromDegrees(-vision.getTx()); }
         );
         this.vision = vision;

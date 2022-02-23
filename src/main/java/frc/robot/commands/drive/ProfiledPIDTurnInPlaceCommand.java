@@ -20,35 +20,13 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
     private final DrivetrainSubsystem drivetrain;
 
-    /** Creates a new ProfiledPIDTurnInPlaceCommand. */
-    public ProfiledPIDTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
-        super(
-            // The ProfiledPIDController used by the command
-            profiledPIDController,
-            // This should return the measurement
-            () -> drivetrain.getPose().getRotation().getRadians(),
-            // This should return the goal (can also be a constant)
-            deltaAngleSupplier.get().getRadians(),
-            // This uses the output
-            (output, setpoint) -> {
-                // Use the output (and setpoint, if desired) here
-                drivetrain.drive(new ChassisSpeeds(0.0, 0.0, output));
-            },
-            drivetrain
-        );
-        // Use addRequirements() here to declare subsystem dependencies.
-        // Configure additional PID options by calling `getController` here.
-        this.drivetrain = drivetrain;
-
-        // Set the controller to be continuous (because it is an angle controller)
-        getController().enableContinuousInput(-Math.PI, Math.PI);
-        // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
-        // setpoint before it is considered as having reached the reference
-        getController().setTolerance(Units.degreesToRadians(5), Units.degreesToRadians(10));
-    }
-
-    public ProfiledPIDTurnInPlaceCommand(DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
+    public ProfiledPIDTurnInPlaceCommand(
+        DrivetrainSubsystem drivetrain, 
+        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> deltaAngleSupplier
+    ) {
         this(
+            drivetrain,
             // The default ProfiledPIDController used by the command
             new ProfiledPIDController(
                 // The PID gains
@@ -58,8 +36,38 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
                 // The motion profile constraints
                 new TrapezoidProfile.Constraints(Math.PI, 2 * Math.PI)
             ),
-            drivetrain,
-            deltaAngleSupplier);
+            originalGyroAngle,
+            deltaAngleSupplier
+        );
+    }
+
+    public ProfiledPIDTurnInPlaceCommand(
+        DrivetrainSubsystem drivetrain, 
+        ProfiledPIDController profiledPIDController, 
+        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> deltaAngleSupplier
+    ) {
+        super(
+            // The ProfiledPIDController used by the command
+            profiledPIDController,
+            // This should return the measurement
+            () -> drivetrain.getPose().getRotation().minus(originalGyroAngle).getRadians(),
+            // This should return the goal (can also be a constant)
+            deltaAngleSupplier.get().getRadians(),
+            // This uses the output
+            (output, setpoint) -> {
+                // Use the output (and setpoint, if desired) here
+                drivetrain.drive(new ChassisSpeeds(0.0, 0.0, output));
+            },
+            drivetrain
+        );
+        this.drivetrain = drivetrain;
+
+        // Set the controller to be continuous (because it is an angle controller)
+        getController().enableContinuousInput(-Math.PI, Math.PI);
+        // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
+        // setpoint before it is considered as having reached the reference
+        getController().setTolerance(Units.degreesToRadians(5), Units.degreesToRadians(10));
     }
 
     // Called once the command ends or is interrupted.
