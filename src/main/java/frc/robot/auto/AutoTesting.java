@@ -8,15 +8,16 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-
+import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
-
+import frc.robot.subsystems.ClawClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -33,8 +34,8 @@ public class AutoTesting extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem grassHopper, IndexerSubsystem indexer) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-175));
         Pose2d ball1Pos = new Pose2d(Units.inchesToMeters(-50), Units.inchesToMeters(-6), Rotation2d.fromDegrees(-175));
@@ -51,10 +52,12 @@ public class AutoTesting extends AutoBase {
         VisionTurnInPlaceCommand autoAim = new VisionTurnInPlaceCommand(drivetrain, vision);
         VisionTurnInPlaceCommand autoAim2 = new VisionTurnInPlaceCommand(drivetrain, vision);
 
+        ClimberArmsBackCommand climberBack = new ClimberArmsBackCommand(climber);
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup returnToShoot = new ParallelDeadlineGroup(driveToShoot, super.newIntakeArmOutCommand());
 
+        this.addCommands(climberBack);
         this.addCommands(autoAim);
         this.addCommands(super.newShoot1Command().withTimeout(1.5));
         this.addCommands(turnToBall1);

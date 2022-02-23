@@ -48,6 +48,7 @@ public class NonVisionShootCommand extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
+    shooter.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
   }

@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
+        public static final boolean stopWheelChatter = false;
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
@@ -86,7 +87,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
-  private double lastwheelVelocity;
+  private SwerveModuleState[] swerveModuleStates;
+  private double intendedCurrentVelocity;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -185,8 +187,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-        SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-        setModuleStates(states);
+        swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+        setModuleStates(swerveModuleStates);
+        intendedCurrentVelocity = Math.hypot(Math.abs(chassisSpeeds.vxMetersPerSecond), Math.abs(chassisSpeeds.vyMetersPerSecond));
   }
 
   public void stop() {
@@ -201,9 +204,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         SwerveDriveKinematics.desaturateWheelSpeeds(states, maxVelocity);
 
-        lastwheelVelocity = states[0].speedMetersPerSecond;
-
-        if (states[0].speedMetersPerSecond == 0
+        if (stopWheelChatter && states[0].speedMetersPerSecond == 0
                         && states[1].speedMetersPerSecond == 0 
                         && states[2].speedMetersPerSecond == 0
                         && states[3].speedMetersPerSecond == 0) {
@@ -243,8 +244,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
   }
 
-  public double getLastWheelVelocity() {
-        return lastwheelVelocity;
+  public SwerveModuleState[] getSwerveModuleStates() {
+        return swerveModuleStates;
+  }
+
+  public double getIntendedCurrentVelocity() {
+        return intendedCurrentVelocity;
   }
 
   public void putToSmartDashboard() {
@@ -257,7 +262,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
         
         // For comparing gyro and wheel velocities
-        SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", lastwheelVelocity);
+        // SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", swerveModuleStates[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
         SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
 
   }
