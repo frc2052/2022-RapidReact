@@ -86,6 +86,7 @@ public class RobotContainer {
   private JoystickButton climberLockButton;
   private JoystickButton climberUnlockButton;
   private JoystickButton tuneShooterButton;
+  private JoystickButton climberOverrideButton;
 
   private JoystickButton pidTestingButton;
 
@@ -156,6 +157,7 @@ public class RobotContainer {
     climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
+    climberOverrideButton = new JoystickButton(secondaryPannel, 99);
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
 
@@ -207,8 +209,8 @@ public class RobotContainer {
     shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
 
     // Climber Button Command Bindings
-    extendClimberButton.whileHeld(new ExtendClimberCommand(climber));
-    retractClimberButton.whileHeld(new RetractClimberCommand(climber));
+    extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
+    retractClimberButton.whileHeld(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
     climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
     climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
