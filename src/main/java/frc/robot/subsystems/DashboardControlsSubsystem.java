@@ -151,6 +151,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public enum Autos {
+        NONE_SELECTED("NO AUTO SELECTED"),
         AUTO_TESTING("Auto Testing"),
         ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
         SIMPLE_3_BALL("Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),

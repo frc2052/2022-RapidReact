@@ -1,14 +1,22 @@
 package frc.robot.auto;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.ProfiledPIDVisionTurnInPlaceCommand;
+import frc.robot.commands.drive.WaitOdometryResetCommand;
+import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
+import frc.robot.commands.shooter.AutoShootCommand.AutoShootMode;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 
@@ -35,31 +43,37 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
      * @param vision
      * @param intake
      */
-    public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper, HookClimberSubsystem climber) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer, climber);
+    public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
-        Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-150));
-        Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-140), Units.inchesToMeters(-93), Rotation2d.fromDegrees(-150));
-        Pose2d arriveAtTerminalBalls = new Pose2d(Units.inchesToMeters(-160),Units.inchesToMeters(-100),Rotation2d.fromDegrees(-170));
-        Pose2d shootPos = new Pose2d(Units.inchesToMeters(-24), Units.inchesToMeters(24), Rotation2d.fromDegrees(0));
+        Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-160));
+        Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-150), Units.inchesToMeters(-90), Rotation2d.fromDegrees(-160));
+        List<Translation2d> kickBallMidpoint = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
+        Pose2d arriveAtTerminalBalls = new Pose2d(Units.inchesToMeters(-176),Units.inchesToMeters(-127),Rotation2d.fromDegrees(-135));
+        Pose2d shootPos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(-12), Rotation2d.fromDegrees(30));
 
-        AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 2);
+        AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 2, 1);
+        AutoTrajectoryConfig intakingBothTerminalBallsTrajectoryConfig = super.createTrajectoryConfig(1, 0.75, 1, 5, 2);
 
-        SwerveControllerCommand driveTowardsTerminalBalls = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withEndVelocity(2), startPos, approachTerminalBalls, super.createRotationAngle(120));
-        SwerveControllerCommand driveToArriveAtTerminalBalls = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-170)), arriveAtTerminalBalls, super.createRotationAngle(-170));
-        SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPos, super.createHubTrackingSupplier(30));
+        SwerveControllerCommand driveTowardsTerminalBalls = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withEndVelocity(1), startPos, approachTerminalBalls, kickBallMidpoint, super.createRotationAngle(-160));
+        SwerveControllerCommand driveToArriveAtTerminalBalls = super.createSwerveTrajectoryCommand(intakingBothTerminalBallsTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-135)), arriveAtTerminalBalls, super.createRotationAngle(-135));
+        SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(30), shootPos, super.createHubTrackingSupplier(20));
+
+        AutoShootCommand autoShootCommand = new AutoShootCommand(AutoShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup waitToIntake = new ParallelDeadlineGroup(new WaitCommand(0.5), super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup aimingAndShooting = new ParallelDeadlineGroup(autoShootCommand, new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
-        ProfiledPIDVisionTurnInPlaceCommand visionAimToShoot = new ProfiledPIDVisionTurnInPlaceCommand(drivetrain, vision);
-
-        this.addCommands(this.newNonVisionShoot1Command(7900, 7900));
+        this.addCommands(new WaitOdometryResetCommand(drivetrain));
+        this.addCommands(super.newClimberArmsBackCommand());
+        this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1));
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(intakeTerminalBalls);
-    //    this.addCommands(delay);
+        this.addCommands(waitToIntake);
         this.addCommands(returnToShoot);
-        this.addCommands(visionAimToShoot);
+        this.addCommands(aimingAndShooting);
         
 
 

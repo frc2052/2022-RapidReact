@@ -30,6 +30,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoBase  extends SequentialCommandGroup {
     private DrivetrainSubsystem drivetrain;
@@ -257,6 +258,9 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
         return () -> {
+            if(vision.getLedMode() != 3.0) {
+                vision.setLED(LEDMode.ON);
+            }
             Rotation2d rotation;
             vision.updateLimelight();
             if(vision.hasValidTarget()) {

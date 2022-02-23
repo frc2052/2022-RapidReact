@@ -83,6 +83,7 @@ public class VisionSubsystem extends SubsystemBase{
     public double getTvert() {return this.tvert;}
     public double getCamMode() {return this.camMode;}
     public double getGetpipe() {return this.getpipe;}
+    public double getLedMode() {return this.lledMode.getDouble(0.0);}
     
     public boolean isLinedUp() {
       return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;

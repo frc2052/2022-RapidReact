@@ -261,7 +261,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
         
         // For comparing gyro and wheel velocities
-        SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", swerveModuleStates[0].speedMetersPerSecond);
+        //SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", swerveModuleStates[0].speedMetersPerSecond);
         SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
         SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
 
