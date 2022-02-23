@@ -14,6 +14,7 @@ import frc.robot.auto.AutoTesting;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
 import frc.robot.auto.MiddleLeft3BallTerminalDefenseAuto;
+import frc.robot.auto.MiddleLeft4BallTerminalDefenseAuto;
 import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
 import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
@@ -244,6 +245,8 @@ public class RobotContainer {
         return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case MIDDLE_RIGHT_TERMINAL_4_BALL:
+        return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case FIVE_BALL:
         return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
