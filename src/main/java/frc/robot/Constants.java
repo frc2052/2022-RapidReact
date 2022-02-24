@@ -84,6 +84,8 @@ public final class Constants {
         public static final double DISTANCE_CALCULATION_LINEAR_OFFSET = 0;
 
         public static final int DEFAULT_ASSUMED_DISTANCE = 7;
+
+        public static final int RELAY_PORT = 0;
     }
 
     public static final class PixyCamConstants {

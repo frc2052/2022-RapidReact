@@ -24,10 +24,14 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private int lastLEDBrightness;
 
     private boolean limelightLEDsEnabled;
-    private boolean lastLimelightLEDsEnabled;
     private boolean limelightDriveCamToggle;
+    private boolean limelightPowerRelayToggle;
+    private boolean limelightLEDOverride;
+
+    private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
-    private boolean isAutoSelected;
+    private boolean lastLimelightPowerRelayState;
+    private boolean lastLimelightLEDOverride;
 
     private LEDStatusMode lastLEDStatusMode;
 
@@ -38,11 +42,15 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        limelightPowerRelayToggle = vision.getRelayState();
+        limelightLEDOverride = false;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
         lastIsDriverCamera = limelightDriveCamToggle;
         lastLEDStatusMode = LEDStatusMode.RAINBOW;
+        lastLimelightPowerRelayState = limelightPowerRelayToggle;
+        lastLimelightLEDOverride = limelightLEDOverride;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -86,6 +94,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
+        SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
+        SmartDashboard.putBoolean("Limelight LED Override", limelightLEDOverride);
     }
 
     @Override
@@ -94,6 +104,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
+        limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
+        limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -129,6 +141,23 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             SmartDashboard.putBoolean("Is An Auto Selected?", false);
         } else {
             SmartDashboard.putBoolean("Is An Auto Selected?", true);
+        }
+
+        if (limelightPowerRelayToggle != lastLimelightPowerRelayState) {
+            vision.togglePowerRelay();
+            lastLimelightPowerRelayState = limelightPowerRelayToggle;
+        }
+
+        if (limelightLEDOverride != lastLimelightLEDOverride) {
+            if (limelightLEDOverride) {
+                vision.setLED(LEDMode.ON);
+                vision.setLEDOverride(true);
+                lastLimelightLEDOverride = true;
+            } else {
+                vision.setLED(LEDMode.OFF);
+                vision.setLEDOverride(false);
+                lastLimelightLEDOverride = false;
+            }
         }
     }
 

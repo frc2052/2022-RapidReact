@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 // Subsystem for accessing the Limelight's NetworkTable values and creating methods to control it.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.*;
@@ -13,10 +13,14 @@ import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
 
+    Relay powerRelay = new Relay(Constants.Limelight.RELAY_PORT);
+
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-    private double tx, ty, ta, ts, tl, camMode, getpipe;
+    private double tx, ty; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
+    
+    private boolean ledOverride = false;
 
     private NetworkTableEntry ltv = table.getEntry("tv"); // If the Limelight has any targets.              Value between 0.0 and 1.0.
     private NetworkTableEntry ltx = table.getEntry("tx"); // Horizontal offset from crosshair to target.    Value between -29.8 and 29.8 (degrees).
@@ -46,11 +50,7 @@ public class VisionSubsystem extends SubsystemBase{
     */
 
     public VisionSubsystem() {
-      ShuffleboardTab visionTab = Shuffleboard.getTab("Vision Test");
-
-      visionTab.add("Has Valid Target", false)
-        .withPosition(0, 0)
-        .withSize(1,1);
+      powerRelay.set(Relay.Value.kForward); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
     }
 
     @Override
@@ -89,6 +89,14 @@ public class VisionSubsystem extends SubsystemBase{
     public double getGetpipe() {return this.lgetpipe.getDouble(0.0);}
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
     public double getStreamMode() {return this.lstream.getDouble(0.0);}
+
+    public boolean getRelayState() {
+      if(powerRelay.get() == Relay.Value.kOff) {
+        return false;
+      } else {
+        return true;
+      }
+    }
     
     public boolean isLinedUp() {
       return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
@@ -105,20 +113,26 @@ public class VisionSubsystem extends SubsystemBase{
         System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
     }
 
+    public void setLEDOverride(boolean override) {
+      ledOverride = override;
+    }
+
     public void setLED(LEDMode mode) {
-      switch(mode) {
-        case PIPELINE:
-          lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline.
-          break;
-        case OFF:
-          lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off.
-          break;
-        case BLINK:
-          lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink.
-          break;
-        case ON:
-          lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on.
-          break;
+      if (!ledOverride) {
+        switch(mode) {
+          case PIPELINE:
+            lledMode.setDouble(0.0);  // Whatever value is specified by the current pipeline.
+            break;
+          case OFF:
+            lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off.
+            break;
+          case BLINK:
+            lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink.
+            break;
+          case ON:
+            lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on.
+            break;
+        }
       }
     }
 
@@ -168,6 +182,16 @@ public class VisionSubsystem extends SubsystemBase{
         }
       } else {
         return Math.PI; // If no target found rotate half a rotation per second to find target.
+      }
+    }
+
+    public void togglePowerRelay() {
+      if(powerRelay.get() == Relay.Value.kOff) {
+        powerRelay.set(Relay.Value.kForward);
+        // System.err.println("************ FORWARD");
+      } else {
+        powerRelay.set(Relay.Value.kOff); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
+        // System.err.println("************ OFF");
       }
     }
 
