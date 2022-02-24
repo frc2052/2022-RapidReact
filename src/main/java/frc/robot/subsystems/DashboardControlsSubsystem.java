@@ -60,8 +60,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
     
-        driveModeSelector.setDefaultOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
-        driveModeSelector.addOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
+        driveModeSelector.setDefaultOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
+        driveModeSelector.addOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
 
         limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
         limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
