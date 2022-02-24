@@ -30,6 +30,7 @@ import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
+import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -49,6 +50,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.util.ProjectileCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -219,6 +221,18 @@ public class RobotContainer {
     pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
   }
 
+  // private void configureTurnJoystickButtonBindings() {
+    
+  // }
+
+  // private void configureDriveJoystickButtonBindings() {
+    
+  // }
+
+  // private void configureSecondaryPannelButtonBindings() {
+    
+  // }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -254,7 +268,6 @@ public class RobotContainer {
       default:
         break;
     }
-
     System.err.println("NO VALID AUTO SELECTED");
     return null;
   }
@@ -282,8 +295,11 @@ public class RobotContainer {
     return value;
   }
 
-  public void addSelectorsToSmartDashboard() {
+  public void addSelectorsAndCommandButtonsToSmartDashboard() {
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+
+    SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
+    SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
   }
 
   public void printToSmartDashboard() {

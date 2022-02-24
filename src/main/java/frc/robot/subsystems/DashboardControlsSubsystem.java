@@ -18,44 +18,43 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private SendableChooser<DriveMode> driveModeSelector;
     private SendableChooser<CamMode> limelightCamModeSelector;
     private SendableChooser<LEDStatusMode> ledStatusModeSelector;
+    private SendableChooser<ButtonBindingsProfile> buttonBindingsProfileSelector;
 
     private int ledBrightness;
     private int lastLEDBrightness;
 
     private boolean limelightLEDsEnabled;
-    private boolean lastLEDState;
+    private boolean lastLimelightLEDsEnabled;
     private boolean limelightDriveCamToggle;
-    private boolean lastCamState;
-    private CamMode lastCamMode;
-    private boolean climberEncoderResetButton;
+    private boolean lastIsDriverCamera;
+    private boolean isAutoSelected;
 
     private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision, HookClimberSubsystem climber) { // Adds values and items to selectors and toggles.
         this.visionSubsystem = vision;
         this.climber = climber;
-
-        ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
-        lastLEDBrightness = ledBrightness;
-
+        
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
-        lastLEDState = limelightLEDsEnabled;
+        ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
-        lastCamState = limelightDriveCamToggle;
-        lastCamMode = CamMode.VISION;
+
+        lastLimelightLEDsEnabled = limelightLEDsEnabled;
+        lastLEDBrightness = ledBrightness;
+        lastIsDriverCamera = limelightDriveCamToggle;
         lastLEDStatusMode = LEDStatusMode.RAINBOW;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
         limelightCamModeSelector = new SendableChooser<CamMode>();
-        ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
+        // ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
 
         autoSelector.setDefaultOption(Autos.values()[0].name, Autos.values()[0]);
-        for(int i = 1; i < Autos.values().length; i++) {
+        for (int i = 1; i < Autos.values().length; i++) {
             autoSelector.addOption(Autos.values()[i].name, Autos.values()[i]);
         }
 
-        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
+        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.values()[0]);
         for (int i = 1; i < LEDStatusMode.values().length; i++) {
             ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
@@ -63,22 +62,28 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         driveModeSelector.setDefaultOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
         driveModeSelector.addOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
 
-        limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
-        limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
+        buttonBindingsProfileSelector.setDefaultOption(ButtonBindingsProfile.values()[0].name, ButtonBindingsProfile.values()[0]);
+        for (int i = 1; i < ButtonBindingsProfile.values().length; i++) {
+            buttonBindingsProfileSelector.addOption(ButtonBindingsProfile.values()[i].name, ButtonBindingsProfile.values()[i]);
+        }
+
+        // limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
+        // limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
     }
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
-        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
-        SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
         SmartDashboard.putData("LED Status Modes", ledStatusModeSelector);
+        SmartDashboard.putData("Button Bindings Profiles", buttonBindingsProfileSelector);
 
         SmartDashboard.putNumber("LED Brightness", ledBrightness);
 
+        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
+        SmartDashboard.putBoolean("Is An Auto Selected?", false);
     }
 
     @Override
@@ -88,50 +93,41 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
 
-        if(limelightLEDsEnabled && !lastLEDState) {
-            visionSubsystem.setLED(LEDMode.ON);
-        } else if (!limelightLEDsEnabled && lastLEDState) {
-            visionSubsystem.setLED(LEDMode.OFF);
+        if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
+            if(limelightLEDsEnabled) {
+                visionSubsystem.setLED(LEDMode.ON);
+                lastLimelightLEDsEnabled = true;
+            } else {
+                visionSubsystem.setLED(LEDMode.OFF);
+                lastLimelightLEDsEnabled = false;
+            }
         }
-        lastLEDState = limelightLEDsEnabled;
 
-        if(!limelightDriveCamToggle && lastCamState) {
-            visionSubsystem.setCamMode(CamMode.VISION);
-            lastCamMode = CamMode.VISION;
-        } else if (limelightDriveCamToggle && !lastCamState) {
-            visionSubsystem.setCamMode(CamMode.DRIVER);
-            lastCamMode = CamMode.DRIVER;
+        if (limelightDriveCamToggle != lastIsDriverCamera) {
+            if(limelightDriveCamToggle) {
+                visionSubsystem.setCamMode(CamMode.VISION);
+                lastIsDriverCamera = limelightDriveCamToggle;
+            } else {
+                visionSubsystem.setCamMode(CamMode.DRIVER);
+                lastIsDriverCamera = limelightDriveCamToggle;
+            }
         }
-        lastCamState = limelightDriveCamToggle;
 
-        if(selectedLEDStatusMode != lastLEDStatusMode) {
+        if (selectedLEDStatusMode != lastLEDStatusMode) {
             LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
             lastLEDStatusMode = selectedLEDStatusMode;
         }
 
-        if(ledBrightness != lastLEDBrightness) {
-            //System.out.println("Changing brightness to " + ledBrightness);
+        if (ledBrightness != lastLEDBrightness) {
             LEDSubsystem.getInstance().setBrightness(ledBrightness);
             lastLEDBrightness = ledBrightness;
         }
 
-        //Logic for having a selection list for limelight modes, unworking and uneeded for now...
-        
-        /* 
-        if(limelightCamModeSelector.getSelected() == CamMode.DRIVER && (lastCamMode == CamMode.VISION)) {
-            vision.setCamMode(CamMode.DRIVER);
-            lastCamMode = CamMode.DRIVER;
-            limelightDriveCamToggle = true;
-            lastCamState = true;
-            SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
-        } else if (limelightCamModeSelector.getSelected() == CamMode.VISION && (lastCamMode == CamMode.DRIVER)) {
-            vision.setCamMode(CamMode.VISION);
-            lastCamMode = CamMode.VISION;
-            limelightDriveCamToggle = false;
-            lastCamState = false;
-            SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
+        if (this.getSelectedAuto() == Autos.ONE_BALL) {
+            SmartDashboard.putBoolean("Is An Auto Selected?", false);
+        } else {
+            SmartDashboard.putBoolean("Is An Auto Selected?", true);
         }
-        */
     }
 
     public Autos getSelectedAuto() {
@@ -146,14 +142,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         return ledStatusModeSelector.getSelected();
     }
 
-    public void setLastLEDState(boolean state) {
-        lastLEDState = state;
+    public ButtonBindingsProfile getSelectButtonBindingsProfile() {
+        return buttonBindingsProfileSelector.getSelected();
+    }
+
+    public void setLastLimelightLEDsEnabled(boolean state) {
+        lastLimelightLEDsEnabled = state;
     }
 
     public enum Autos {
-        NONE_SELECTED("NO AUTO SELECTED"),
+        ONE_BALL("DEFAULT WHEN NO OTHER SELECTED - One Ball Auto, Any Starting Location Facing Towards Hub"),
         AUTO_TESTING("Auto Testing"),
-        ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
         SIMPLE_3_BALL("Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
         THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
@@ -175,5 +174,23 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     public enum DriveMode {
         FIELD_CENTRIC,
         ROBOT_CENTRIC,
+    }
+
+    // This definately doesn't work but maybe it's steps in the rights direction
+    public enum ButtonBindingsProfile {
+        DEFAULT("Default", new int[] {11, 1, 7, 6, 1, 1, 5}, new int[] {12, 3, 5, 7}, new int[] {1, 9, 3}),
+        SOLO_DRIVER("Solo Driver", new int[] {4, 6, 8, 10, 12}, new int[] {7, 2, 7, 9}, new int[] {4, 8, 11});
+
+        public String name;
+        public int[] turnJoystickBindings;
+        public int[] driveJoystickBindings;
+        public int[] secondaryPannelBindings;
+
+        ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
+            this.name = name;
+            this.turnJoystickBindings = turnJoystickBindings;
+            this.driveJoystickBindings = driveJoystickBindings;
+            this.secondaryPannelBindings = secondaryPannelBindings;
+        }
     }
 }
