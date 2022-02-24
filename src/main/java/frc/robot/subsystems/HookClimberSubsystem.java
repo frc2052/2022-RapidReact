@@ -71,7 +71,7 @@ public class HookClimberSubsystem extends SubsystemBase{
      */
     public void manualRetractArm(boolean override) {
         if (override) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * .5); //slower climb speed when doing override
+            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * .75); //slower climb speed when doing override
         } else if (climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
             climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
         } else {

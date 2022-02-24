@@ -30,6 +30,7 @@ import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
+import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -216,6 +217,9 @@ public class RobotContainer {
     climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
     climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
+
+    // Button on SmartDashboard.
+    SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
 
     // TODO: Delete this when done
     pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
