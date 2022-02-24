@@ -69,7 +69,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
-        SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
