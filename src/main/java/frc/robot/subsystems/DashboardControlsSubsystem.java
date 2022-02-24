@@ -47,14 +47,15 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
         limelightCamModeSelector = new SendableChooser<CamMode>();
-        // ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
+        ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
+        buttonBindingsProfileSelector = new SendableChooser<ButtonBindingsProfile>();
 
         autoSelector.setDefaultOption(Autos.values()[0].name, Autos.values()[0]);
         for (int i = 1; i < Autos.values().length; i++) {
             autoSelector.addOption(Autos.values()[i].name, Autos.values()[i]);
         }
 
-        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.values()[0]);
+        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
         for (int i = 1; i < LEDStatusMode.values().length; i++) {
             ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
