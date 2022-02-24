@@ -157,7 +157,7 @@ public class RobotContainer {
     climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
-    climberOverrideButton = new JoystickButton(secondaryPannel, 99);
+    climberOverrideButton = new JoystickButton(secondaryPannel, 8);
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
 
