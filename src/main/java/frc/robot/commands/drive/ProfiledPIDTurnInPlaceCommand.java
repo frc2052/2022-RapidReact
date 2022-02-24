@@ -22,7 +22,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
 
     public ProfiledPIDTurnInPlaceCommand(
         DrivetrainSubsystem drivetrain, 
-        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> originalGyroAngle, 
         Supplier<Rotation2d> deltaAngleSupplier
     ) {
         this(
@@ -44,7 +44,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
     public ProfiledPIDTurnInPlaceCommand(
         DrivetrainSubsystem drivetrain, 
         ProfiledPIDController profiledPIDController, 
-        Rotation2d originalGyroAngle, 
+        Supplier<Rotation2d> originalGyroAngle, 
         Supplier<Rotation2d> deltaAngleSupplier
     ) {
         super(
@@ -53,7 +53,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             // This should return the measurement
             () -> drivetrain.getPose().getRotation().getRadians(),
             // This should return the goal (can also be a constant)
-            deltaAngleSupplier.get().plus(originalGyroAngle).getRadians(),
+            () -> deltaAngleSupplier.get().plus(originalGyroAngle.get()).getRadians(),
             // This uses the output
             (output, setpoint) -> {
                 // Use the output (and setpoint, if desired) here

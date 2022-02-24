@@ -215,7 +215,7 @@ public class RobotContainer {
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
 
     // TODO: Delete this when done
-    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, drivetrain.getGyroscopeRotation(), () -> { return Rotation2d.fromDegrees(180); }));
+    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, drivetrain::getGyroscopeRotation, () -> { return Rotation2d.fromDegrees(180); }));
   }
 
   /**
