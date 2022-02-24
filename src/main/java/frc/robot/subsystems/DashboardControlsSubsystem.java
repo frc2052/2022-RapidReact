@@ -162,7 +162,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         MIDDLE_RIGHT_TERMINAL_4_BALL("Terminal 4 Ball - Middle Right Start (B) Facing Away From Hub"),
         MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
         MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("Other version of middle left terminal defense"),
-        FIVE_BALL("Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
+        RIGHT_FIVE_BALL("Right Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
+        RIGHT_FIVE_BALL_2("Right Five Ball Auto 2 - Far Right Start (A) Facing Away From Hub"),
         RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
 
         public String name;
