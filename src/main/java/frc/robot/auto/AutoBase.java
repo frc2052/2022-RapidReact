@@ -13,20 +13,30 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.climber.ClimberArmsBackCommand;
+import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoBase  extends SequentialCommandGroup {
     private DrivetrainSubsystem drivetrain;
@@ -35,6 +45,7 @@ public class AutoBase  extends SequentialCommandGroup {
     private IntakeSubsystem intake;
     private HopperSubsystem hopper;
     private IndexerSubsystem indexer;
+    private HookClimberSubsystem climber;
 
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
@@ -48,13 +59,14 @@ public class AutoBase  extends SequentialCommandGroup {
     protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
     protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
-    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer) {
+    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.shooter = shooter;
         this.intake = intake;
         this.hopper = hopper;
         this.indexer = indexer;
+        this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
 
@@ -83,6 +95,14 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
+    protected AutoShootCommand newAutoShoot1Command() {
+        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+    }
+
+    protected AutoShootCommand newAutoShootAllCommand() {
+        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+    }
+
     protected ShootCommand newShoot1Command() {
         return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
     }
@@ -99,12 +119,24 @@ public class AutoBase  extends SequentialCommandGroup {
         return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected IntakeArmOutCommand newIntakeArmOutCommand() {
-        return new IntakeArmOutCommand(intake, indexer, hopper);
+    protected ParallelCommandGroup newIntakeArmOutCommand() {
+        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
         return new IntakeArmInCommand(intake, indexer, hopper);
+    }
+
+    protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
+        return new VisionTurnInPlaceCommand(drivetrain, vision);
+    }
+
+    protected ClimberArmsBackCommand newClimberArmsBackCommand() {
+        return new ClimberArmsBackCommand(climber);
+    }
+
+    protected Command autonomousFinishedCommandGroup() {
+        return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED)).andThen(() -> drivetrain.stop(), drivetrain);
     }
 
     /**
@@ -244,6 +276,9 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
         return () -> {
+            if(vision.getLedMode() != 3.0) {
+                vision.setLED(LEDMode.ON);
+            }
             Rotation2d rotation;
             vision.updateLimelight();
             if(vision.hasValidTarget()) {

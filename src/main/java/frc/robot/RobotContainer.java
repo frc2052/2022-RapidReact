@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.AutoTesting;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
+import frc.robot.auto.MiddleLeft3BallTerminalDefenseAuto;
+import frc.robot.auto.MiddleLeft4BallTerminalDefenseAuto;
 import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
 import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
@@ -226,25 +228,29 @@ public class RobotContainer {
     // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer);
+        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       case ONE_BALL:
-        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper);
+        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case THREE_BALL_DRIVE_AND_SHOOT:
-        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer);
+        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_RIGHT_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
+        return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case MIDDLE_RIGHT_TERMINAL_4_BALL:
+        return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper);
+        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
         break;
     }
@@ -306,5 +312,9 @@ public class RobotContainer {
 
   public void resetGyro() {
     drivetrain.zeroGyroscope();
+  }
+
+  public void resetRobot() {
+    drivetrain.stop();
   }
 }

@@ -102,7 +102,7 @@ public class VisionCalculator {
         // Upper bound of the estimated distance from the target.
         VisionDistance upperDistance = null;
 
-        System.err.println("TY Val:" + ty);
+        //System.err.println("TY Val:" + ty);
 
         // Finds the upper and lower distance bounds to more accurately find a distance.
         for (int i = 0; i < visionDistances.size(); i++) {

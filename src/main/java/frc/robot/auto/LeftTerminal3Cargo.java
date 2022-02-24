@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -32,8 +33,8 @@ public class LeftTerminal3Cargo extends AutoBase {
     4 drive to terminal spot
     5 drive to shooting spot and shoot
     */
-    public LeftTerminal3Cargo(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem grassHopper) {
-        super(drivetrain, vision, shooter, intake, grassHopper, indexer);
+    public LeftTerminal3Cargo(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+        super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(30));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(41), Units.inchesToMeters(35.5), Rotation2d.fromDegrees(30));
@@ -48,7 +49,7 @@ public class LeftTerminal3Cargo extends AutoBase {
 
         
 
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, grassHopper, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmOutCommand());
@@ -56,7 +57,7 @@ public class LeftTerminal3Cargo extends AutoBase {
 
         this.addCommands(intakeBall1);
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(shoot2CargoCommand);
+        this.addCommands(super.newShootAllCommand());
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(terminalMidPoint);
         this.addCommands(driveToTerminalPos);

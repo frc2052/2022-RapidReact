@@ -12,13 +12,13 @@ import frc.robot.util.HsvToRgb;
 
 public class LEDSubsystem extends SubsystemBase {
 
-    private final CANifier canifier;
+//    private final CANifier canifier;
 
     private double externalBrightnessModifier;
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
-        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
+//        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
@@ -50,6 +50,7 @@ public class LEDSubsystem extends SubsystemBase {
         OFF("Off"),
         BLINK_RED("Blink Red"),
         SOLID_WHITE("Solid White"),
+        CURRENT_DEFAULT("Current Default Mode for Game Stage"),
         AUTONOMOUS_INTAKE_ON("Autonomous Intake On"),
         AUTONOMOUS_DEFAULT("Autonomous Default"),
         AUTONOMOUS_FINISHED("Autonomous Finished"),
@@ -84,22 +85,22 @@ public class LEDSubsystem extends SubsystemBase {
         externalBrightnessModifier = (int)(brightness - 100) / 100.0;
     }
 
-    @Override
-    public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot
+    // @Override
+    // public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot
 
-        if (currentLEDStatusMode != lastLEDStatusMode) {
-            counter = 0;
-            LEDsOff();
-            runLEDStatusModeInitial();
-            lastLEDStatusMode = currentLEDStatusMode;
-        }
+    //     if (currentLEDStatusMode != lastLEDStatusMode) {
+    //         counter = 0;
+    //         LEDsOff();
+    //         runLEDStatusModeInitial();
+    //         lastLEDStatusMode = currentLEDStatusMode;
+    //     }
 
-        runLEDStatusMode();
+    //     runLEDStatusMode();
 
-        canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
-        canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
-        canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
-    }
+    //     canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
+    //     canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
+    //     canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
+    // }
 
     private void runLEDStatusModeInitial() {
         switch (currentLEDStatusMode) {

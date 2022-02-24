@@ -43,9 +43,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
-    System.err.println("***************************** RUNNING SHOOTER");
-    System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
-    System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
+    //System.err.println("***************************** RUNNING SHOOTER");
+    //System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
+    //System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
     topWheelTargetVelocity = topVelocityTicksPerSeconds;
     bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds;
 
@@ -89,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // }
 
   public void stop() {
-    System.err.println("***************************** STOPPING SHOOTER");
+    //System.err.println("***************************** STOPPING SHOOTER");
     topWheelTargetVelocity = 0;
     bottomWheelTargetVelocity = 0;
 
@@ -98,7 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shootAtPercentage(double topWheelPercent, double bottomWheelPercent) {
-    System.err.println("***************************** RUN BY PERCENT SHOOTER");
+    //System.err.println("***************************** RUN BY PERCENT SHOOTER");
     topMotor.set(ControlMode.PercentOutput, topWheelPercent/100);
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }

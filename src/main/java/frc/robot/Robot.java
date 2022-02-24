@@ -78,6 +78,8 @@ public class Robot extends TimedRobot {
       autonomousCommand.schedule();
     }
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
+
+    robotContainer.resetRobot();
   }
 
   /** This function is called periodically during autonomous. */
