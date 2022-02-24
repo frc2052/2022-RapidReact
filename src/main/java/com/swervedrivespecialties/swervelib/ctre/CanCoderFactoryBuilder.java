@@ -4,6 +4,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoder;
 import com.swervedrivespecialties.swervelib.AbsoluteEncoderFactory;
 
@@ -27,6 +28,7 @@ public class CanCoderFactoryBuilder {
             config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
             config.magnetOffsetDegrees = Math.toDegrees(configuration.getOffset());
             config.sensorDirection = direction == Direction.CLOCKWISE;
+            config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
 
             CANCoder encoder = new CANCoder(configuration.getId());
             CtreUtils.checkCtreError(encoder.configAllSettings(config, 250), "Failed to configure CANCoder");
