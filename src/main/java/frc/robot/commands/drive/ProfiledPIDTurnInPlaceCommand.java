@@ -26,7 +26,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             // The ProfiledPIDController used by the command
             profiledPIDController,
             // This should return the measurement
-            () -> drivetrain.getPose().getRotation().getRadians(),
+            () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
             // This should return the goal (can also be a constant)
             deltaAngleSupplier.get().getRadians(),
             // This uses the output
@@ -36,8 +36,6 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             },
             drivetrain
         );
-        // Use addRequirements() here to declare subsystem dependencies.
-        // Configure additional PID options by calling `getController` here.
         this.drivetrain = drivetrain;
 
         // Set the controller to be continuous (because it is an angle controller)
