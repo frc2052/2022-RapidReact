@@ -280,7 +280,6 @@ public class AutoBase  extends SequentialCommandGroup {
                 vision.setLED(LEDMode.ON);
             }
             Rotation2d rotation;
-            vision.updateLimelight();
             if(vision.hasValidTarget()) {
                 rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
             } else {

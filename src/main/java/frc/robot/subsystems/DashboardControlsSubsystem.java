@@ -11,7 +11,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 /** Subsystem for sending and checking toggles and selectable lists on the SmartDashboard */
 public class DashboardControlsSubsystem extends SubsystemBase {
 
-    private VisionSubsystem visionSubsystem;
+    private VisionSubsystem vision;
     private HookClimberSubsystem climber;
 
     private SendableChooser<Autos> autoSelector;
@@ -32,7 +32,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private LEDStatusMode lastLEDStatusMode;
 
     public DashboardControlsSubsystem(VisionSubsystem vision, HookClimberSubsystem climber) { // Adds values and items to selectors and toggles.
-        this.visionSubsystem = vision;
+        this.vision = vision;
         this.climber = climber;
         
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
@@ -79,6 +79,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putData("Button Bindings Profiles", buttonBindingsProfileSelector);
 
         SmartDashboard.putNumber("LED Brightness", ledBrightness);
+        SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
@@ -95,20 +96,20 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
-                visionSubsystem.setLED(LEDMode.ON);
+                vision.setLED(LEDMode.ON);
                 lastLimelightLEDsEnabled = true;
             } else {
-                visionSubsystem.setLED(LEDMode.OFF);
+                vision.setLED(LEDMode.OFF);
                 lastLimelightLEDsEnabled = false;
             }
         }
 
         if (limelightDriveCamToggle != lastIsDriverCamera) {
             if(limelightDriveCamToggle) {
-                visionSubsystem.setCamMode(CamMode.VISION);
+                vision.setCamMode(CamMode.VISION);
                 lastIsDriverCamera = limelightDriveCamToggle;
             } else {
-                visionSubsystem.setCamMode(CamMode.DRIVER);
+                vision.setCamMode(CamMode.DRIVER);
                 lastIsDriverCamera = limelightDriveCamToggle;
             }
         }

@@ -319,10 +319,10 @@ public class RobotContainer {
       shooter.putToSmartDashboard();
       
       // For Testing Velocity Calculations
-      double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
-      SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
-      SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-      SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+      // double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+      // SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
+      // SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
+      // SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
     }
   }
 

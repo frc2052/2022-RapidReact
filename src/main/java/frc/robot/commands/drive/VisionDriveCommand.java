@@ -48,7 +48,6 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
-        vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
         horizontalAngle = vision.getTx(); //+ drivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 

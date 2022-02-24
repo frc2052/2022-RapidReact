@@ -32,7 +32,6 @@ public class VisionTurnInPlaceCommand extends CommandBase {
 
     @Override
     public void execute() {
-        vision.updateLimelight(); // VisionSubsystem's method to update networktable values.
         //double rotation = vision.getRotationToTarget();
         tx = vision.getTx();
         isLinedUp = false;

@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.*;
 import frc.robot.Constants;
+import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-    private double tx, ty, ta, ts, tl, tshort, tlong, thor, tvert, camMode, getpipe;
+    private double tx, ty, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
 
     private NetworkTableEntry ltv = table.getEntry("tv"); // If the Limelight has any targets.              Value between 0.0 and 1.0.
@@ -33,12 +34,10 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry lcamMode = table.getEntry("camMode"); // Can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
     private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // True active pipeline index of camera 0 through 9.
     private NetworkTableEntry lpipeline = table.getEntry("pipeline"); // NetworkTableEntry needed for setting pipeline value.
-
-    private NetworkTableEntry lstream = table.getEntry("stream"); 
+    private NetworkTableEntry lstream = table.getEntry("stream"); // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
 
     /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
-    private NetworkTableEntry lstream = table.getEntry("stream");   // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
     private NetworkTableEntry ltcornxy = table.getEntry("tcornxy"); // gets a number array of bounding box corner coordiantes [x0,y0,x1,y1……]
     private NetworkTableEntry cx0 = table.getEntry("cx0");          // Crosshair A X in normalized screen space
     private NetworkTableEntry cy0 = table.getEntry("cy0");          // Crosshair A Y in normalized screen space
@@ -54,36 +53,42 @@ public class VisionSubsystem extends SubsystemBase{
         .withSize(1,1);
     }
 
-    public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
-        tx = ltx.getDouble(0.0);
-        ty = lty.getDouble(0.0);
-        ta = lta.getDouble(0.0);
-        ts = lts.getDouble(0.0);
-        tl = ltl.getDouble(0.0);
+    @Override
+    public void periodic() {
+      hasValidTarget = ltv.getDouble(0.0) == 1.0;
 
-        tshort = ltshort.getDouble(0.0);
-        tlong = ltlong.getDouble(0.0);
-        thor = lthor.getDouble(0.0);
-        tvert = ltvert.getDouble(0.0);
-        camMode = lcamMode.getDouble(0.0);
-        getpipe = lgetpipe.getDouble(0.0);
-        
-        hasValidTarget = ltv.getDouble(0.0) == 1.0;
+      tx = ltx.getDouble(0.0);
+      ty = lty.getDouble(0.0);
     }
+
+    // public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
+    //     tx = ltx.getDouble(0.0);
+    //     ty = lty.getDouble(0.0);
+    //     ta = lta.getDouble(0.0);
+    //     ts = lts.getDouble(0.0);
+    //     tl = ltl.getDouble(0.0);
+
+    //     camMode = lcamMode.getDouble(0.0);
+    //     getpipe = lgetpipe.getDouble(0.0);
+        
+    //     hasValidTarget = ltv.getDouble(0.0) == 1.0;
+    // }
 
     public double getTx() {return this.tx;}
     public double getTy() {return this.ty;}
-    public double getTa() {return this.ta;}
-    public double getTs() {return this.ts;}
-    public double getTl() {return this.tl;}
+    public double getTa() {return this.lta.getDouble(0.0);}
+    public double getTs() {return this.lts.getDouble(0.0);}
+    public double getTl() {return this.ltl.getDouble(0.0);}
 
-    public double getTshort() {return this.tshort;}
-    public double getTlong() {return this.tlong;}
-    public double getThor() {return this.thor;}
-    public double getTvert() {return this.tvert;}
-    public double getCamMode() {return this.camMode;}
-    public double getGetpipe() {return this.getpipe;}
+    public double getTshort() {return this.ltshort.getDouble(0.0);}
+    public double getTlong() {return this.ltlong.getDouble(0.0);}
+    public double getThor() {return this.lthor.getDouble(0.0);}
+    public double getTvert() {return this.ltvert.getDouble(0.0);}
+
+    public double getCamMode() {return this.lcamMode.getDouble(0.0);}
+    public double getGetpipe() {return this.lgetpipe.getDouble(0.0);}
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
+    public double getStreamMode() {return this.lstream.getDouble(0.0);}
     
     public boolean isLinedUp() {
       return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
@@ -147,13 +152,8 @@ public class VisionSubsystem extends SubsystemBase{
       }
     }
 
-    public double getXDistanceToUpperHub() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
-      updateLimelight();
+    public double getEquationDistanceToUpperHubMeters() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.
       return (Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS) / (Math.tan(Math.toRadians(Constants.Limelight.MOUNT_ANGLE_DEGREES + ty))) + Constants.Limelight.DISTANCE_CALCULATION_LINEAR_OFFSET;
-    }
-
-    public double getXDistanceToUpperHub(double angle) { // Same calculation as the other but uses an angle argument.
-      return (Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS) / (Math.tan(Math.toRadians(Constants.Limelight.MOUNT_ANGLE_DEGREES + angle))) + Constants.Limelight.DISTANCE_CALCULATION_LINEAR_OFFSET;
     }
 
     public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation.
@@ -172,23 +172,20 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     public void putToSmartDashboard() {
-        updateLimelight();
         SmartDashboard.putBoolean("Is lined up?", isLinedUp());
         SmartDashboard.putBoolean("Has target?", hasValidTarget);
-        SmartDashboard.putString("Vertical Distance from Crosshair: ", ty + " degrees");
-        SmartDashboard.putString("Horizontal Distance from Crosshair: ", tx + " degrees");
-        SmartDashboard.putString("Target's area of the image", ta + "%");
-        SmartDashboard.putNumber("Skew or Rotation: ", ts);
-        SmartDashboard.putString("Latency: ", tl + "ms");
-        SmartDashboard.putNumber("Pipeline: ", getpipe);
-        SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
-        SmartDashboard.putBoolean("Enable Limelight LEDs", lledMode.getDouble(0.0) == 1.0 ? false : (lledMode.getDouble(0.0) == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
+        SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
+        SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
+        SmartDashboard.putString("Target's area of the image", getTa() + "%");
+        SmartDashboard.putString("Latency: ", getTl() + "ms");
+        SmartDashboard.putNumber("Pipeline: ", getGetpipe());
+        SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+        SmartDashboard.putBoolean("Enable Limelight LEDs", getLedMode() == 1.0 ? false : (getLedMode() == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
 
-        SmartDashboard.putNumber("xDistance away (Meters): ", getXDistanceToUpperHub());
-        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getXDistanceToUpperHub()));
+      //SmartDashboard.putNumber("xDistance away (Meters): ", getEquationDistanceToUpperHubMeters());
+        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
 
-        SmartDashboard.putBoolean("Is In Range?", getXDistanceToUpperHub() < Constants.ShooterSub.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (getXDistanceToUpperHub() > Constants.ShooterSub.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
-        SmartDashboard.putNumber("Stream Mode ", lstream.getDouble(0.0));
+        SmartDashboard.putBoolean("Is In Range?", VisionCalculator.getInstance().getDistanceInches(ty) < Constants.ShooterSub.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (VisionCalculator.getInstance().getDistanceInches(ty) > Constants.ShooterSub.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
 
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
