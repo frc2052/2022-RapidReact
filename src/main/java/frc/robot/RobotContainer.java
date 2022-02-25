@@ -220,6 +220,9 @@ public class RobotContainer {
     climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
     climberLockButton.whenPressed(() -> { climber.lockClimber(); });
 
+    // Button on SmartDashboard.
+    SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
+
     // TODO: Delete this when done
     pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
   }

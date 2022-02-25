@@ -68,8 +68,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
         }
     
-        driveModeSelector.setDefaultOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
-        driveModeSelector.addOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
+        driveModeSelector.setDefaultOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
+        driveModeSelector.addOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
 
         buttonBindingsProfileSelector.setDefaultOption(ButtonBindingsProfile.values()[0].name, ButtonBindingsProfile.values()[0]);
         for (int i = 1; i < ButtonBindingsProfile.values().length; i++) {
