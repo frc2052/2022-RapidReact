@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class OrchestraSubsystem extends SubsystemBase {
   private final Orchestra orchestra;
   private Songs currentSong;
+
   /** Creates a new OrchestraSubsystem. */
   public OrchestraSubsystem() {
     orchestra = new Orchestra();
@@ -35,9 +36,13 @@ public class OrchestraSubsystem extends SubsystemBase {
       System.err.println("The orchestra has an encore!");
     }
   }
-
+  
   public void setSong(Songs song) {
     this.currentSong = song;
+  }
+
+  public void loadMusic(String filePath) {
+    System.out.println("Music has been loaded!");
   }
 
   @Override
