@@ -3,17 +3,16 @@ package frc.robot.subsystems;
 // Subsystem for accessing the Limelight's NetworkTable values and creating methods to control it.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
-import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
 
-    Relay powerRelay = new Relay(Constants.Limelight.RELAY_PORT);
+    // Relay powerRelay = new Relay(Constants.Limelight.RELAY_PORT); - Limelight VEX Power relay code, can't use because defaults to off when robot is disabled
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -49,9 +48,9 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry cy1 = table.getEntry("cy1");          // Crosshair B Y in normalized screen space
     */
 
-    public VisionSubsystem() {
-      powerRelay.set(Relay.Value.kForward); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
-    }
+    // public VisionSubsystem() {
+    //   powerRelay.set(Relay.Value.kForward); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
+    // }
 
     @Override
     public void periodic() {
@@ -100,13 +99,14 @@ public class VisionSubsystem extends SubsystemBase{
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
     public double getStreamMode() {return this.lstream.getDouble(0.0);}
 
-    public boolean getRelayState() {
-      if(powerRelay.get() == Relay.Value.kOff) {
-        return false;
-      } else {
-        return true;
-      }
-    }
+    // Limelight VEX Power relay code, can't use because defaults to off when robot is disabled
+    // public boolean getRelayState() {
+    //   if(powerRelay.get() == Relay.Value.kOff) {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // }
     
     public boolean isLinedUp() {
       return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
@@ -195,15 +195,16 @@ public class VisionSubsystem extends SubsystemBase{
       }
     }
 
-    public void togglePowerRelay() {
-      if(powerRelay.get() == Relay.Value.kOff) {
-        powerRelay.set(Relay.Value.kForward);
-        // System.err.println("************ FORWARD");
-      } else {
-        powerRelay.set(Relay.Value.kOff); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
-        // System.err.println("************ OFF");
-      }
-    }
+    // Limelight VEX Power relay code, can't use because defaults to off when robot is disabled
+    // public void togglePowerRelay() {
+    //   if(powerRelay.get() == Relay.Value.kOff) {
+    //     powerRelay.set(Relay.Value.kForward);
+    //     // System.err.println("************ FORWARD");
+    //   } else {
+    //     powerRelay.set(Relay.Value.kOff); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
+    //     // System.err.println("************ OFF");
+    //   }
+    // }
 
     public void putToSmartDashboard() {
         SmartDashboard.putBoolean("Is lined up?", isLinedUp());
@@ -219,7 +220,7 @@ public class VisionSubsystem extends SubsystemBase{
       //SmartDashboard.putNumber("xDistance away (Meters): ", getEquationDistanceToUpperHubMeters());
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
 
-        SmartDashboard.putBoolean("Is In Range?", VisionCalculator.getInstance().getDistanceInches(ty) < Constants.Shooter.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (VisionCalculator.getInstance().getDistanceInches(ty) > Constants.Shooter.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
+        SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
 
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");

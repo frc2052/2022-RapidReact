@@ -88,6 +88,9 @@ public final class Constants {
 
         public static final double PIPELINE_SWITCH_TY_DEGREES = -20;
         public static final double PIPELINE_SWITCH_THRESHOLD = 3;
+
+        public static final double FAR_RANGE_FROM_HUB_ANGLE_DEGREES = -22.4;
+        public static final double CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES = 21.1;
     }
 
     public static final class PixyCamConstants {
