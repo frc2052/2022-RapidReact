@@ -66,11 +66,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean isAtSpeed() {
     // Consider the shooter on target if we are within a shooter tolerance of target speeds
-    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.ShooterSub.SHOOTER_TOLERANCE)
-        && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.ShooterSub.SHOOTER_TOLERANCE);
+    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+        && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.ShooterSub.SHOOTER_TOLERANCE)
-        && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.ShooterSub.SHOOTER_TOLERANCE);
+    boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+        && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
     return topIsOnTarget && bottomIsOnTarget;
   }

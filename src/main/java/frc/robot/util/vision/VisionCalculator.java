@@ -158,7 +158,7 @@ public class VisionCalculator {
 
         // Returns a default shooter configuration if either of the bounds are null
         if (lowerDistanceConfig == null && upperDistanceConfig == null) {
-            return shooterDistanceConfigs.get(Constants.ShooterSub.DEFAULT_ASSUMED_SHOOTER_CONFIG);
+            return shooterDistanceConfigs.get(Constants.Shooter.DEFAULT_ASSUMED_SHOOTER_CONFIG);
         } else if (lowerDistanceConfig == null) {
             return upperDistanceConfig;
         } else if (upperDistanceConfig == null) {

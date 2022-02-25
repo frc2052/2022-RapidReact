@@ -59,6 +59,16 @@ public class VisionSubsystem extends SubsystemBase{
 
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
+
+      if ((getPipeline() == 0 && ty >= Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES + Constants.Limelight.PIPELINE_SWITCH_THRESHOLD)) { // Logic for switching between Limelight vision pipelines on distance (angle here) - written weirdly to be as efficient as possible
+        if (getCamMode() != 1.0) {
+          setPipeline(1);
+        }
+      } else if (getPipeline() == 1 && ty < Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES - Constants.Limelight.PIPELINE_SWITCH_THRESHOLD) {
+        if (getCamMode() != 1.0) {
+          setPipeline(0);
+        }
+      }
     }
 
     // public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
@@ -86,7 +96,7 @@ public class VisionSubsystem extends SubsystemBase{
     public double getTvert() {return this.ltvert.getDouble(0.0);}
 
     public double getCamMode() {return this.lcamMode.getDouble(0.0);}
-    public double getGetpipe() {return this.lgetpipe.getDouble(0.0);}
+    public double getPipeline() {return this.lgetpipe.getDouble(0.0);}
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
     public double getStreamMode() {return this.lstream.getDouble(0.0);}
 
@@ -202,14 +212,14 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
         SmartDashboard.putString("Target's area of the image", getTa() + "%");
         SmartDashboard.putString("Latency: ", getTl() + "ms");
-        SmartDashboard.putNumber("Pipeline: ", getGetpipe());
+        SmartDashboard.putNumber("Pipeline: ", getPipeline());
         SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
         SmartDashboard.putBoolean("Enable Limelight LEDs", getLedMode() == 1.0 ? false : (getLedMode() == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
 
       //SmartDashboard.putNumber("xDistance away (Meters): ", getEquationDistanceToUpperHubMeters());
         SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
 
-        SmartDashboard.putBoolean("Is In Range?", VisionCalculator.getInstance().getDistanceInches(ty) < Constants.ShooterSub.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (VisionCalculator.getInstance().getDistanceInches(ty) > Constants.ShooterSub.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
+        SmartDashboard.putBoolean("Is In Range?", VisionCalculator.getInstance().getDistanceInches(ty) < Constants.Shooter.FAR_RANGE_LIMIT_FROM_HUB_METERS ? (VisionCalculator.getInstance().getDistanceInches(ty) > Constants.Shooter.CLOSE_RANGE_LIMIT_FROM_HUB_METERS ? true : false) : false);
 
         //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
         //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");

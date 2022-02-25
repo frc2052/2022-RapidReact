@@ -65,8 +65,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake);
 
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
-        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newIntakeArmInCommand());
-        ParallelDeadlineGroup waitToIntake = new ParallelDeadlineGroup(new WaitCommand(1), super.newIntakeArmOutCommand());
+        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
         ParallelDeadlineGroup aimingAndShooting1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
         ParallelDeadlineGroup intakeBall4Command = new ParallelDeadlineGroup(driveToBall4Pos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), onlyIntakeCommand);
@@ -76,8 +75,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1.25));
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(intakeTerminalBalls);
-        this.addCommands(waitToIntake);
-        this.addCommands(super.newIntakeArmInCommand());
+        this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
         this.addCommands(returnToShoot);
         this.addCommands(aimingAndShooting1);
         this.addCommands(intakeBall4Command);

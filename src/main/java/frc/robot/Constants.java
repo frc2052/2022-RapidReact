@@ -53,7 +53,7 @@ public final class Constants {
 
     }
 
-    public static final class ShooterSub {
+    public static final class Shooter {
         public static final double INDEXER_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
@@ -82,10 +82,12 @@ public final class Constants {
         public static final double LINED_UP_THRESHOLD = 2;
 
         public static final double DISTANCE_CALCULATION_LINEAR_OFFSET = 0;
-
         public static final int DEFAULT_ASSUMED_DISTANCE = 7;
 
         public static final int RELAY_PORT = 0;
+
+        public static final double PIPELINE_SWITCH_TY_DEGREES = -20;
+        public static final double PIPELINE_SWITCH_THRESHOLD = 3;
     }
 
     public static final class PixyCamConstants {
