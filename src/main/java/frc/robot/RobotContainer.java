@@ -328,6 +328,7 @@ public class RobotContainer {
       // SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
       // SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
       // SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+      SmartDashboard.putNumber("Max Velocity Meters Per Second", drivetrain.MAX_VELOCITY_METERS_PER_SECOND);
     }
   }
 
