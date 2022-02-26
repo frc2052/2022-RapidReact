@@ -136,8 +136,8 @@ public final class Constants {
     }
 
     public static final class Climber {
-        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.6; // .5
-        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.4; // .75
+        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.7; // .5
+        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.5; // .75
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
         // our gearbox ratio is 20
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
