@@ -26,15 +26,14 @@ public class OneBallAuto extends AutoBase{
     */
     public OneBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, null, hopper, indexer, climber);
-        vision.setLED(LEDMode.ON);
 
-        Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
-        Pose2d backUpPos = new Pose2d(Units.inchesToMeters(-50),0, Rotation2d.fromDegrees(0));
+        Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(175));
+        Pose2d backUpPos = new Pose2d(Units.inchesToMeters(-50),0, Rotation2d.fromDegrees(175));
 
         NonVisionShootCommand shootCommand = super.newNonVisionShoot1Command(7900, 7900);
         SwerveControllerCommand backUp = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, backUpPos);
 
-        this.addCommands(shootCommand);
+        this.addCommands(shootCommand.withTimeout(3));
         this.addCommands(backUp);
     }
 }

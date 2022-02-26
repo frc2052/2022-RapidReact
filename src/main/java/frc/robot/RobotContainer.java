@@ -36,7 +36,9 @@ import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.shooter.TuneShooterCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootLowCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
@@ -85,6 +87,7 @@ public class RobotContainer {
   private JoystickButton shootSingleButton;
   private JoystickButton shootAllButton;
   private JoystickButton shootLowGoalButton;
+  private JoystickButton limelightLineupNonvisionShootButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
@@ -155,6 +158,8 @@ public class RobotContainer {
     shootAllButton = new JoystickButton(driveJoystick, 1);
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(driveJoystick, 5);
+    limelightLineupNonvisionShootButton = new JoystickButton(driveJoystick, 10);
+    
     
     // Climber Buttons Bindings
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -212,6 +217,8 @@ public class RobotContainer {
     tuneShooterButton.whileHeld(new TuneShooterCommand(shooter, indexer, intake, hopper));
 
     shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
+
+    limelightLineupNonvisionShootButton.whileHeld(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000)); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
 
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
