@@ -24,7 +24,7 @@
                 {
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/Is An Auto Selected?",
-                  "_title": "Auto Selected?",
+                  "_title": "SmartDashboard/Is An Auto Selected?",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#8B0000FF"
                 },
@@ -207,7 +207,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Is In Range?",
-              "_title": "In Range?",
+              "_title": "SmartDashboard/Is In Range?",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
@@ -236,12 +236,12 @@
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Camera Mode: ",
-                  "_title": "Limelight Camera Mode"
+                  "_title": "Limelight Cam Mode"
                 },
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Gyro Angle",
-                  "_title": "Gyroscope Angle"
+                  "_title": "SmartDashboard/Gyro Angle"
                 }
               ]
             }
@@ -254,7 +254,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
-              "_title": "Shooter At Speed?",
+              "_title": "SmartDashboard/Shooter Wheels At Speed?",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
@@ -267,7 +267,7 @@
             "content": {
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
-              "_title": "Zero Climber"
+              "_title": "SmartDashboard/Zero Climber Encoder"
             }
           }
         }
@@ -380,7 +380,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///limelight/pipeline",
-              "_title": "limelight/pipeline"
+              "_title": "/limelight/pipeline"
             }
           }
         }
