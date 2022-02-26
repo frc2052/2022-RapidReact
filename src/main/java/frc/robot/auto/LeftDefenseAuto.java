@@ -67,7 +67,6 @@ public class LeftDefenseAuto extends AutoBase {
         this.addCommands(aimAndShoot);
         this.addCommands(intakeOpposingBall1);
         this.addCommands(turnToHangerIntakeStayOn);
-        this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(nonVisionShootAllCommand.withTimeout(2));
         this.addCommands(turnToFirstTeleopBall);
 

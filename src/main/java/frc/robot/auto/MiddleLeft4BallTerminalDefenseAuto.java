@@ -53,8 +53,8 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         Pose2d ball4Pos = new Pose2d(Units.inchesToMeters(-17), Units.inchesToMeters(97), Rotation2d.fromDegrees(-30));
 
         AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 4, 2);
-        AutoTrajectoryConfig intakingBothTerminalBallsTrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 5, 2);
-        AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(4, 4, 1, 3, 2);
+        AutoTrajectoryConfig intakingBothTerminalBallsTrajectoryConfig = super.createTrajectoryConfig(1.5, 1, 1, 5, 2);
+        AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 3, 2);
         AutoTrajectoryConfig intakeBall4TrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 5, 2);
 
         SwerveControllerCommand driveTowardsTerminalBalls = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withEndVelocity(3), startPos, approachTerminalBalls, kickBallMidpoint, super.createRotationAngle(-160));
@@ -64,19 +64,19 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
 
         OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake);
 
-        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
-        ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
+        //ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
+        //ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
         ParallelDeadlineGroup aimingAndShooting1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
         ParallelDeadlineGroup intakeBall4Command = new ParallelDeadlineGroup(driveToBall4Pos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), onlyIntakeCommand);
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1.25));
+        this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1));
         this.addCommands(driveTowardsTerminalBalls);
-        this.addCommands(intakeTerminalBalls);
-        this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
-        this.addCommands(returnToShoot);
+        this.addCommands(driveToArriveAtTerminalBalls);
+        //this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
+        this.addCommands(drivebackThroughHangerToShootPos);
         this.addCommands(aimingAndShooting1);
         this.addCommands(intakeBall4Command);
         this.addCommands(aimingAndShooting2);
