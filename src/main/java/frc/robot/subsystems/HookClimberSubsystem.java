@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.util.OrchestraUtility;
 
 public class HookClimberSubsystem extends SubsystemBase{
     // DoubleSolenoid that controls both in and out solenoids for both climbing arms.
@@ -51,6 +52,8 @@ public class HookClimberSubsystem extends SubsystemBase{
         isLocked = lockSolenoid.get() == Value.kReverse;
         isVertical = true;
         unlockClimber();
+
+        OrchestraUtility.getInstance().addInstrument(this.climberMotor);
     }
 
     /**

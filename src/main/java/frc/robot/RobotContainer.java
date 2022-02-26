@@ -230,7 +230,7 @@ public class RobotContainer {
 
     orchestraButton.whenPressed(() -> {
       if (!OrchestraUtility.getInstance().isPlaying()) {
-        OrchestraUtility.getInstance().setSong(Songs.DEFINITELY_NOT_A_RICK_ROLL);
+        OrchestraUtility.getInstance().setSong(Songs.STAR_SPANGLED_BANNER);
         OrchestraUtility.getInstance().playSong();
       } else {
         OrchestraUtility.getInstance().stopSong();

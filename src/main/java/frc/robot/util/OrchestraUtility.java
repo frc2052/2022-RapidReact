@@ -55,7 +55,8 @@ public class OrchestraUtility {
     }
 
     public static enum Songs {
-        DEFINITELY_NOT_A_RICK_ROLL("RickRoll");
+        DEFINITELY_NOT_A_RICK_ROLL("RickRoll"),
+        STAR_SPANGLED_BANNER("NationalAnthem");
     
         private final String fileName;
     
