@@ -139,7 +139,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastLEDBrightness = ledBrightness;
         }
 
-        if (this.getSelectedAuto() == Autos.ONE_BALL) {
+        if (this.getSelectedAuto() == Autos.NONE_SELECTED) {
             SmartDashboard.putBoolean("Is An Auto Selected?", false);
         } else {
             SmartDashboard.putBoolean("Is An Auto Selected?", true);
@@ -184,19 +184,20 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public enum Autos {
-        ONE_BALL("DEFAULT WHEN NO OTHER SELECTED - One Ball Auto, Any Starting Location Facing Towards Hub"),
+        NONE_SELECTED("NO AUTO SELECTED"),
+        ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
         AUTO_TESTING("Auto Testing"),
-        SIMPLE_3_BALL("Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
-        THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
-        LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
-        LEFT_2_BALL_1_DEFENSE("2 Ball and 1 Defence - Far Left Start (D) Facing Away From Hub"),
-        MIDDLE_RIGHT_TERMINAL_3_BALL("Terminal 3 Ball - Middle Right Start (B) Facing Away From Hub"),
-        MIDDLE_RIGHT_TERMINAL_4_BALL("Terminal 4 Ball - Middle Right Start (B) Facing Away From Hub"),
-        MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
-        MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("Other version of middle left terminal defense"),
-        RIGHT_FIVE_BALL("Right Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
-        RIGHT_FIVE_BALL_2("Right Five Ball Auto 2 - Far Right Start (A) Facing Away From Hub"),
-        RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
+        SIMPLE_3_BALL("*TUNED* Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
+        //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
+        //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
+        LEFT_2_BALL_1_DEFENSE("*TUNED* 2 Ball and 1 Defence - Far Left Start (D) Facing Away From Hub"),
+        //MIDDLE_RIGHT_TERMINAL_3_BALL("Terminal 3 Ball - Middle Right Start (B) Facing Away From Hub"),
+        MIDDLE_RIGHT_TERMINAL_4_BALL("*TUNED* Terminal 4 Ball - Middle Right Start (B) Facing Away From Hub"),
+        //MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
+        MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Other version of middle left terminal defense"),
+        //RIGHT_FIVE_BALL("Right Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
+        RIGHT_FIVE_BALL_2("*TUNED* Right Five Ball Auto 2 - Far Right Start (A) Facing Towards From Hub");
+        //RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
 
         public String name;
 
