@@ -59,15 +59,21 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
-      if ((getPipeline() == 0 && ty >= Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES + Constants.Limelight.PIPELINE_SWITCH_THRESHOLD)) { // Logic for switching between Limelight vision pipelines on distance (angle here) - written weirdly to be as efficient as possible
-        if (getCamMode() != 1.0) {
-          setPipeline(1);
-        }
-      } else if (getPipeline() == 1 && ty < Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES - Constants.Limelight.PIPELINE_SWITCH_THRESHOLD) {
-        if (getCamMode() != 1.0) {
-          setPipeline(0);
-        }
-      }
+      // if (hasValidTarget) {
+      //   if ((getPipeline() == 0 && ty >= Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES + Constants.Limelight.PIPELINE_SWITCH_THRESHOLD)) { // Logic for switching between Limelight vision pipelines on distance (angle here) - written weirdly to be as efficient as possible
+      //     if (getCamMode() != 1.0) {
+      //       setPipeline(1);
+      //     }
+      //   } else if (getPipeline() == 1 && ty < Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES - Constants.Limelight.PIPELINE_SWITCH_THRESHOLD) {
+      //     if (getCamMode() != 1.0) {
+      //       setPipeline(0);
+      //     }
+      //   }
+      // } else if (getPipeline() != 0.0) {
+      //   if (getCamMode() != 1.0) {
+      //     setPipeline(0);
+      //   }
+      // }
     }
 
     // public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
@@ -116,9 +122,9 @@ public class VisionSubsystem extends SubsystemBase{
       return this.hasValidTarget;
     }
 
-    public void setPipeline(int pipeline) { // Method to set pipeline (Limelight 'profile').
+    public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').
       if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines.
-        lpipeline.setDouble((double) pipeline);
+        lpipeline.setDouble(pipeline);
       else
         System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
     }
@@ -149,14 +155,12 @@ public class VisionSubsystem extends SubsystemBase{
     public void setCamMode(CamMode mode) {
       switch(mode) {
         case VISION:
-          setLED(LEDMode.ON);
           lcamMode.setDouble(0.0);  // Camera is used for vision processing.
-          this.setPipeline(0);      // Change to default pipeline for vision processing.
+          setPipeline(0.0);      // Change to default pipeline for vision processing.
           break;
         case DRIVER:
-          this.setLED(LEDMode.OFF);
           lcamMode.setDouble(9.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver.
-          this.setPipeline(9);      // Change to pipeline intended for driver cam.
+          setPipeline(9.0);      // Change to pipeline intended for driver cam.
           break;
       }
     }

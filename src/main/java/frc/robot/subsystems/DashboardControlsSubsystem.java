@@ -119,11 +119,13 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightDriveCamToggle != lastIsDriverCamera) {
             if(limelightDriveCamToggle) {
-                vision.setCamMode(CamMode.VISION);
-                lastIsDriverCamera = limelightDriveCamToggle;
-            } else {
+                vision.setLED(LEDMode.ON);
                 vision.setCamMode(CamMode.DRIVER);
-                lastIsDriverCamera = limelightDriveCamToggle;
+                lastIsDriverCamera = true;
+            } else {
+                vision.setLED(LEDMode.OFF);
+                vision.setCamMode(CamMode.VISION);
+                lastIsDriverCamera = false;
             }
         }
 
