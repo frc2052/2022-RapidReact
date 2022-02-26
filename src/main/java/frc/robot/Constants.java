@@ -76,8 +76,8 @@ public final class Constants {
     }
 
     public static final class Limelight {
-        public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(21); // ESTIMATE Based on Cad Model, update when robot is completed.
-        public static final double MOUNT_ANGLE_DEGREES = 45;
+        public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(28);
+        public static final double MOUNT_ANGLE_DEGREES = 65;
 
         public static final double LINED_UP_THRESHOLD = 2;
 
@@ -150,5 +150,9 @@ public final class Constants {
 
     public static final class LEDs {
         public static final int CANIFIER_PORT = 21;
+    }
+
+    public static final class Misc {
+        public static final double USB_CAM_MOUNT_HEIGHT_METERS = Units.inchesToMeters(29.5);
     }
 }

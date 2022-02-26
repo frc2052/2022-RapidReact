@@ -253,26 +253,26 @@ public class RobotContainer {
         return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
       case SIMPLE_3_BALL:
         return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case THREE_BALL_DRIVE_AND_SHOOT:
-        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
-      case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case MIDDLE_RIGHT_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case MIDDLE_LEFT_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_RIGHT_TERMINAL_4_BALL:
         return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case RIGHT_FIVE_BALL:
-        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case RIGHT_FIVE_BALL_2:
         return new RightFiveBallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case THREE_BALL_DRIVE_AND_SHOOT:
+    //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+    //   case LEFT_TERMINAL_3_BALL: 
+    //     return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case MIDDLE_RIGHT_TERMINAL_3_BALL:
+    //     return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case MIDDLE_LEFT_TERMINAL_DEFENSE:
+    //     return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case RIGHT_FIVE_BALL:
+    //     return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+    //     return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
         break;
     }
