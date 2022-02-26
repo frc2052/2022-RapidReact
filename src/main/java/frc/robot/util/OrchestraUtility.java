@@ -60,7 +60,7 @@ public class OrchestraUtility {
         private final String fileName;
     
         private Songs(String fileName) {
-          this.fileName = "songs/" + fileName + ".mid";
+          this.fileName = "songs/" + fileName + ".chrp";
         }
     
         public String getFileName() {
