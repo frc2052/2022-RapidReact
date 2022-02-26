@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
+import frc.robot.util.OrchestraUtility;
 
 public class ShooterSubsystem extends SubsystemBase {
   private final TalonFX topMotor;
@@ -40,6 +41,9 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.config_kI(0, 0, 10);
     bottomMotor.config_kD(0, 0, 10);
     bottomMotor.config_kF(0, 0.0522, 10);
+
+    OrchestraUtility.getInstance().addInstrument(topMotor); 
+    OrchestraUtility.getInstance().addInstrument(bottomMotor);
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {

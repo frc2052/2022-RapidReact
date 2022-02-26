@@ -43,11 +43,15 @@ public class OrchestraUtility {
         }
     }
 
-    public OrchestraUtility getInstance() {
+    public static OrchestraUtility getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new OrchestraUtility();
         }
         return INSTANCE;
+    }
+
+    public boolean isPlaying() {
+        return orchestra.isPlaying();
     }
 
     public static enum Songs {
@@ -56,7 +60,7 @@ public class OrchestraUtility {
         private final String fileName;
     
         private Songs(String fileName) {
-          this.fileName = fileName;
+          this.fileName = "songs/" + fileName + ".mid";
         }
     
         public String getFileName() {

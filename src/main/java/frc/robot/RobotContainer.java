@@ -47,8 +47,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-
+import frc.robot.util.OrchestraUtility;
 import frc.robot.util.ProjectileCalculator;
+import frc.robot.util.OrchestraUtility.Songs;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -68,11 +69,11 @@ public class RobotContainer {
   private IntakeSubsystem intake;
   private HopperSubsystem hopper;
   private PneumaticsSubsystem pneumatics;
-  private HookClimberSubsystem climber;
+  private HookClimberSubsystem climber; 
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
-  private final Joystick secondaryPannel = new Joystick(2);
+  private final Joystick secondaryPanel = new Joystick(2);
   
   private JoystickButton resetGyroButton;
 
@@ -90,6 +91,7 @@ public class RobotContainer {
   private JoystickButton climberUnlockButton;
   private JoystickButton tuneShooterButton;
   private JoystickButton climberOverrideButton;
+  private JoystickButton orchestraButton;
 
   private JoystickButton pidTestingButton;
 
@@ -144,9 +146,9 @@ public class RobotContainer {
     resetGyroButton = new JoystickButton(driveJoystick, 11);
 
     // Intake Buttons Bindings
-    intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
-    intakeInButton = new JoystickButton(secondaryPannel, 7);
-    intakeReverseButton = new JoystickButton(secondaryPannel, 6);
+    intakeArmToggleButton = new JoystickButton(secondaryPanel, 1);
+    intakeInButton = new JoystickButton(secondaryPanel, 7);
+    intakeReverseButton = new JoystickButton(secondaryPanel, 6);
 
     // Shooter Buttons Bindings
     shootSingleButton = new JoystickButton(turnJoystick, 1);
@@ -155,14 +157,16 @@ public class RobotContainer {
     shootLowGoalButton = new JoystickButton(driveJoystick, 5);
     
     // Climber Buttons Bindings
-    extendClimberButton = new JoystickButton(secondaryPannel, 5);
-    retractClimberButton = new JoystickButton(secondaryPannel, 3);
-    climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
-    climberUnlockButton = new JoystickButton(secondaryPannel, 11);
-    climberLockButton = new JoystickButton(secondaryPannel, 12);
-    climberOverrideButton = new JoystickButton(secondaryPannel, 8);
+    extendClimberButton = new JoystickButton(secondaryPanel, 5);
+    retractClimberButton = new JoystickButton(secondaryPanel, 3);
+    climberSolenoidToggleButton = new JoystickButton(secondaryPanel, 4);
+    climberUnlockButton = new JoystickButton(secondaryPanel, 11);
+    climberLockButton = new JoystickButton(secondaryPanel, 12);
+    climberOverrideButton = new JoystickButton(secondaryPanel, 8);
 
-    pidTestingButton = new JoystickButton(secondaryPannel, 2);
+    pidTestingButton = new JoystickButton(secondaryPanel, 2);
+
+    orchestraButton = new JoystickButton(secondaryPanel, 10);
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
@@ -223,6 +227,15 @@ public class RobotContainer {
 
     // TODO: Delete this when done
     pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+
+    orchestraButton.whenPressed(() -> {
+      if (!OrchestraUtility.getInstance().isPlaying()) {
+        OrchestraUtility.getInstance().setSong(Songs.DEFINITELY_NOT_A_RICK_ROLL);
+        OrchestraUtility.getInstance().playSong();
+      } else {
+        OrchestraUtility.getInstance().stopSong();
+      } 
+    });
   }
 
   /**
