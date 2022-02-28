@@ -59,6 +59,20 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
+      SmartDashboard.putBoolean("Has target?", hasValidTarget);
+      SmartDashboard.putNumber("Pipeline: ", getPipeline());
+      SmartDashboard.putString("Latency: ", getTl() + "ms");
+      SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+
+      if (hasValidTarget) {
+        SmartDashboard.putBoolean("Is lined up?", isLinedUp());
+        SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
+        SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
+        SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
+
+        SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
+      }
+
       // if (hasValidTarget) {
       //   if ((getPipeline() == 0 && ty >= Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES + Constants.Limelight.PIPELINE_SWITCH_THRESHOLD)) { // Logic for switching between Limelight vision pipelines on distance (angle here) - written weirdly to be as efficient as possible
       //     if (getCamMode() != 1.0) {
@@ -141,12 +155,14 @@ public class VisionSubsystem extends SubsystemBase{
             break;
           case OFF:
             lledMode.setDouble(1.0);  // Turns the Limelight's LEDs off.
+            SmartDashboard.putBoolean("Enable Limelight LEDs", false);  // SmartDashboard boolean sends in the case other locations enable or disable the LEDs.
             break;
           case BLINK:
             lledMode.setDouble(2.0);  // Makes the Limelight's LEDs blink.
             break;
           case ON:
             lledMode.setDouble(3.0);  // Turns the Limelight's LEDs on.
+            SmartDashboard.putBoolean("Enable Limelight LEDs", true);
             break;
         }
       }
@@ -209,29 +225,6 @@ public class VisionSubsystem extends SubsystemBase{
     //     // System.err.println("************ OFF");
     //   }
     // }
-
-    public void putToSmartDashboard() {
-        SmartDashboard.putBoolean("Is lined up?", isLinedUp());
-        SmartDashboard.putBoolean("Has target?", hasValidTarget);
-        SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
-        SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
-        SmartDashboard.putString("Target's area of the image", getTa() + "%");
-        SmartDashboard.putString("Latency: ", getTl() + "ms");
-        SmartDashboard.putNumber("Pipeline: ", getPipeline());
-        SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
-        SmartDashboard.putBoolean("Enable Limelight LEDs", getLedMode() == 1.0 ? false : (getLedMode() == 3.0 ? true : false)); // To update toggle in case classes other than DashboardControlsSubsystem enable the LEDs.
-
-      //SmartDashboard.putNumber("xDistance away (Meters): ", getEquationDistanceToUpperHubMeters());
-        SmartDashboard.putNumber("xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
-
-        SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
-
-        //SmartDashboard.putString("Shortest Bounding Box Side", tshort + " pixels");
-        //SmartDashboard.putString("Longest Bounding Box Side", tlong + " pixels");
-        //SmartDashboard.putString("Horizontal Bounding Box Sidelength", thor + " pixels");
-        //SmartDashboard.putString("Vertical Bounding Box Sidelength", tvert + " pixels");
-        //SmartDashboard.putNumber("Camtran", camtran);
-    }
 
     public enum LEDMode {PIPELINE, OFF, BLINK, ON}
     public enum CamMode {VISION, DRIVER}

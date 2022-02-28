@@ -66,11 +66,11 @@ public class IndexerSubsystem extends SubsystemBase {
     return !stagedCargoDetector.get();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Feeder Indexer Speed", getFeederIndexerSpeed());
-    SmartDashboard.putNumber("Large Indexer Speed", getLargeIndexerSpeed());
-  }
+  // @Override
+  // public void periodic() {
+  //   // This method will be called once per scheduler run
+  //   SmartDashboard.putNumber("Feeder Indexer Speed", getFeederIndexerSpeed());
+  //   SmartDashboard.putNumber("Large Indexer Speed", getLargeIndexerSpeed());
+  // }
   
 }
