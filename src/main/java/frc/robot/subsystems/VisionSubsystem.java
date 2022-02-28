@@ -156,7 +156,7 @@ public class VisionSubsystem extends SubsystemBase{
       switch(mode) {
         case VISION:
           lcamMode.setDouble(0.0);  // Camera is used for vision processing.
-          setPipeline(0.0);      // Change to default pipeline for vision processing.
+          setPipeline(Constants.Limelight.DEFAULT_PIPELINE);      // Change to default pipeline for vision processing.
           break;
         case DRIVER:
           lcamMode.setDouble(9.0);  // Camera settings are adjusted by turning exposure back up to be used as a regular camera by the driver.

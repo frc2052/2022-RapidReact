@@ -88,6 +88,7 @@ public class RobotContainer {
   private JoystickButton shootAllButton;
   private JoystickButton shootLowGoalButton;
   private JoystickButton limelightLineupNonvisionShootButton;
+  private JoystickButton againstHubUpperShotButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
@@ -159,6 +160,7 @@ public class RobotContainer {
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(driveJoystick, 5);
     limelightLineupNonvisionShootButton = new JoystickButton(driveJoystick, 10);
+    againstHubUpperShotButton = new JoystickButton(driveJoystick, 9);
     
     
     // Climber Buttons Bindings
