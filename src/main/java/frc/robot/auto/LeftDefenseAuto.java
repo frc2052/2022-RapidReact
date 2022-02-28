@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.shooter.NonVisionShootCommand;
@@ -45,7 +46,6 @@ public class LeftDefenseAuto extends AutoBase {
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
         TurnInPlaceCommand turnToHub = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(175));
-        VisionTurnInPlaceCommand turnAndAimCommand = new VisionTurnInPlaceCommand(drivetrain, vision);
         SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-90)), opponentBallPos, super.createRotationAngle(-90));
         TurnInPlaceCommand turnToHanger = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(135));
         TurnInPlaceCommand turnToFirstTeleopBall = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(-170));
@@ -56,20 +56,18 @@ public class LeftDefenseAuto extends AutoBase {
         
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
         //ParallelCommandGroup turnToShoot = new ParallelCommandGroup(turnToHub, super.newIntakeArmInCommand());
+        ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
         ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup turnToHangerIntakeStayOn = new ParallelDeadlineGroup(turnToHanger, super.newIntakeArmOutCommand());
         
         this.addCommands(climberBack);
         this.addCommands(intakeBall1);
         this.addCommands(turnToHub);
-        this.addCommands(turnAndAimCommand);
-        this.addCommands(super.newVisionTurnInPlaceCommand());
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(super.newShootAllCommand().withTimeout(4));
+        this.addCommands(aimAndShoot);
         this.addCommands(intakeOpposingBall1);
         this.addCommands(turnToHangerIntakeStayOn);
-        this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(nonVisionShootAllCommand.withTimeout(3));
+        this.addCommands(nonVisionShootAllCommand.withTimeout(2));
         this.addCommands(turnToFirstTeleopBall);
 
         

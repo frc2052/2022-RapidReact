@@ -13,13 +13,17 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
+import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
@@ -127,6 +131,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new IntakeArmInCommand(intake, indexer, hopper);
     }
 
+    protected AutoTimedIntakeOnThenInCommand newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
+        return new AutoTimedIntakeOnThenInCommand(intake, indexer, hopper, deadlineSeconds);
+    }
+
     protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
         return new VisionTurnInPlaceCommand(drivetrain, vision);
     }
@@ -137,6 +145,21 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Command autonomousFinishedCommandGroup() {
         return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED)).andThen(() -> drivetrain.stop(), drivetrain);
+    }
+
+    protected ParallelDeadlineGroup newAutoAimAndShootAllCommandGroup() {
+        return new ParallelDeadlineGroup(newAutoShootAllCommand(), new PerpetualCommand(newVisionTurnInPlaceCommand()));
+    }
+
+    /**
+     * Method located in AutoBase for easy Pose2d creation for Autos.
+     * @param xInches
+     * @param yInches
+     * @param wheelRotationDegrees
+     * @return
+     */
+    protected Pose2d newPose2dInches(double xInches, double yInches, double wheelRotationDegrees) {
+        return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches), Rotation2d.fromDegrees(wheelRotationDegrees));
     }
 
     /**
@@ -280,9 +303,23 @@ public class AutoBase  extends SequentialCommandGroup {
                 vision.setLED(LEDMode.ON);
             }
             Rotation2d rotation;
-            vision.updateLimelight();
             if(vision.hasValidTarget()) {
                 rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
+            } else {
+                rotation = Rotation2d.fromDegrees(noTargetAngle);
+            }
+            return rotation;
+        };
+    }
+
+    protected Supplier<Rotation2d> createHubTrackingSupplierWithOffset(double noTargetAngle, double offsetAngle) {
+        return () -> {
+            if(vision.getLedMode() != 3.0) {
+                vision.setLED(LEDMode.ON);
+            }
+            Rotation2d rotation;
+            if(vision.hasValidTarget()) {
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()).plus(Rotation2d.fromDegrees(offsetAngle)));
             } else {
                 rotation = Rotation2d.fromDegrees(noTargetAngle);
             }

@@ -31,11 +31,11 @@ public class IndexerSubsystem extends SubsystemBase {
   }
 
   public void runPreload() {
-    largeIndexer.set(ControlMode.PercentOutput, Constants.ShooterSub.INDEXER_SPEED);
+    largeIndexer.set(ControlMode.PercentOutput, Constants.Shooter.INDEXER_SPEED);
   }
 
   public void runFeeder() {
-    feederIndexer.set(ControlMode.PercentOutput, -Constants.ShooterSub.FEEDER_SPEED);
+    feederIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.FEEDER_SPEED);
   }
 
   public void stopPreload() {

@@ -42,7 +42,6 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
     @Override
     public void execute() {
         super.execute();
-        vision.updateLimelight();
     }
 
     @Override

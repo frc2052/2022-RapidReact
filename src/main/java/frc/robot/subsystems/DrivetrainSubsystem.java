@@ -72,7 +72,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // cause the angle reading to increase until it wraps back over to zero.
   private final AHRS navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
+  private SwerveDriveOdometry odometry;
 
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule frontLeftModule;
@@ -170,7 +170,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // TODO: Check if gyro has a startup time on reset
   public void zeroGyroscope() {
     navx.zeroYaw();
-    odometry.resetPosition(new Pose2d(0.0, 0.0, new Rotation2d()), getGyroscopeRotation());
+    odometry = new SwerveDriveOdometry(kinematics, navx.getRotation2d());
   }
 
   public Rotation2d getGyroscopeRotation() {

@@ -86,7 +86,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     // @Override
-    // public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot
+    // public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot - Currently commented out becasue Canifier is fried
 
     //     if (currentLEDStatusMode != lastLEDStatusMode) {
     //         counter = 0;

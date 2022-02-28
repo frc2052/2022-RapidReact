@@ -36,15 +36,15 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   public void execute() {
     super.execute();
     // TESTING Mathmatical calculations for running shooter at required velocity with Limelight's calculated distance.
-    if(vision.hasValidTarget()) {
-      double distance = vision.getXDistanceToUpperHub();
-      double reqVelocity = ProjectileCalculator.calculateReqProjectileVelocity(distance);
-      double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
-      //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
+    // if(vision.hasValidTarget()) {
+    //   double distance = vision.getEquationDistanceToUpperHubMeters();
+    //   double reqVelocity = ProjectileCalculator.calculateReqProjectileVelocity(distance);
+    //   double reqAngularVelocity = reqVelocity/Constants.ShooterSub.FLYWHEEL_RADIUS_METERS;
+    //   //double reqRPM = twoWheelFly.calculateReqShooterRPM(reqVelocity);
 
-      // shooter.setBothWheelVelocities(reqAngularVelocity);
-      // shooter.runAtShootSpeed();
-    }
+    //   // shooter.setBothWheelVelocities(reqAngularVelocity);
+    //   // shooter.runAtShootSpeed();
+    // }
   }
 
   // Called once the command ends or is interrupted.

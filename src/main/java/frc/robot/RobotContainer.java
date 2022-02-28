@@ -20,6 +20,7 @@ import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
 import frc.robot.auto.OneBallAuto;
 import frc.robot.auto.RightFiveBallAuto;
+import frc.robot.auto.RightFiveBallAuto2;
 import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
 import frc.robot.auto.ThreeballDriveAndShoot;
@@ -35,7 +36,9 @@ import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.shooter.TuneShooterCommand;
+import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootLowCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
@@ -50,6 +53,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.util.ProjectileCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -83,6 +87,7 @@ public class RobotContainer {
   private JoystickButton shootSingleButton;
   private JoystickButton shootAllButton;
   private JoystickButton shootLowGoalButton;
+  private JoystickButton limelightLineupNonvisionShootButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
@@ -153,6 +158,8 @@ public class RobotContainer {
     shootAllButton = new JoystickButton(driveJoystick, 1);
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(driveJoystick, 5);
+    limelightLineupNonvisionShootButton = new JoystickButton(driveJoystick, 10);
+    
     
     // Climber Buttons Bindings
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -211,6 +218,8 @@ public class RobotContainer {
 
     shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
 
+    limelightLineupNonvisionShootButton.whileHeld(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000)); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
+
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
     retractClimberButton.whileHeld(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
@@ -222,8 +231,20 @@ public class RobotContainer {
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
 
     // TODO: Delete this when done
-    pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+    //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
   }
+
+  // private void configureTurnJoystickButtonBindings() {
+    
+  // }
+
+  // private void configureDriveJoystickButtonBindings() {
+    
+  // }
+
+  // private void configureSecondaryPannelButtonBindings() {
+    
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -239,28 +260,29 @@ public class RobotContainer {
         return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
       case SIMPLE_3_BALL:
         return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case THREE_BALL_DRIVE_AND_SHOOT:
-        return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
-      case LEFT_TERMINAL_3_BALL: 
-        return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case LEFT_2_BALL_1_DEFENSE:
         return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case MIDDLE_RIGHT_TERMINAL_3_BALL:
-        return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case MIDDLE_LEFT_TERMINAL_DEFENSE:
-        return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_RIGHT_TERMINAL_4_BALL:
         return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case FIVE_BALL:
-        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case RIGHT_FIVE_BALL_2:
+        return new RightFiveBallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case THREE_BALL_DRIVE_AND_SHOOT:
+    //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+    //   case LEFT_TERMINAL_3_BALL: 
+    //     return new LeftTerminal3Cargo(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case MIDDLE_RIGHT_TERMINAL_3_BALL:
+    //     return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case MIDDLE_LEFT_TERMINAL_DEFENSE:
+    //     return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case RIGHT_FIVE_BALL:
+    //     return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+    //   case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+    //     return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
         break;
     }
-
     System.err.println("NO VALID AUTO SELECTED");
     return null;
   }
@@ -288,8 +310,11 @@ public class RobotContainer {
     return value;
   }
 
-  public void addSelectorsToSmartDashboard() {
+  public void addSelectorsAndCommandButtonsToSmartDashboard() {
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+
+    SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
+    SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
   }
 
   public void printToSmartDashboard() {
@@ -309,10 +334,11 @@ public class RobotContainer {
       shooter.putToSmartDashboard();
       
       // For Testing Velocity Calculations
-      double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
-      SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
-      SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-      SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+      // double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
+      // SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
+      // SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
+      // SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
+      SmartDashboard.putNumber("Max Velocity Meters Per Second", drivetrain.MAX_VELOCITY_METERS_PER_SECOND);
     }
   }
 

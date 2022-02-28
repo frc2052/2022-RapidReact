@@ -53,7 +53,7 @@ public final class Constants {
 
     }
 
-    public static final class ShooterSub {
+    public static final class Shooter {
         public static final double INDEXER_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
@@ -76,14 +76,21 @@ public final class Constants {
     }
 
     public static final class Limelight {
-        public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(21); // ESTIMATE Based on Cad Model, update when robot is completed.
-        public static final double MOUNT_ANGLE_DEGREES = 45;
+        public static final double MOUNT_HEIGHT_METERS = Units.inchesToMeters(28);
+        public static final double MOUNT_ANGLE_DEGREES = 65;
 
         public static final double LINED_UP_THRESHOLD = 2;
 
         public static final double DISTANCE_CALCULATION_LINEAR_OFFSET = 0;
-
         public static final int DEFAULT_ASSUMED_DISTANCE = 7;
+
+        public static final int RELAY_PORT = 0;
+
+        public static final double PIPELINE_SWITCH_TY_DEGREES = -20;
+        public static final double PIPELINE_SWITCH_THRESHOLD = 3;
+
+        public static final double FAR_RANGE_FROM_HUB_ANGLE_DEGREES = -22.4;
+        public static final double CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES = 21.1;
     }
 
     public static final class PixyCamConstants {
@@ -129,10 +136,10 @@ public final class Constants {
     }
 
     public static final class Climber {
-        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.4; // .5
-        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.4; // .75
+        public static final double CLIMBER_EXTENSION_SPEED_PCT  = 0.7; // .5
+        public static final double CLIMBER_RETRACT_SPEED_PCT  = -0.5; // .75
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
-        // our gearbox ratio is 12
+        // our gearbox ratio is 20
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
         // TODO: These Value Needs To Change
@@ -143,5 +150,9 @@ public final class Constants {
 
     public static final class LEDs {
         public static final int CANIFIER_PORT = 21;
+    }
+
+    public static final class Misc {
+        public static final double USB_CAM_MOUNT_HEIGHT_METERS = Units.inchesToMeters(29.5);
     }
 }
