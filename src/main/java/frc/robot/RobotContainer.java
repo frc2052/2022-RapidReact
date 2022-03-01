@@ -228,8 +228,8 @@ public class RobotContainer {
         NonVisionShootMode.SHOOT_ALL, 
         shooter, 
         indexer, 
-        VisionCalculator.getInstance().getShooterConfig(7*12).getTopMotorVelocityTicksPerSecond(), 
-        VisionCalculator.getInstance().getShooterConfig(7*12).getBottomMotorVelocityTicksPerSecond()));
+        VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
+        VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond()));
     
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
