@@ -53,6 +53,7 @@ import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.util.ProjectileCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -204,7 +205,7 @@ public class RobotContainer {
     );
     shootAllButton.whileHeld(
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+        new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
