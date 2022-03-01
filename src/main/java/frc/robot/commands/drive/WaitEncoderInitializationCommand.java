@@ -7,12 +7,16 @@ package frc.robot.commands.drive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class VerifyEncoderInitializationCommand extends CommandBase {
+public class WaitEncoderInitializationCommand extends CommandBase {
     private final DrivetrainSubsystem drivetrain;
     private final int timeoutSeconds;
 
+    public WaitEncoderInitializationCommand(DrivetrainSubsystem drivetrain) {
+        this(drivetrain, 10);
+    }
+
     /** Creates a new VerifyEncoderInitializationCommand. */
-    public VerifyEncoderInitializationCommand(DrivetrainSubsystem drivetrain, int timeoutSeconds) {
+    public WaitEncoderInitializationCommand(DrivetrainSubsystem drivetrain, int timeoutSeconds) {
         this.drivetrain = drivetrain;
 
         this.timeoutSeconds = timeoutSeconds;
