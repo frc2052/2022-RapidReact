@@ -46,7 +46,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         // limelightPowerRelayToggle = vision.getRelayState();
         limelightLEDOverride = false;
-        selectedAuto = getSelectedAuto();
+        selectedAuto = Autos.NONE_SELECTED;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
@@ -126,11 +126,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightDriveCamToggle != lastIsDriverCamera) {
             if(limelightDriveCamToggle) {
-                vision.setLED(LEDMode.ON);
+                vision.setLED(LEDMode.OFF);
                 vision.setCamMode(CamMode.DRIVER);
                 lastIsDriverCamera = true;
             } else {
-                vision.setLED(LEDMode.OFF);
+                vision.setLED(LEDMode.ON);
                 vision.setCamMode(CamMode.VISION);
                 lastIsDriverCamera = false;
             }
