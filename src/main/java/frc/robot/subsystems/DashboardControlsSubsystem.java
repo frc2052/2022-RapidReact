@@ -183,18 +183,14 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isLimelightDead != lastIsLimelightDead) {
-            System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
+            //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
             lastIsLimelightDead = isLimelightDead;
         }
     }
 
-    public boolean booleanTest() {
-        return isLimelightDead;
-    }
-
-    public BooleanSupplier getIsLimelightDead() {
-        return () -> booleanTest();
-    }
+    // public BooleanSupplier getIsLimelightDead() {
+    //     return () -> { return isLimelightDead; };
+    // }
 
     public Autos getSelectedAuto() {
         return autoSelector.getSelected();

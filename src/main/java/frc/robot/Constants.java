@@ -60,6 +60,7 @@ public final class Constants {
         public static final double FEEDER_SPEED = 1;
 
         public static final double SHOOTER_TOLERANCE = 0.05;
+        public static final double SHOOTER_PULLDOWN_PCT = 0.97;
 
         public static final double SHOOTER_FIRING_ANGLE_DEGREES = 72.0;
         public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);

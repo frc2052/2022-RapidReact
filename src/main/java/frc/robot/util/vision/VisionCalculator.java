@@ -41,7 +41,7 @@ public class VisionCalculator {
      */
     private void setupShooterDistanceConfigs() {
         shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 5000, 10000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7800, 7800));
+        shooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7400, 7400));
         shooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 7900, 7900));
         shooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 8500, 8500));
         shooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9000, 9000));

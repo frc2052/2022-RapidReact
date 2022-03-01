@@ -49,8 +49,8 @@ public class ShooterSubsystem extends SubsystemBase {
     topWheelTargetVelocity = topVelocityTicksPerSeconds;
     bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds;
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {
