@@ -172,7 +172,42 @@ public class DrivetrainSubsystem extends SubsystemBase {
     zeroGyroscope();
   }
 
-    public void waitForEncoderPosition(int timeOutSeconds) {
+    /**
+     * Finds if all of the swerve module encoders are properly initialized. 
+     * 
+     * @param timeOutSeconds the time in milleseconds for the getSensorInitializationStrategy to give up.
+     * @return If all the encoders have been properly initialized without errors.
+     */
+    public boolean encodersInitialized(int timeoutMs) {
+        for (SwerveModule module : modules) {
+            CANCoder encoder = module.getSteerEncoder().getCANCoder();
+
+            // Checks for the current position of the encoder.
+            double position = 0;
+            // TODO: Is this logic backwards? It's how it was described in the original post.
+            if (encoder.configGetSensorInitializationStrategy(timeoutMs) == SensorInitializationStrategy.BootToAbsolutePosition) {
+                position = encoder.getPosition();
+            } else {
+                position = encoder.getAbsolutePosition();
+            }
+
+            // Checks if getting the position threw an error and if not set the steer motor to the current position.
+            if (encoder.getLastError() == ErrorCode.OK) {
+                TalonFX steerMotor = (TalonFX) module.getSteerMotor();
+                steerMotor.setSelectedSensorPosition(position);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Original CheifDelphi post code
+     * @param timeOutSeconds
+     */
+    @Deprecated
+    private void waitForEncoderPosition(int timeOutSeconds) {
         for (SwerveModule module : modules) {
             boolean success = false;
             CANCoder encoder = module.getSteerEncoder().getCANCoder();
