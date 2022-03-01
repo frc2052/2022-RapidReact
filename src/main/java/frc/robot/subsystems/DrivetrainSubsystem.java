@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 //import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
@@ -20,12 +24,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.OrchestraUtility;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /**
@@ -79,6 +85,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule frontRightModule;
   private final SwerveModule backLeftModule;
   private final SwerveModule backRightModule;
+  private final SwerveModule[] modules;
 
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
@@ -160,8 +167,39 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.BACK_RIGHT_MODULE_STEER_OFFSET
     );
 
+    modules = new SwerveModule[] { frontRightModule, frontLeftModule, backLeftModule, backRightModule };
+
     zeroGyroscope();
   }
+
+    public void waitForEncoderPosition(int timeOutSeconds) {
+        for (SwerveModule module : modules) {
+            boolean success = false;
+            CANCoder encoder = module.getSteerEncoder().getCANCoder();
+            Timer loopTimer = new Timer();
+            if (encoder.configGetSensorInitializationStrategy((int) Units.secondsToMilliseconds(timeOutSeconds)) == SensorInitializationStrategy.BootToAbsolutePosition) {
+                loopTimer.start();
+                while (loopTimer.get() >= timeOutSeconds && !success) {
+                    double pos = encoder.getPosition();
+                    if (encoder.getLastError() == ErrorCode.OK) {
+                        TalonFX steerMotor = (TalonFX) module.getSteerMotor();
+                        steerMotor.setSelectedSensorPosition(pos);
+                        success = true;
+                    }
+                }
+            } else {
+                loopTimer.start();
+                while (loopTimer.get() >= timeOutSeconds && !success) {
+                    double absolutePos = encoder.getAbsolutePosition();
+                    if (encoder.getLastError() == ErrorCode.OK) {
+                        TalonFX steerMotor = (TalonFX) module.getSteerMotor();
+                        steerMotor.setSelectedSensorPosition(absolutePos);
+                        success = true;
+                    }
+                }  
+            }
+        }
+    }
 
   /**
    * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
