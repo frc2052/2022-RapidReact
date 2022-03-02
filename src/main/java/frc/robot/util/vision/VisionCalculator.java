@@ -116,7 +116,7 @@ public class VisionCalculator {
 
         // Returns a default distance if either of the bounds are null.
         if (lowerDistance == null && upperDistance == null) {
-            return visionDistances.get(Constants.Limelight.DEFAULT_ASSUMED_DISTANCE).getDistanceInches();
+            return 0;
         } else if (lowerDistance == null) {
             return upperDistance.getDistanceInches();
         } else if (upperDistance == null) {
@@ -141,6 +141,9 @@ public class VisionCalculator {
 
 
     public ShooterDistanceConfig getShooterConfig(int distanceInches) {
+        if(distanceInches <= 0){
+            return new ShooterDistanceConfig(0, 0, 0);
+        }
         // Lower bound of the estimated shooter configuration given the distance from the target.
         ShooterDistanceConfig lowerDistanceConfig = null;
         // Upper bound of the estimated shooter configuration given the distance from the target.

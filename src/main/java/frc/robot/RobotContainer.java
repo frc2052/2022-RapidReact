@@ -52,6 +52,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import frc.robot.util.ProjectileCalculator;
+import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -89,6 +90,7 @@ public class RobotContainer {
   private JoystickButton shootAllButton;
   private JoystickButton shootLowGoalButton;
   private JoystickButton limelightLineupNonvisionShootButton;
+  private JoystickButton nonVisionShootAllButton;
   private JoystickButton extendClimberButton;
   private JoystickButton retractClimberButton;
   private JoystickButton climberSolenoidToggleButton;
@@ -160,6 +162,7 @@ public class RobotContainer {
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(driveJoystick, 5);
     limelightLineupNonvisionShootButton = new JoystickButton(driveJoystick, 10);
+    nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
     
     
     // Climber Buttons Bindings
@@ -222,6 +225,14 @@ public class RobotContainer {
 
     limelightLineupNonvisionShootButton.whileHeld(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000)); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
 
+    nonVisionShootAllButton.whileHeld(
+      new NonVisionShootCommand(
+        NonVisionShootMode.SHOOT_ALL, 
+        shooter, 
+        indexer, 
+        VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
+        VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond()));
+    
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
     retractClimberButton.whileHeld(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
