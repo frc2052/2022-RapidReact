@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,13 +29,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean limelightDriveCamToggle;
     // private boolean limelightPowerRelayToggle;
     private boolean limelightLEDOverride;
+    private boolean isLimelightDead;
 
     private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
     // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
+    private boolean lastIsLimelightDead;
 
     private LEDStatusMode lastLEDStatusMode;
+    private Autos selectedAuto;
+    private Autos lastSelectedAuto;
 
     public DashboardControlsSubsystem(VisionSubsystem vision, HookClimberSubsystem climber) { // Adds values and items to selectors and toggles.
         this.vision = vision;
@@ -44,6 +50,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         // limelightPowerRelayToggle = vision.getRelayState();
         limelightLEDOverride = false;
+        selectedAuto = Autos.NONE_SELECTED;
+        isLimelightDead = false;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
@@ -51,6 +59,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         lastLEDStatusMode = LEDStatusMode.RAINBOW;
         // lastLimelightPowerRelayState = limelightPowerRelayToggle;
         lastLimelightLEDOverride = limelightLEDOverride;
+        lastSelectedAuto = selectedAuto;
+        lastIsLimelightDead = isLimelightDead;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -96,6 +106,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
         SmartDashboard.putBoolean("Limelight LED Override", limelightLEDOverride);
+        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
+
+        SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
     }
 
     @Override
@@ -106,6 +119,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
         limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
+        selectedAuto = getSelectedAuto();
+        isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead Button", false);
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -119,11 +134,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightDriveCamToggle != lastIsDriverCamera) {
             if(limelightDriveCamToggle) {
-                vision.setLED(LEDMode.ON);
+                vision.setLED(LEDMode.OFF);
                 vision.setCamMode(CamMode.DRIVER);
                 lastIsDriverCamera = true;
             } else {
-                vision.setLED(LEDMode.OFF);
+                vision.setLED(LEDMode.ON);
                 vision.setCamMode(CamMode.VISION);
                 lastIsDriverCamera = false;
             }
@@ -139,7 +154,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastLEDBrightness = ledBrightness;
         }
 
-        if (this.getSelectedAuto() == Autos.NONE_SELECTED) {
+        if (selectedAuto == Autos.NONE_SELECTED) {
             SmartDashboard.putBoolean("Is An Auto Selected?", false);
         } else {
             SmartDashboard.putBoolean("Is An Auto Selected?", true);
@@ -161,7 +176,21 @@ public class DashboardControlsSubsystem extends SubsystemBase {
                 lastLimelightLEDOverride = false;
             }
         }
+
+        if (selectedAuto != lastSelectedAuto && selectedAuto != null) {
+            SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+            lastSelectedAuto = selectedAuto;
+        }
+
+        if (isLimelightDead != lastIsLimelightDead) {
+            //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
+            lastIsLimelightDead = isLimelightDead;
+        }
     }
+
+    // public BooleanSupplier getIsLimelightDead() {
+    //     return () -> { return isLimelightDead; };
+    // }
 
     public Autos getSelectedAuto() {
         return autoSelector.getSelected();
@@ -184,25 +213,26 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     public enum Autos {
-        NONE_SELECTED("NO AUTO SELECTED"),
-        ONE_BALL("One Ball Auto, Any Starting Location Facing Towards Hub"),
-        AUTO_TESTING("Auto Testing"),
-        SIMPLE_3_BALL("*TUNED* Simple 3 Ball - Far Right Start (A) Facing Towards Hub"),
+        NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
+        ONE_BALL("One Ball", "Any Starting Location Facing Towards Hub"),
+        AUTO_TESTING("Auto Testing", "Auto Testing"),
+        SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A2) Facing Towards Hub"),
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
-        LEFT_2_BALL_1_DEFENSE("*TUNED* 2 Ball and 1 Defence - Far Left Start (D) Facing Away From Hub"),
+        LEFT_2_BALL_1_DEFENSE("*TUNED* 2 Ball and 1 Defence", "Far Left Start (D) Facing Away From Hub"),
         //MIDDLE_RIGHT_TERMINAL_3_BALL("Terminal 3 Ball - Middle Right Start (B) Facing Away From Hub"),
-        MIDDLE_RIGHT_TERMINAL_4_BALL("*TUNED* Terminal 4 Ball - Middle Right Start (B) Facing Away From Hub"),
+        MIDDLE_RIGHT_TERMINAL_4_BALL("*TUNED* Terminal 4 Ball", "Middle Left Start (C) Facing Towards Hub"),
         //MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
-        MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Other version of middle left terminal defense"),
-        //RIGHT_FIVE_BALL("Right Five Ball Auto - Far Right Start (A) Facing Away From Hub"),
-        RIGHT_FIVE_BALL_2("*TUNED* Right Five Ball Auto 2 - Far Right Start (A) Facing Towards From Hub");
+        MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Terminal 3 Ball", "Middle Left Start (C) Facing Towards Hub"),
+        RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto 2", "Far Right Start (A) Facing Towards Hub");
         //RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
 
         public String name;
+        public String description;
 
-        Autos(String name) {
+        Autos(String name, String description) {
             this.name = name;
+            this.description = description;
         }
     }
 

@@ -145,10 +145,11 @@ public class HookClimberSubsystem extends SubsystemBase{
         return numberOfRotaions * Constants.Climber.TICKS_PER_WINCH_ROTATION;
     }
 
-    public void putToSmartDashboard() {
-        SmartDashboard.putNumber("Climber Height Ticks", climberMotor.getSelectedSensorPosition());
-        SmartDashboard.putBoolean("Climber Locked", isLocked);
-    }
+@Override
+public void periodic() {
+    SmartDashboard.putNumber("Climber Height Ticks", climberMotor.getSelectedSensorPosition());
+    SmartDashboard.putBoolean("Climber Locked", isLocked);
+}
 
     public static enum ClimberSolenoidState {
         FORWARD,

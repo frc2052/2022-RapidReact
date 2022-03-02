@@ -49,8 +49,8 @@ public class ShooterSubsystem extends SubsystemBase {
     topWheelTargetVelocity = topVelocityTicksPerSeconds;
     bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds;
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {
@@ -103,11 +103,12 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }
 
-  public void putToSmartDashboard() {
-    SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
-    SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
-    SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
-    SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
-  }
+@Override
+public void periodic() {
+  SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
+  SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
+  SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
+  SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
+  SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+}
 }

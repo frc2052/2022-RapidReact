@@ -58,8 +58,8 @@ public class ShootCommand extends CommandBase {
     ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches);
 
     double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
-    if (shooterBoost < 0) {
-      shooterBoost = 0;
+    if (shooterBoost < -0.1) {
+      shooterBoost = -0.1;
     } else if (shooterBoost > 0.1) {
       shooterBoost = 0.1;
     }

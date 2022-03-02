@@ -20,7 +20,7 @@ import frc.robot.auto.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.MiddleRightTerminal3CargoAuto;
 import frc.robot.auto.OneBallAuto;
 import frc.robot.auto.RightFiveBallAuto;
-import frc.robot.auto.RightFiveBallAuto2;
+import frc.robot.auto.RightFiveBallAuto;
 import frc.robot.auto.Simple3BallAuto;
 import frc.robot.auto.TestAuto1;
 import frc.robot.auto.ThreeballDriveAndShoot;
@@ -54,6 +54,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -208,6 +209,7 @@ public class RobotContainer {
     shootAllButton.whileHeld(
       new ParallelCommandGroup(
         new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+        // new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -277,8 +279,8 @@ public class RobotContainer {
         return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       case MIDDLE_RIGHT_TERMINAL_4_BALL:
         return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      case RIGHT_FIVE_BALL_2:
-        return new RightFiveBallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case RIGHT_FIVE_BALL:
+        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
     //   case THREE_BALL_DRIVE_AND_SHOOT:
     //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
     //   case LEFT_TERMINAL_3_BALL: 
@@ -326,31 +328,6 @@ public class RobotContainer {
 
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
-  }
-
-  public void printToSmartDashboard() {
-    if (drivetrain != null) {
-      drivetrain.putToSmartDashboard();
-    }
-    if (vision != null) {
-      vision.putToSmartDashboard();
-    }
-    if (intake != null) {
-      intake.putToSmartDashboard();
-    }
-    if (climber != null) {
-      climber.putToSmartDashboard();
-    }
-    if (shooter != null) {
-      shooter.putToSmartDashboard();
-      
-      // For Testing Velocity Calculations
-      // double reqProjectileVelocity = ProjectileCalculator.calculateReqProjectileVelocity(vision.getXDistanceToUpperHub());
-      // SmartDashboard.putNumber("Required Projectile Velocity", reqProjectileVelocity);
-      // SmartDashboard.putNumber("Required Angular Velocity", reqProjectileVelocity / Constants.ShooterSub.FLYWHEEL_RADIUS_METERS);
-      // SmartDashboard.putNumber("Required RPM", ProjectileCalculator.calculateReqShooterRPM(reqProjectileVelocity));
-      SmartDashboard.putNumber("Max Velocity Meters Per Second", drivetrain.MAX_VELOCITY_METERS_PER_SECOND);
-    }
   }
 
   public void resetGyro() {

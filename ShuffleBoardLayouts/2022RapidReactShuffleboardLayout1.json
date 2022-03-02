@@ -34,19 +34,24 @@
                   "_title": "Auto Selector"
                 },
                 {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Selected Auto Description",
+                  "_title": "SmartDashboard/Selected Auto Description"
+                },
+                {
                   "_type": "ComboBox Chooser",
                   "_source0": "network_table:///SmartDashboard/Drive Modes",
                   "_title": "Drive Mode"
                 },
                 {
-                  "_type": "Toggle Button",
-                  "_source0": "network_table:///SmartDashboard/Toggle Limelight Driver Camera",
-                  "_title": "Toggle Limelight Driver Camera"
-                },
-                {
                   "_type": "Toggle Switch",
                   "_source0": "network_table:///SmartDashboard/Enable Limelight LEDs",
                   "_title": "Limelight LED Toggle"
+                },
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Toggle Limelight Driver Camera",
+                  "_title": "Toggle Limelight Driver Camera"
                 },
                 {
                   "_type": "ComboBox Chooser",
@@ -55,20 +60,20 @@
                 },
                 {
                   "_type": "Number Slider",
+                  "_source0": "network_table:///SmartDashboard/Shooter Velocity Boost Pct",
+                  "_title": "Shooter Velocity Boost Percent",
+                  "Slider Settings/Min": -0.1,
+                  "Slider Settings/Max": 0.1,
+                  "Slider Settings/Block increment": 0.01,
+                  "Visuals/Display value": true
+                },
+                {
+                  "_type": "Number Slider",
                   "_source0": "network_table:///SmartDashboard/LED Brightness",
                   "_title": "LED Brightness",
                   "Slider Settings/Min": 0.0,
                   "Slider Settings/Max": 100.0,
                   "Slider Settings/Block increment": 1.0,
-                  "Visuals/Display value": true
-                },
-                {
-                  "_type": "Number Slider",
-                  "_source0": "network_table:///SmartDashboard/Shooter Velocity Boost Pct",
-                  "_title": "Shooter Velocity Boost Percent",
-                  "Slider Settings/Min": 0.0,
-                  "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01,
                   "Visuals/Display value": true
                 }
               ]
@@ -382,6 +387,17 @@
               "_source0": "network_table:///limelight/pipeline",
               "_title": "/limelight/pipeline"
             }
+          },
+          "8,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Limelight Is Dead Button",
+              "_title": "SmartDashboard/Limelight Is Dead Button"
+            }
           }
         }
       }
@@ -477,6 +493,19 @@
             }
           }
         }
+      }
+    },
+    {
+      "title": "Tab 5",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
       }
     }
   ],

@@ -53,7 +53,8 @@ public class IntakeSubsystem extends SubsystemBase {
         intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    public void putToSmartDashboard() {
+    @Override
+    public void periodic() {
         SmartDashboard.putBoolean("Intake Arm Out", isIntakeArmOut);
     }
 }

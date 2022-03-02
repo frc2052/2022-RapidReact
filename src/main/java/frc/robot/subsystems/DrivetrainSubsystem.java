@@ -249,19 +249,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return intendedCurrentVelocity;
   }
 
-  public void putToSmartDashboard() {
+@Override
+public void periodic() {
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(backLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(backRightModule.getSteerAngle()));
-        SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
-        SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
+        // SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
+        // SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
         
         // For comparing gyro and wheel velocities
-        //SmartDashboard.putNumber("SwerveStates Wheel Velocity: ", swerveModuleStates[0].speedMetersPerSecond);
         SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
-        SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
-
-  }
+        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+}
 }
