@@ -41,9 +41,9 @@ public class RightFiveBallAuto2 extends AutoBase {
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);
         Pose2d ball1Pos = super.newPose2dInches(-38, 38, 90);
-        Pose2d ball2Pos = super.newPose2dInches(-28, 128, 50);
+        Pose2d ball2Pos = super.newPose2dInches(-28, 130, 50);
         Pose2d shootPos = super.newPose2dInches(0, 110, 45);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(-5, 265, 150);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(6, 266, 150);
         Pose2d terminalBallPos = super.newPose2dInches(-11, 310, 150);
         Pose2d shootPos2 = super.newPose2dInches(-10, 110, -30);
 
