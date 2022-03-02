@@ -62,7 +62,7 @@
                   "_type": "Number Slider",
                   "_source0": "network_table:///SmartDashboard/Shooter Velocity Boost Pct",
                   "_title": "Shooter Velocity Boost Percent",
-                  "Slider Settings/Min": 0.0,
+                  "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
                   "Slider Settings/Block increment": 0.01,
                   "Visuals/Display value": true
