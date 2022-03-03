@@ -113,6 +113,10 @@ public class RobotContainer {
   public RobotContainer() {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
+    vision = new VisionSubsystem();
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+
     drivetrain = new DrivetrainSubsystem();
 
     drivetrain.setDefaultCommand(
@@ -124,15 +128,12 @@ public class RobotContainer {
         dashboardControlsSubsystem
 		  )
     );
-
   }
 
   public void init() {
     if (!initComplete) {
         initComplete = true;
 
-    vision = new VisionSubsystem();
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climber);
     //intakeCamera = new UsbCameraSubsystem();  
 
     // //The following subsystems have a dependency on CAN
@@ -146,6 +147,7 @@ public class RobotContainer {
     //LEDSubsystem.getInstance();
 
     configureButtonBindings();
+    addSelectorsAndCommandButtonsToSmartDashboard();
     }
   }
 
@@ -332,8 +334,6 @@ public class RobotContainer {
   }
 
   public void addSelectorsAndCommandButtonsToSmartDashboard() {
-    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
-
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
   }

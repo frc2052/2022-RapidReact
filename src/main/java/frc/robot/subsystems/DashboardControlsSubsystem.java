@@ -1,11 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -14,7 +11,6 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class DashboardControlsSubsystem extends SubsystemBase {
 
     private VisionSubsystem vision;
-    private HookClimberSubsystem climber;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -41,9 +37,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
 
-    public DashboardControlsSubsystem(VisionSubsystem vision, HookClimberSubsystem climber) { // Adds values and items to selectors and toggles.
+    public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
         this.vision = vision;
-        this.climber = climber;
         
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
