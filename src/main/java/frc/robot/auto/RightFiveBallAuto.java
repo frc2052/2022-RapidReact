@@ -40,25 +40,25 @@ public class RightFiveBallAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);
-        Pose2d ball1Pos = super.newPose2dInches(-38, 38, 90);
-        Pose2d ball2Pos = super.newPose2dInches(-28, 130, 50);
+        Pose2d ball1Pos = super.newPose2dInches(-41, 38, 90);
+        Pose2d ball2Pos = super.newPose2dInches(-26, 133, 50);
         Pose2d shootPos = super.newPose2dInches(0, 110, 45);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(6, 266, 150);
-        Pose2d terminalBallPos = super.newPose2dInches(-11, 310, 150);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(32, 287, 150);
+        Pose2d terminalBallPos = super.newPose2dInches(12, 305, 150);
         Pose2d shootPos2 = super.newPose2dInches(-10, 110, -30);
 
-        AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(2, 1.5, 1, 5, 3);
-        AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 2, 3, 2);
-        AutoTrajectoryConfig shoot1TrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 8, 3);
-        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(4, 3, 3, 3, 2);
-        AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(2, 1.5, 2, 5, 2);
+        AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
+        AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 2, 3, 2);
+        AutoTrajectoryConfig shoot1TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 1, 8, 3);
+        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(4, 3.5, 3, 3, 2);
+        AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(2.5, 1.5, 2, 5, 2);
         AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(4, 3.5, 2, 3, 2);
 
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(0.5), startPos, ball1Pos, super.createRotationAngle(175));
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartVelocity(0.5), super.getLastEndingPosCreated(50), ball2Pos, super.createRotationAngle(50));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(shoot1TrajectoryConfig, super.getLastEndingPosCreated(-60), shootPos, super.createHubTrackingSupplier(-60));
-        SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(toTerminalTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(150), terminalBallMidPointPos, super.createRotationAngle(130));
-        SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(135));
+        SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(toTerminalTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(150), terminalBallMidPointPos, super.createRotationAngle(130));
+        SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(135));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(backToShootTrajectoryConfig, super.getLastEndingPosCreated(-30), shootPos2, createHubTrackingSupplier(-50));
 
         OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake);
@@ -66,25 +66,24 @@ public class RightFiveBallAuto extends AutoBase {
         //ParallelDeadlineGroup aimAndShootPreloaded = new ParallelDeadlineGroup(super.newAutoShoot1Command(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveToShoot1 = new ParallelDeadlineGroup(driveToShoot, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
-        ParallelDeadlineGroup driveToShoot1 = new ParallelDeadlineGroup(driveToShoot, super.newAutoTimedIntakeOnThenInCommand(1.5));
-        // ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newIntakeArmOutCommand());
-        // ParallelCommandGroup driveBackAndShoot = new ParallelCommandGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(1));
-        // ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
+        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newIntakeArmOutCommand());
+        ParallelCommandGroup driveBackAndShoot = new ParallelCommandGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(1));
+        ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(0.75));
         this.addCommands(intakeBall1);
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot1);
-        this.addCommands(aimAndShoot1); // Drives and rotates to position to shoot ball into upper hub\
         this.addCommands(super.newIntakeArmInCommand());
+        this.addCommands(aimAndShoot1); // Drives and rotates to position to shoot ball into upper hub\
         this.addCommands(driveToTerminalMidPoint);
-        this.addCommands(driveToTerminalBalls);
-        // this.addCommands(intakeTerminalBalls);
-        // this.addCommands(super.newIntakeArmOutCommand().withTimeout(0.75));
-        // this.addCommands(driveBackAndShoot);
-        // this.addCommands(aimAndShoot2.withTimeout(3));
+        this.addCommands(intakeTerminalBalls);
+        this.addCommands(super.newIntakeArmOutCommand().withTimeout(0.75));
+        this.addCommands(driveBackAndShoot);
+        this.addCommands(aimAndShoot2.withTimeout(3));
 
         //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
