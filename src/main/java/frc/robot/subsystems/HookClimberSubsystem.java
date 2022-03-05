@@ -57,7 +57,9 @@ public class HookClimberSubsystem extends SubsystemBase{
      * Extends the climbing arm at a set speed
      */
     public void manualExtendArm(boolean override) {
-        if (override || (climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED))) {
+        if (override) {
+            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
+        } else if (climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED)) {
             climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
         } else {
             System.err.println("Climber extended to (or past) the max height!");
