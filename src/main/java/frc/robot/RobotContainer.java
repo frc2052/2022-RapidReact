@@ -109,12 +109,14 @@ public class RobotContainer {
 
   private boolean initComplete = false;
 
+  private Command autonomousCommand;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
     vision = new VisionSubsystem();
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, this);
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
 
     drivetrain = new DrivetrainSubsystem();
@@ -275,22 +277,32 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Uses options sent to the SmartDashboard with AutoSelector, finds the selected option, and returns a new instance of the desired Auto command.
+    return autonomousCommand;
+  }
+
+  public void initializeAutonomousCommand() {
     switch(dashboardControlsSubsystem.getSelectedAuto()) {
       case AUTO_TESTING:
-        return new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+        autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+        break;
       case ONE_BALL:
-        return new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
+        autonomousCommand = new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
+        break;
       case SIMPLE_3_BALL:
-        return new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
       case LEFT_2_BALL_1_DEFENSE:
-        return new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
-        return new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
       case MIDDLE_RIGHT_TERMINAL_4_BALL:
-        return new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
       case RIGHT_FIVE_BALL:
-        return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
     //   case THREE_BALL_DRIVE_AND_SHOOT:
     //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
     //   case LEFT_TERMINAL_3_BALL: 
@@ -304,10 +316,9 @@ public class RobotContainer {
     //   case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
     //     return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
+        System.err.println("NO VALID AUTO SELECTED");
         break;
     }
-    System.err.println("NO VALID AUTO SELECTED");
-    return null;
   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code

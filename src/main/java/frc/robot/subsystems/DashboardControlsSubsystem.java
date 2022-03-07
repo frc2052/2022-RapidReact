@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class DashboardControlsSubsystem extends SubsystemBase {
 
     private VisionSubsystem vision;
+    private RobotContainer robotContainer;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -37,8 +39,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
 
-    public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
+    public DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
+        this.robotContainer = robotContainer;
         
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
@@ -174,6 +177,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (selectedAuto != lastSelectedAuto && selectedAuto != null) {
             SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+            robotContainer.initializeAutonomousCommand();
             lastSelectedAuto = selectedAuto;
         }
 
