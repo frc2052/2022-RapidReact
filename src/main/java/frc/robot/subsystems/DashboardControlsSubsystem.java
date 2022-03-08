@@ -110,7 +110,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops.
+    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops. Intended to only do logic when somthing has changed.
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
@@ -183,6 +183,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (isLimelightDead != lastIsLimelightDead) {
             //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
+            
             lastIsLimelightDead = isLimelightDead;
         }
     }

@@ -42,6 +42,7 @@ public class LeftDefenseAuto extends AutoBase {
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
+        //Pose2d closeShootPos = super.newPose2dInches(10, 10, -20);
         Pose2d opponentBallPos = new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-25), Rotation2d.fromDegrees(-90));
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));

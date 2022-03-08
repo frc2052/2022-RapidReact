@@ -18,6 +18,7 @@ public class VisionSubsystem extends SubsystemBase{
 
     private double tx, ty; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
+    private boolean isLinedUp;
     
     private boolean ledOverride = false;
 
@@ -59,13 +60,15 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
+      isLinedUp = Math.abs(tx) < -0.08 * ty + 3.4; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
+
       SmartDashboard.putBoolean("Has target?", hasValidTarget);
       SmartDashboard.putNumber("Pipeline: ", getPipeline());
       SmartDashboard.putString("Latency: ", getTl() + "ms");
       SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
       if (hasValidTarget) {
-        SmartDashboard.putBoolean("Is lined up?", isLinedUp());
+        SmartDashboard.putBoolean("Is lined up?", isLinedUp);
         SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
         SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
@@ -129,7 +132,8 @@ public class VisionSubsystem extends SubsystemBase{
     // }
     
     public boolean isLinedUp() {
-      return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
+      // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
+      return isLinedUp;
     }
 
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
@@ -211,7 +215,7 @@ public class VisionSubsystem extends SubsystemBase{
           return 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
         }
       } else {
-        return Math.PI; // If no target found rotate half a rotation per second to find target.
+        return 0; // If no target found don't rotate.
       }
     }
 
