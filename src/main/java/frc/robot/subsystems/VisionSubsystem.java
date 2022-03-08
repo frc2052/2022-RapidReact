@@ -60,7 +60,7 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
-      isLinedUp = Math.abs(tx) < -0.08 * ty + 3.4; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
+      isLinedUp = Math.abs(tx) < 0.08 * ty + 3.4; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
 
       SmartDashboard.putBoolean("Has target?", hasValidTarget);
       SmartDashboard.putNumber("Pipeline: ", getPipeline());
