@@ -214,9 +214,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     public enum Autos {
         NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
-        ONE_BALL("One Ball", "Any Starting Location Facing Towards Hub"),
+        ONE_BALL("*TUNED* One Ball", "Any Starting Location Facing Towards Hub"),
         AUTO_TESTING("Auto Testing", "Auto Testing"),
-        SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A2) Facing Towards Hub"),
+        SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A) Facing Towards Hub"),
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
         LEFT_2_BALL_1_DEFENSE("*TUNED* 2 Ball and 1 Defence", "Far Left Start (D) Facing Away From Hub"),
@@ -224,8 +224,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         MIDDLE_RIGHT_TERMINAL_4_BALL("*TUNED* Terminal 4 Ball", "Middle Left Start (C) Facing Towards Hub"),
         //MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
         MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Terminal 3 Ball", "Middle Left Start (C) Facing Towards Hub"),
-        RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto 2", "Far Right Start (A) Facing Towards Hub");
-        //RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
+        RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto", "Far Right Start (A2) Facing Towards Hub"),
+        LEFT_2_BALL_2_DEFENSE("-INITIAL TESTING- Left 2 Ball 2 Defense", "Far Left Start (D) Facing Away From Hub"),
+        RIGHT_MIDDLE_5_BALL_1_DEFENSE("_TUNING_ Right Middle 5 Ball 1 Defense", "Right Middle Start (B) Facing Away From Hub");
 
         public String name;
         public String description;

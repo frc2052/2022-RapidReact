@@ -7,7 +7,6 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
-import frc.robot.util.vision.ShooterDistanceConfig;
 import frc.robot.util.vision.VisionCalculator;
 
 import java.util.function.DoubleSupplier;
@@ -48,7 +47,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
-        horizontalAngle = vision.getTx(); //- drivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
+        horizontalAngle = vision.getTx() - drivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 
         if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.

@@ -10,13 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.drive.ProfiledPIDVisionTurnInPlaceCommand;
-import frc.robot.commands.drive.WaitOdometryResetCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand;
-import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -24,10 +18,8 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;

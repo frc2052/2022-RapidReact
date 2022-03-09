@@ -4,19 +4,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
-import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
-
 
 public class OneBallAuto extends AutoBase{
     

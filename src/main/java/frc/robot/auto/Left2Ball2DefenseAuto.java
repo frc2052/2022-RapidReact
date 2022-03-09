@@ -6,18 +6,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-import frc.robot.commands.shooter.NonVisionShootCommand;
-import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
-import frc.robot.commands.climber.ClimberArmsBackCommand;
-import frc.robot.commands.drive.TurnInPlaceCommand;
-import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -26,7 +18,6 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class Left2Ball2DefenseAuto extends AutoBase {
 

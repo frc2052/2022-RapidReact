@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.AutoTesting;
+import frc.robot.auto.Left2Ball2DefenseAuto;
 import frc.robot.auto.LeftDefenseAuto;
 import frc.robot.auto.LeftTerminal3Cargo;
 import frc.robot.auto.MiddleLeft3BallTerminalDefenseAuto;
@@ -303,6 +304,12 @@ public class RobotContainer {
       case RIGHT_FIVE_BALL:
         autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
+      case LEFT_2_BALL_2_DEFENSE:
+        autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+        autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
     //   case THREE_BALL_DRIVE_AND_SHOOT:
     //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
     //   case LEFT_TERMINAL_3_BALL: 
@@ -311,10 +318,6 @@ public class RobotContainer {
     //     return new MiddleRightTerminal3CargoAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
     //   case MIDDLE_LEFT_TERMINAL_DEFENSE:
     //     return new MiddleLeftTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-    //   case RIGHT_FIVE_BALL:
-    //     return new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-    //   case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-    //     return new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       default:
         System.err.println("NO VALID AUTO SELECTED");
         break;

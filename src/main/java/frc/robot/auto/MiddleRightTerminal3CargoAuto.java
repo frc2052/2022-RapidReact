@@ -1,17 +1,11 @@
 package frc.robot.auto;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
-import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -51,13 +45,10 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         SwerveControllerCommand driveToTerminalBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(150));
         SwerveControllerCommand driveBackToShoot2 = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
-        IntakeArmOutCommand intakeArmOutCommand = new IntakeArmOutCommand(intake, indexer, hopper);
-        IntakeArmInCommand intakeArmInCommand = new IntakeArmInCommand(intake, indexer, hopper);
-
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);
-        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, intakeArmOutCommand);
-        ParallelCommandGroup goBackToShoot = new ParallelCommandGroup(driveBackToShoot2, intakeArmInCommand);
+        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, super.newIntakeArmOutCommand());
+        ParallelCommandGroup goBackToShoot = new ParallelCommandGroup(driveBackToShoot2, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPos);
         this.addCommands(super.newShoot1Command());
