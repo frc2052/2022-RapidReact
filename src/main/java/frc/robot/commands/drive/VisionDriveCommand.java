@@ -85,13 +85,21 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.
         int distanceInches = VisionCalculator.getInstance().getDistanceInches(vision.getTy());  // Gets the calculated distance from the VisionCalculator
         double distanceMeters = Units.inchesToMeters(distanceInches);   // Converts to meters
-        ShooterDistanceConfig shooterDistanceConfig = VisionCalculator.getInstance().getShooterConfig(distanceInches);  // Gets the shooter config for the distance, so we can get the wheel velocities
-        double averageFiringVelocityTP100MS = (shooterDistanceConfig.getTopMotorVelocityTicksPerSecond() + shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond()) / 2;   // Finds average velocity between the 2 shooter wheel velocities
-        double averageFiringVelocityMPS = averageFiringVelocityTP100MS * 10 / 2048 * 2 * Math.PI * Constants.Shooter.FLYWHEEL_RADIUS_METERS; // Ticks per 100 ms to rotations per second by multiplying by 10 to get to seconds, and deviding by 2048, the amount of ticks per revolution of the falcon shooter motors. Can use this raw becasue the gear ratio from the motore to the shooter should be 1:1.
-        double lineToHubDistanceMeters = Math.hypot(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS, distanceMeters); // Gets the length for t
+        double shooterDistanceMeters = distanceMeters + Constants.Field.EDGE_TO_CENTER_OF_HUB_OFFSET_METERS - Constants.Limelight.OFFSET_FROM_CENTER_SHOOTER.getX();
+        // ShooterDistanceConfig shooterDistanceConfig = VisionCalculator.getInstance().getShooterConfig(distanceInches);  // Gets the shooter config for the distance, so we can get the wheel velocities
+        // double averageFiringVelocityTP100MS = (shooterDistanceConfig.getTopMotorVelocityTicksPerSecond() + shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond()) / 2;   // Finds average velocity between the 2 shooter wheel velocities
+        // double averageFiringVelocityMPS = averageFiringVelocityTP100MS * 10 / 2048 * 2 * Math.PI * Constants.Shooter.FLYWHEEL_RADIUS_METERS; // Ticks per 100 ms to rotations per second by multiplying by 10 to get to seconds, and deviding by 2048, the amount of ticks per revolution of the falcon shooter motors. Can use this raw becasue the gear ratio from the motore to the shooter should be 1:1.
+
+        double launchVelocity = Math.sqrt((shooterDistanceMeters * 9.8) / Math.sin(Math.toRadians(2 * Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES))); // Gets the velocity we should be launching the ball at
+        double xLaunchVelocity = launchVelocity * Math.cos(Math.toRadians(Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES));
+        // double yLaunchVelocity = launchVelocity * Math.sin(Math.toRadians(Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES));
+
+
+        double lineToHubDistanceMeters = Math.hypot(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS , shooterDistanceMeters); // Gets the length for t
         double currentWheelVelocityMPS = driveTrain.getIntendedCurrentVelocity(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
-        double offsetRadians = Math.atan(Math.toRadians(distanceMeters*currentWheelVelocityMPS/averageFiringVelocityMPS/lineToHubDistanceMeters));  // Plugs everything needed into the equation TODO Figure out if the Math.toRadians needs to be omitted
+        double offsetRadians = Math.atan(Math.toRadians(shooterDistanceMeters*currentWheelVelocityMPS/xLaunchVelocity/lineToHubDistanceMeters));  // Plugs everything needed into the equation TODO Figure out if the Math.toRadians needs to be omitted
         return Math.toDegrees(offsetRadians);   // Returns the needed offset in degrees
+        // return 0.0; // doesn't work yet
     }
 
     @Override

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -74,6 +75,8 @@ public final class Constants {
 
     public static final class Field {
         public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
+
+        public static final double EDGE_TO_CENTER_OF_HUB_OFFSET_METERS = 0.68;
     }
 
     public static final class Limelight {
@@ -94,6 +97,8 @@ public final class Constants {
         public static final double CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES = 21.1;
 
         public static final double DEFAULT_PIPELINE = 0.0;
+
+        public static final Translation2d OFFSET_FROM_CENTER_SHOOTER = new Translation2d(1, 1); // TEMP VALUE - measure and correct asap
     }
 
     public static final class PixyCamConstants {
