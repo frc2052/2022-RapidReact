@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class MovingShootingCommand extends CommandBase {
+public class MovingShootingCommand extends ShootCommand {
 
   private final ShooterSubsystem shooter;
   protected final IndexerSubsystem indexer; 
@@ -22,6 +22,7 @@ public class MovingShootingCommand extends CommandBase {
   private final VisionSubsystem vision;
   private final VisionCalculator visionCalculator;
   protected final ChassisSpeeds chassisSpeeds;
+  public ShootMode shootMode;
   public double veloXMetersSecond;
   public double veloYMetersSecond;
 
@@ -30,6 +31,7 @@ public class MovingShootingCommand extends CommandBase {
   public MovingShootingCommand(
     double vxMetersPerSecond, 
     double vyMetersPerSecond, 
+    ShootMode shootMode,
     ShooterSubsystem shooter,
     IndexerSubsystem indexer,
     HopperSubsystem hopper,
@@ -39,6 +41,7 @@ public class MovingShootingCommand extends CommandBase {
     ) {
     this.veloXMetersSecond = vxMetersPerSecond;
     this.veloYMetersSecond = vyMetersPerSecond;
+    this.shootMode = shootMode;
     this.shooter = shooter;
     this.indexer = indexer;
     this.hopper = hopper;
