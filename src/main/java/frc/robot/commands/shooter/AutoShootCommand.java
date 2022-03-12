@@ -42,7 +42,7 @@ public class AutoShootCommand extends ShootCommand {
           timer = new Timer();
           timer.start();
       }
-      if (timer.get() >= 1) { // At least 1 sec has passed since a ball was last seen
+      if (timer.get() >= 0.5) { // At least 1 sec has passed since a ball was last seen
         return true;
       }
     } else {

@@ -107,26 +107,17 @@ public class RobotContainer {
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
+  private boolean initComplete = false;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
-    init();
-  }
 
-  private void init() {
     vision = new VisionSubsystem();
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, climber);
-    //intakeCamera = new UsbCameraSubsystem();  
+    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision);
+    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
 
-    // //The following subsystems have a dependency on CAN
     drivetrain = new DrivetrainSubsystem();
-    shooter = new ShooterSubsystem();
-    indexer = new IndexerSubsystem();
-    intake = new IntakeSubsystem();
-    hopper = new HopperSubsystem();
-    pneumatics = new PneumaticsSubsystem();
-    climber = new HookClimberSubsystem();
-    //LEDSubsystem.getInstance();
 
     drivetrain.setDefaultCommand(
       new DefaultDriveCommand(
@@ -137,8 +128,27 @@ public class RobotContainer {
         dashboardControlsSubsystem
 		  )
     );
+  }
+
+  public void init() {
+    if (!initComplete) {
+        initComplete = true;
+
+    //intakeCamera = new UsbCameraSubsystem();  
+
+    // //The following subsystems have a dependency on CAN
+
+    shooter = new ShooterSubsystem();
+    indexer = new IndexerSubsystem();
+    intake = new IntakeSubsystem();
+    hopper = new HopperSubsystem();
+    pneumatics = new PneumaticsSubsystem();
+    climber = new HookClimberSubsystem();
+    //LEDSubsystem.getInstance();
 
     configureButtonBindings();
+    addSelectorsAndCommandButtonsToSmartDashboard();
+    }
   }
 
   /**
@@ -324,8 +334,6 @@ public class RobotContainer {
   }
 
   public void addSelectorsAndCommandButtonsToSmartDashboard() {
-    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
-
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
   }

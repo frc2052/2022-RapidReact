@@ -201,19 +201,6 @@
               ]
             }
           },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Is In Range?",
-              "_title": "SmartDashboard/Is In Range?",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
           "5,4": {
             "size": [
               1,
@@ -261,7 +248,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,4": {
+          "4,3": {
             "size": [
               1,
               1
@@ -270,6 +257,19 @@
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
               "_title": "SmartDashboard/Zero Climber Encoder"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Is In Range?",
+              "_title": "SmartDashboard/Is In Range?",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }

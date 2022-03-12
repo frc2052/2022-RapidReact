@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
 
-    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
+//    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
 
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);
   }
@@ -68,6 +68,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    robotContainer.init();
+
     robotContainer.resetGyro();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -107,6 +109,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    robotContainer.init();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
