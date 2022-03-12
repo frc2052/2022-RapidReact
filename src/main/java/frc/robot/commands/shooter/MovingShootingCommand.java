@@ -11,6 +11,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class MovingShootingCommand extends CommandBase {
@@ -23,6 +24,8 @@ public class MovingShootingCommand extends CommandBase {
   protected final ChassisSpeeds chassisSpeeds;
   public double veloXMetersSecond;
   public double veloYMetersSecond;
+
+  private Timer timer;
 
   public MovingShootingCommand(
     double vxMetersPerSecond, 
@@ -44,21 +47,26 @@ public class MovingShootingCommand extends CommandBase {
     this.chassisSpeeds = chassisSpeeds;
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(!super.indexer.getCargoStagedDetected() && !super.indexer.getCargoPreStagedDetected()) {
+      if (timer == null) {
+        timer = new Timer(); 
+        timer.start();
+      }
+      if (timer.get() >= 1) {
+        return true;
+      }
+    } else { 
+        clearTimer();
+    }
     return false;
+  }
+
+  private void clearTimer() {
+    if(timer != null) {
+        timer.stop();
+        timer = null;
+    }
   }
 }
