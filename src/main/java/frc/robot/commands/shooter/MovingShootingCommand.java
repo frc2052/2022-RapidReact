@@ -20,6 +20,7 @@ public class MovingShootingCommand extends CommandBase {
   private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
   private final VisionCalculator visionCalculator;
+  protected final ChassisSpeeds chassisSpeeds;
   public double veloXMetersSecond;
   public double veloYMetersSecond;
 
@@ -30,7 +31,8 @@ public class MovingShootingCommand extends CommandBase {
     IndexerSubsystem indexer,
     HopperSubsystem hopper,
     VisionSubsystem vision,
-    VisionCalculator visionCalculator
+    VisionCalculator visionCalculator,
+    ChassisSpeeds chassisSpeeds
     ) {
     this.veloXMetersSecond = vxMetersPerSecond;
     this.veloYMetersSecond = vyMetersPerSecond;
@@ -39,6 +41,7 @@ public class MovingShootingCommand extends CommandBase {
     this.hopper = hopper;
     this.vision = vision;
     this.visionCalculator = visionCalculator;
+    this.chassisSpeeds = chassisSpeeds;
   }
 
   // Called when the command is initially scheduled.
