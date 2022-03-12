@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.archive;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,7 +6,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;

@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.tuned;
 
 import java.util.List;
 
@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
 

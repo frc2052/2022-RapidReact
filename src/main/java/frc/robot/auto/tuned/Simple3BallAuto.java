@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.tuned;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -6,8 +6,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 
-import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -42,12 +43,11 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(path2Config, super.getLastEndingPosCreated(60), ball2Pos, super.createRotationAngle(60));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(path2Config, super.getLastEndingPosCreated(), shootPos, super.createHubTrackingSupplier(-45));
 
-        ClimberArmsBackCommand climberBack = new ClimberArmsBackCommand(climber);
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup returnToShoot = new ParallelDeadlineGroup(driveToShoot, super.newAutoTimedIntakeOnThenInCommand(0.25));
 
-        this.addCommands(climberBack);
+        this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(super.newAutoAimAndShootAllCommandGroup());
         this.addCommands(turnToBall1);
         this.addCommands(intakeBall1); // Drives and intakes the closest ball to the robot

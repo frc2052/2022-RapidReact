@@ -39,6 +39,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
 
+    private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
+
     public DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
         this.robotContainer = robotContainer;
@@ -83,6 +85,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         for (int i = 1; i < ButtonBindingsProfile.values().length; i++) {
             buttonBindingsProfileSelector.addOption(ButtonBindingsProfile.values()[i].name, ButtonBindingsProfile.values()[i]);
         }
+
+        lastSelectedButtonBindingsProfile = ButtonBindingsProfile.DEFAULT;
 
         // limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
         // limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
@@ -186,6 +190,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             
             lastIsLimelightDead = isLimelightDead;
         }
+
+        if (getSelectButtonBindingsProfile() != lastSelectedButtonBindingsProfile) {
+            robotContainer.assignButtonBindings(getSelectButtonBindingsProfile());
+            lastSelectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        }
     }
 
     // public BooleanSupplier getIsLimelightDead() {
@@ -244,19 +253,22 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     // This definately doesn't work but maybe it's steps in the rights direction
     public enum ButtonBindingsProfile {
-        DEFAULT("Default", new int[] {11, 1, 7, 6, 1, 1, 5}, new int[] {12, 3, 5, 7}, new int[] {1, 9, 3}),
-        SOLO_DRIVER("Solo Driver", new int[] {4, 6, 8, 10, 12}, new int[] {7, 2, 7, 9}, new int[] {4, 8, 11});
+        DEFAULT("Default"),
+        SOLO_DRIVER("Solo Driver");
 
         public String name;
-        public int[] turnJoystickBindings;
-        public int[] driveJoystickBindings;
-        public int[] secondaryPannelBindings;
+        // public int[] turnJoystickBindings;
+        // public int[] driveJoystickBindings;
+        // public int[] secondaryPannelBindings;
 
-        ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
+        ButtonBindingsProfile(String name) {
             this.name = name;
-            this.turnJoystickBindings = turnJoystickBindings;
-            this.driveJoystickBindings = driveJoystickBindings;
-            this.secondaryPannelBindings = secondaryPannelBindings;
-        }
+        } 
+        // ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
+        //     this.name = name;
+        //     this.turnJoystickBindings = turnJoystickBindings;
+        //     this.driveJoystickBindings = driveJoystickBindings;
+        //     this.secondaryPannelBindings = secondaryPannelBindings;
+        // }
     }
 }

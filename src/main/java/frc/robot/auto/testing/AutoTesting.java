@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.testing;
 
 // A version of Simple3BallAuto to be used and abused for testing and learning !
 
@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;

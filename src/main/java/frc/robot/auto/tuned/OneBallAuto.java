@@ -1,9 +1,10 @@
-package frc.robot.auto;
+package frc.robot.auto.tuned;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand;
+import frc.robot.auto.AutoBase;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -24,10 +25,9 @@ public class OneBallAuto extends AutoBase{
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(175));
         Pose2d backUpPos = new Pose2d(Units.inchesToMeters(-50),0, Rotation2d.fromDegrees(175));
 
-        NonVisionShootCommand shootCommand = super.newNonVisionShoot1Command(7900, 7900);
         SwerveControllerCommand backUp = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, backUpPos);
 
-        this.addCommands(shootCommand.withTimeout(3));
+        this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(3));
         this.addCommands(backUp);
     }
 }

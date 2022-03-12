@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
 
+    robotContainer.initializeAutonomousCommand();
 //    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
 
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);

@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.tuned;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.drive.WaitOdometryResetCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;

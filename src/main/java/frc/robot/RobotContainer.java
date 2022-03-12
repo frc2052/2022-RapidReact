@@ -10,21 +10,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import frc.robot.auto.AutoTesting;
-import frc.robot.auto.Left2Ball2DefenseAuto;
-import frc.robot.auto.LeftDefenseAuto;
-import frc.robot.auto.LeftTerminal3Cargo;
-import frc.robot.auto.MiddleLeft3BallTerminalDefenseAuto;
-import frc.robot.auto.MiddleLeft4BallTerminalDefenseAuto;
-import frc.robot.auto.MiddleLeftTerminalDefenseAuto;
-import frc.robot.auto.MiddleRight5BallDefenseAuto;
-import frc.robot.auto.MiddleRightTerminal3CargoAuto;
-import frc.robot.auto.OneBallAuto;
-import frc.robot.auto.RightFiveBallAuto;
-import frc.robot.auto.RightFiveBallAuto;
-import frc.robot.auto.Simple3BallAuto;
-import frc.robot.auto.TestAuto1;
-import frc.robot.auto.ThreeballDriveAndShoot;
+import frc.robot.auto.testing.AutoTesting;
+import frc.robot.auto.testing.Left2Ball2DefenseAuto;
+import frc.robot.auto.tuned.LeftDefenseAuto;
+import frc.robot.auto.testing.LeftTerminal3Cargo;
+import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
+import frc.robot.auto.tuned.MiddleLeft4BallTerminalDefenseAuto;
+import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
+import frc.robot.auto.testing.MiddleRightTerminal3CargoAuto;
+import frc.robot.auto.tuned.OneBallAuto;
+import frc.robot.auto.tuned.RightFiveBallAuto;
+import frc.robot.auto.tuned.Simple3BallAuto;
+import frc.robot.auto.testing.ThreeballDriveAndShoot;
 
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
@@ -51,8 +48,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-
+import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
 import frc.robot.util.ProjectileCalculator;
+import frc.robot.util.buttonbindings.ButtonList.ButtonCommands;
+import frc.robot.util.buttonbindings.profiles.Default;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -77,9 +76,9 @@ public class RobotContainer {
   private PneumaticsSubsystem pneumatics;
   private HookClimberSubsystem climber;
 
-  private final Joystick driveJoystick = new Joystick(0);
-  private final Joystick turnJoystick = new Joystick(1);
-  private final Joystick secondaryPannel = new Joystick(2);
+  private Joystick driveJoystick = new Joystick(0);
+  private Joystick turnJoystick = new Joystick(1);
+  private Joystick secondaryPannel = new Joystick(2);
   
   private JoystickButton resetGyroButton;
 
@@ -258,6 +257,29 @@ public class RobotContainer {
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+
+    ButtonCommands.VISION_SHOOT.setCommand(new ParallelCommandGroup(
+      new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+      // new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
+      new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+        drivetrain,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+        vision,
+        dashboardControlsSubsystem
+      )
+    ));
+  }
+
+  public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
+    switch(buttonBindingsProfile) {
+      case DEFAULT:
+        driveJoystick = new Joystick(0);
+        turnJoystick = new Joystick(1);
+        secondaryPannel = new Joystick(2);
+        Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+        break;
+    }
   }
 
   // private void configureTurnJoystickButtonBindings() {
