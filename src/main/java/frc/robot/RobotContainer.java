@@ -50,8 +50,9 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
 import frc.robot.util.ProjectileCalculator;
-import frc.robot.util.buttonbindings.ButtonList.ButtonCommands;
+import frc.robot.util.buttonbindings.ButtonCommands;
 import frc.robot.util.buttonbindings.profiles.Default;
+import frc.robot.util.buttonbindings.profiles.SoloDriver;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -149,7 +150,6 @@ public class RobotContainer {
     //LEDSubsystem.getInstance();
 
     configureButtonBindings();
-    addSelectorsAndCommandButtonsToSmartDashboard();
     }
   }
 
@@ -176,7 +176,6 @@ public class RobotContainer {
     limelightLineupNonvisionShootButton = new JoystickButton(driveJoystick, 10);
     nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
     
-    
     // Climber Buttons Bindings
     extendClimberButton = new JoystickButton(secondaryPannel, 5);
     retractClimberButton = new JoystickButton(secondaryPannel, 3);
@@ -186,6 +185,54 @@ public class RobotContainer {
     climberOverrideButton = new JoystickButton(secondaryPannel, 8);
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
+
+    ButtonCommands.SHOOT_SINGLE.setCommand(
+      new ParallelCommandGroup(
+        new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+          drivetrain,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          vision,
+          dashboardControlsSubsystem
+      )
+    ));
+    ButtonCommands.VISION_SHOOT_ALL.setCommand(new ParallelCommandGroup(
+        new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+        // new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+          drivetrain,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          vision,
+          dashboardControlsSubsystem
+        )
+      ));
+
+    ButtonCommands.RESET_GYRO.setCommand(new InstantCommand(() -> { this.resetGyro(); }));
+
+    ButtonCommands.INTAKE_TOGGLE.setCommand(new IntakeArmToggleCommand(intake, indexer, hopper));
+    ButtonCommands.INTAKE_ON.setCommand(new IntakeInCommand(intake, indexer, hopper));
+    ButtonCommands.INTAKE_REVERSE.setCommand(new IntakeReverseCommand(intake, hopper));
+
+    ButtonCommands.TUNE_SHOOTER.setCommand(new TuneShooterCommand(shooter, indexer, intake, hopper));
+    ButtonCommands.SHOOT_LOW_GOAL.setCommand(new ShootLowCommand(shooter, indexer));
+    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000));
+
+    ButtonCommands.NON_VISION_SHOOT_ALL.setCommand(
+      new NonVisionShootCommand(
+        NonVisionShootMode.SHOOT_ALL, 
+        shooter, 
+        indexer, 
+        VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
+        VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond())
+      );
+
+    ButtonCommands.CLIMBER_EXTEND.setCommand(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
+    ButtonCommands.CLIMBER_RETRACT.setCommand(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
+    ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(new ToggleClimberSolenoidCommand(climber));
+    ButtonCommands.UNLOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.unlockClimber(); }));
+    ButtonCommands.LOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.lockClimber(); }));
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
@@ -201,83 +248,53 @@ public class RobotContainer {
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
-    intakeArmToggleButton.whenPressed(new IntakeArmToggleCommand(intake, indexer, hopper));
-    intakeInButton.whileHeld(new IntakeInCommand(intake, indexer, hopper));
-    intakeReverseButton.whileHeld(new IntakeReverseCommand(intake, hopper));
+    intakeArmToggleButton.whenPressed(ButtonCommands.INTAKE_TOGGLE.command);
+    intakeInButton.whileHeld(ButtonCommands.INTAKE_ON.command);
+    intakeReverseButton.whileHeld(ButtonCommands.INTAKE_REVERSE.command);
 
     // Shooter Button Command Bindings
-    shootSingleButton.whileHeld(
-      new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
-        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-          drivetrain,
-          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          vision,
-          dashboardControlsSubsystem
-        )
-      )
-    );
-    shootAllButton.whileHeld(
-      new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-        // new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
-        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-          drivetrain,
-          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          vision,
-          dashboardControlsSubsystem
-        )
-      )
-    );
-    tuneShooterButton.whileHeld(new TuneShooterCommand(shooter, indexer, intake, hopper));
+    shootSingleButton.whileHeld(ButtonCommands.SHOOT_SINGLE.command);
+    shootAllButton.whileHeld(ButtonCommands.VISION_SHOOT_ALL.command);
+    tuneShooterButton.whileHeld(ButtonCommands.TUNE_SHOOTER.command);
 
-    shootLowGoalButton.whileHeld(new ShootLowCommand(shooter, indexer));
+    shootLowGoalButton.whileHeld(ButtonCommands.SHOOT_LOW_GOAL.command);
 
-    limelightLineupNonvisionShootButton.whileHeld(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000)); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
+    limelightLineupNonvisionShootButton.whileHeld(ButtonCommands.LINEUP_SHOOT.command); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
 
-    nonVisionShootAllButton.whileHeld(
-      new NonVisionShootCommand(
-        NonVisionShootMode.SHOOT_ALL, 
-        shooter, 
-        indexer, 
-        VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
-        VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond()));
+    nonVisionShootAllButton.whileHeld(ButtonCommands.NON_VISION_SHOOT_ALL.command);
+      
     
     // Climber Button Command Bindings
-    extendClimberButton.whileHeld(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
-    retractClimberButton.whileHeld(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
-    climberSolenoidToggleButton.whenPressed(new ToggleClimberSolenoidCommand(climber));
-    climberUnlockButton.whenPressed(() -> { climber.unlockClimber(); });
-    climberLockButton.whenPressed(() -> { climber.lockClimber(); });
+    extendClimberButton.whileHeld(ButtonCommands.CLIMBER_EXTEND.command);
+    retractClimberButton.whileHeld(ButtonCommands.CLIMBER_RETRACT.command);
+    climberSolenoidToggleButton.whenPressed(ButtonCommands.TOGGLE_CLIMBER_ANGLE.command);
+    climberUnlockButton.whenPressed(ButtonCommands.UNLOCK_CLIMBER.command);
+    climberLockButton.whenPressed(ButtonCommands.LOCK_CLIMBER.command);
 
-    // Button on SmartDashboard.
+    // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
+    SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
 
-    ButtonCommands.VISION_SHOOT.setCommand(new ParallelCommandGroup(
-      new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-      // new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem.getIsLimelightDead()),
-      new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-        drivetrain,
-        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        vision,
-        dashboardControlsSubsystem
-      )
-    ));
   }
 
   public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
+    driveJoystick = new Joystick(0);
+    turnJoystick = new Joystick(1);
+    secondaryPannel = new Joystick(2);
+
     switch(buttonBindingsProfile) {
       case DEFAULT:
-        driveJoystick = new Joystick(0);
-        turnJoystick = new Joystick(1);
-        secondaryPannel = new Joystick(2);
         Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+        break;
+      case SOLO_DRIVER:
+        SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+        break;
+      default:
+        System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
+        configureButtonBindings();
         break;
     }
   }
@@ -367,11 +384,6 @@ public class RobotContainer {
     value = limiter.calculate(Math.copySign(value * value, value));
     
     return value;
-  }
-
-  public void addSelectorsAndCommandButtonsToSmartDashboard() {
-    SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
-    SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
   }
 
   public void resetGyro() {
