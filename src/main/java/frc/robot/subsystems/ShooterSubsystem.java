@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,8 +20,12 @@ import frc.robot.Constants.MotorIDs;
 public class ShooterSubsystem extends SubsystemBase {
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
+
+  private final DoubleSolenoid angleChangeSolenoid;
+
   private double topWheelTargetVelocity;
   private double bottomWheelTargetVelocity;
+  private double currentAngle;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -40,6 +47,15 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.config_kI(0, 0, 10);
     bottomMotor.config_kD(0, 0, 10);
     bottomMotor.config_kF(0, 0.0522, 10);
+
+    angleChangeSolenoid = new DoubleSolenoid(
+      Constants.Solenoids.COMPRESSOR_MODULE_ID,
+      PneumaticsModuleType.REVPH,
+      Constants.Solenoids.SHOOTER_ANGLE_IN_SOLENOID,
+      Constants.Solenoids.SHOOTER_ANGLE_OUT_SOLENOID
+    );
+
+    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? Constants.Shooter.FIRING_ANGLE_2_DEGREES : Constants.Shooter.FIRING_ANGLE_1_DEGREES;
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
@@ -103,12 +119,26 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }
 
-@Override
-public void periodic() {
-  SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
-  SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
-  SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
-  SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
-  SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
-}
+  public void setShootAngle1() {
+    angleChangeSolenoid.set(Value.kForward);
+    currentAngle = Constants.Shooter.FIRING_ANGLE_1_DEGREES;
+  }
+
+  public void setShootAngle2() {
+    angleChangeSolenoid.set(Value.kReverse);
+    currentAngle = Constants.Shooter.FIRING_ANGLE_2_DEGREES;
+  }
+
+  public double getShootAngle() {
+    return currentAngle;
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
+    SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
+    SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
+    SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+  }
 }

@@ -44,6 +44,9 @@ public final class Constants {
 
         public static final int INTAKE_OUT_SOLENOID = 5;
         public static final int INTAKE_IN_SOLENOID = 4;
+
+        public static final int SHOOTER_ANGLE_OUT_SOLENOID = 7;
+        public static final int SHOOTER_ANGLE_IN_SOLENOID = 6;
     }
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
@@ -62,7 +65,11 @@ public final class Constants {
         public static final double SHOOTER_TOLERANCE = 0.05;
         public static final double SHOOTER_PULLDOWN_PCT = 0.97;
 
-        public static final double SHOOTER_FIRING_ANGLE_DEGREES = 72.0;
+        public static final double ANGLE_CHANGE_THRESHOLD_TY = -10.0; // TEMP VALUE
+        public static final double ANGLE_CHANGE_TOLERANCE = 0.5; // TEMP VALUE
+
+        public static final double FIRING_ANGLE_1_DEGREES = 72.0;
+        public static final double FIRING_ANGLE_2_DEGREES = 50.0; // TEMP VALUE
         public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);
 
         public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
