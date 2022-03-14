@@ -30,8 +30,8 @@ public class IntakeArmInCommand extends HopperBaseCommand {
         super.end(interrupted);
 
         // Retracts intake arm and stops the intake wheels.
-        intake.intakeArmIn();
-        intake.intakeStop(); // TODO: Remove this line!
+        intake.armIn();
+        intake.stop(); // TODO: Remove this line!
     }
 
     @Override

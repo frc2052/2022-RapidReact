@@ -59,7 +59,7 @@ public class RightFiveBallAuto extends AutoBase {
         ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(0.75));
+        this.addCommands(super.newInitialNonVisionShootPreloadedCommand());
         this.addCommands(intakeBall1);
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot1);

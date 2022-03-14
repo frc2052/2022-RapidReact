@@ -17,7 +17,7 @@ import frc.robot.util.vision.VisionCalculator;
 public class ShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
   protected final IndexerSubsystem indexer;
-  private final HopperSubsystem grassHopper;
+  private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
@@ -30,12 +30,12 @@ public class ShootCommand extends CommandBase {
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
-    HopperSubsystem grassHopper, 
+    HopperSubsystem hopper, 
     VisionSubsystem vision
   ) {
     this.shooter = shooter;
     this.indexer = indexer;
-    this.grassHopper = grassHopper;
+    this.hopper = hopper;
     this.vision = vision;
     this.shootMode = shootMode;
 
@@ -43,7 +43,7 @@ public class ShootCommand extends CommandBase {
 
     SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 
-    addRequirements(this.shooter, this.indexer, this.grassHopper);
+    addRequirements(this.shooter, this.indexer, this.hopper);
   }
 
   @Override
@@ -73,12 +73,12 @@ public class ShootCommand extends CommandBase {
 
     if (shooter.isAtSpeed() && vision.isLinedUp()) {
       indexer.runFeeder();
-      grassHopper.hopperGo();
+      hopper.run();
       if (shootMode == ShootMode.SHOOT_ALL) {
         indexer.runPreload();
       }
     } else {
-      grassHopper.hopperStop();
+      hopper.stop();
       indexer.stopFeeder();
       indexer.stopPreload();
     }
@@ -88,7 +88,7 @@ public class ShootCommand extends CommandBase {
   public void end(boolean interrupted) {
     // Stop the shooter, feeder, and preloader.
     shooter.stop();
-    grassHopper.hopperStop();
+    hopper.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
     vision.setLED(LEDMode.OFF);

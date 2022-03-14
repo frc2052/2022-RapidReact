@@ -26,27 +26,24 @@ public class AutoTimedIntakeOnThenInCommand extends HopperBaseCommand {
 
   @Override
   public void initialize() {
-    intake.intakeArmOut();
+    intake.armOut();
   }
       
   @Override
   public void execute() {
-    intake.intakeOn();
+    super.execute();
+    intake.run();
   }
 
   @Override 
   public void end(boolean interrupted){
     super.end(interrupted);
-    intake.intakeStop();
-    intake.intakeArmIn();
+    intake.stop();
+    intake.armIn();
   }
 
   @Override
   public boolean isFinished() {
-    if (timer == null) { // This is the first time we've not seen a ball
-        timer = new Timer();
-        timer.start();
-    }
     if (timer.get() >= deadlineSeconds) { // At least 1 sec has passed since a ball was last seen
       return true;
     }

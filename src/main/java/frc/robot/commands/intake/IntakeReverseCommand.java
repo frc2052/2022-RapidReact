@@ -23,15 +23,15 @@ public class IntakeReverseCommand extends CommandBase {
   @Override
   public void execute() {
     // Extends intake arm and spin the intake wheels in reverse.
-    intake.intakeArmOut(); // TODO: Remove this line!
-    intake.intakeReverse();
-    grassHopper.hopperReverse();
+    intake.armOut(); // TODO: Remove this line!
+    intake.reverse();
+    grassHopper.reverse();
   }
 
   @Override
   public void end(boolean interrupted) {
-    intake.intakeStop();
-    grassHopper.hopperStop();
+    intake.stop();
+    grassHopper.stop();
   }
 
   @Override

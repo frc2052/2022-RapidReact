@@ -22,8 +22,8 @@ public class IntakeStopCommand extends CommandBase {
     @Override
     public void initialize() {
         // Stops the intake and hopper.
-        intake.intakeStop();
-        grassHopper.hopperStop();
+        intake.stop();
+        grassHopper.stop();
     }
 
     @Override

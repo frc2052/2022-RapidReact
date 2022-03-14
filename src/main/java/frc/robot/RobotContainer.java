@@ -217,13 +217,14 @@ public class RobotContainer {
 
     ButtonCommands.TUNE_SHOOTER.setCommand(new TuneShooterCommand(shooter, indexer, intake, hopper));
     ButtonCommands.SHOOT_LOW_GOAL.setCommand(new ShootLowCommand(shooter, indexer));
-    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, 9000, 9000));
+    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 9000, 9000));
 
     ButtonCommands.NON_VISION_SHOOT_ALL.setCommand(
       new NonVisionShootCommand(
         NonVisionShootMode.SHOOT_ALL, 
         shooter, 
         indexer, 
+        hopper,
         VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
         VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond())
       );
@@ -231,8 +232,8 @@ public class RobotContainer {
     ButtonCommands.CLIMBER_EXTEND.setCommand(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
     ButtonCommands.CLIMBER_RETRACT.setCommand(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
     ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(new ToggleClimberSolenoidCommand(climber));
-    ButtonCommands.UNLOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.unlockClimber(); }));
-    ButtonCommands.LOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.lockClimber(); }));
+    ButtonCommands.UNLOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.unlock(); }));
+    ButtonCommands.LOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.lock(); }));
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(

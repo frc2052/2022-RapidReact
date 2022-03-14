@@ -30,17 +30,17 @@ public class HopperBaseCommand extends CommandBase {
       //Keep running all the wheels until all the balls are staged
       indexer.runPreload();
       indexer.runFeeder();
-      grassHopper.hopperGo();
+      grassHopper.run();
     } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       //The staged detector shows a ball ready to be fired but no second ball is detected
       indexer.stopFeeder();
       indexer.runPreload();
-      grassHopper.hopperGo();
+      grassHopper.run();
     } else {
       //Two balls are loaded and no more can be taken
       indexer.stopFeeder();
       indexer.stopPreload();
-      grassHopper.hopperStop();
+      grassHopper.stop();
     }
   }
 
@@ -48,7 +48,7 @@ public class HopperBaseCommand extends CommandBase {
   public void end(boolean interrupted) {
     indexer.stopFeeder();
     indexer.stopPreload();
-    grassHopper.hopperStop();
+    grassHopper.stop();
   }
 
   // Returns true when the command should end.

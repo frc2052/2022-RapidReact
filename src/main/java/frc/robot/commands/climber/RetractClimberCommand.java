@@ -20,7 +20,7 @@ public class RetractClimberCommand extends CommandBase {
     public void execute() {
         // Climber retracts.
         if (!climberSubsystem.getIsLocked()) {
-            climberSubsystem.manualRetractArm(overrideButtonPressed.getAsBoolean());
+            climberSubsystem.retract(overrideButtonPressed.getAsBoolean());
         } else {
             System.err.println("Climber locked!");
         }
@@ -28,7 +28,7 @@ public class RetractClimberCommand extends CommandBase {
 
      @Override
     public void end(boolean interrupted) {
-        climberSubsystem.manualStop();
+        climberSubsystem.stop();
     }
 }
 

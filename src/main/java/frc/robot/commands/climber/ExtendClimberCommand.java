@@ -19,7 +19,7 @@ public class ExtendClimberCommand extends CommandBase {
     public void execute() {
         // Climber extends. 
         if (!climberSubsystem.getIsLocked()) {
-            climberSubsystem.manualExtendArm(overrideButtonPressed.getAsBoolean());
+            climberSubsystem.extend(overrideButtonPressed.getAsBoolean());
         } else {
             System.err.println("Climber locked!");
         }
@@ -27,7 +27,7 @@ public class ExtendClimberCommand extends CommandBase {
 
      @Override
     public void end(boolean interrupted) {
-        climberSubsystem.manualStop();
+        climberSubsystem.stop();
     }
 }
 

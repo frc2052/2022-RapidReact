@@ -5,12 +5,14 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class NonVisionShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
-  private final IndexerSubsystem indexer;
+  protected final IndexerSubsystem indexer;
+  private final HopperSubsystem hopper;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
@@ -19,10 +21,11 @@ public class NonVisionShootCommand extends CommandBase {
   private double topWheelVelocity;
   private double bottomWheelVelocity;
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, double topWheelVelocity, double bottomWheelVelocity) {
+  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) {
+    this.nonVisionShootMode = shootMode;
     this.shooter = shooter;
     this.indexer = indexer;
-    this.nonVisionShootMode = shootMode;
+    this.hopper = hopper;
     this.topWheelVelocity = topWheelVelocity;
     this.bottomWheelVelocity = bottomWheelVelocity;
 
@@ -37,6 +40,7 @@ public class NonVisionShootCommand extends CommandBase {
 
     if (shooter.isAtSpeed()) {
       indexer.runFeeder();
+      hopper.run();
       if (nonVisionShootMode == NonVisionShootMode.SHOOT_ALL) {
         indexer.runPreload();
       }
@@ -48,6 +52,7 @@ public class NonVisionShootCommand extends CommandBase {
     shooter.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
+    hopper.stop();
   }
 
   @Override

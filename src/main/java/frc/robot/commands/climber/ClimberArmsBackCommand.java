@@ -19,7 +19,7 @@ public class ClimberArmsBackCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climberSubsystem.shiftClimberBackward();
+    climberSubsystem.shiftBackward();
   }
 
   // Returns true when the command should end.

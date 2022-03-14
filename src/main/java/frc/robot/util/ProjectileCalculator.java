@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import frc.robot.Constants;
 
+/**
+ * Not currently used becuase real robots don't work how math says they should
+ */
 public class ProjectileCalculator {
     
     /**
