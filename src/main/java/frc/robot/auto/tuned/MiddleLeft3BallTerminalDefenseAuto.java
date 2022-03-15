@@ -54,7 +54,7 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToArriveAtTerminalBalls = super.createSwerveTrajectoryCommand(intakingBothTerminalBallsTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-135)), arriveAtTerminalBalls, super.createRotationAngle(-135));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(drivingBacktTrajectoryConfig, super.getLastEndingPosCreated(30), shootPos, super.createHubTrackingSupplier(20));
 
-        AutoShootCommand autoShootCommand = new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        AutoShootCommand autoShootCommand = new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));

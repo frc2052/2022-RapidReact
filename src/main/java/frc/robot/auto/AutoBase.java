@@ -101,19 +101,19 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected AutoShootCommand newAutoShoot1Command() {
-        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected AutoShootCommand newAutoShootAllCommand() {
-        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected ShootCommand newShoot1Command() {
-        return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected ShootCommand newShootAllCommand() {
-        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {

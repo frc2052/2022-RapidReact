@@ -6,6 +6,7 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -19,6 +20,7 @@ public class ShootCommand extends CommandBase {
   protected final IndexerSubsystem indexer;
   private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
+  private final DrivetrainSubsystem drivetrain;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
@@ -31,13 +33,15 @@ public class ShootCommand extends CommandBase {
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
-    VisionSubsystem vision
+    VisionSubsystem vision,
+    DrivetrainSubsystem drivetrain
   ) {
     this.shooter = shooter;
     this.indexer = indexer;
     this.hopper = hopper;
     this.vision = vision;
     this.shootMode = shootMode;
+    this.drivetrain = drivetrain;
 
     visionCalculator = VisionCalculator.getInstance();
 
@@ -54,8 +58,8 @@ public class ShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
-    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches);
+    double distanceInches = visionCalculator.getDistanceInches(vision.getTy()) + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
+    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig((int) distanceInches);
 
     double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
     if (shooterBoost < -0.1) {

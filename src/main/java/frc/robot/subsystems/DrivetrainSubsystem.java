@@ -85,7 +85,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
-  private double intendedCurrentVelocity;
+  private double intendedXVelocityMPS = 0;
+  private double intendedYVelocityMPS = 0;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -186,7 +187,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds chassisSpeeds) {
         swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
         setModuleStates(swerveModuleStates);
-        intendedCurrentVelocity = Math.hypot(Math.abs(chassisSpeeds.vxMetersPerSecond), Math.abs(chassisSpeeds.vyMetersPerSecond));
+        intendedXVelocityMPS = chassisSpeeds.vxMetersPerSecond;
+        intendedYVelocityMPS = chassisSpeeds.vyMetersPerSecond;
   }
 
   public void stop() {
@@ -245,8 +247,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return swerveModuleStates;
   }
 
+  public double getIntendedXVelocityMPS() {
+        return intendedXVelocityMPS;
+  }
+
+  public double getIntendedYVelocityMPS() {
+        return intendedYVelocityMPS;
+  }
+
   public double getIntendedCurrentVelocity() {
-        return intendedCurrentVelocity;
+        return Math.hypot(Math.abs(intendedXVelocityMPS), Math.abs(intendedYVelocityMPS));
   }
 
 @Override
@@ -260,7 +270,7 @@ public void periodic() {
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
         
         // For comparing gyro and wheel velocities
-        SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
+        SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
         // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
 }
 }
