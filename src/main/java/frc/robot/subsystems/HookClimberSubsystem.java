@@ -56,11 +56,11 @@ public class HookClimberSubsystem extends SubsystemBase{
     /**
      * Extends the climbing arm at a set speed
      */
-    public void extend(boolean override) {
+    public void extend(double extendPctOutput, boolean override) {
         if (override) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
-        } else if (climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED)) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
+        } else if (getIsAtMaxHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
         } else {
             System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
@@ -68,18 +68,26 @@ public class HookClimberSubsystem extends SubsystemBase{
         }
     }
 
+    public void extend(boolean override) {
+        extend(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT, override);
+    }
+
     /**
      * Retracts the climbing arm at a set speed
      */
-    public void retract(boolean override) {
+    public void retract(double retractPctOutput, boolean override) {
         if (override) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * .75); //slower climb speed when doing override
-        } else if (climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
+            climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
+        } else if (getIsAtMinHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
         } else {
             System.err.println("Climber retracted to (or past) the min height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
         }
+    }
+
+    public void retract(boolean override) {
+        retract(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT, override);
     }
 
     /**
@@ -130,6 +138,18 @@ public class HookClimberSubsystem extends SubsystemBase{
 
     public boolean getIsLocked() {
         return isLocked;
+    }
+
+    public boolean getIsAtMaxHeight() {
+        return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED);
+    }
+
+    public boolean getIsAtMinHeight() {
+        return climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS;
+    }
+
+    public double getEncoderPosition() {
+        return climberMotor.getSelectedSensorPosition();
     }
 
     public void setArmPostionInches(double inches){
