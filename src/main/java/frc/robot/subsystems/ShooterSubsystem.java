@@ -120,12 +120,12 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShootAngle1() {
-    angleChangeSolenoid.set(Value.kForward);
+    angleChangeSolenoid.set(Value.kReverse);
     currentAngle = Constants.Shooter.FIRING_ANGLE_1_DEGREES;
   }
 
   public void setShootAngle2() {
-    angleChangeSolenoid.set(Value.kReverse);
+    angleChangeSolenoid.set(Value.kForward);
     currentAngle = Constants.Shooter.FIRING_ANGLE_2_DEGREES;
   }
 

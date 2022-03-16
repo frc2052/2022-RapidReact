@@ -63,26 +63,20 @@ public class VisionCalculator {
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
 
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(22 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(23 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(24 * 12, 5000, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(25 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 8000, 8000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 8200, 8000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 8400, 8400));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 8600, 8600));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 8500, 9000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 7000, 11000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 7500, 11200));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 7700, 11400));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 8500, 11500));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 9050, 12050));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 9350, 12350));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 9250, 11800));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 9450, 12000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 9750, 12300));
     }
 
     /**
