@@ -1,11 +1,6 @@
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.HookClimberSubsystem;
-
-public class MidBarAutoClimb extends SequentialCommandGroup{
+public class MidBarAutoClimb {
     private final HookClimberSubsystem climber;
     
     public MidBarAutoClimb(HookClimberSubsystem climber, BooleanSupplier overrideButtonIsPressed) {
@@ -13,16 +8,8 @@ public class MidBarAutoClimb extends SequentialCommandGroup{
 
         addRequirements(this.climber);
 
-        SequentialCommandGroup sequentialCommandGroup = new SequentialCommandGroup(
+        this.addCommands(
             new ExtendClimberCommand(climber, () -> false).withInterrupt(climber::getIsAtMaxHeight),
-            new RetractClimberCommand(climber, () -> true, 0.8).withInterrupt(() -> climber.getEncoderPosition() <= -2000),
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 5000),
-            new ClimberArmsBackCommand(climber),
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(climber::getIsAtMaxHeight),
-            new ToggleClimberSolenoidCommand(climber),
-            new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)
+            new RetractClimberCommand(climber, () -> true, 0.8).withInterrupt(() -> climber.getEncoderPosition() <= -2000)
         );
-
-        this.addCommands(sequentialCommandGroup/*.withInterrupt(() -> isStopButtonPressed())*/);
-    }
 }

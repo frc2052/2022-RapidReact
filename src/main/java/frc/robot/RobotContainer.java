@@ -99,6 +99,7 @@ public class RobotContainer {
   private JoystickButton climberUnlockButton;
   private JoystickButton tuneShooterButton;
   private JoystickButton climberOverrideButton;
+  private JoystickButton commandInterruptButton;
 
   private JoystickButton pidTestingButton;
 
@@ -183,6 +184,7 @@ public class RobotContainer {
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
     climberOverrideButton = new JoystickButton(secondaryPannel, 8);
+    commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
 
@@ -275,6 +277,8 @@ public class RobotContainer {
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
+    SmartDashboard.putData("Mid Bar Auto Climb", new MidBarAutoClimb(climber).withInterrupt(() -> commandInterruptButton.get()));
+    SmartDashboard.putData("Mid Bar Auto Climb", new HighBarAutoClimb(climber).withInterrupt(() -> commandInterruptButton.get()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
