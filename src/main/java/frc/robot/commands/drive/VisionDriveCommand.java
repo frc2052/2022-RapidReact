@@ -15,7 +15,7 @@ import edu.wpi.first.math.util.Units;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
     private VisionSubsystem vision;
-    private DrivetrainSubsystem driveTrain;
+    private DrivetrainSubsystem drivetrain;
     private double visionRotation = 0;
     private double horizontalAngle;
     private boolean isLinedUp;
@@ -36,7 +36,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         );
 
         this.vision = vision;
-        this.driveTrain = drivetrain;
+        this.drivetrain = drivetrain;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     }
 
     private double drivingHorizontalFiringOffsetAngleDegrees() {
-        if(driveTrain.getIntendedCurrentVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+        if(drivetrain.getIntendedCurrentVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
             return 0.0;
         }
         // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.
@@ -95,7 +95,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
 
         double lineToHubDistanceMeters = Math.hypot(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS , shooterDistanceMeters); // Gets the length for t
-        double currentWheelVelocityMPS = driveTrain.getIntendedCurrentVelocity(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
+        double currentWheelVelocityMPS = drivetrain.getIntendedCurrentVelocity(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
         double offsetRadians = Math.atan(Math.toRadians(shooterDistanceMeters*currentWheelVelocityMPS/xLaunchVelocity/lineToHubDistanceMeters));  // Plugs everything needed into the equation TODO Figure out if the Math.toRadians needs to be omitted
         return Math.toDegrees(offsetRadians);   // Returns the needed offset in degrees
         // return 0.0; // doesn't work yet

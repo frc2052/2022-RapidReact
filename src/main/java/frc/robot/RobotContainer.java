@@ -27,6 +27,8 @@ import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
 import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
+import frc.robot.commands.climber.HighBarAutoClimb;
+import frc.robot.commands.climber.MidBarAutoClimb;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;

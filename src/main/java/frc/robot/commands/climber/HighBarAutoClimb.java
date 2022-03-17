@@ -5,10 +5,10 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.HookClimberSubsystem;
 
-public class MidBarAutoClimb extends SequentialCommandGroup{
+public class HighBarAutoClimb extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
-    public HighBarAutoClimb(HookClimberSubsystem climber, BooleanSupplier overrideButtonIsPressed) {
+    public HighBarAutoClimb(HookClimberSubsystem climber) {
         this.climber = climber;
 
         addRequirements(this.climber);
