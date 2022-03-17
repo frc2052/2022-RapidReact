@@ -306,18 +306,6 @@ public class RobotContainer {
     }
   }
 
-  // private void configureTurnJoystickButtonBindings() {
-    
-  // }
-
-  // private void configureDriveJoystickButtonBindings() {
-    
-  // }
-
-  // private void configureSecondaryPannelButtonBindings() {
-    
-  // }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -333,7 +321,7 @@ public class RobotContainer {
         autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         break;
       case ONE_BALL:
-        autonomousCommand = new OneBallAuto(drivetrain, vision, shooter, indexer, hopper, climber);
+        autonomousCommand = new OneBallAuto(drivetrain, shooter, indexer, hopper, climber);
         break;
       case SIMPLE_3_BALL:
         autonomousCommand = new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);

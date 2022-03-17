@@ -27,12 +27,14 @@ public class LeftDefenseAuto extends AutoBase {
      * Position D Start (Far Left Parallel with Outer Tarmac Line) Facing Away from the Hub.
      * First intakes closest alliance ball, then turns and reapproaches tarmac to score 2.
      * Then drives to and intakes closest opponent cargo, and turns and fires it into the hanger.
-     * WORKING - NEEDS ADJUSTMENT
+     * TUNED
      * @param drivetrain
      * @param vision
      * @param shooter
      * @param intake
      * @param indexer
+     * @param hopper
+     * @param climber
      */
     public LeftDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

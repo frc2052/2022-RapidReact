@@ -21,6 +21,9 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     private final DrivetrainSubsystem drivetrain;
     private PIDController pidController;
 
+    /**
+     * PID Controlled VisionDriveCommand for tracking the hub and by overriding the DefaultDriveCommand's getTurnValue method.
+     */
     public PIDVisionDriveCommand(
         DrivetrainSubsystem drivetrain,
         DoubleSupplier translationXSupplier,

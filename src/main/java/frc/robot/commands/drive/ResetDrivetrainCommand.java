@@ -10,7 +10,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class ResetDrivetrainCommand extends CommandBase {
     private final DrivetrainSubsystem drivetrain;
 
-    /** Creates a new ResetDrivetrainCommand. */
+    /** Creates a new ResetDrivetrainCommand to completely zero its odometry. */
     public ResetDrivetrainCommand(DrivetrainSubsystem drivetrain) {
         this.drivetrain = drivetrain;
         

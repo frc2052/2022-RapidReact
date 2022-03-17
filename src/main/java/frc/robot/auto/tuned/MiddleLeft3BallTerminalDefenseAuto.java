@@ -32,10 +32,14 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
      * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
-     * TUNED AND WORKING
+     * TUNED
      * @param drivetrain
      * @param vision
+     * @param shooter
      * @param intake
+     * @param indexer
+     * @param hopper
+     * @param climber
      */
     public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

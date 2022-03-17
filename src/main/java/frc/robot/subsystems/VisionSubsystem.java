@@ -60,11 +60,9 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
-      isLinedUp = Math.abs(tx) < 0.08 * ty + 3.4; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
-
       SmartDashboard.putBoolean("Has target?", hasValidTarget);
       SmartDashboard.putNumber("Pipeline: ", getPipeline());
-      SmartDashboard.putString("Latency: ", getTl() + "ms");
+      // SmartDashboard.putString("Latency: ", getTl() + "ms");
       SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
       if (hasValidTarget) {
@@ -73,7 +71,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
         SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
 
-        SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
+        // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }
 
       // if (hasValidTarget) {
@@ -133,7 +131,7 @@ public class VisionSubsystem extends SubsystemBase{
     
     public boolean isLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
-      return isLinedUp;
+      return Math.abs(tx) <= getTolerance();
     }
 
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
@@ -198,6 +196,10 @@ public class VisionSubsystem extends SubsystemBase{
         default:
           return LEDMode.PIPELINE;
       }
+    }
+
+    public double getTolerance() {
+      return 0.07 * ty + 3.0; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
     }
 
     public double getEquationDistanceToUpperHubMeters() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.

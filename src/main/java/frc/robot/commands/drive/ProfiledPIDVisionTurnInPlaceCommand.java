@@ -10,9 +10,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceCommand {
     private final VisionSubsystem vision;
 

@@ -16,6 +16,14 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier translationYSupplier;
     private final DoubleSupplier rotationSupplier;
 
+    /**
+     * The default drive command that runs when no other commands are, controlling the drivetrain.
+     * @param drivetrain
+     * @param translationXSupplier a DoubleSupplier that should pass the DriveJoystick's X
+     * @param translationYSupplier a DoubleSupplier that should pass the DriveJoystick's Y
+     * @param rotationSupplier a DoubleSupplier that should pass the TurnJoystick's value
+     * @param dashboardControls DashboardControlsSubsystem instance for getting weather the drivemode should be field or robot centric
+     */
     public DefaultDriveCommand(
         DrivetrainSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
@@ -33,7 +41,7 @@ public class DefaultDriveCommand extends CommandBase {
         addRequirements(drivetrain);
     }
 
-    protected double getTurnValue() {
+    protected double getTurnValue() { // Seperated as a method so it can be overriden by other commands if needed.
         return rotationSupplier.getAsDouble();
     }
 
