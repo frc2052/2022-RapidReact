@@ -241,6 +241,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
   }
 
+  public double getGyroPitchDegrees() {
+        // Get the pitch of the robot, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
+        // Wanted for making an auto climb that makes sure the robot isn't swinging in the wrong place before extending the climber.
+        return navx.getPitch();
+  }
+
   public SwerveModuleState[] getSwerveModuleStates() {
         return swerveModuleStates;
   }
