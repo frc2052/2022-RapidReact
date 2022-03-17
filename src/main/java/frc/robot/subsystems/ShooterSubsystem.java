@@ -25,7 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double topWheelTargetVelocity;
   private double bottomWheelTargetVelocity;
-  private double currentAngle;
+  private FiringAngle currentAngle;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -55,7 +55,7 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.Solenoids.SHOOTER_ANGLE_OUT_SOLENOID
     );
 
-    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? Constants.Shooter.FIRING_ANGLE_2_DEGREES : Constants.Shooter.FIRING_ANGLE_1_DEGREES;
+    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_1 : FiringAngle.ANGLE_2;
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
@@ -121,15 +121,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setShootAngle1() {
     angleChangeSolenoid.set(Value.kForward);
-    currentAngle = Constants.Shooter.FIRING_ANGLE_1_DEGREES;
+    currentAngle = FiringAngle.ANGLE_1;
   }
 
   public void setShootAngle2() {
     angleChangeSolenoid.set(Value.kReverse);
-    currentAngle = Constants.Shooter.FIRING_ANGLE_2_DEGREES;
+    currentAngle = FiringAngle.ANGLE_2;
   }
 
-  public double getShootAngle() {
+  public double getShootAngleDegrees() {
+    return currentAngle.getAngleDegrees();
+  }
+
+  public FiringAngle getShootAngleEnum() {
     return currentAngle;
   }
 
@@ -140,5 +144,20 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+  }
+
+  public enum FiringAngle {
+    ANGLE_1(Constants.Shooter.FIRING_ANGLE_1_DEGREES),
+    ANGLE_2(Constants.Shooter.FIRING_ANGLE_2_DEGREES);
+
+    private double angleDegrees;
+
+    FiringAngle(double angleDegrees) {
+      this.angleDegrees = angleDegrees;
+    }
+
+    public double getAngleDegrees() {
+        return angleDegrees;
+    }
   }
 }
