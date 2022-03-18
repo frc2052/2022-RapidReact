@@ -15,13 +15,15 @@ import frc.robot.Constants;
  */
 public class VisionCalculator {
     // Map of distance (inches) to shooter distance configs
-    private final List<ShooterDistanceConfig> shooterDistanceConfigs;
+    private final List<ShooterDistanceConfig> angle1ShooterDistanceConfigs;
+    private final List<ShooterDistanceConfig> angle2ShooterDistanceConfigs;
     // Map of limelight values to distances (inches)
     private final List<VisionDistance> visionDistances;
 
     // Singleton pattern for making sure only one instance of this class exists that can be accessed easily from anywhere.
     private VisionCalculator() {
-        shooterDistanceConfigs = new ArrayList<ShooterDistanceConfig>();
+        angle1ShooterDistanceConfigs = new ArrayList<ShooterDistanceConfig>();
+        angle2ShooterDistanceConfigs = new ArrayList<ShooterDistanceConfig>();
         setupShooterDistanceConfigs();
 
         visionDistances = new ArrayList<VisionDistance>();
@@ -40,26 +42,47 @@ public class VisionCalculator {
      * and the top and bottom motor percent values.
      */
     private void setupShooterDistanceConfigs() {
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 5000, 10000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7400, 7400));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 7900, 7900));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 8500, 8500));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 11500, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 16000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 16000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 17000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 18000, 9000));
-        shooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 19000, 9000));
-        // shooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 15700, 9000));
-        // shooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
-        // shooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 5000, 10000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7400, 7400));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 7900, 7900));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 8500, 8500));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 11500, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 16000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 16000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 17000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 18000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 19000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 15700, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
+
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(22 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(23 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(24 * 12, 5000, 10000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(25 * 12, 5000, 10000));
     }
 
     /**
@@ -140,7 +163,7 @@ public class VisionCalculator {
     }
 
 
-    public ShooterDistanceConfig getShooterConfig(int distanceInches) {
+    public ShooterDistanceConfig getShooterConfig(int distanceInches, double shooterAngle) {
         if(distanceInches <= 0){
             return new ShooterDistanceConfig(0, 0, 0);
         }
@@ -149,19 +172,21 @@ public class VisionCalculator {
         // Upper bound of the estimated shooter configuration given the distance from the target.
         ShooterDistanceConfig upperDistanceConfig = null;
 
+        List<ShooterDistanceConfig> distanceToConfigList = (shooterAngle == Constants.Shooter.FIRING_ANGLE_1_DEGREES ? angle1ShooterDistanceConfigs : angle2ShooterDistanceConfigs);
+
         // Finds the upper and lower distance configuration bounds to more accurately find a shooter configuration.
-        for (int i = 0; i < shooterDistanceConfigs.size(); i++) {
-            if (shooterDistanceConfigs.get(i).getDistanceInches() < distanceInches) {
-                lowerDistanceConfig = shooterDistanceConfigs.get(i);
+        for (int i = 0; i < distanceToConfigList.size(); i++) {
+            if (distanceToConfigList.get(i).getDistanceInches() < distanceInches) {
+                lowerDistanceConfig = distanceToConfigList.get(i);
             } else {
-                upperDistanceConfig = shooterDistanceConfigs.get(i);
+                upperDistanceConfig = distanceToConfigList.get(i);
                 break;
             }
         }
 
         // Returns a default shooter configuration if either of the bounds are null
         if (lowerDistanceConfig == null && upperDistanceConfig == null) {
-            return shooterDistanceConfigs.get(Constants.Shooter.DEFAULT_ASSUMED_SHOOTER_CONFIG);
+            return distanceToConfigList.get(Constants.Shooter.DEFAULT_ASSUMED_SHOOTER_CONFIG);
         } else if (lowerDistanceConfig == null) {
             return upperDistanceConfig;
         } else if (upperDistanceConfig == null) {
@@ -193,5 +218,9 @@ public class VisionCalculator {
             // Add the final offsets to our lower distance so the top shooter cofniguration can safely be assumed.
             lowerDistanceConfig.getTopMotorVelocityTicksPerSecond() + offsetTopMotorVelocityTicksPerSecond
         );
+    }
+
+    public ShooterDistanceConfig getShooterConfig(int distance) {
+        return getShooterConfig(distance, Constants.Shooter.FIRING_ANGLE_1_DEGREES);
     }
 }

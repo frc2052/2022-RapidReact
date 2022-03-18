@@ -6,10 +6,12 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 import frc.robot.util.vision.ShooterDistanceConfig;
 import frc.robot.util.vision.VisionCalculator;
@@ -55,7 +57,15 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
-    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches);
+
+    // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
+    if(vision.getTy() < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY - Constants.Shooter.ANGLE_CHANGE_TOLERANCE && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
+      shooter.setShootAngle2();
+    } else if (vision.getTy() > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY + Constants.Shooter.ANGLE_CHANGE_TOLERANCE && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
+      shooter.setShootAngle1();
+    }
+
+    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleDegrees());
 
     double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
     if (shooterBoost < -0.1) {
