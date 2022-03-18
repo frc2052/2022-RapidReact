@@ -5,6 +5,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,12 +16,47 @@ public class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
+    private double [] rgb = new double[3]; // Is actually GRB in the order of the array
+
+    private double saturation;
+    private double hue;
+    private double value;
     private double externalBrightnessModifier;
+    private double counter;
+    private long lastOnChangeTime = 0;
+
+    private boolean areLedsOn = false;
+    private boolean isGoingUp = true;
+
+    private Timer timer;
+
+    private LEDStatusMode currentLEDStatusMode; // Default Modes
+    private LEDStatusMode lastLEDStatusMode;
+
+    private LEDStatusMode runningStatusMode;
+    private LEDStatusMode lastRunningStatusMode;
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
+
+        // Setting initial values and making sure variables aren't going to be null and cause any potential issues
+        saturation = 0;
+        hue = 0;
+        value = 0;
+
+        counter = 0;
+        lastOnChangeTime = 0;
+        areLedsOn = false;
+        isGoingUp = true;
+        timer = new Timer();
+
+        currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        lastLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+
+        runningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        lastRunningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
     public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
@@ -28,22 +65,6 @@ public class LEDSubsystem extends SubsystemBase {
         }
         return instance;
     }
-
-    private double [] rgb = new double[3]; // Is actually GRB in the order of the array
-
-    private double saturation = 1;
-    private double hue = 0;
-    private double value = 1;
-    private double counter = 0;
-
-    private long lastOnChangeTime = 0;
-
-    private boolean areLedsOn = false;
-    private boolean isGoingUp = true;
-
-    private LEDStatusMode currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT; // Default Modes
-    private LEDStatusMode lastLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-
     
     public enum LEDStatusMode {
         RAINBOW("Rainbow"),
@@ -88,11 +109,17 @@ public class LEDSubsystem extends SubsystemBase {
 
     // @Override
     // public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot - Currently commented out becasue Canifier is fried
+        
+    //     double matchTime = DriverStation.getMatchTime(); // The current approximate match time
+
+    //     if (matchTime >= 120 && matchTime <= 125) {
+    //         currentLEDStatusMode = LEDStatusMode.ENG_GAME_WARNING;
+    //     }
 
     //     if (currentLEDStatusMode != lastLEDStatusMode) {
     //         counter = 0;
     //         LEDsOff();
-    //         runLEDStatusModeInitial();
+    //         runLEDStatusModeInitial(currentLEDStatusMode);
     //         lastLEDStatusMode = currentLEDStatusMode;
     //     }
 
@@ -103,8 +130,8 @@ public class LEDSubsystem extends SubsystemBase {
     //     canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
     // }
 
-    private void runLEDStatusModeInitial() {
-        switch (currentLEDStatusMode) {
+    private void runLEDStatusModeInitial(LEDStatusMode statusMode) {
+        switch (statusMode) {
             case RAINBOW:
                 hue = 0;
                 saturation = 1;
@@ -158,6 +185,7 @@ public class LEDSubsystem extends SubsystemBase {
             case TEST_MODE:
                 break;
             case LIGHT_SHOW:
+                timer.start();
                 break;
             default:
                 System.err.println("LED INITIAL SWITCH FELL THROUGH");
@@ -504,7 +532,19 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     private void lightShowStatusMode() {
-        rainbowStatusMode();
+        double time = timer.get();
+        if (runningStatusMode != lastRunningStatusMode) {
+            runLEDStatusModeInitial(runningStatusMode);
+            lastRunningStatusMode = runningStatusMode;
+        }
+        if (time < 10) {
+
+        } else if (time < 5) {
+            runningStatusMode = LEDStatusMode.RAINBOW;
+            rainbowStatusMode();
+        } else {
+            timer.reset();
+        }
     }
 
     private void evaluateOnOffInterval(int onMs, int offMs) {

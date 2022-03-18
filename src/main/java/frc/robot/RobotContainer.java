@@ -47,6 +47,7 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -123,6 +124,8 @@ public class RobotContainer {
     vision = new VisionSubsystem();
     dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, this);
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
+    
+    LEDSubsystem.getInstance();
 
     drivetrain = new DrivetrainSubsystem();
 
