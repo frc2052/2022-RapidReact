@@ -21,7 +21,7 @@ public class NonVisionShootCommand extends CommandBase {
   private double topWheelVelocity;
   private double bottomWheelVelocity;
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) {
+  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper,/* FiringAngle firingAngleMode,*/ double topWheelVelocity, double bottomWheelVelocity) {
     this.nonVisionShootMode = shootMode;
     this.shooter = shooter;
     this.indexer = indexer;
@@ -31,6 +31,13 @@ public class NonVisionShootCommand extends CommandBase {
 
     addRequirements(shooter, indexer);
   }
+
+  // @Override
+  // public void initialize() {
+  //     if (firingAngleMode == FiringAngle.ANGLE_1) {
+  //       shooter.set
+  //     }
+  // }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

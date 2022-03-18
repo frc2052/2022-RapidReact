@@ -68,7 +68,8 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_HIGH_BAR("Climbing High Bar"),
         CLIMBING_TRAVERSAL("Climbing Traversal Bar"),
         CLIMBING_LOCK_ENGAGED("Climber Lock Engaged"),
-        TEST_MODE("Test Mode");
+        TEST_MODE("Test Mode"),
+        LIGHT_SHOW("Light Show"); // Meant for either demonstration or when the drivetrian is dead
 
         public String name;
 
@@ -156,6 +157,8 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case TEST_MODE:
                 break;
+            case LIGHT_SHOW:
+                break;
             default:
                 System.err.println("LED INITIAL SWITCH FELL THROUGH");
                 break;
@@ -228,6 +231,9 @@ public class LEDSubsystem extends SubsystemBase {
                 break;
             case TEST_MODE:
                 testStatusMode();
+                break;
+            case LIGHT_SHOW:
+                lightShowStatusMode();
                 break;
             default:
             System.err.println("LED STATUS MODE SWITCH FELL THROUGH");
@@ -495,6 +501,10 @@ public class LEDSubsystem extends SubsystemBase {
         } else {
             LEDsOff();
         }
+    }
+
+    private void lightShowStatusMode() {
+        rainbowStatusMode();
     }
 
     private void evaluateOnOffInterval(int onMs, int offMs) {

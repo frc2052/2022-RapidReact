@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,12 +30,14 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     // private boolean limelightPowerRelayToggle;
     private boolean limelightLEDOverride;
     private boolean isLimelightDead;
+    private boolean isDrivetrainDead;
 
     private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
     // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
     private boolean lastIsLimelightDead;
+    private boolean lastIsDrivetrainDead;
 
     private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
@@ -52,6 +56,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightLEDOverride = false;
         selectedAuto = Autos.NONE_SELECTED;
         isLimelightDead = false;
+        isDrivetrainDead = false;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
@@ -61,6 +66,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         lastLimelightLEDOverride = limelightLEDOverride;
         lastSelectedAuto = selectedAuto;
         lastIsLimelightDead = isLimelightDead;
+        lastIsDrivetrainDead = isDrivetrainDead;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -108,9 +114,12 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
         SmartDashboard.putBoolean("Limelight LED Override", limelightLEDOverride);
-        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
 
         SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+
+        // Dead subsystem buttons
+        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
+        SmartDashboard.putBoolean("Drivetrain Is Dead Button", false);
     }
 
     @Override
@@ -185,21 +194,26 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastSelectedAuto = selectedAuto;
         }
 
+        if (getSelectButtonBindingsProfile() != lastSelectedButtonBindingsProfile) {
+            robotContainer.assignButtonBindings(getSelectButtonBindingsProfile());
+            lastSelectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        }
+
         if (isLimelightDead != lastIsLimelightDead) {
             //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
             
             lastIsLimelightDead = isLimelightDead;
         }
 
-        if (getSelectButtonBindingsProfile() != lastSelectedButtonBindingsProfile) {
-            robotContainer.assignButtonBindings(getSelectButtonBindingsProfile());
-            lastSelectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        if (isDrivetrainDead != lastIsDrivetrainDead) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            lastIsDrivetrainDead = isDrivetrainDead;
         }
     }
 
-    // public BooleanSupplier getIsLimelightDead() {
-    //     return () -> { return isLimelightDead; };
-    // }
+    public boolean getIsLimelightDead() {
+        return isLimelightDead;
+    }
 
     public Autos getSelectedAuto() {
         return autoSelector.getSelected();
