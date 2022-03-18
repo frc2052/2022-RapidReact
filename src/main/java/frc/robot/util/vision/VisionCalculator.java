@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 /** 
  * Class for converting {@link VisionSubsystem} ty values to distance (inches) from target
@@ -222,5 +223,9 @@ public class VisionCalculator {
 
     public ShooterDistanceConfig getShooterConfig(int distance) {
         return getShooterConfig(distance, Constants.Shooter.FIRING_ANGLE_1_DEGREES);
+    }
+
+    public ShooterDistanceConfig getShooterConfig(int distance, FiringAngle firingAngleMode) {
+        return getShooterConfig(distance, firingAngleMode.getAngleDegrees());
     }
 }

@@ -51,6 +51,7 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.buttonbindings.ButtonCommands;
 import frc.robot.util.buttonbindings.profiles.Default;
@@ -203,7 +204,7 @@ public class RobotContainer {
     ));
     ButtonCommands.VISION_SHOOT_ALL.setCommand(new ParallelCommandGroup(
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-        new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 9000, 9000), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem::getIsLimelightDead),
+        new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem::getIsLimelightDead),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -221,7 +222,7 @@ public class RobotContainer {
 
     ButtonCommands.TUNE_SHOOTER.setCommand(new TuneShooterCommand(shooter, indexer, intake, hopper));
     ButtonCommands.SHOOT_LOW_GOAL.setCommand(new ShootLowCommand(shooter, indexer));
-    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 9000, 9000));
+    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, VisionCalculator.getInstance().getShooterConfig(7 * 12, FiringAngle.ANGLE_2)));
 
     ButtonCommands.NON_VISION_SHOOT_ALL.setCommand(
       new NonVisionShootCommand(
@@ -229,9 +230,9 @@ public class RobotContainer {
         shooter, 
         indexer, 
         hopper,
-        VisionCalculator.getInstance().getShooterConfig(3*12).getTopMotorVelocityTicksPerSecond(), 
-        VisionCalculator.getInstance().getShooterConfig(3*12).getBottomMotorVelocityTicksPerSecond())
-      );
+        FiringAngle.ANGLE_1,
+        VisionCalculator.getInstance().getShooterConfig(3*12, FiringAngle.ANGLE_1)
+    ));
 
     ButtonCommands.CLIMBER_EXTEND.setCommand(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
     ButtonCommands.CLIMBER_RETRACT.setCommand(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));

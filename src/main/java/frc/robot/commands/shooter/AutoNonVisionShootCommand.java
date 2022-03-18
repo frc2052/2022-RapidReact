@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 public class AutoNonVisionShootCommand extends NonVisionShootCommand {
 
@@ -18,6 +19,7 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer,
     HopperSubsystem hopper,
+    FiringAngle firingAngle,
     double topWheelVelocity,
     double bottomWheelVelocity
   ) {
@@ -26,9 +28,14 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
         shooter,
         indexer,
         hopper,
+        firingAngle,
         topWheelVelocity,
         bottomWheelVelocity
     );    
+  }
+
+  public AutoNonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+    this(shootMode, shooter, indexer, hopper, FiringAngle.ANGLE_1, topWheelVelocity, bottomWheelVelocity);
   }
 
   @Override
