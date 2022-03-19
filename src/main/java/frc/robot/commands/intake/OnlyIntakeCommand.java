@@ -13,6 +13,11 @@ public class OnlyIntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
   private final IndexerSubsystem indexer;
 
+  /**
+   * Command that only controls the intake in motor and nothing else. 
+   * @param intake
+   * @param indexer only for getting the cargo stage beam break sensors
+   */
   public OnlyIntakeCommand(IntakeSubsystem intake, IndexerSubsystem indexer) {
     this.intake = intake;
     this.indexer = indexer;

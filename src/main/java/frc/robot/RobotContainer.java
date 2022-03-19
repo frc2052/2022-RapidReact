@@ -35,6 +35,7 @@ import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
+import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.shooter.TuneShooterCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
@@ -207,7 +208,11 @@ public class RobotContainer {
     ));
     ButtonCommands.VISION_SHOOT_ALL.setCommand(new ParallelCommandGroup(
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-        new ConditionalCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), dashboardControlsSubsystem::getIsLimelightDead),
+        new ConditionalCommand(
+          new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
+          new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), 
+          dashboardControlsSubsystem::getIsLimelightDead
+        ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -220,7 +225,13 @@ public class RobotContainer {
     ButtonCommands.RESET_GYRO.setCommand(new InstantCommand(() -> { this.resetGyro(); }));
 
     ButtonCommands.INTAKE_TOGGLE.setCommand(new IntakeArmToggleCommand(intake, indexer, hopper));
-    ButtonCommands.INTAKE_ON.setCommand(new IntakeInCommand(intake, indexer, hopper));
+    ButtonCommands.INTAKE_ON.setCommand(
+      new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
+        new OnlyIntakeCommand(intake, indexer), 
+        new IntakeInCommand(intake, indexer, hopper), 
+        shootAllButton::get
+      )
+    );
     ButtonCommands.INTAKE_REVERSE.setCommand(new IntakeReverseCommand(intake, hopper));
 
     ButtonCommands.TUNE_SHOOTER.setCommand(new TuneShooterCommand(shooter, indexer, intake, hopper));

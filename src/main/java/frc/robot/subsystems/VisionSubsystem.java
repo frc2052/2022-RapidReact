@@ -14,31 +14,33 @@ public class VisionSubsystem extends SubsystemBase{
 
     // Relay powerRelay = new Relay(Constants.Limelight.RELAY_PORT); - Limelight VEX Power relay code, can't use because defaults to off when robot is disabled
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTable table;
 
     private double tx, ty; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
     private boolean isLinedUp;
+    private boolean externalIsLinedUp;
+    private double lastTl;
     
     private boolean ledOverride = false;
 
-    private NetworkTableEntry ltv = table.getEntry("tv"); // If the Limelight has any targets.              Value between 0.0 and 1.0.
-    private NetworkTableEntry ltx = table.getEntry("tx"); // Horizontal offset from crosshair to target.    Value between -29.8 and 29.8 (degrees).
-    private NetworkTableEntry lty = table.getEntry("ty"); // Vertical offset from crosshair to target.      Value between -24.85 and 24.85 (degrees).
-    private NetworkTableEntry lta = table.getEntry("ta"); // Target's area of the image.                    Value between 0 and 100 (percent).
-    private NetworkTableEntry lts = table.getEntry("ts"); // The skew or rotation.                          Value between -90 and 0 (degrees).
-    private NetworkTableEntry ltl = table.getEntry("tl"); // The pipeline's latency contribution.           Value greater than 0 (ms).
+    private NetworkTableEntry ltv; // If the Limelight has any targets.              Value between 0.0 and 1.0.
+    private NetworkTableEntry ltx; // Horizontal offset from crosshair to target.    Value between -29.8 and 29.8 (degrees).
+    private NetworkTableEntry lty; // Vertical offset from crosshair to target.      Value between -24.85 and 24.85 (degrees).
+    private NetworkTableEntry lta; // Target's area of the image.                    Value between 0 and 100 (percent).
+    private NetworkTableEntry lts; // The skew or rotation.                          Value between -90 and 0 (degrees).
+    private NetworkTableEntry ltl; // The pipeline's latency contribution.           Value greater than 0 (ms).
 
-    private NetworkTableEntry ltshort = table.getEntry("tshort");   // Length of shortest bounding box side (pixels)
-    private NetworkTableEntry ltlong = table.getEntry("tlong");     // Length of longest bounding box side  (pixels)
-    private NetworkTableEntry lthor = table.getEntry("thor");       // Horizontal sidelength of bound box   0 - 320 (pixels) 
-    private NetworkTableEntry ltvert = table.getEntry("tvert");     // Vertical sidelength of bound box     0 - 320 (pixels)
+    // private NetworkTableEntry ltshort = table.getEntry("tshort");   // Length of shortest bounding box side (pixels)
+    // private NetworkTableEntry ltlong = table.getEntry("tlong");     // Length of longest bounding box side  (pixels)
+    // private NetworkTableEntry lthor = table.getEntry("thor");       // Horizontal sidelength of bound box   0 - 320 (pixels) 
+    // private NetworkTableEntry ltvert = table.getEntry("tvert");     // Vertical sidelength of bound box     0 - 320 (pixels)
 
-    private NetworkTableEntry lledMode = table.getEntry("ledMode"); // Current LED mode, value between 0.0 and 4.0, explained in setLED() method.
-    private NetworkTableEntry lcamMode = table.getEntry("camMode"); // Can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
-    private NetworkTableEntry lgetpipe = table.getEntry("getpipe"); // True active pipeline index of camera 0 through 9.
-    private NetworkTableEntry lpipeline = table.getEntry("pipeline"); // NetworkTableEntry needed for setting pipeline value.
-    private NetworkTableEntry lstream = table.getEntry("stream"); // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
+    private NetworkTableEntry lledMode;  // Current LED mode, value between 0.0 and 4.0, explained in setLED() method.
+    private NetworkTableEntry lcamMode;  // Can be 0, which is regular limelight vision processing, or 1, which turns up the exposure and disables vision processing, intended for driver camera use.
+    private NetworkTableEntry lgetpipe;  // True active pipeline index of camera 0 through 9.
+    private NetworkTableEntry lpipeline; // NetworkTableEntry needed for setting pipeline value.
+    private NetworkTableEntry lstream;   // 0 (Standard) sets side by side streams if a webcam is attached, 1 (PiP Main) sets secondary camera stream in lower right corner for primary stream, 2 (PiP Secondary) sets primary stream in lower right corner of secondary stream.
 
     /* Unneeded other possible networktable entries
     private NetworkTableEntry lcamtran = table.getEntry("tshort");  // "Results of a 3D position solution, NumberArray: Translation (x,y,z) Rotation(pitch,yaw,roll)"
@@ -49,9 +51,26 @@ public class VisionSubsystem extends SubsystemBase{
     private NetworkTableEntry cy1 = table.getEntry("cy1");          // Crosshair B Y in normalized screen space
     */
 
-    // public VisionSubsystem() {
-    //   powerRelay.set(Relay.Value.kForward); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
-    // }
+    public VisionSubsystem() {
+      // powerRelay.set(Relay.Value.kForward); // NEVER SET TO REVERSE YOU'LL BLOW UP THE LIMELIGHT
+
+      table = NetworkTableInstance.getDefault().getTable("limelight");
+
+      ltv = table.getEntry("tv");
+      ltx = table.getEntry("tx");
+      lty = table.getEntry("ty");
+      lta = table.getEntry("ta");
+      lts = table.getEntry("ts");
+      ltl = table.getEntry("tl");
+
+      lledMode = table.getEntry("ledMode");
+      lcamMode = table.getEntry("camMode");
+      lgetpipe = table.getEntry("getpipe");
+      lpipeline = table.getEntry("pipeline");
+      lstream = table.getEntry("stream");
+
+      lastTl = getTl();
+    }
 
     @Override
     public void periodic() {
@@ -59,6 +78,12 @@ public class VisionSubsystem extends SubsystemBase{
 
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
+
+      if (getTl() == lastTl) {
+        System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
+      }
+
+      lastTl = getTl();
 
       SmartDashboard.putBoolean("Has target?", hasValidTarget);
       SmartDashboard.putNumber("Pipeline: ", getPipeline());
@@ -110,10 +135,10 @@ public class VisionSubsystem extends SubsystemBase{
     public double getTs() {return this.lts.getDouble(0.0);}
     public double getTl() {return this.ltl.getDouble(0.0);}
 
-    public double getTshort() {return this.ltshort.getDouble(0.0);}
-    public double getTlong() {return this.ltlong.getDouble(0.0);}
-    public double getThor() {return this.lthor.getDouble(0.0);}
-    public double getTvert() {return this.ltvert.getDouble(0.0);}
+    // public double getTshort() {return this.ltshort.getDouble(0.0);}
+    // public double getTlong() {return this.ltlong.getDouble(0.0);}
+    // public double getThor() {return this.lthor.getDouble(0.0);}
+    // public double getTvert() {return this.ltvert.getDouble(0.0);}
 
     public double getCamMode() {return this.lcamMode.getDouble(0.0);}
     public double getPipeline() {return this.lgetpipe.getDouble(0.0);}
@@ -131,11 +156,18 @@ public class VisionSubsystem extends SubsystemBase{
     
     public boolean isLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
+      if (externalIsLinedUp) {
+        return true;
+      }
       return Math.abs(tx) <= getTolerance();
     }
 
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
+    }
+
+    public void setExternalIsLinedUp(boolean isLinedUp) {
+      externalIsLinedUp = isLinedUp;
     }
 
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').

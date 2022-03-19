@@ -48,6 +48,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     @Override
     protected double getTurnValue() {
         horizontalAngle = vision.getTx() - drivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
+        vision.setExternalIsLinedUp(false);
         isLinedUp = false;
 
         if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
@@ -58,6 +59,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
                 visionRotation = -Math.copySign(Math.PI /4, horizontalAngle);
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
+                vision.setExternalIsLinedUp(true);
                 isLinedUp = true;
             }
         } else {
