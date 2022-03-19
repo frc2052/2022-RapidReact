@@ -1,7 +1,5 @@
 package frc.robot.auto.testing;
 
-// A version of Simple3BallAuto to be used and abused for testing and learning !
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -28,10 +26,14 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 public class AutoTesting extends AutoBase {
 
     /**
-     * Position A Start (Far Right parallel with outer Tarmac line) Facing Inward Towards Hub.
-     * Simple auto to score 3 alliance cargo.
+     * Class to be used and abused for testing autos
      * @param drivetrain
      * @param vision
+     * @param shooter
+     * @param intake
+     * @param hopper
+     * @param indexer
+     * @param climber
      */
     public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

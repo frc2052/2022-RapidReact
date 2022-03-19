@@ -62,7 +62,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand drivebackThroughHangerToShootPos = super.createSwerveTrajectoryCommand(backToShootTrajectoryConfig, super.getLastEndingPosCreated(90), shootPos, throughHangerMidpoint, super.createRotationAngle(-30));
         SwerveControllerCommand driveToBall4Pos = super.createSwerveTrajectoryCommand(intakeBall4TrajectoryConfig, super.getLastEndingPosCreated(-30), ball4Pos, super.createRotationAngle(-30));
 
-        OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake);
+        OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake, indexer);
 
         //ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
         //ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));

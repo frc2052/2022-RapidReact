@@ -5,13 +5,17 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class OnlyIntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
+  private final IndexerSubsystem indexer;
 
-  public OnlyIntakeCommand(IntakeSubsystem intake) {
+  public OnlyIntakeCommand(IntakeSubsystem intake, IndexerSubsystem indexer) {
     this.intake = intake;
+    this.indexer = indexer;
     
     addRequirements(this.intake);
   }
@@ -19,9 +23,12 @@ public class OnlyIntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     // Extend intake arm and spin the intake wheels.
-    intake.armOut(); // TODO: Remove this line!
-    // Don't allow more balls to be picked up if both the stage and prestage are full.
-    if (!isFinished()) {
+    intake.armOut();
+  }
+
+  @Override
+  public void execute() {
+    if (indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
       intake.run();
     }
   }

@@ -10,20 +10,20 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeStopCommand extends CommandBase {
     private final IntakeSubsystem intake;
-    private final HopperSubsystem grassHopper;
+    private final HopperSubsystem hopper;
 
-    public IntakeStopCommand(IntakeSubsystem intake, HopperSubsystem grassHopper) {
+    public IntakeStopCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
       this.intake = intake;
-      this.grassHopper = grassHopper;
+      this.hopper = hopper;
 
-      addRequirements(this.intake, this.grassHopper);
+      addRequirements(this.intake, this.hopper);
     }
   
     @Override
     public void initialize() {
         // Stops the intake and hopper.
         intake.stop();
-        grassHopper.stop();
+        hopper.stop();
     }
 
     @Override

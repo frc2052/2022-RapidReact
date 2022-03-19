@@ -19,9 +19,7 @@ public class IntakeInCommand extends HopperBaseCommand {
   }
     
   @Override
-  public void initialize() {
-    // Extend intake arm and spin the intake wheels.
-    // intake.intakeArmOut(); // TODO: Remove this line!
+  public void execute() {
     // Don't allow more balls to be picked up if both the stage and prestage are full.
     if (!isFinished()) {
       intake.run();
