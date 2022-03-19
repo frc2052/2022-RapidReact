@@ -107,6 +107,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("LED Brightness", ledBrightness);
         SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
+        SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
@@ -229,6 +230,10 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     public ButtonBindingsProfile getSelectButtonBindingsProfile() {
         return buttonBindingsProfileSelector.getSelected();
+    }
+
+    public double getShooterVelocityBoost() {
+        return SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
     }
 
     public void setLastLimelightLEDsEnabled(boolean state) {

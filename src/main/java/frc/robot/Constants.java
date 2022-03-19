@@ -64,7 +64,8 @@ public final class Constants {
         public static final double FEEDER_SPEED = 1;
 
         public static final double SHOOTER_TOLERANCE = 0.05;
-        public static final double SHOOTER_PULLDOWN_PCT = 0.97;
+        public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
+        public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
         public static final double ANGLE_CHANGE_THRESHOLD_TY = -10.0; // TEMP VALUE
         public static final double ANGLE_CHANGE_TOLERANCE = 0.5; // TEMP VALUE

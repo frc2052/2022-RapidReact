@@ -25,6 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double topWheelTargetVelocity;
   private double bottomWheelTargetVelocity;
+  private double shooterVelocityBoost;
   private FiringAngle currentAngle;
 
   public ShooterSubsystem() {
@@ -62,11 +63,11 @@ public class ShooterSubsystem extends SubsystemBase {
     //System.err.println("***************************** RUNNING SHOOTER");
     //System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
     //System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
-    topWheelTargetVelocity = topVelocityTicksPerSeconds;
-    bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds;
+    topWheelTargetVelocity = topVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
+    bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {
@@ -119,6 +120,15 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }
 
+  public void setShooterVelocityBoost(double boostPct) {
+    if (boostPct < -0.1) {
+      boostPct = -0.1;
+    } else if (boostPct > 0.1) {
+      boostPct = 0.1;
+    }
+    shooterVelocityBoost = boostPct;
+  }
+
   public void setShootAngle1() {
     angleChangeSolenoid.set(Value.kForward);
     currentAngle = FiringAngle.ANGLE_1;
@@ -139,6 +149,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    shooterVelocityBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0); // TODO figure out a better way to do this, weather using the setboost method from dashboardControls or making it a singleton and checking here or somthing.
+
     SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
     SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);

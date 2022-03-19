@@ -43,8 +43,6 @@ public class ShootCommand extends CommandBase {
 
     visionCalculator = VisionCalculator.getInstance();
 
-    SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
-
     addRequirements(this.shooter, this.indexer, this.hopper);
   }
 
@@ -67,18 +65,11 @@ public class ShootCommand extends CommandBase {
 
     ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleDegrees());
 
-    double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
-    if (shooterBoost < -0.1) {
-      shooterBoost = -0.1;
-    } else if (shooterBoost > 0.1) {
-      shooterBoost = 0.1;
-    }
-
     SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     shooter.shootAtSpeed(
-      shooterConfig.getTopMotorVelocityTicksPerSecond() * (shooterBoost + 1), // Boost the shooter velocity by a max of 110%
-      shooterConfig.getBottomMotorVelocityTicksPerSecond() * (shooterBoost + 1)
+      shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
+      shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
     if (shooter.isAtSpeed() && vision.isLinedUp()) {
