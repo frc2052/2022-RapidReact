@@ -2,6 +2,7 @@ package frc.robot.auto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -55,6 +56,8 @@ public class AutoBase  extends SequentialCommandGroup {
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
 
+    protected boolean isLinedUp;
+
     // private TrajectoryConfig slowTrajectoryConfig;
     // private PIDController slowXYController;
     // private ProfiledPIDController slowThetaController;
@@ -74,6 +77,7 @@ public class AutoBase  extends SequentialCommandGroup {
         this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
+        isLinedUp = false;
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(swerveDriveKinematics), 
@@ -336,12 +340,22 @@ public class AutoBase  extends SequentialCommandGroup {
             }
             Rotation2d rotation;
             if(vision.hasValidTarget()) {
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()).plus(Rotation2d.fromDegrees(offsetAngle)));
+                double rotationDegrees = vision.getTx() + offsetAngle;
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
+                if (Math.abs(rotation.getDegrees()) <= 3) {
+                    isLinedUp = true;
+                } else {
+                    isLinedUp = false;
+                }
             } else {
                 rotation = Rotation2d.fromDegrees(noTargetAngle);
             }
             return rotation;
         };
+    }
+
+    protected boolean getIsLinedUp() {
+        return isLinedUp;
     }
 
     protected Pose2d getLastEndingPosCreated() {

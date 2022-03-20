@@ -4,6 +4,8 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -25,6 +27,7 @@ public class ShootCommand extends CommandBase {
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
   private final ShootMode shootMode;
+  private final BooleanSupplier isLinedUSupplier;
 
   private final VisionCalculator visionCalculator;
 
@@ -33,17 +36,36 @@ public class ShootCommand extends CommandBase {
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
-    VisionSubsystem vision
+    VisionSubsystem vision,
+    BooleanSupplier isLinedUSupplier
   ) {
     this.shooter = shooter;
     this.indexer = indexer;
     this.hopper = hopper;
     this.vision = vision;
     this.shootMode = shootMode;
+    this.isLinedUSupplier = isLinedUSupplier;
 
     visionCalculator = VisionCalculator.getInstance();
 
     addRequirements(this.shooter, this.indexer, this.hopper);
+  }
+
+  public ShootCommand(
+    ShootMode shootMode, 
+    ShooterSubsystem shooter, 
+    IndexerSubsystem indexer, 
+    HopperSubsystem hopper, 
+    VisionSubsystem vision
+  ) {
+    this(
+      shootMode, 
+      shooter, 
+      indexer, 
+      hopper, 
+      vision, 
+      vision::isLinedUp
+    );
   }
 
   @Override
@@ -72,7 +94,7 @@ public class ShootCommand extends CommandBase {
       shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
-    if (shooter.isAtSpeed() && vision.isLinedUp()) {
+    if (shooter.isAtSpeed() && isLinedUSupplier.getAsBoolean()) {
       indexer.runFeeder();
       hopper.run();
       if (shootMode == ShootMode.SHOOT_ALL) {
