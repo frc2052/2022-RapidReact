@@ -17,7 +17,7 @@ public class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
-    PWM red, blue, green;
+    PWM redChannel, blueChannel, greenChannel;
 
     private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
 
@@ -43,9 +43,9 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDSubsystem() {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
-        red = new PWM(Constants.LEDs.R_PWM_PORT);
-        green = new PWM(Constants.LEDs.G_PWM_PORT);
-        blue = new PWM(Constants.LEDs.B_PWM_PORT);
+        redChannel = new PWM(Constants.LEDs.R_PWM_PORT);
+        greenChannel = new PWM(Constants.LEDs.G_PWM_PORT);
+        blueChannel = new PWM(Constants.LEDs.B_PWM_PORT);
 
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
 
@@ -133,9 +133,9 @@ public class LEDSubsystem extends SubsystemBase {
 
         runLEDStatusMode();
 
-        green.setRaw((int) (rgb[0] / 255));
-        red.setRaw((int) (rgb[1] / 255));
-        blue.setRaw((int) (rgb[2] / 255));
+        greenChannel.setRaw((int) (rgb[0] / 255));
+        redChannel.setRaw((int) (rgb[1] / 255));
+        blueChannel.setRaw((int) (rgb[2] / 255));
 
         // canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
         // canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
