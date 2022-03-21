@@ -4,6 +4,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -14,8 +15,9 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.util.Units;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
-    private VisionSubsystem vision;
-    private DrivetrainSubsystem drivetrain;
+    private final VisionSubsystem vision;
+    private final DrivetrainSubsystem drivetrain;
+    private final ShooterSubsystem shooter;
     private double visionRotation = 0;
     private double horizontalAngle;
     private boolean isLinedUp;
@@ -25,6 +27,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         VisionSubsystem vision,
+        ShooterSubsystem shooter,
         DashboardControlsSubsystem dashboard
     ) {
         super(
@@ -37,6 +40,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
         this.vision = vision;
         this.drivetrain = drivetrain;
+        this.shooter = shooter;
     }
 
     @Override
@@ -91,8 +95,8 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         // double averageFiringVelocityTP100MS = (shooterDistanceConfig.getTopMotorVelocityTicksPerSecond() + shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond()) / 2;   // Finds average velocity between the 2 shooter wheel velocities
         // double averageFiringVelocityMPS = averageFiringVelocityTP100MS * 10 / 2048 * 2 * Math.PI * Constants.Shooter.FLYWHEEL_RADIUS_METERS; // Ticks per 100 ms to rotations per second by multiplying by 10 to get to seconds, and deviding by 2048, the amount of ticks per revolution of the falcon shooter motors. Can use this raw becasue the gear ratio from the motore to the shooter should be 1:1.
 
-        double launchVelocity = Math.sqrt((shooterDistanceMeters * 9.8) / Math.sin(Math.toRadians(2 * Constants.Shooter.FIRING_ANGLE_1_DEGREES))); // Gets the velocity we should be launching the ball at
-        double xLaunchVelocity = launchVelocity * Math.cos(Math.toRadians(Constants.Shooter.FIRING_ANGLE_1_DEGREES)); //TODO Change to get current shooter firing angle or somthing
+        double launchVelocity = Math.sqrt((shooterDistanceMeters * 9.8) / Math.sin(Math.toRadians(2 * shooter.getShootAngleDegrees()))); // Gets the velocity we should be launching the ball at
+        double xLaunchVelocity = launchVelocity * Math.cos(Math.toRadians(shooter.getShootAngleDegrees())); //TODO Change to get current shooter firing angle or somthing
         // double yLaunchVelocity = launchVelocity * Math.sin(Math.toRadians(Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES));
 
 

@@ -67,18 +67,18 @@ public final class Constants {
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
-        public static final double ANGLE_CHANGE_THRESHOLD_TY = -10.0; // TEMP VALUE
-        public static final double ANGLE_CHANGE_TOLERANCE = 0.5; // TEMP VALUE
+        public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TEMP VALUE
+        public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TEMP VALUE
 
         public static final double FIRING_ANGLE_1_DEGREES = 72.0;
-        public static final double FIRING_ANGLE_2_DEGREES = 50.0; // TEMP VALUE
+        public static final double FIRING_ANGLE_2_DEGREES = 60.0;
         public static final double FLYWHEEL_RADIUS_METERS = Units.inchesToMeters(2);
 
         public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
         public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
 
-        public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
-        public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
+        // public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
+        // public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
     }
 
     public static final class Field {
@@ -165,7 +165,11 @@ public final class Constants {
     }
 
     public static final class LEDs {
-        public static final int CANIFIER_PORT = 21;
+        // public static final int CANIFIER_PORT = 21;
+
+        public static final int R_PWM_PORT = 0;
+        public static final int G_PWM_PORT = 1;
+        public static final int B_PWM_PORT = 2;
     }
 
     public static final class Misc {

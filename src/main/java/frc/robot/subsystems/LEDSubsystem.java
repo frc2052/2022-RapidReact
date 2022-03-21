@@ -6,6 +6,7 @@ import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +17,9 @@ public class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
-    private double [] rgb = new double[3]; // Is actually GRB in the order of the array
+    PWM red, blue, green;
+
+    private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
 
     private double saturation;
     private double hue;
@@ -39,6 +42,11 @@ public class LEDSubsystem extends SubsystemBase {
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
     private LEDSubsystem() {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
+
+        red = new PWM(Constants.LEDs.R_PWM_PORT);
+        green = new PWM(Constants.LEDs.G_PWM_PORT);
+        blue = new PWM(Constants.LEDs.B_PWM_PORT);
+
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
 
         // Setting initial values and making sure variables aren't going to be null and cause any potential issues
@@ -107,28 +115,32 @@ public class LEDSubsystem extends SubsystemBase {
         externalBrightnessModifier = (int)(brightness - 100) / 100.0;
     }
 
-    // @Override
-    // public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot - Currently commented out becasue Canifier is fried
+    @Override
+    public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot - Currently commented out becasue Canifier is fried
         
-    //     double matchTime = DriverStation.getMatchTime(); // The current approximate match time
+        double matchTime = DriverStation.getMatchTime(); // The current approximate match time
 
-    //     if (matchTime >= 120 && matchTime <= 125) {
-    //         currentLEDStatusMode = LEDStatusMode.ENG_GAME_WARNING;
-    //     }
+        if (matchTime >= 120 && matchTime <= 125) {
+            currentLEDStatusMode = LEDStatusMode.ENG_GAME_WARNING;
+        }
 
-    //     if (currentLEDStatusMode != lastLEDStatusMode) {
-    //         counter = 0;
-    //         LEDsOff();
-    //         runLEDStatusModeInitial(currentLEDStatusMode);
-    //         lastLEDStatusMode = currentLEDStatusMode;
-    //     }
+        if (currentLEDStatusMode != lastLEDStatusMode) {
+            counter = 0;
+            LEDsOff();
+            runLEDStatusModeInitial(currentLEDStatusMode);
+            lastLEDStatusMode = currentLEDStatusMode;
+        }
 
-    //     runLEDStatusMode();
+        runLEDStatusMode();
 
-    //     canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
-    //     canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
-    //     canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
-    // }
+        green.setRaw((int) (rgb[0] / 255));
+        red.setRaw((int) (rgb[1] / 255));
+        blue.setRaw((int) (rgb[2] / 255));
+
+        // canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
+        // canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
+        // canifier.setLEDOutput(rgb[2] + externalBrightnessModifier, LEDChannel.LEDChannelC);  // B (Blue)
+    }
 
     private void runLEDStatusModeInitial(LEDStatusMode statusMode) {
         switch (statusMode) {

@@ -45,7 +45,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
 
-    public DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
+    private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
         this.robotContainer = robotContainer;
         
@@ -96,6 +96,20 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         // limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
         // limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
+    }
+
+    // Singleton pattern to make sure only one instance of this subsystems exists, it can be called from anywhere, and has an init method to pass the pointers to other classes.
+    private static DashboardControlsSubsystem instance;
+    public static void init(VisionSubsystem vision, RobotContainer robotContainer) {
+        if (instance == null) {
+            instance = new DashboardControlsSubsystem(vision, robotContainer);
+        }
+    }
+    public static DashboardControlsSubsystem getInstance() {
+        if (instance == null) {
+            System.err.println("ATTEMPTED TO GET DASHBOARD CONTROLS INSTANCE WHEN NULL");
+        }
+        return instance;
     }
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard

@@ -55,7 +55,6 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.ProjectileCalculator;
-import frc.robot.util.buttonbindings.ButtonCommands;
 import frc.robot.util.buttonbindings.profiles.Default;
 import frc.robot.util.buttonbindings.profiles.SoloDriver;
 import frc.robot.util.vision.VisionCalculator;
@@ -115,6 +114,7 @@ public class RobotContainer {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private boolean initComplete = false;
+  private boolean competitionMode = false;
 
   private Command autonomousCommand;
 
@@ -123,7 +123,8 @@ public class RobotContainer {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
     vision = new VisionSubsystem();
-    dashboardControlsSubsystem = new DashboardControlsSubsystem(vision, this);
+    DashboardControlsSubsystem.init(vision, this);
+    dashboardControlsSubsystem = DashboardControlsSubsystem.getInstance();
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
     
     LEDSubsystem.getInstance();
@@ -195,7 +196,7 @@ public class RobotContainer {
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
 
-    ButtonCommands.SHOOT_SINGLE.setCommand(
+    Command shootSingleCommand =
       new ParallelCommandGroup(
         new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
@@ -203,10 +204,12 @@ public class RobotContainer {
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
+          shooter,
           dashboardControlsSubsystem
-      )
-    ));
-    ButtonCommands.VISION_SHOOT_ALL.setCommand(new ParallelCommandGroup(
+        )
+      );
+    Command visionShootAllCommand =
+      new ParallelCommandGroup(
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
         new ConditionalCommand(
           new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
@@ -218,27 +221,24 @@ public class RobotContainer {
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
+          shooter,
           dashboardControlsSubsystem
         )
-      ));
-
-    ButtonCommands.RESET_GYRO.setCommand(new InstantCommand(() -> { this.resetGyro(); }));
-
-    ButtonCommands.INTAKE_TOGGLE.setCommand(new IntakeArmToggleCommand(intake, indexer, hopper));
-    ButtonCommands.INTAKE_ON.setCommand(
+      );
+    Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
+    Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
+    Command intakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new OnlyIntakeCommand(intake, indexer), 
         new IntakeInCommand(intake, indexer, hopper), 
         shootAllButton::get
-      )
-    );
-    ButtonCommands.INTAKE_REVERSE.setCommand(new IntakeReverseCommand(intake, hopper));
+      );
+    Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
+    Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
+    Command shootLowGoalCommand = new ShootLowCommand(shooter, indexer);
+    Command lineupShootCommand = new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, VisionCalculator.getInstance().getShooterConfig(7 * 12, FiringAngle.ANGLE_2));
 
-    ButtonCommands.TUNE_SHOOTER.setCommand(new TuneShooterCommand(shooter, indexer, intake, hopper));
-    ButtonCommands.SHOOT_LOW_GOAL.setCommand(new ShootLowCommand(shooter, indexer));
-    ButtonCommands.LINEUP_SHOOT.setCommand(new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, VisionCalculator.getInstance().getShooterConfig(7 * 12, FiringAngle.ANGLE_2)));
-
-    ButtonCommands.NON_VISION_SHOOT_ALL.setCommand(
+    Command nonVisionShootAllCommand =
       new NonVisionShootCommand(
         NonVisionShootMode.SHOOT_ALL, 
         shooter, 
@@ -246,13 +246,13 @@ public class RobotContainer {
         hopper,
         FiringAngle.ANGLE_1,
         VisionCalculator.getInstance().getShooterConfig(3*12, FiringAngle.ANGLE_1)
-    ));
+      );
 
-    ButtonCommands.CLIMBER_EXTEND.setCommand(new ExtendClimberCommand(climber, () -> climberOverrideButton.get()));
-    ButtonCommands.CLIMBER_RETRACT.setCommand(new RetractClimberCommand(climber, () -> climberOverrideButton.get()));
-    ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(new ToggleClimberSolenoidCommand(climber));
-    ButtonCommands.UNLOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.unlock(); }));
-    ButtonCommands.LOCK_CLIMBER.setCommand(new InstantCommand(() -> { climber.lock(); }));
+    Command climberExtendCommand = new ExtendClimberCommand(climber, () -> climberOverrideButton.get());
+    Command climberRetractCommand = new RetractClimberCommand(climber, () -> climberOverrideButton.get());
+    Command toggleClimberAngleCommand = new ToggleClimberSolenoidCommand(climber);
+    Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
+    Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
@@ -268,28 +268,28 @@ public class RobotContainer {
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
-    intakeArmToggleButton.whenPressed(ButtonCommands.INTAKE_TOGGLE.command);
-    intakeInButton.whileHeld(ButtonCommands.INTAKE_ON.command);
-    intakeReverseButton.whileHeld(ButtonCommands.INTAKE_REVERSE.command);
+    intakeArmToggleButton.whenPressed(intakeToggleCommand);
+    intakeInButton.whileHeld(intakeOnCommand);
+    intakeReverseButton.whileHeld(intakeReverseCommand);
 
     // Shooter Button Command Bindings
-    shootSingleButton.whileHeld(ButtonCommands.SHOOT_SINGLE.command);
-    shootAllButton.whileHeld(ButtonCommands.VISION_SHOOT_ALL.command);
-    tuneShooterButton.whileHeld(ButtonCommands.TUNE_SHOOTER.command);
+    shootSingleButton.whileHeld(shootSingleCommand);
+    shootAllButton.whileHeld(visionShootAllCommand);
+    tuneShooterButton.whileHeld(tuneShooterCommand);
 
-    shootLowGoalButton.whileHeld(ButtonCommands.SHOOT_LOW_GOAL.command);
+    shootLowGoalButton.whileHeld(shootLowGoalCommand);
 
-    limelightLineupNonvisionShootButton.whileHeld(ButtonCommands.LINEUP_SHOOT.command); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
+    limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
 
-    nonVisionShootAllButton.whileHeld(ButtonCommands.NON_VISION_SHOOT_ALL.command);
+    nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
       
     
     // Climber Button Command Bindings
-    extendClimberButton.whileHeld(ButtonCommands.CLIMBER_EXTEND.command);
-    retractClimberButton.whileHeld(ButtonCommands.CLIMBER_RETRACT.command);
-    climberSolenoidToggleButton.whenPressed(ButtonCommands.TOGGLE_CLIMBER_ANGLE.command);
-    climberUnlockButton.whenPressed(ButtonCommands.UNLOCK_CLIMBER.command);
-    climberLockButton.whenPressed(ButtonCommands.LOCK_CLIMBER.command);
+    extendClimberButton.whileHeld(climberExtendCommand);
+    retractClimberButton.whileHeld(climberRetractCommand);
+    climberSolenoidToggleButton.whenPressed(toggleClimberAngleCommand);
+    climberUnlockButton.whenPressed(unlockClimberCommand);
+    climberLockButton.whenPressed(lockClimberCommand);
 
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
@@ -300,24 +300,46 @@ public class RobotContainer {
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
 
+    if (!competitionMode) { // Makes sure not to do any processing of this if we're at compeition because we don't need it
+      ButtonCommands.VISION_SHOOT_ALL.setCommand(visionShootAllCommand);
+      ButtonCommands.SHOOT_LOW_GOAL.setCommand(shootLowGoalCommand);
+      ButtonCommands.NON_VISION_SHOOT_ALL.setCommand(nonVisionShootAllCommand);
+      ButtonCommands.MANUAL_SHOOT.setCommand(tuneShooterCommand);
+      ButtonCommands.LINEUP_SHOOT.setCommand(lineupShootCommand);
+      ButtonCommands.TUNE_SHOOTER.setCommand(tuneShooterCommand);
+      ButtonCommands.RESET_GYRO.setCommand(resetGyroCommand);
+      ButtonCommands.SHOOT_SINGLE.setCommand(shootSingleCommand);
+      ButtonCommands.CLIMBER_RETRACT.setCommand(climberRetractCommand);
+      ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(toggleClimberAngleCommand);
+      ButtonCommands.CLIMBER_EXTEND.setCommand(climberExtendCommand);
+      ButtonCommands.INTAKE_TOGGLE.setCommand(intakeToggleCommand);
+      ButtonCommands.INTAKE_REVERSE.setCommand(intakeReverseCommand);
+      ButtonCommands.INTAKE_ON.setCommand(intakeOnCommand);
+      ButtonCommands.CLIMBER_LIMIT_OVERRIDE.setCommand(null);
+      ButtonCommands.UNLOCK_CLIMBER.setCommand(unlockClimberCommand);
+      ButtonCommands.LOCK_CLIMBER.setCommand(lockClimberCommand);
+    }
   }
 
   public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
-    driveJoystick = new Joystick(0);
-    turnJoystick = new Joystick(1);
-    secondaryPannel = new Joystick(2);
+    if (!competitionMode) {
+      // News up each joystick which should remove button bindings connected to each.
+      driveJoystick = new Joystick(0);
+      turnJoystick = new Joystick(1);
+      secondaryPannel = new Joystick(2);
 
-    switch(buttonBindingsProfile) {
-      case DEFAULT:
-        Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-        break;
-      case SOLO_DRIVER:
-        SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-        break;
-      default:
-        System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
-        configureButtonBindings();
-        break;
+      switch(buttonBindingsProfile) {
+        case DEFAULT:
+          Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+          break;
+        case SOLO_DRIVER:
+          SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+          break;
+        default:
+          System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
+          configureButtonBindings();
+          break;
+      }
     }
   }
 
@@ -403,4 +425,34 @@ public class RobotContainer {
   public void resetRobot() {
     drivetrain.stop();
   }
+
+  public enum ButtonCommands {
+    VISION_SHOOT_ALL(null),
+    SHOOT_LOW_GOAL(null),
+    NON_VISION_SHOOT_ALL(null),
+    MANUAL_SHOOT(null),
+    LINEUP_SHOOT(null),
+    TUNE_SHOOTER(null),
+    RESET_GYRO(null),
+    SHOOT_SINGLE(null),
+    CLIMBER_RETRACT(null),
+    TOGGLE_CLIMBER_ANGLE(null),
+    CLIMBER_EXTEND(null),
+    INTAKE_TOGGLE(null),
+    INTAKE_REVERSE(null),
+    INTAKE_ON(null),
+    CLIMBER_LIMIT_OVERRIDE(null),
+    UNLOCK_CLIMBER(null),
+    LOCK_CLIMBER(null);
+
+    public Command command;
+
+    private ButtonCommands(Command command) {
+        this.command = command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+}
 }
