@@ -67,8 +67,8 @@ public final class Constants {
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
-        public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TEMP VALUE
-        public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TEMP VALUE
+        public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TODO Tune this
+        public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TODO Tune this
 
         public static final double FIRING_ANGLE_1_DEGREES = 72.0;
         public static final double FIRING_ANGLE_2_DEGREES = 60.0;
@@ -106,7 +106,7 @@ public final class Constants {
 
         public static final double DEFAULT_PIPELINE = 0.0;
 
-        public static final Translation2d OFFSET_FROM_CENTER_SHOOTER = new Translation2d(7.5, 8); // TEMP VALUE - measure and correct asap
+        public static final Translation2d OFFSET_FROM_CENTER_SHOOTER = new Translation2d(7.5, 8);
     }
 
     public static final class PixyCamConstants {

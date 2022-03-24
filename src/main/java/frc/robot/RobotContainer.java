@@ -32,7 +32,6 @@ import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
-import frc.robot.commands.intake.HopperTest;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -106,8 +105,6 @@ public class RobotContainer {
   private JoystickButton climberOverrideButton;
   private JoystickButton commandInterruptButton;
   private JoystickButton tempFieldCentricButton;
-
-  private JoystickButton hopperTestButton;
 
   private JoystickButton pidTestingButton;
 
@@ -202,10 +199,8 @@ public class RobotContainer {
     climberOverrideButton = new JoystickButton(secondaryPannel, 8);
     commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
 
+    // Testing Buttons
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
-
-    hopperTestButton = new JoystickButton(turnJoystick, 10);
-    hopperTestButton.whenHeld(new HopperTest(hopper));
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -239,16 +234,15 @@ public class RobotContainer {
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
     Command intakeOnCommand =
-    //   new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
-        new IntakeInCommand(intake, indexer, hopper);
-    //     new OnlyIntakeCommand(intake, indexer), 
-    //     shootAllButton::get
-    //   );
+      new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
+        new OnlyIntakeCommand(intake, indexer), 
+        new IntakeInCommand(intake, indexer, hopper),
+        shootAllButton::get
+      );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
     Command shootLowGoalCommand = new ShootLowCommand(shooter, indexer);
     Command lineupShootCommand = new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, VisionCalculator.getInstance().getShooterConfig(7 * 12, FiringAngle.ANGLE_2));
-
     Command nonVisionShootAllCommand =
       new NonVisionShootCommand(
         NonVisionShootMode.SHOOT_ALL, 
@@ -277,8 +271,7 @@ public class RobotContainer {
 
     // Drivetrain Button Command Bindings
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
-    tempFieldCentricButton.whenPressed(() -> { this.resetGyro();
-     });
+    tempFieldCentricButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(intakeToggleCommand);
@@ -289,14 +282,10 @@ public class RobotContainer {
     shootSingleButton.whileHeld(shootSingleCommand);
     shootAllButton.whileHeld(visionShootAllCommand);
     tuneShooterButton.whileHeld(tuneShooterCommand);
-
     shootLowGoalButton.whileHeld(shootLowGoalCommand);
-
-    limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
-
+    limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation (requires limelight to be sending video data, rather useless right now)
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
       
-    
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
     retractClimberButton.whileHeld(climberRetractCommand);
@@ -467,5 +456,5 @@ public class RobotContainer {
     public void setCommand(Command command) {
         this.command = command;
     }
-}
+  }
 }
