@@ -12,6 +12,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -64,7 +65,7 @@ public class ShootCommand extends CommandBase {
       indexer, 
       hopper, 
       vision, 
-      vision::isLinedUp
+      TargetingSubsystem.getInstance()::getIsLinedUpToShoot
     );
   }
 

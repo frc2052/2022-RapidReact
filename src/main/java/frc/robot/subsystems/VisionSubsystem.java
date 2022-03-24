@@ -19,7 +19,6 @@ public class VisionSubsystem extends SubsystemBase{
     private double tx, ty; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
     private boolean isLinedUp;
-    private boolean externalIsLinedUp;
     private double lastTl;
     
     private boolean ledOverride = false;
@@ -157,18 +156,11 @@ public class VisionSubsystem extends SubsystemBase{
     
     public boolean isLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
-      if (externalIsLinedUp) {
-        return true;
-      }
       return Math.abs(tx) <= getTolerance();
     }
 
     public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
-    }
-
-    public void setExternalIsLinedUp(boolean isLinedUp) {
-      externalIsLinedUp = isLinedUp;
     }
 
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').

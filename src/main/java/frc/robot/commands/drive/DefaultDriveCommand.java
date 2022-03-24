@@ -32,7 +32,6 @@ public class DefaultDriveCommand extends CommandBase {
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         DoubleSupplier rotationSupplier,
-        DashboardControlsSubsystem dashboardControls,
         BooleanSupplier tempFieldCentricButtonPressed
     ) {
         this.drivetrain = drivetrain;
@@ -40,7 +39,7 @@ public class DefaultDriveCommand extends CommandBase {
         this.translationYSupplier = translationYSupplier;
         this.rotationSupplier = rotationSupplier;
 
-        this.dashboardControls = dashboardControls;
+        this.dashboardControls = DashboardControlsSubsystem.getInstance();
         this.tempFieldCentricButtonPressed = tempFieldCentricButtonPressed;
 
         addRequirements(drivetrain);
