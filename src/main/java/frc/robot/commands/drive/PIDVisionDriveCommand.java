@@ -36,7 +36,8 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
             translationXSupplier,
             translationYSupplier,
             () -> { return 0.0; }, // This value will not be used because getTurn will be overriden.
-            dashboard
+            dashboard,
+            () -> { return false; }
         );
         
         this.vision = vision;

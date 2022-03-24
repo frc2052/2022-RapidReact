@@ -105,6 +105,7 @@ public class RobotContainer {
   private JoystickButton tuneShooterButton;
   private JoystickButton climberOverrideButton;
   private JoystickButton commandInterruptButton;
+  private JoystickButton tempFieldCentricButton;
 
   private JoystickButton hopperTestButton;
 
@@ -140,7 +141,8 @@ public class RobotContainer {
         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-        dashboardControlsSubsystem
+        dashboardControlsSubsystem,
+        () -> { return tempFieldCentricButton.get(); }
 		  )
     );
 
@@ -176,6 +178,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Drivetrain Button Bindings
     resetGyroButton = new JoystickButton(driveJoystick, 11);
+    tempFieldCentricButton = new JoystickButton(driveJoystick, 2);
 
     // Intake Buttons Bindings
     intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
@@ -274,6 +277,8 @@ public class RobotContainer {
 
     // Drivetrain Button Command Bindings
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    tempFieldCentricButton.whenPressed(() -> { this.resetGyro();
+     });
     
     // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(intakeToggleCommand);

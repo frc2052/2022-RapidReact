@@ -106,7 +106,7 @@ public final class Constants {
 
         public static final double DEFAULT_PIPELINE = 0.0;
 
-        public static final Translation2d OFFSET_FROM_CENTER_SHOOTER = new Translation2d(0, 0); // TEMP VALUE - measure and correct asap
+        public static final Translation2d OFFSET_FROM_CENTER_SHOOTER = new Translation2d(7.5, 8); // TEMP VALUE - measure and correct asap
     }
 
     public static final class PixyCamConstants {
