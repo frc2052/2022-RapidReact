@@ -79,11 +79,11 @@ public class VisionSubsystem extends SubsystemBase{
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
-      if (getTl() == lastTl) {
-        System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
-      }
+    //   if (getTl() == lastTl) {
+    //     System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
+    //   }
 
-      lastTl = getTl();
+    //   lastTl = getTl();
 
       SmartDashboard.putBoolean("Has target?", hasValidTarget);
       SmartDashboard.putNumber("Pipeline: ", getPipeline());
@@ -95,6 +95,7 @@ public class VisionSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
         SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
+        SmartDashboard.putNumber("Limelight Tolerance", getTolerance());
 
         // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }

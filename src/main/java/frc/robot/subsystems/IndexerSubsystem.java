@@ -72,7 +72,7 @@ public class IndexerSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Feeder Indexer Speed", getFeederIndexerSpeed());
     // SmartDashboard.putNumber("Large Indexer Speed", getLargeIndexerSpeed());
     SmartDashboard.putBoolean("Staged Cargo Detected", getCargoStagedDetected());
-    SmartDashboard.putBoolean("PreStaged Cargo Detected", getCargoStagedDetected());
+    SmartDashboard.putBoolean("PreStaged Cargo Detected", getCargoPreStagedDetected());
   }
   
 }

@@ -32,6 +32,7 @@ import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
+import frc.robot.commands.intake.HopperTest;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -105,6 +106,8 @@ public class RobotContainer {
   private JoystickButton climberOverrideButton;
   private JoystickButton commandInterruptButton;
 
+  private JoystickButton hopperTestButton;
+
   private JoystickButton pidTestingButton;
 
   // Slew rate limiters to make joystick inputs more gentle.
@@ -140,6 +143,8 @@ public class RobotContainer {
         dashboardControlsSubsystem
 		  )
     );
+
+    init();
   }
 
   public void init() {
@@ -150,15 +155,15 @@ public class RobotContainer {
 
     // //The following subsystems have a dependency on CAN
 
-    shooter = new ShooterSubsystem();
-    indexer = new IndexerSubsystem();
-    intake = new IntakeSubsystem();
-    hopper = new HopperSubsystem();
-    pneumatics = new PneumaticsSubsystem();
-    climber = new HookClimberSubsystem();
-    //LEDSubsystem.getInstance();
+        shooter = new ShooterSubsystem();
+        indexer = new IndexerSubsystem();
+        intake = new IntakeSubsystem();
+        hopper = new HopperSubsystem();
+        pneumatics = new PneumaticsSubsystem();
+        climber = new HookClimberSubsystem();
+        //LEDSubsystem.getInstance();
 
-    configureButtonBindings();
+        configureButtonBindings();
     }
   }
 
@@ -196,6 +201,9 @@ public class RobotContainer {
 
     pidTestingButton = new JoystickButton(secondaryPannel, 2);
 
+    hopperTestButton = new JoystickButton(turnJoystick, 10);
+    hopperTestButton.whenHeld(new HopperTest(hopper));
+
     Command shootSingleCommand =
       new ParallelCommandGroup(
         new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
@@ -228,11 +236,11 @@ public class RobotContainer {
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
     Command intakeOnCommand =
-      new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
-        new OnlyIntakeCommand(intake, indexer), 
-        new IntakeInCommand(intake, indexer, hopper), 
-        shootAllButton::get
-      );
+    //   new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
+        new IntakeInCommand(intake, indexer, hopper);
+    //     new OnlyIntakeCommand(intake, indexer), 
+    //     shootAllButton::get
+    //   );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
     Command shootLowGoalCommand = new ShootLowCommand(shooter, indexer);

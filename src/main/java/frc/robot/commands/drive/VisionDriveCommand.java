@@ -84,7 +84,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     }
 
     private double drivingHorizontalFiringOffsetAngleDegrees() {
-        if(drivetrain.getIntendedCurrentVelocity() < 0.2) {    // Just avoids doing all the math if we're not or barely moving anyway
+        if(drivetrain.getIntendedCurrentVelocity() < 0.1) {    // Just avoids doing all the math if we're not or barely moving anyway
             return 0.0;
         }
         // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.

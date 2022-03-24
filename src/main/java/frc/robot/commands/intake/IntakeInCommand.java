@@ -20,6 +20,8 @@ public class IntakeInCommand extends HopperBaseCommand {
     
   @Override
   public void execute() {
+    super.execute();
+    
     // Don't allow more balls to be picked up if both the stage and prestage are full.
     if (!isFinished()) {
       intake.run();
