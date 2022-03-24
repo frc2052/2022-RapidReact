@@ -115,6 +115,8 @@ public final class Constants {
     }
 
     public static final class DriveTrain {
+        public static final String CANIVOR_NAME = "Drivebase";
+
         // The left-to-right distance between the drivetrain wheels
         // Should be measured from center to center.
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.5);
