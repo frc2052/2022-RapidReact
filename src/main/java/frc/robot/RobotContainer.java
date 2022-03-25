@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -324,7 +325,7 @@ public class RobotContainer {
   }
 
   public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
-    if (!competitionMode) {
+    if (!competitionMode) { // Could put DriverStation.isTest() in here if we don't want to redeploy code to change this
       // News up each joystick which should remove button bindings connected to each.
       driveJoystick = new Joystick(0);
       turnJoystick = new Joystick(1);
