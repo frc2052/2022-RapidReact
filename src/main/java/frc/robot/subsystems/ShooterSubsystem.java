@@ -149,8 +149,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    shooterVelocityBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0); // TODO figure out a better way to do this, weather using the setboost method from dashboardControls or making it a singleton and checking here or somthing.
-
     SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
     SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);

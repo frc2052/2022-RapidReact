@@ -125,7 +125,7 @@ public class RobotContainer {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
     vision = new VisionSubsystem();
-    DashboardControlsSubsystem.init(vision, this);
+    DashboardControlsSubsystem.init(vision, this, shooter);
     dashboardControlsSubsystem = DashboardControlsSubsystem.getInstance();
     dashboardControlsSubsystem.addSelectorsToSmartDashboard();
     

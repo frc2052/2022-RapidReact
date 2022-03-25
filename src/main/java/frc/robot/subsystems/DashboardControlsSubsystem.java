@@ -11,8 +11,9 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 /** Subsystem for sending and checking toggles and selectable lists on the SmartDashboard */
 public class DashboardControlsSubsystem extends SubsystemBase {
 
-    private VisionSubsystem vision;
-    private RobotContainer robotContainer;
+    private final VisionSubsystem vision;
+    private final RobotContainer robotContainer;
+    private final ShooterSubsystem shooter;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -22,6 +23,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     private int ledBrightness;
     private int lastLEDBrightness;
+    private double shooterBoostPct;
+    private double lastShooterBoostPct;
 
     private boolean limelightLEDsEnabled;
     private boolean limelightDriveCamToggle;
@@ -29,6 +32,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean limelightLEDOverride;
     private boolean isLimelightDead;
     private boolean isDrivetrainDead;
+    private boolean isPnuematicsDead;
 
     private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
@@ -36,16 +40,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean lastLimelightLEDOverride;
     private boolean lastIsLimelightDead;
     private boolean lastIsDrivetrainDead;
+    private boolean lastIsPnuematicsDead;
 
     private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
-
     private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
 
-    private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
+    private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer, ShooterSubsystem shooter) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
         this.robotContainer = robotContainer;
+        this.shooter = shooter;
         
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
@@ -55,6 +60,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         selectedAuto = Autos.NONE_SELECTED;
         isLimelightDead = false;
         isDrivetrainDead = false;
+        isPnuematicsDead = false;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
@@ -65,6 +71,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         lastSelectedAuto = selectedAuto;
         lastIsLimelightDead = isLimelightDead;
         lastIsDrivetrainDead = isDrivetrainDead;
+        lastIsPnuematicsDead = isPnuematicsDead;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -98,9 +105,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     // Singleton pattern to make sure only one instance of this subsystems exists, it can be called from anywhere, and has an init method to pass the pointers to other classes.
     private static DashboardControlsSubsystem instance;
-    public static void init(VisionSubsystem vision, RobotContainer robotContainer) {
+    public static void init(VisionSubsystem vision, RobotContainer robotContainer, ShooterSubsystem shooter) {
         if (instance == null) {
-            instance = new DashboardControlsSubsystem(vision, robotContainer);
+            instance = new DashboardControlsSubsystem(vision, robotContainer, shooter);
         }
     }
     public static DashboardControlsSubsystem getInstance() {
@@ -131,8 +138,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
 
         // Dead subsystem buttons
-        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
-        SmartDashboard.putBoolean("Drivetrain Is Dead Button", false);
+        SmartDashboard.putBoolean("Limelight Is Dead", false);
+        SmartDashboard.putBoolean("Drivetrain Is Dead", false);
+        SmartDashboard.putBoolean("Pnuematics Is Dead", false);
     }
 
     @Override
@@ -141,10 +149,13 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
+        shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
         limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
         selectedAuto = getSelectedAuto();
-        isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead Button", false);
+        isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead", false);
+        isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
+        isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -176,6 +187,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         if (ledBrightness != lastLEDBrightness) {
             LEDSubsystem.getInstance().setBrightness(ledBrightness);
             lastLEDBrightness = ledBrightness;
+        }
+
+        if (shooterBoostPct != lastShooterBoostPct) {
+            shooter.setShooterVelocityBoost(shooterBoostPct);
+            lastShooterBoostPct = shooterBoostPct;
         }
 
         if (selectedAuto == Autos.NONE_SELECTED) {
@@ -214,13 +230,18 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (isLimelightDead != lastIsLimelightDead) {
             //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
-            
+            // trigger Limelight relay
             lastIsLimelightDead = isLimelightDead;
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
             lastIsDrivetrainDead = isDrivetrainDead;
+        }
+
+        if (isPnuematicsDead != lastIsPnuematicsDead) {
+            // Override shooter angle changing
+            lastIsPnuematicsDead = isPnuematicsDead;
         }
     }
 
