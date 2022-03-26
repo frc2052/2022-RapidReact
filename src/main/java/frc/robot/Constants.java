@@ -160,7 +160,7 @@ public final class Constants {
 
         // TODO: These Value Needs To Change
         public static final double MIN_CLIMBER_HEIGHT_TICKS = 1000;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 250000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 269000;
         public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 335000;
     }
 

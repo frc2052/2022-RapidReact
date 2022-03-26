@@ -16,7 +16,7 @@ public class MidBarAutoClimbCommand extends SequentialCommandGroup{
         addRequirements(this.climber);
 
         this.addCommands(
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(climber::getIsAtMaxHeight),
+            new ExtendClimberCommand(climber, () -> false).withInterrupt(climber::getIsBelowMaxHeight),
             new RetractClimberCommand(climber, () -> true, 0.8).withInterrupt(() -> climber.getEncoderPosition() <= -2000)
         );
     }

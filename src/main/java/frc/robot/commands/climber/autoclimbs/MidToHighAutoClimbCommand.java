@@ -13,10 +13,10 @@ import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 
-public class NextBarAutoClimbCommand extends SequentialCommandGroup{
+public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
-    public NextBarAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
+    public MidToHighAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
         this.climber = climber;
 
         addRequirements(this.climber);
@@ -25,8 +25,6 @@ public class NextBarAutoClimbCommand extends SequentialCommandGroup{
         this.addCommands(
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 130000), // Just slightly below the bar
-            new WaitUntilCommand(() -> drivetrain.getIsTopOfSwing()),
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> !climber.getIsBelowMaxHeight()),
             new ClimberArmsForwardCommand(climber)
             // new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)
