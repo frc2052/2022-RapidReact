@@ -9,6 +9,12 @@ import frc.robot.Constants;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 import frc.robot.util.vision.VisionCalculator;
 
+// public enum Mode {
+//     NONE,
+//     NORMAL,
+//     OFFSET
+// }
+
 public class TargetingSubsystem extends SubsystemBase {
     private final VisionSubsystem vision;
     private final DrivetrainSubsystem drivetrain;
@@ -35,6 +41,12 @@ public class TargetingSubsystem extends SubsystemBase {
         }
         return instance;
     }
+
+
+    // private Mode mode = Mode.NORMAL;
+    // public void setMode(Mode mode) {
+    //     this.mode = mode;
+    // }
 
     public double getDrivingHorizontalFiringOffsetAngleDegrees() {
         if(drivetrain.getIntendedCurrentVelocity() < 0.1) {    // Just avoids doing all the math if we're not or barely moving anyway
@@ -81,11 +93,25 @@ public class TargetingSubsystem extends SubsystemBase {
         };
     }
 
+    // public Rotation2d getRotation() {
+
+    // }
+
+    // public void somewhereElse() {
+    //     Supplier<Rotation2d> supplier = this::getRotation;
+    // }
+
     public boolean getIsLinedUpToShoot() {
         if (Math.abs(drivetrain.getIntendedCurrentVelocity()) < 0.1) {
             return vision.isLinedUp();
         }
         return isLinedUpToShoot;
+    }
+
+    @Override
+    public void periodic() {
+        // TODO Auto-generated method stub
+        super.periodic();
     }
 
     public void setIsLinedUpToShoot(boolean isLinedUpToShoot) {

@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -19,7 +20,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     private final VisionSubsystem vision;
     private final DrivetrainSubsystem drivetrain;
-    private PIDController pidController;
+    private ProfiledPIDController pidController;
 
     /**
      * PID Controlled VisionDriveCommand for tracking the hub and by overriding the DefaultDriveCommand's getTurnValue method.
@@ -42,7 +43,10 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         this.vision = vision;
         this.drivetrain = drivetrain;
 
-        pidController = new PIDController(1, 0, 0);
+        pidController = new ProfiledPIDController(
+            1, 0, 0,
+            new TrapezoidProfile.Constraints(Math.PI, Math.PI)
+        );
         pidController.enableContinuousInput(-180, 180);
     }
 
