@@ -88,7 +88,7 @@ public class ShootCommand extends CommandBase {
         }
     }
 
-    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleDegrees());
+    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleEnum());
 
     SmartDashboard.putNumber("Distance Inches", distanceInches);
 

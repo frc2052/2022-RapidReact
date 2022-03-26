@@ -158,7 +158,7 @@ public class VisionCalculator {
     }
 
 
-    public ShooterDistanceConfig getShooterConfig(int distanceInches, double shooterAngle) {
+    public ShooterDistanceConfig getShooterConfig(int distanceInches, FiringAngle firingAngleMode) {
         if(distanceInches <= 0){
             return new ShooterDistanceConfig(0, 0, 0);
         }
@@ -167,7 +167,19 @@ public class VisionCalculator {
         // Upper bound of the estimated shooter configuration given the distance from the target.
         ShooterDistanceConfig upperDistanceConfig = null;
 
-        List<ShooterDistanceConfig> distanceToConfigList = (shooterAngle == Constants.Shooter.FIRING_ANGLE_1_DEGREES ? angle1ShooterDistanceConfigs : angle2ShooterDistanceConfigs);
+        List<ShooterDistanceConfig> distanceToConfigList;
+
+        switch (firingAngleMode) {
+            case ANGLE_1:
+                distanceToConfigList = angle1ShooterDistanceConfigs;
+                break;
+            case ANGLE_2:
+                distanceToConfigList = angle2ShooterDistanceConfigs;
+                break;
+            default:
+                System.err.println("FIRING ANGLE SWITCH FELL THROUGH");
+                return null;
+        }
 
         // Finds the upper and lower distance configuration bounds to more accurately find a shooter configuration.
         for (int i = 0; i < distanceToConfigList.size(); i++) {
@@ -215,11 +227,7 @@ public class VisionCalculator {
         );
     }
 
-    public ShooterDistanceConfig getShooterConfig(int distance) {
-        return getShooterConfig(distance, Constants.Shooter.FIRING_ANGLE_1_DEGREES);
-    }
-
-    public ShooterDistanceConfig getShooterConfig(int distance, FiringAngle firingAngleMode) {
-        return getShooterConfig(distance, firingAngleMode.getAngleDegrees());
+    public ShooterDistanceConfig getShooterConfig(int distance) { // Defaults to Angle 1 (for old code compatibility without reworking)
+        return getShooterConfig(distance, FiringAngle.ANGLE_1);
     }
 }
