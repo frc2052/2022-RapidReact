@@ -9,7 +9,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
-        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -64,8 +63,7 @@
                   "_title": "LED Brightness",
                   "Slider Settings/Min": 0.0,
                   "Slider Settings/Max": 100.0,
-                  "Slider Settings/Block increment": 1.0,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 1.0
                 },
                 {
                   "_type": "Number Slider",
@@ -73,8 +71,7 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 0.01
                 }
               ]
             }
@@ -260,17 +257,6 @@
               ]
             }
           },
-          "4,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
-              "_title": "SmartDashboard/Zero Climber Encoder"
-            }
-          },
           "4,3": {
             "size": [
               1,
@@ -296,6 +282,17 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
+              "_title": "SmartDashboard/Zero Climber Encoder"
+            }
           }
         }
       }
@@ -309,7 +306,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "7,0": {
             "size": [
@@ -420,6 +416,76 @@
               "_source0": "network_table:///SmartDashboard/Limelight Is Dead Button",
               "_title": "SmartDashboard/Limelight Is Dead Button"
             }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Pitch",
+              "_title": "SmartDashboard/Gyro Pitch"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Yaw",
+              "_title": "SmartDashboard/Gyro Yaw"
+            }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Roll",
+              "_title": "SmartDashboard/Gyro Roll"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Swing Backward",
+              "_title": "SmartDashboard/Swing Backward",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Is Top Of Swing",
+              "_title": "SmartDashboard/Is Top Of Swing",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Times at the top",
+              "_title": "SmartDashboard/Times at the top"
+            }
           }
         }
       }
@@ -433,7 +499,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "1,0": {
             "size": [
@@ -526,7 +591,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {}
       }
     }
