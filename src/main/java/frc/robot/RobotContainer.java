@@ -139,7 +139,6 @@ public class RobotContainer {
         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-        dashboardControlsSubsystem,
         () -> { return tempFieldCentricButton.get(); }
 		  )
     );
@@ -211,8 +210,7 @@ public class RobotContainer {
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
-          shooter,
-          dashboardControlsSubsystem
+          shooter
         )
       );
     Command visionShootAllCommand =
@@ -228,8 +226,7 @@ public class RobotContainer {
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
           vision,
-          shooter,
-          dashboardControlsSubsystem
+          shooter
         )
       );
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });

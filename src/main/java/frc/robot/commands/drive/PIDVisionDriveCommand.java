@@ -29,15 +29,13 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         DrivetrainSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
-        VisionSubsystem vision,
-        DashboardControlsSubsystem dashboard
+        VisionSubsystem vision
     ) {
         super(
             drivetrain,
             translationXSupplier,
             translationYSupplier,
             () -> { return 0.0; }, // This value will not be used because getTurn will be overriden.
-            dashboard,
             () -> { return false; }
         );
         

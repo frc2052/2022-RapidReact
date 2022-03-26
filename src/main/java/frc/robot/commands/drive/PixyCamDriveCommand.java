@@ -30,7 +30,6 @@ public class PixyCamDriveCommand extends DefaultDriveCommand {
       translationXSupplier, 
       translationYSupplier, 
       () -> { return 0.0; }, //this value will not be used because getTurnWillBeOverriden
-      dashboard,
       () -> { return false; }
     );
     this.pixyCamSubsystem = pixyCamSubsystem;
