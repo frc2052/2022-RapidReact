@@ -19,17 +19,17 @@ public class IntakeArmOutCommand extends HopperBaseCommand {
       
   @Override
   public void execute() {
-    super.execute(); // Runs the hopper execute
+    super.execute(); // Runs the HopperBaseCommand execute method
 
     // Extend the intake arm and stops the intake wheels.
     intake.armOut();
-    intake.run(); // TODO: Remove this line!
+    intake.run();
   }
 
   @Override 
   public void end(boolean interrupted){
     super.end(interrupted);
-    intake.stop(); // TODO: Remove this line!
+    intake.stop();
   }
 
   @Override

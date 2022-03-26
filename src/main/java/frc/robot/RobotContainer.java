@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,7 +35,6 @@ import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.NextBarAutoClimbCommand;
-import frc.robot.commands.intake.HopperTest;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -112,6 +112,7 @@ public class RobotContainer {
   private JoystickButton highAutoClimbButton;
 
   private JoystickButton hopperTestButton;
+  private JoystickButton tempFieldCentricButton;
 
   private JoystickButton pidTestingButton;
 
@@ -145,7 +146,8 @@ public class RobotContainer {
         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
-        dashboardControlsSubsystem
+        dashboardControlsSubsystem,
+        () -> { return tempFieldCentricButton.get(); }
 		  )
     );
 
@@ -181,6 +183,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Drivetrain Button Bindings
     resetGyroButton = new JoystickButton(driveJoystick, 11);
+    tempFieldCentricButton = new JoystickButton(driveJoystick, 2);
 
     // Intake Buttons Bindings
     intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
@@ -207,9 +210,6 @@ public class RobotContainer {
     highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
     pidTestingButton = new JoystickButton(secondaryPannel, 9);
-
-    hopperTestButton = new JoystickButton(turnJoystick, 10);
-    hopperTestButton.whenHeld(new HopperTest(hopper));
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -243,16 +243,15 @@ public class RobotContainer {
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
     Command intakeOnCommand =
-    //   new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
-        new IntakeInCommand(intake, indexer, hopper);
-    //     new OnlyIntakeCommand(intake, indexer), 
-    //     shootAllButton::get
-    //   );
+      new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
+        new OnlyIntakeCommand(intake, indexer), 
+        new IntakeInCommand(intake, indexer, hopper),
+        shootAllButton::get
+      );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
     Command shootLowGoalCommand = new ShootLowCommand(shooter, indexer);
     Command lineupShootCommand = new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, VisionCalculator.getInstance().getShooterConfig(7 * 12, FiringAngle.ANGLE_2));
-
     Command nonVisionShootAllCommand =
       new NonVisionShootCommand(
         NonVisionShootMode.SHOOT_ALL, 
@@ -281,6 +280,7 @@ public class RobotContainer {
 
     // Drivetrain Button Command Bindings
     resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    tempFieldCentricButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(intakeToggleCommand);
@@ -291,16 +291,14 @@ public class RobotContainer {
     shootSingleButton.whileHeld(shootSingleCommand);
     shootAllButton.whileHeld(visionShootAllCommand);
     tuneShooterButton.whileHeld(tuneShooterCommand);
-
     shootLowGoalButton.whileHeld(shootLowGoalCommand);
-
-    limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation
-
+    limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation (requires limelight to be sending video data, rather useless right now)
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
 
     traversalAutoClimbButton.whenPressed(new NextBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get()));
     highAutoClimbButton.whenPressed(new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get()));
     
+      
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
     retractClimberButton.whileHeld(climberRetractCommand);
@@ -468,5 +466,5 @@ public class RobotContainer {
     public void setCommand(Command command) {
         this.command = command;
     }
-}
+  }
 }

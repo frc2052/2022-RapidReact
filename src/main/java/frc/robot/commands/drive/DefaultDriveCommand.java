@@ -6,6 +6,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
@@ -15,6 +16,8 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier translationXSupplier;
     private final DoubleSupplier translationYSupplier;
     private final DoubleSupplier rotationSupplier;
+
+    private final BooleanSupplier tempFieldCentricButtonPressed;
 
     /**
      * The default drive command that runs when no other commands are, controlling the drivetrain.
@@ -29,7 +32,8 @@ public class DefaultDriveCommand extends CommandBase {
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         DoubleSupplier rotationSupplier,
-        DashboardControlsSubsystem dashboardControls
+        DashboardControlsSubsystem dashboardControls,
+        BooleanSupplier tempFieldCentricButtonPressed
     ) {
         this.drivetrain = drivetrain;
         this.translationXSupplier = translationXSupplier;
@@ -37,6 +41,7 @@ public class DefaultDriveCommand extends CommandBase {
         this.rotationSupplier = rotationSupplier;
 
         this.dashboardControls = dashboardControls;
+        this.tempFieldCentricButtonPressed = tempFieldCentricButtonPressed;
 
         addRequirements(drivetrain);
     }
@@ -50,7 +55,7 @@ public class DefaultDriveCommand extends CommandBase {
         // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to
         // be checking each time, but there hasn't been any issues yet and should be just fine.
         // It also allows us to switch drive modes at any point during the match.
-        if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {
+        if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC || tempFieldCentricButtonPressed.getAsBoolean()) {
             drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     translationXSupplier.getAsDouble(),

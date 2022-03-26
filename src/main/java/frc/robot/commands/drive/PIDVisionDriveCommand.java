@@ -23,6 +23,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     /**
      * PID Controlled VisionDriveCommand for tracking the hub and by overriding the DefaultDriveCommand's getTurnValue method.
+     * Untested and probably unworking right now
      */
     public PIDVisionDriveCommand(
         DrivetrainSubsystem drivetrain,
@@ -36,7 +37,8 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
             translationXSupplier,
             translationYSupplier,
             () -> { return 0.0; }, // This value will not be used because getTurn will be overriden.
-            dashboard
+            dashboard,
+            () -> { return false; }
         );
         
         this.vision = vision;

@@ -80,9 +80,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule backLeftModule;
   private final SwerveModule backRightModule;
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
   private double intendedCurrentVelocity;
