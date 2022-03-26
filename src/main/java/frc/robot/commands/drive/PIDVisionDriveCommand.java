@@ -56,7 +56,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
-        pidController.setTolerance(0.07 * vision.getTy() + 3);
+        pidController.setTolerance(vision.getTolerance());
 
         return pidController.calculate(
             drivetrain.getGyroscopeRotation().getDegrees(),

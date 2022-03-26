@@ -15,6 +15,11 @@ import frc.robot.subsystems.HookClimberSubsystem;
 public class NextBarAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
+    /**
+     * Requires being already clipped onto Mid Bar correctly.
+     * @param climber
+     * @param drivetrain
+     */
     public NextBarAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
         this.climber = climber;
 

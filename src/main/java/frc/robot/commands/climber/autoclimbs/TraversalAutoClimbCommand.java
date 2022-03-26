@@ -7,13 +7,17 @@ import frc.robot.subsystems.HookClimberSubsystem;
 public class TraversalAutoClimbCommand extends SequentialCommandGroup {
     private final HookClimberSubsystem climber;
  
+    /**
+     * Requires being already clipped onto Mid Bar correctly.
+     * @param climber
+     * @param drivetrain
+     */
     public TraversalAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
         this.climber = climber;
 
         addRequirements(this.climber);
 
         this.addCommands(
-            new MidBarAutoClimbCommand(climber),
             new NextBarAutoClimbCommand(climber, drivetrain),
             new NextBarAutoClimbCommand(climber, drivetrain)
         );

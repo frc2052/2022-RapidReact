@@ -31,8 +31,8 @@ import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
+import frc.robot.commands.climber.autoclimbs.AutoClimbTestCommand;
 import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
-import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -297,8 +297,8 @@ public class RobotContainer {
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
-    SmartDashboard.putData("Mid Bar Auto Climb", new MidBarAutoClimbCommand(climber).withInterrupt(() -> commandInterruptButton.get()));
-    SmartDashboard.putData("Mid Bar Auto Climb", new HighBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> commandInterruptButton.get()));
+    SmartDashboard.putData("High Bar Auto Climb", new HighBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> commandInterruptButton.get()));
+    SmartDashboard.putData("Auto Climb Tester", new AutoClimbTestCommand(climber).withInterrupt(() -> commandInterruptButton.get()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
