@@ -71,7 +71,7 @@ public class ShootCommand extends CommandBase {
 
   @Override
   public void initialize() {
-      vision.setLED(LEDMode.ON);
+      vision.setLEDMode(LEDMode.ON);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,7 +79,7 @@ public class ShootCommand extends CommandBase {
   public void execute() {
     int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
 
-    if(vision.hasValidTarget()) {
+    if(vision.getHasValidTarget()) {
         // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
         if(vision.getTy() < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DEGREES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
         shooter.setShootAngle2();
@@ -117,7 +117,7 @@ public class ShootCommand extends CommandBase {
     hopper.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
-    vision.setLED(LEDMode.OFF);
+    vision.setLEDMode(LEDMode.OFF);
   }
 
   @Override

@@ -48,7 +48,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     @Override
     public void initialize() {
         super.initialize();
-        vision.setLED(LEDMode.ON);
+        vision.setLEDMode(LEDMode.ON);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         horizontalAngle = vision.getTx() - targeting.getDrivingHorizontalFiringOffsetAngleDegrees();      // Horizontal offset from the Limelight's crosshair to target.
         isLinedUp = false;
 
-        if(vision.hasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
+        if(vision.getHasValidTarget()) { // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(horizontalAngle) > 4) {
 //                visionRotation = -Math.copySign(Math.PI/2, horizontalAngle);
                 visionRotation = -Math.copySign(Math.toRadians(horizontalAngle * 9) , horizontalAngle); // Dynamically changes rotation speed to be faster at a larger tx,
@@ -89,7 +89,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        vision.setLED(LEDMode.OFF);
+        vision.setLEDMode(LEDMode.OFF);
         LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
     }
 }

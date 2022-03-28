@@ -53,7 +53,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     @Override
     public void initialize() {
         super.initialize();
-        vision.setLED(LEDMode.ON);
+        vision.setLEDMode(LEDMode.ON);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        vision.setLED(LEDMode.OFF);
+        vision.setLEDMode(LEDMode.OFF);
         LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
     }
 }

@@ -75,10 +75,10 @@ public class TargetingSubsystem extends SubsystemBase {
     public Supplier<Rotation2d> createHubTrackingSupplierWithOffset(double noTargetAngle, double offsetAngle) {
         return () -> {
             if(vision.getLedMode() != 3.0) {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
             }
             Rotation2d rotation;
-            if(vision.hasValidTarget()) {
+            if(vision.getHasValidTarget()) {
                 double rotationDegrees = vision.getTx() + offsetAngle;
                 rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
                 if (Math.abs(rotation.getDegrees()) <= 3) {
@@ -103,7 +103,7 @@ public class TargetingSubsystem extends SubsystemBase {
 
     public boolean getIsLinedUpToShoot() {
         if (Math.abs(drivetrain.getIntendedCurrentVelocity()) < 0.1) {
-            return vision.isLinedUp();
+            return vision.getIsLinedUp();
         }
         return isLinedUpToShoot;
     }

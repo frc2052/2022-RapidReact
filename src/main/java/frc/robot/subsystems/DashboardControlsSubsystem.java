@@ -159,21 +159,21 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
                 lastLimelightLEDsEnabled = true;
             } else {
-                vision.setLED(LEDMode.OFF);
+                vision.setLEDMode(LEDMode.OFF);
                 lastLimelightLEDsEnabled = false;
             }
         }
 
         if (limelightDriveCamToggle != lastIsDriverCamera) {
             if(limelightDriveCamToggle) {
-                vision.setLED(LEDMode.OFF);
+                vision.setLEDMode(LEDMode.OFF);
                 vision.setCamMode(CamMode.DRIVER);
                 lastIsDriverCamera = true;
             } else {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
                 vision.setCamMode(CamMode.VISION);
                 lastIsDriverCamera = false;
             }
@@ -207,11 +207,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (limelightLEDOverride != lastLimelightLEDOverride) {
             if (limelightLEDOverride) {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
                 vision.setLEDOverride(true);
                 lastLimelightLEDOverride = true;
             } else {
-                vision.setLED(LEDMode.OFF);
+                vision.setLEDMode(LEDMode.OFF);
                 vision.setLEDOverride(false);
                 lastLimelightLEDOverride = false;
             }

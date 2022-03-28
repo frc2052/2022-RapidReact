@@ -33,7 +33,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
     @Override
     public void initialize() {
         super.initialize();
-        vision.setLED(LEDMode.ON);
+        vision.setLEDMode(LEDMode.ON);
     }
 
     @Override
@@ -44,6 +44,6 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        vision.setLED(LEDMode.OFF);
+        vision.setLEDMode(LEDMode.OFF);
     }
 }

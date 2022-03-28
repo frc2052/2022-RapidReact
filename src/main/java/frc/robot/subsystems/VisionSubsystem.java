@@ -16,9 +16,8 @@ public class VisionSubsystem extends SubsystemBase{
 
     NetworkTable table;
 
-    private double tx, ty; //, ta, ts, tl, camMode, getpipe;
+    private double tx, ty, tl, pipeline, camMode; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
-    private boolean isLinedUp;
     private double lastTl;
     
     private boolean ledOverride = false;
@@ -75,8 +74,13 @@ public class VisionSubsystem extends SubsystemBase{
     public void periodic() {
       hasValidTarget = ltv.getDouble(0.0) == 1.0;
 
+      // Values here are always being calculated anyway (probably because of SmartDashboard), so they're done periodic.
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
+
+      tl = ltl.getDouble(0.0);
+      pipeline = lgetpipe.getDouble(0.0);
+      camMode = lcamMode.getDouble(0.0);
 
     //   if (getTl() == lastTl) {
     //     System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
@@ -84,13 +88,13 @@ public class VisionSubsystem extends SubsystemBase{
 
     //   lastTl = getTl();
 
-      SmartDashboard.putBoolean("Has target?", hasValidTarget);
-      SmartDashboard.putNumber("Pipeline: ", getPipeline());
-      // SmartDashboard.putString("Latency: ", getTl() + "ms");
-      SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+      SmartDashboard.putBoolean("Has Target?", hasValidTarget);
+      SmartDashboard.putNumber("Pipeline", pipeline);
+      SmartDashboard.putString("Latency", tl + "ms");
+      SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
       if (hasValidTarget) {
-        SmartDashboard.putBoolean("Is lined up?", isLinedUp);
+        // SmartDashboard.putBoolean("Is lined up?", isLinedUp());
         SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
         SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
@@ -131,17 +135,17 @@ public class VisionSubsystem extends SubsystemBase{
 
     public double getTx() {return this.tx;}
     public double getTy() {return this.ty;}
+    public double getTl() {return this.tl;};
     public double getTa() {return this.lta.getDouble(0.0);}
     public double getTs() {return this.lts.getDouble(0.0);}
-    public double getTl() {return this.ltl.getDouble(0.0);}
 
     // public double getTshort() {return this.ltshort.getDouble(0.0);}
     // public double getTlong() {return this.ltlong.getDouble(0.0);}
     // public double getThor() {return this.lthor.getDouble(0.0);}
     // public double getTvert() {return this.ltvert.getDouble(0.0);}
 
-    public double getCamMode() {return this.lcamMode.getDouble(0.0);}
-    public double getPipeline() {return this.lgetpipe.getDouble(0.0);}
+    public double getCamMode() {return this.camMode;}
+    public double getPipeline() {return this.pipeline;}
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
     public double getStreamMode() {return this.lstream.getDouble(0.0);}
 
@@ -154,12 +158,12 @@ public class VisionSubsystem extends SubsystemBase{
     //   }
     // }
     
-    public boolean isLinedUp() {
+    public boolean getIsLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
       return Math.abs(tx) <= getTolerance();
     }
 
-    public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
+    public boolean getHasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
     }
 
@@ -174,7 +178,7 @@ public class VisionSubsystem extends SubsystemBase{
       ledOverride = override;
     }
 
-    public void setLED(LEDMode mode) {
+    public void setLEDMode(LEDMode mode) {
       if (!ledOverride) {
         switch(mode) {
           case PIPELINE:
@@ -232,7 +236,7 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation.
-      if(hasValidTarget()) {
+      if(getHasValidTarget()) {
         // Logic to set the chassis rotation speed based on horizontal offset.
         if(Math.abs(this.tx) > 5) {
           return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,

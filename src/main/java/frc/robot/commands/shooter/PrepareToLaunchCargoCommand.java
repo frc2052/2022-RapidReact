@@ -26,7 +26,7 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
 
   @Override
   public void initialize() {
-      vision.setLED(LEDMode.ON);
+      vision.setLEDMode(LEDMode.ON);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,7 +50,7 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     shooter.stop();
-    vision.setLED(LEDMode.OFF);
+    vision.setLEDMode(LEDMode.OFF);
   }
 
   // Returns true when the command should end.

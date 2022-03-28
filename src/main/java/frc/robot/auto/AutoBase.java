@@ -318,10 +318,10 @@ public class AutoBase  extends SequentialCommandGroup {
     protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
         return () -> {
             if(vision.getLedMode() != 3.0) {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
             }
             Rotation2d rotation;
-            if(vision.hasValidTarget()) {
+            if(vision.getHasValidTarget()) {
                 rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
             } else {
                 rotation = Rotation2d.fromDegrees(noTargetAngle);
