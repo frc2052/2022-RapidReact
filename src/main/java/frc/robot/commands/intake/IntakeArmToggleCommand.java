@@ -22,10 +22,10 @@ public class IntakeArmToggleCommand extends HopperBaseCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (intake.isIntakeArmOut()) {
-      intake.intakeArmIn();
+    if (intake.isArmOut()) {
+      intake.armIn();
     } else {
-      intake.intakeArmOut();
+      intake.armOut();
     }
   }
 

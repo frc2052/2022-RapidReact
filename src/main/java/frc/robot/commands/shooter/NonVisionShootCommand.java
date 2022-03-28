@@ -5,31 +5,52 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.vision.ShooterDistanceConfig;
-import frc.robot.util.vision.VisionCalculator;
 
 public class NonVisionShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
-  private final IndexerSubsystem indexer;
+  protected final IndexerSubsystem indexer;
+  private final HopperSubsystem hopper;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
   private final NonVisionShootMode nonVisionShootMode;
+  private FiringAngle firingAngleMode;
 
   private double topWheelVelocity;
   private double bottomWheelVelocity;
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, double topWheelVelocity, double bottomWheelVelocity) {
+  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
+    this.nonVisionShootMode = shootMode;
     this.shooter = shooter;
     this.indexer = indexer;
-    this.nonVisionShootMode = shootMode;
+    this.hopper = hopper;
+    this.firingAngleMode = firingAngleMode;
     this.topWheelVelocity = topWheelVelocity;
     this.bottomWheelVelocity = bottomWheelVelocity;
 
     addRequirements(shooter, indexer);
+  }
+
+  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
+    this(shootMode, shooter, indexer, hopper, firingAngleMode, shooterDistanceConfig.getTopMotorVelocityTicksPerSecond(), shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond());
+  }
+
+  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+    this(shootMode, shooter, indexer, hopper, FiringAngle.ANGLE_1, topWheelVelocity, bottomWheelVelocity);
+  }
+
+  @Override
+  public void initialize() {
+      if (firingAngleMode == FiringAngle.ANGLE_1) {
+        shooter.setShootAngle1();
+      } else {
+        shooter.setShootAngle2();
+      }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +61,7 @@ public class NonVisionShootCommand extends CommandBase {
 
     if (shooter.isAtSpeed()) {
       indexer.runFeeder();
+      hopper.run();
       if (nonVisionShootMode == NonVisionShootMode.SHOOT_ALL) {
         indexer.runPreload();
       }
@@ -51,6 +73,7 @@ public class NonVisionShootCommand extends CommandBase {
     shooter.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
+    hopper.stop();
   }
 
   @Override

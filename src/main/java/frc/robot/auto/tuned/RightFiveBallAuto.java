@@ -1,10 +1,11 @@
-package frc.robot.auto;
+package frc.robot.auto.tuned;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -58,7 +59,7 @@ public class RightFiveBallAuto extends AutoBase {
         ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(0.75));
+        this.addCommands(super.newInitialNonVisionShootPreloadedCommand());
         this.addCommands(intakeBall1);
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(driveToShoot1);

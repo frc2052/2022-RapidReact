@@ -80,12 +80,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule backLeftModule;
   private final SwerveModule backRightModule;
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+//   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
   private double intendedCurrentVelocity;
+  private double lastRollValue;
+  private boolean lastRollDelta;
+  private boolean isTopOfSwing;
+  private int counter = 0;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -241,6 +245,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
   }
 
+  public double getGyroPitchDegrees() {
+        // Get the pitch of the robot, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
+        // Wanted for making an auto climb that makes sure the robot isn't swinging in the wrong place before extending the climber.
+        return navx.getPitch();
+  }
+
+  public double getGyroYawDegrees() {
+      return navx.getYaw();
+  }
+
+  public double getGyroRoll() {
+      return navx.getRoll();
+  }
+
+   public boolean getIsTopOfSwing() { 
+    return isTopOfSwing;
+   }
+
   public SwerveModuleState[] getSwerveModuleStates() {
         return swerveModuleStates;
   }
@@ -251,6 +273,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 @Override
 public void periodic() {
+        boolean isForward = getGyroRoll() < lastRollValue ? true : false;
+        lastRollValue = getGyroRoll();
+        isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
+        lastRollDelta = isForward;
+
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(backLeftModule.getSteerAngle()));
@@ -262,5 +289,17 @@ public void periodic() {
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
         // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
-}
+
+        SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
+        SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
+        SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
+        
+        SmartDashboard.putBoolean("Swing Backward", isForward);
+        SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
+
+        if (isTopOfSwing) {
+            counter++;
+        }
+        SmartDashboard.putNumber("Times at the top", counter);
+    }
 }

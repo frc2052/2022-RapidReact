@@ -1,12 +1,12 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
@@ -17,12 +17,23 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier translationYSupplier;
     private final DoubleSupplier rotationSupplier;
 
+    private final BooleanSupplier tempFieldCentricButtonPressed;
+
+    /**
+     * The default drive command that runs when no other commands are, controlling the drivetrain.
+     * @param drivetrain
+     * @param translationXSupplier a DoubleSupplier that should pass the DriveJoystick's X
+     * @param translationYSupplier a DoubleSupplier that should pass the DriveJoystick's Y
+     * @param rotationSupplier a DoubleSupplier that should pass the TurnJoystick's value
+     * @param dashboardControls DashboardControlsSubsystem instance for getting weather the drivemode should be field or robot centric
+     */
     public DefaultDriveCommand(
         DrivetrainSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         DoubleSupplier rotationSupplier,
-        DashboardControlsSubsystem dashboardControls
+        DashboardControlsSubsystem dashboardControls,
+        BooleanSupplier tempFieldCentricButtonPressed
     ) {
         this.drivetrain = drivetrain;
         this.translationXSupplier = translationXSupplier;
@@ -30,11 +41,12 @@ public class DefaultDriveCommand extends CommandBase {
         this.rotationSupplier = rotationSupplier;
 
         this.dashboardControls = dashboardControls;
+        this.tempFieldCentricButtonPressed = tempFieldCentricButtonPressed;
 
         addRequirements(drivetrain);
     }
 
-    protected double getTurnValue() {
+    protected double getTurnValue() { // Seperated as a method so it can be overriden by other commands if needed.
         return rotationSupplier.getAsDouble();
     }
 
@@ -43,7 +55,7 @@ public class DefaultDriveCommand extends CommandBase {
         // Checks the drive mode selected in the SmartDashboard, isn't the most efficient to
         // be checking each time, but there hasn't been any issues yet and should be just fine.
         // It also allows us to switch drive modes at any point during the match.
-        if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC) {
+        if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC || tempFieldCentricButtonPressed.getAsBoolean()) {
             drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     translationXSupplier.getAsDouble(),

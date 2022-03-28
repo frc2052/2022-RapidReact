@@ -2,6 +2,7 @@ package frc.robot.auto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -26,6 +27,7 @@ import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.shooter.AutoNonVisionShootCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
@@ -54,6 +56,8 @@ public class AutoBase  extends SequentialCommandGroup {
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
 
+    protected boolean isLinedUp;
+
     // private TrajectoryConfig slowTrajectoryConfig;
     // private PIDController slowXYController;
     // private ProfiledPIDController slowThetaController;
@@ -73,6 +77,7 @@ public class AutoBase  extends SequentialCommandGroup {
         this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
+        isLinedUp = false;
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(swerveDriveKinematics), 
@@ -116,11 +121,19 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected AutoNonVisionShootCommand newAutoNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected ParallelCommandGroup newIntakeArmOutCommand() {
@@ -149,6 +162,14 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected ParallelDeadlineGroup newAutoAimAndShootAllCommandGroup() {
         return new ParallelDeadlineGroup(newAutoShootAllCommand(), new PerpetualCommand(newVisionTurnInPlaceCommand()));
+    }
+
+    /**
+     * Returns easy NonVisionShootCommand for firing the ball at 7900 ticks per 100 ms on both wheels with a timeout of 0.7 seconds,
+     * perfect for firing the preloaded cargo when initially aiming at the hub in the least amount of time possible.
+     */
+    protected Command newInitialNonVisionShootPreloadedCommand() {
+        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.7);
     }
 
     /**
@@ -319,12 +340,22 @@ public class AutoBase  extends SequentialCommandGroup {
             }
             Rotation2d rotation;
             if(vision.hasValidTarget()) {
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()).plus(Rotation2d.fromDegrees(offsetAngle)));
+                double rotationDegrees = vision.getTx() + offsetAngle;
+                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
+                if (Math.abs(rotation.getDegrees()) <= 3) {
+                    isLinedUp = true;
+                } else {
+                    isLinedUp = false;
+                }
             } else {
                 rotation = Rotation2d.fromDegrees(noTargetAngle);
             }
             return rotation;
         };
+    }
+
+    protected boolean getIsLinedUp() {
+        return isLinedUp;
     }
 
     protected Pose2d getLastEndingPosCreated() {

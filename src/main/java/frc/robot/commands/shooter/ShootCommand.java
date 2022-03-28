@@ -4,12 +4,16 @@
 
 package frc.robot.commands.shooter;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 import frc.robot.util.vision.ShooterDistanceConfig;
 import frc.robot.util.vision.VisionCalculator;
@@ -17,12 +21,13 @@ import frc.robot.util.vision.VisionCalculator;
 public class ShootCommand extends CommandBase {
   private final ShooterSubsystem shooter;
   protected final IndexerSubsystem indexer;
-  private final HopperSubsystem grassHopper;
+  private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
   private final ShootMode shootMode;
+  private final BooleanSupplier isLinedUSupplier;
 
   private final VisionCalculator visionCalculator;
 
@@ -30,20 +35,37 @@ public class ShootCommand extends CommandBase {
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
-    HopperSubsystem grassHopper, 
-    VisionSubsystem vision
+    HopperSubsystem hopper, 
+    VisionSubsystem vision,
+    BooleanSupplier isLinedUSupplier
   ) {
     this.shooter = shooter;
     this.indexer = indexer;
-    this.grassHopper = grassHopper;
+    this.hopper = hopper;
     this.vision = vision;
     this.shootMode = shootMode;
+    this.isLinedUSupplier = isLinedUSupplier;
 
     visionCalculator = VisionCalculator.getInstance();
 
-    SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
+    addRequirements(this.shooter, this.indexer, this.hopper);
+  }
 
-    addRequirements(this.shooter, this.indexer, this.grassHopper);
+  public ShootCommand(
+    ShootMode shootMode, 
+    ShooterSubsystem shooter, 
+    IndexerSubsystem indexer, 
+    HopperSubsystem hopper, 
+    VisionSubsystem vision
+  ) {
+    this(
+      shootMode, 
+      shooter, 
+      indexer, 
+      hopper, 
+      vision, 
+      vision::isLinedUp
+    );
   }
 
   @Override
@@ -55,30 +77,33 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
-    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches);
 
-    double shooterBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
-    if (shooterBoost < -0.1) {
-      shooterBoost = -0.1;
-    } else if (shooterBoost > 0.1) {
-      shooterBoost = 0.1;
+    if(vision.hasValidTarget()) {
+        // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
+        if(vision.getTy() < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DEGREES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
+        shooter.setShootAngle2();
+        } else if (vision.getTy() > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DEGREES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
+        shooter.setShootAngle1();
+        }
     }
+
+    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleDegrees());
 
     SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     shooter.shootAtSpeed(
-      shooterConfig.getTopMotorVelocityTicksPerSecond() * (shooterBoost + 1), // Boost the shooter velocity by a max of 110%
-      shooterConfig.getBottomMotorVelocityTicksPerSecond() * (shooterBoost + 1)
+      shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
+      shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
-    if (shooter.isAtSpeed() && vision.isLinedUp()) {
+    if (shooter.isAtSpeed() && isLinedUSupplier.getAsBoolean()) {
       indexer.runFeeder();
-      grassHopper.hopperGo();
+      hopper.run();
       if (shootMode == ShootMode.SHOOT_ALL) {
         indexer.runPreload();
       }
     } else {
-      grassHopper.hopperStop();
+      hopper.stop();
       indexer.stopFeeder();
       indexer.stopPreload();
     }
@@ -88,7 +113,7 @@ public class ShootCommand extends CommandBase {
   public void end(boolean interrupted) {
     // Stop the shooter, feeder, and preloader.
     shooter.stop();
-    grassHopper.hopperStop();
+    hopper.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
     vision.setLED(LEDMode.OFF);

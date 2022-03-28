@@ -50,17 +50,19 @@ public class HookClimberSubsystem extends SubsystemBase{
         );
         isLocked = lockSolenoid.get() == Value.kReverse;
         isVertical = true;
-        unlockClimber();
+        unlock();
     }
 
     /**
      * Extends the climbing arm at a set speed
      */
-    public void manualExtendArm(boolean override) {
+    public void extend(double extendPctOutput, boolean override) {
         if (override) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
-        } else if (climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED)) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
+        } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
+        } else if (getIsBelowMaxHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
         } else {
             System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
@@ -68,31 +70,39 @@ public class HookClimberSubsystem extends SubsystemBase{
         }
     }
 
+    public void extend(boolean override) {
+        extend(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT, override);
+    }
+
     /**
      * Retracts the climbing arm at a set speed
      */
-    public void manualRetractArm(boolean override) {
+    public void retract(double retractPctOutput, boolean override) {
         if (override) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * .75); //slower climb speed when doing override
-        } else if (climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
-            climberMotor.set(ControlMode.PercentOutput, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
+            climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
+        } else if (getIsAtMinHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
         } else {
             System.err.println("Climber retracted to (or past) the min height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
         }
     }
 
+    public void retract(boolean override) {
+        retract(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT, override);
+    }
+
     /**
      * Stops all climber motor activity.
      */
-    public void manualStop() {
+    public void stop() {
         climberMotor.set(ControlMode.PercentOutput, 0);
     }
 
     /**
      * Shifts climber arms into climbing ready position (verticle)
      */
-    public void shiftClimberForward(){
+    public void shiftForward(){
         climberSolenoid.set(Value.kForward);
         currentSolenoidState = ClimberSolenoidState.FORWARD;
         isVertical = true;
@@ -101,7 +111,7 @@ public class HookClimberSubsystem extends SubsystemBase{
     /**
      * Shifts climber arms into the relaxed or reaching position (angled)
      */
-    public void shiftClimberBackward(){
+    public void shiftBackward(){
         climberSolenoid.set(Value.kReverse);
         currentSolenoidState = ClimberSolenoidState.BACKWARD;
         isVertical = false;
@@ -111,20 +121,20 @@ public class HookClimberSubsystem extends SubsystemBase{
         return currentSolenoidState;
     }
 
-    public void lockClimber() {
-        System.err.println("************************ LOCKED");
+    public void lock() {
+        System.err.println("************************ CLIMBER LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
         LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
-    public void unlockClimber() {
-        System.err.println("************************ UNLOCKED");
+    public void unlock() {
+        System.err.println("************************ CLIMBER UNLOCKED");
         lockSolenoid.set(Value.kForward);
         isLocked = false;
     }
 
-    public void ZeroClimberEncoder() {
+    public void zeroEncoder() {
         climberMotor.setSelectedSensorPosition(0);
     }
 
@@ -132,8 +142,24 @@ public class HookClimberSubsystem extends SubsystemBase{
         return isLocked;
     }
 
+    public boolean getIsBelowMaxHeight() {
+        return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED);
+    }
+
+    public boolean getIsAbove90PctHeight() {
+        return climberMotor.getSelectedSensorPosition() >= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED) * 0.9;
+    }
+
+    public boolean getIsAtMinHeight() {
+        return climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS;
+    }
+
+    public double getEncoderPosition() {
+        return climberMotor.getSelectedSensorPosition();
+    }
+
     public void setArmPostionInches(double inches){
-        double ticks = heightInInchesToTicks(inches);
+        double ticks = heightInchesToTicks(inches);
         climberMotor.set(ControlMode.Position, ticks);
         desiredPositionTicks = ticks;
     }
@@ -142,7 +168,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         return climberMotor.getSelectedSensorPosition() == desiredPositionTicks;
     }
 
-    private double heightInInchesToTicks(double inches) {
+    private double heightInchesToTicks(double inches) {
         double numberOfRotaions = inches / Constants.Climber.WINCH_CIRCUMFERENCE_INCHES;
         return numberOfRotaions * Constants.Climber.TICKS_PER_WINCH_ROTATION;
     }

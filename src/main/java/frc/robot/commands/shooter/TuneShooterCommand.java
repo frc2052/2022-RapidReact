@@ -15,18 +15,18 @@ public class TuneShooterCommand extends CommandBase {
   private ShooterSubsystem shooter;
   private final IndexerSubsystem indexer;
   private final IntakeSubsystem intake;
-  private final HopperSubsystem grassHopper;
+  private final HopperSubsystem hopper;
 
-  public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake, HopperSubsystem grassHopper) {
+  public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake, HopperSubsystem hopper) {
     this.shooter = shooter;
     this.indexer = indexer;
     this.intake = intake;
-    this.grassHopper = grassHopper;
+    this.hopper = hopper;
 
     SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 1000);
     SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 1000);
     
-    addRequirements(shooter, indexer, intake, grassHopper);
+    addRequirements(shooter, indexer, intake, hopper);
   }
 
   // Called when the command is initially scheduled.
@@ -42,10 +42,10 @@ public class TuneShooterCommand extends CommandBase {
 
     if (shooter.isAtSpeed()) {
       indexer.runFeeder();
-      grassHopper.hopperGo();
+      hopper.run();
       indexer.runPreload();
     } else {
-      grassHopper.hopperStop();
+      hopper.stop();
       indexer.stopFeeder();
       indexer.stopPreload();
     }
@@ -58,8 +58,8 @@ public class TuneShooterCommand extends CommandBase {
     shooter.shootAtPercentage(0, 0);
     indexer.stopFeeder();
     indexer.stopPreload();
-    intake.intakeStop();
-    grassHopper.hopperStop();
+    intake.stop();
+    hopper.stop();
   }
 
   // Returns true when the command should end.

@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,8 +20,13 @@ import frc.robot.Constants.MotorIDs;
 public class ShooterSubsystem extends SubsystemBase {
   private final TalonFX topMotor;
   private final TalonFX bottomMotor;
+
+  private final DoubleSolenoid angleChangeSolenoid;
+
   private double topWheelTargetVelocity;
   private double bottomWheelTargetVelocity;
+  private double shooterVelocityBoost;
+  private FiringAngle currentAngle;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -40,17 +48,26 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.config_kI(0, 0, 10);
     bottomMotor.config_kD(0, 0, 10);
     bottomMotor.config_kF(0, 0.0522, 10);
+
+    angleChangeSolenoid = new DoubleSolenoid(
+      Constants.Solenoids.COMPRESSOR_MODULE_ID,
+      PneumaticsModuleType.REVPH,
+      Constants.Solenoids.SHOOTER_ANGLE_IN_SOLENOID,
+      Constants.Solenoids.SHOOTER_ANGLE_OUT_SOLENOID
+    );
+
+    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_1 : FiringAngle.ANGLE_2;
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
     //System.err.println("***************************** RUNNING SHOOTER");
     //System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
     //System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
-    topWheelTargetVelocity = topVelocityTicksPerSeconds;
-    bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds;
+    topWheelTargetVelocity = topVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
+    bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_PULLDOWN_PCT);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {
@@ -103,12 +120,56 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
   }
 
-@Override
-public void periodic() {
-  SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
-  SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
-  SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
-  SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
-  SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
-}
+  public void setShooterVelocityBoost(double boostPct) {
+    if (boostPct < -0.1) {
+      boostPct = -0.1;
+    } else if (boostPct > 0.1) {
+      boostPct = 0.1;
+    }
+    shooterVelocityBoost = boostPct;
+  }
+
+  public void setShootAngle1() {
+    angleChangeSolenoid.set(Value.kReverse);
+    currentAngle = FiringAngle.ANGLE_1;
+  }
+
+  public void setShootAngle2() {
+    angleChangeSolenoid.set(Value.kForward);
+    currentAngle = FiringAngle.ANGLE_2;
+  }
+
+  public double getShootAngleDegrees() {
+    return currentAngle.getAngleDegrees();
+  }
+
+  public FiringAngle getShootAngleEnum() {
+    return currentAngle;
+  }
+
+  @Override
+  public void periodic() {
+    shooterVelocityBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0); // TODO figure out a better way to do this, weather using the setboost method from dashboardControls or making it a singleton and checking here or somthing.
+
+    SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
+    SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
+    SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
+    SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+  }
+
+  public enum FiringAngle {
+    ANGLE_1(Constants.Shooter.FIRING_ANGLE_1_DEGREES),
+    ANGLE_2(Constants.Shooter.FIRING_ANGLE_2_DEGREES);
+
+    private double angleDegrees;
+
+    FiringAngle(double angleDegrees) {
+      this.angleDegrees = angleDegrees;
+    }
+
+    public double getAngleDegrees() {
+        return angleDegrees;
+    }
+  }
 }

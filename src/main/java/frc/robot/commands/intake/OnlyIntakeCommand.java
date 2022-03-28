@@ -5,13 +5,21 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class OnlyIntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
+  private final IndexerSubsystem indexer;
 
-  public OnlyIntakeCommand(IntakeSubsystem intake) {
+  /**
+   * Command that only controls the intake in motor and nothing else. 
+   * @param intake
+   * @param indexer only for getting the cargo stage beam break sensors
+   */
+  public OnlyIntakeCommand(IntakeSubsystem intake, IndexerSubsystem indexer) {
     this.intake = intake;
+    this.indexer = indexer;
     
     addRequirements(this.intake);
   }
@@ -19,16 +27,19 @@ public class OnlyIntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     // Extend intake arm and spin the intake wheels.
-    intake.intakeArmOut(); // TODO: Remove this line!
-    // Don't allow more balls to be picked up if both the stage and prestage are full.
-    if (!isFinished()) {
-      intake.intakeOn();
+    intake.armOut();
+  }
+
+  @Override
+  public void execute() {
+    if (indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
+      intake.run();
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    intake.intakeStop();
+    intake.stop();
   }
   
   @Override

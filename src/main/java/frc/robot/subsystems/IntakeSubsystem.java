@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
     private final DoubleSolenoid armSolenoid;
     private TalonSRX intakeMotor;
-    private boolean isIntakeArmOut;
+    private boolean isArmOut;
 
     public IntakeSubsystem() {
         armSolenoid = new DoubleSolenoid(
@@ -24,37 +24,37 @@ public class IntakeSubsystem extends SubsystemBase {
             Solenoids.INTAKE_OUT_SOLENOID
         );
         intakeMotor = new TalonSRX(MotorIDs.INTAKE_MOTOR);
-        isIntakeArmOut = armSolenoid.get() == Value.kReverse;
+        isArmOut = armSolenoid.get() == Value.kReverse;
     }
 
-    public void intakeArmIn(){
+    public void armIn(){
         armSolenoid.set(Value.kForward);
-        isIntakeArmOut = false;
+        isArmOut = false;
     }
   
-    public void intakeArmOut(){
+    public void armOut(){
         armSolenoid.set(Value.kReverse);
-        isIntakeArmOut = true;
+        isArmOut = true;
     }
 
-    public boolean isIntakeArmOut() {
-        return isIntakeArmOut;
+    public boolean isArmOut() {
+        return isArmOut;
     }
 
-    public void intakeOn(){
+    public void run(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
     }
 
-    public void intakeReverse(){
+    public void reverse(){
         intakeMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);  
     }
    
-    public void intakeStop(){
+    public void stop(){
         intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Intake Arm Out", isIntakeArmOut);
+        SmartDashboard.putBoolean("Intake Arm Out", isArmOut);
     }
 }

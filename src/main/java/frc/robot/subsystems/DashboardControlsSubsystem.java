@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class DashboardControlsSubsystem extends SubsystemBase {
 
     private VisionSubsystem vision;
+    private RobotContainer robotContainer;
 
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
@@ -26,19 +28,24 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     // private boolean limelightPowerRelayToggle;
     private boolean limelightLEDOverride;
     private boolean isLimelightDead;
+    private boolean isDrivetrainDead;
 
     private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
     // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
     private boolean lastIsLimelightDead;
+    private boolean lastIsDrivetrainDead;
 
     private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
 
-    public DashboardControlsSubsystem(VisionSubsystem vision) { // Adds values and items to selectors and toggles.
+    private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
+
+    private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
+        this.robotContainer = robotContainer;
         
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
@@ -47,6 +54,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         limelightLEDOverride = false;
         selectedAuto = Autos.NONE_SELECTED;
         isLimelightDead = false;
+        isDrivetrainDead = false;
 
         lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
@@ -56,6 +64,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         lastLimelightLEDOverride = limelightLEDOverride;
         lastSelectedAuto = selectedAuto;
         lastIsLimelightDead = isLimelightDead;
+        lastIsDrivetrainDead = isDrivetrainDead;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -81,8 +90,24 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             buttonBindingsProfileSelector.addOption(ButtonBindingsProfile.values()[i].name, ButtonBindingsProfile.values()[i]);
         }
 
+        lastSelectedButtonBindingsProfile = ButtonBindingsProfile.DEFAULT;
+
         // limelightCamModeSelector.setDefaultOption("Vision", CamMode.VISION);
         // limelightCamModeSelector.addOption("Driver", CamMode.DRIVER);
+    }
+
+    // Singleton pattern to make sure only one instance of this subsystems exists, it can be called from anywhere, and has an init method to pass the pointers to other classes.
+    private static DashboardControlsSubsystem instance;
+    public static void init(VisionSubsystem vision, RobotContainer robotContainer) {
+        if (instance == null) {
+            instance = new DashboardControlsSubsystem(vision, robotContainer);
+        }
+    }
+    public static DashboardControlsSubsystem getInstance() {
+        if (instance == null) {
+            System.err.println("ATTEMPTED TO GET DASHBOARD CONTROLS INSTANCE WHEN NULL");
+        }
+        return instance;
     }
 
     public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
@@ -94,6 +119,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("LED Brightness", ledBrightness);
         SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
+        SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
@@ -101,13 +127,16 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
         SmartDashboard.putBoolean("Limelight LED Override", limelightLEDOverride);
-        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
 
         SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+
+        // Dead subsystem buttons
+        SmartDashboard.putBoolean("Limelight Is Dead Button", false);
+        SmartDashboard.putBoolean("Drivetrain Is Dead Button", false);
     }
 
     @Override
-    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops.
+    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops. Intended to only do logic when somthing has changed.
         limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
@@ -174,18 +203,30 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         if (selectedAuto != lastSelectedAuto && selectedAuto != null) {
             SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+            robotContainer.initializeAutonomousCommand();
             lastSelectedAuto = selectedAuto;
+        }
+
+        if (getSelectButtonBindingsProfile() != lastSelectedButtonBindingsProfile) {
+            robotContainer.assignButtonBindings(getSelectButtonBindingsProfile());
+            lastSelectedButtonBindingsProfile = getSelectButtonBindingsProfile();
         }
 
         if (isLimelightDead != lastIsLimelightDead) {
             //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
+            
             lastIsLimelightDead = isLimelightDead;
+        }
+
+        if (isDrivetrainDead != lastIsDrivetrainDead) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            lastIsDrivetrainDead = isDrivetrainDead;
         }
     }
 
-    // public BooleanSupplier getIsLimelightDead() {
-    //     return () -> { return isLimelightDead; };
-    // }
+    public boolean getIsLimelightDead() {
+        return isLimelightDead;
+    }
 
     public Autos getSelectedAuto() {
         return autoSelector.getSelected();
@@ -203,15 +244,19 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         return buttonBindingsProfileSelector.getSelected();
     }
 
+    public double getShooterVelocityBoost() {
+        return SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
+    }
+
     public void setLastLimelightLEDsEnabled(boolean state) {
         lastLimelightLEDsEnabled = state;
     }
 
     public enum Autos {
         NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
-        ONE_BALL("One Ball", "Any Starting Location Facing Towards Hub"),
+        ONE_BALL("*TUNED* One Ball", "Any Starting Location Facing Towards Hub"),
         AUTO_TESTING("Auto Testing", "Auto Testing"),
-        SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A2) Facing Towards Hub"),
+        SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A) Facing Towards Hub"),
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
         LEFT_2_BALL_1_DEFENSE("*TUNED* 2 Ball and 1 Defence", "Far Left Start (D) Facing Away From Hub"),
@@ -219,8 +264,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         MIDDLE_RIGHT_TERMINAL_4_BALL("*TUNED* Terminal 4 Ball", "Middle Left Start (C) Facing Towards Hub"),
         //MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
         MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Terminal 3 Ball", "Middle Left Start (C) Facing Towards Hub"),
-        RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto 2", "Far Right Start (A) Facing Towards Hub");
-        //RIGHT_MIDDLE_5_BALL_1_DEFENSE("Right Middle Start (B), Five Balls and 1 Ball Defense");
+        RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto", "Far Right Start (A2) Facing Towards Hub"),
+        LEFT_2_BALL_2_DEFENSE("-INITIAL TESTING- Left 2 Ball 2 Defense", "Far Left Start (D) Facing Away From Hub"),
+        RIGHT_MIDDLE_5_BALL_1_DEFENSE("_TUNING_ Right Middle 5 Ball 1 Defense", "Right Middle Start (B) Facing Away From Hub");
 
         public String name;
         public String description;
@@ -238,19 +284,22 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     // This definately doesn't work but maybe it's steps in the rights direction
     public enum ButtonBindingsProfile {
-        DEFAULT("Default", new int[] {11, 1, 7, 6, 1, 1, 5}, new int[] {12, 3, 5, 7}, new int[] {1, 9, 3}),
-        SOLO_DRIVER("Solo Driver", new int[] {4, 6, 8, 10, 12}, new int[] {7, 2, 7, 9}, new int[] {4, 8, 11});
+        DEFAULT("Default"),
+        SOLO_DRIVER("Solo Driver");
 
         public String name;
-        public int[] turnJoystickBindings;
-        public int[] driveJoystickBindings;
-        public int[] secondaryPannelBindings;
+        // public int[] turnJoystickBindings;
+        // public int[] driveJoystickBindings;
+        // public int[] secondaryPannelBindings;
 
-        ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
+        ButtonBindingsProfile(String name) {
             this.name = name;
-            this.turnJoystickBindings = turnJoystickBindings;
-            this.driveJoystickBindings = driveJoystickBindings;
-            this.secondaryPannelBindings = secondaryPannelBindings;
-        }
+        } 
+        // ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
+        //     this.name = name;
+        //     this.turnJoystickBindings = turnJoystickBindings;
+        //     this.driveJoystickBindings = driveJoystickBindings;
+        //     this.secondaryPannelBindings = secondaryPannelBindings;
+        // }
     }
 }

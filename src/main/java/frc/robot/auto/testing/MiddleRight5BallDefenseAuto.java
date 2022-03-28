@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.auto.testing;
 
 import java.util.List;
 
@@ -6,27 +6,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand;
-import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.auto.AutoBase;
+import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
-import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class MiddleRight5BallDefenseAuto extends AutoBase {
 
@@ -42,6 +33,7 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
      * @param shooter
      * @param intake
      * @param indexer
+     * @param climber
      */
     public MiddleRight5BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
@@ -56,19 +48,22 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         Pose2d terminalBallPos = super.newPose2dInches(190, -42, -23);
         Pose2d driveBackToShoot = super.newPose2dInches(50, 15, 166);
         
-        AutoTrajectoryConfig driveAndShootBall1TrajectoryConfig = super.createTrajectoryConfig(2, 2, 1, 3, 2);
+        AutoTrajectoryConfig driveToFirstBallTrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 3, 3, 2);
+        AutoTrajectoryConfig driveAndShoot2TrajectoryConfig = super.createTrajectoryConfig(2, 2, 1, 3, 2);
+        AutoTrajectoryConfig driveToBall2AndOpposingTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 3, 1);   // Drive to alliance and opponent balls trajectory config
         AutoTrajectoryConfig pathToTerminalTrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 1, 10);
+        AutoTrajectoryConfig driveBackToShootTracjectoryConfig = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 3, 3, 2);
 
-        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, startPos, firstBallPos);
-        SwerveControllerCommand driveAndShootToBall2 = super.createSwerveTrajectoryCommand(driveAndShootBall1TrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplierWithOffset(170, 10));
-        SwerveControllerCommand driveToBall2AndOpposing = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(150), opposingBallPos, alignWithWallMidpoint, super.createRotationAngle(150));
+        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(driveToFirstBallTrajectoryConfig, startPos, firstBallPos);
+        SwerveControllerCommand driveAndShoot2 = super.createSwerveTrajectoryCommand(driveAndShoot2TrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(170)), approachSecondBall, super.createHubTrackingSupplierWithOffset(170, 10));
+        SwerveControllerCommand driveToBall2AndOpposing = super.createSwerveTrajectoryCommand(driveToBall2AndOpposingTrajectoryConfig, super.getLastEndingPosCreated(150), opposingBallPos, alignWithWallMidpoint, super.createRotationAngle(150));
         SwerveControllerCommand driveAndAimBall2 = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(-23), hangerShootPos, super.createHubTrackingSupplier(-110));
         SwerveControllerCommand hangerShootToTerminalBall = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withStartAndEndVelocity(2, 1), super.getLastEndingPosCreated(-23), approachTerminalBall, super.createRotationAngle(-90));
         SwerveControllerCommand driveToBall3 = super.createSwerveTrajectoryCommand(pathToTerminalTrajectoryConfig.withEndVelocity(1), super.getLastEndingPosCreated(-23), terminalBallPos, super.createRotationAngle(-23));
-        SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(super.speedDriveTrajectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
+        SwerveControllerCommand driveBackToShootFinal = super.createSwerveTrajectoryCommand(driveBackToShootTracjectoryConfig, super.getLastEndingPosCreated(166), driveBackToShoot, super.createHubTrackingSupplier(-166));
 
         ParallelDeadlineGroup driveAndIntakeFirstBall = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup driveAndShootBall1 = new ParallelDeadlineGroup(driveAndShootToBall2, super.newShootAllCommand(), super.newAutoTimedIntakeOnThenInCommand(0.5));
+        ParallelDeadlineGroup driveAndShootBall1 = new ParallelDeadlineGroup(driveAndShoot2, super.newShootAllCommand(), super.newAutoTimedIntakeOnThenInCommand(0.5));
         ParallelDeadlineGroup intakeBall2AndOpposingBall1 = new ParallelDeadlineGroup(driveToBall2AndOpposing, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup driveAndShootBall2 = new ParallelDeadlineGroup(driveAndAimBall2, super.newShoot1Command(), super.newIntakeArmInCommand());
         ParallelDeadlineGroup shootEnemyBall1ToHanger = new ParallelDeadlineGroup(hangerShootToTerminalBall, super.newNonVisionShoot1Command(4000, 4000));

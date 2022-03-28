@@ -2,6 +2,9 @@ package frc.robot.util;
 
 import frc.robot.Constants;
 
+/**
+ * Not currently used becuase real robots don't work how math says they should
+ */
 public class ProjectileCalculator {
     
     /**
@@ -12,7 +15,7 @@ public class ProjectileCalculator {
      */
     public static double calculateReqProjectileVelocity(double distanceMeters) {
         double height = Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Shooter.SHOOTER_MOUNT_HEIGHT_METERS;
-        double angleRadians = Math.toRadians(Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES); 
+        double angleRadians = Math.toRadians(Constants.Shooter.FIRING_ANGLE_1_DEGREES); 
         return Math.sqrt(-9.8 * (Math.pow(distanceMeters, 2)) / (2 * Math.pow(Math.cos(angleRadians), 2) * (height - distanceMeters * Math.tan(angleRadians))));
     }
 

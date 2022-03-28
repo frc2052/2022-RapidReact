@@ -4,14 +4,12 @@
 
 package frc.robot.commands.shooter;
 
-import frc.robot.Constants;
 import frc.robot.commands.intake.HopperBaseCommand;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
-import frc.robot.util.ProjectileCalculator;
 
 
 public class PrepareToLaunchCargoCommand extends HopperBaseCommand {

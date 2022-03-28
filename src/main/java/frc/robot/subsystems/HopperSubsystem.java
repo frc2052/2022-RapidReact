@@ -13,15 +13,15 @@ public class HopperSubsystem extends SubsystemBase {
         hopperMotor = new TalonSRX(MotorIDs.HOPPER_MOTOR);
     }
 
-    public void hopperGo() {
+    public void run() {
         hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kHopperSpeed);
     }
 
-    public void hopperStop() {
+    public void stop() {
         hopperMotor.set(ControlMode.PercentOutput, 0);
     }
 
-    public void hopperReverse() {
+    public void reverse() {
         hopperMotor.set(ControlMode.PercentOutput, -Constants.Intake.kHopperSpeed);
     }
 
