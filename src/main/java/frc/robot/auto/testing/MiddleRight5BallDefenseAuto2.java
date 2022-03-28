@@ -66,8 +66,8 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         SwerveControllerCommand driveCommand6 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withEndVelocity(1), super.getLastEndingPosCreated(-23), pos6, super.createRotationAngle(-23)); // Drive to terminal ball pos
         SwerveControllerCommand driveCommand7 = super.createSwerveTrajectoryCommand(trajectoryConfig5, super.getLastEndingPosCreated(166), pos7, super.createHubTrackingSupplier(-166)); // Drive back to shoot final ball
 
-        ShootCommand shootAll1 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, targeting::getIsLinedUpToShoot);
-        ShootCommand shootAll2 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, targeting::getIsLinedUpToShoot);
+        ShootCommand shootAll1 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, targeting::getIsLinedUpToShoot, drivetrain);
+        ShootCommand shootAll2 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, targeting::getIsLinedUpToShoot, drivetrain);
 
         ParallelDeadlineGroup driveAndIntakeFirstBall       = new ParallelDeadlineGroup(driveCommand1, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup driveAndShootBall1            = new ParallelDeadlineGroup(driveCommand2, shootAll1, super.newAutoTimedIntakeOnThenInCommand(0.5));
