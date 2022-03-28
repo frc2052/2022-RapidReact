@@ -210,7 +210,7 @@ public class RobotContainer {
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
-        new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision),
+        new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -224,7 +224,7 @@ public class RobotContainer {
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
         new ConditionalCommand(
           new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
-          new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision), 
+          new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
           dashboardControlsSubsystem::getIsLimelightDead
         ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.

@@ -50,7 +50,7 @@ public class LeftTerminal3Cargo extends AutoBase {
 
         
 
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmOutCommand());

@@ -5,6 +5,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -19,14 +20,16 @@ public class AutoShootCommand extends ShootCommand {
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
-    VisionSubsystem vision
+    VisionSubsystem vision,
+    DrivetrainSubsystem drivetrain
   ) {
     super(
       shootMode,
       shooter,
       indexer,
       hopper,
-      vision
+      vision,
+      drivetrain
     );    
   }
 

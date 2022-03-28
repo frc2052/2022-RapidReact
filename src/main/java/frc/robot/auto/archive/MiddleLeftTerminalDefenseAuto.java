@@ -55,8 +55,8 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
         NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, 6000, 6000);
 

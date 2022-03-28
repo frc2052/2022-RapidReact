@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -24,6 +25,7 @@ public class ShootCommand extends CommandBase {
   protected final IndexerSubsystem indexer;
   private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
+  private final DrivetrainSubsystem drivetrain;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
@@ -38,7 +40,8 @@ public class ShootCommand extends CommandBase {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    BooleanSupplier isLinedUSupplier
+    BooleanSupplier isLinedUSupplier,
+    DrivetrainSubsystem drivetrain
   ) {
     this.shooter = shooter;
     this.indexer = indexer;
@@ -46,6 +49,7 @@ public class ShootCommand extends CommandBase {
     this.vision = vision;
     this.shootMode = shootMode;
     this.isLinedUSupplier = isLinedUSupplier;
+    this.drivetrain = drivetrain;
 
     visionCalculator = VisionCalculator.getInstance();
 
@@ -57,7 +61,8 @@ public class ShootCommand extends CommandBase {
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
-    VisionSubsystem vision
+    VisionSubsystem vision,
+    DrivetrainSubsystem drivetrain
   ) {
     this(
       shootMode, 
@@ -65,7 +70,8 @@ public class ShootCommand extends CommandBase {
       indexer, 
       hopper, 
       vision, 
-      TargetingSubsystem.getInstance()::getIsLinedUpToShoot
+      TargetingSubsystem.getInstance()::getIsLinedUpToShoot,
+      drivetrain
     );
   }
 
@@ -77,7 +83,7 @@ public class ShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    int distanceInches = visionCalculator.getDistanceInches(vision.getTy());
+    double distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
 
     if(vision.getHasValidTarget()) {
         // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
@@ -88,7 +94,7 @@ public class ShootCommand extends CommandBase {
         }
     }
 
-    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig(distanceInches, shooter.getShootAngleEnum());
+    ShooterDistanceConfig shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
 
     SmartDashboard.putNumber("Distance Inches", distanceInches);
 
