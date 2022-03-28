@@ -257,17 +257,6 @@
               ]
             }
           },
-          "4,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
-              "_title": "SmartDashboard/Zero Climber Encoder"
-            }
-          },
           "4,3": {
             "size": [
               1,
@@ -292,6 +281,17 @@
               "_title": "SmartDashboard/Staged Cargo Detected",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
+              "_title": "SmartDashboard/Zero Climber Encoder"
             }
           }
         }
@@ -415,6 +415,76 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///SmartDashboard/Limelight Is Dead Button",
               "_title": "SmartDashboard/Limelight Is Dead Button"
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Pitch",
+              "_title": "SmartDashboard/Gyro Pitch"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Yaw",
+              "_title": "SmartDashboard/Gyro Yaw"
+            }
+          },
+          "3,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Roll",
+              "_title": "SmartDashboard/Gyro Roll"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Swing Backward",
+              "_title": "SmartDashboard/Swing Backward",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Is Top Of Swing",
+              "_title": "SmartDashboard/Is Top Of Swing",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Times at the top",
+              "_title": "SmartDashboard/Times at the top"
             }
           }
         }

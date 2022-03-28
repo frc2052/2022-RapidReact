@@ -59,7 +59,9 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void extend(double extendPctOutput, boolean override) {
         if (override) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-        } else if (getIsAtMaxHeight()) {
+        } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
+        } else if (getIsBelowMaxHeight()) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
         } else {
             System.err.println("Climber extended to (or past) the max height!");
@@ -140,8 +142,12 @@ public class HookClimberSubsystem extends SubsystemBase{
         return isLocked;
     }
 
-    public boolean getIsAtMaxHeight() {
+    public boolean getIsBelowMaxHeight() {
         return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED);
+    }
+
+    public boolean getIsAbove90PctHeight() {
+        return climberMotor.getSelectedSensorPosition() >= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED) * 0.9;
     }
 
     public boolean getIsAtMinHeight() {

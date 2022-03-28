@@ -31,8 +31,8 @@ import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
-import frc.robot.commands.climber.autoclimbs.AutoClimbTestCommand;
-import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
+import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
+import frc.robot.commands.climber.autoclimbs.HighToTraversalAutoClimbCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -60,6 +60,7 @@ import frc.robot.util.buttonbindings.profiles.Default;
 import frc.robot.util.buttonbindings.profiles.SoloDriver;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -82,9 +83,9 @@ public class RobotContainer {
   private PneumaticsSubsystem pneumatics;
   private HookClimberSubsystem climber;
 
-  private Joystick driveJoystick = new Joystick(0);
-  private Joystick turnJoystick = new Joystick(1);
-  private Joystick secondaryPannel = new Joystick(2);
+  private final Joystick driveJoystick = new Joystick(0);
+  private final Joystick turnJoystick = new Joystick(1);
+  private final Joystick secondaryPannel = new Joystick(2);
   
   private JoystickButton resetGyroButton;
 
@@ -105,6 +106,10 @@ public class RobotContainer {
   private JoystickButton tuneShooterButton;
   private JoystickButton climberOverrideButton;
   private JoystickButton commandInterruptButton;
+  private JoystickButton traversalAutoClimbButton;
+  private JoystickButton highAutoClimbButton;
+
+  private JoystickButton hopperTestButton;
   private JoystickButton tempFieldCentricButton;
 
   private JoystickButton pidTestingButton;
@@ -196,11 +201,12 @@ public class RobotContainer {
     climberSolenoidToggleButton = new JoystickButton(secondaryPannel, 4);
     climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     climberLockButton = new JoystickButton(secondaryPannel, 12);
-    climberOverrideButton = new JoystickButton(secondaryPannel, 8);
-    commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
+    climberOverrideButton = new JoystickButton(secondaryPannel, 10);
+    // commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
+    traversalAutoClimbButton = new JoystickButton(secondaryPannel, 2);
+    highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
-    // Testing Buttons
-    pidTestingButton = new JoystickButton(secondaryPannel, 2);
+    pidTestingButton = new JoystickButton(secondaryPannel, 9);
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -283,6 +289,7 @@ public class RobotContainer {
     shootLowGoalButton.whileHeld(shootLowGoalCommand);
     limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation (requires limelight to be sending video data, rather useless right now)
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
+    
       
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
@@ -290,12 +297,12 @@ public class RobotContainer {
     climberSolenoidToggleButton.whenPressed(toggleClimberAngleCommand);
     climberUnlockButton.whenPressed(unlockClimberCommand);
     climberLockButton.whenPressed(lockClimberCommand);
+    traversalAutoClimbButton.whenPressed(new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get()));
+    highAutoClimbButton.whenPressed(new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get()));
 
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
-    SmartDashboard.putData("High Bar Auto Climb", new HighBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> commandInterruptButton.get()));
-    SmartDashboard.putData("Auto Climb Tester", new AutoClimbTestCommand(climber).withInterrupt(() -> commandInterruptButton.get()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
@@ -322,25 +329,22 @@ public class RobotContainer {
   }
 
   public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
-    if (!competitionMode) { // Could put DriverStation.isTest() in here if we don't want to redeploy code to change this
-      // News up each joystick which should remove button bindings connected to each.
-      driveJoystick = new Joystick(0);
-      turnJoystick = new Joystick(1);
-      secondaryPannel = new Joystick(2);
+      if (!competitionMode) {
+          CommandScheduler.getInstance().clearButtons();
 
-      switch(buttonBindingsProfile) {
-        case DEFAULT:
-          Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-          break;
-        case SOLO_DRIVER:
-          SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-          break;
-        default:
-          System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
-          configureButtonBindings();
-          break;
+          switch (buttonBindingsProfile) {
+              case DEFAULT:
+                  Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+                  break;
+              case SOLO_DRIVER:
+                  SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+                  break;
+              default:
+                  System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
+                  configureButtonBindings();
+                  break;
+          }
       }
-    }
   }
 
   /**
