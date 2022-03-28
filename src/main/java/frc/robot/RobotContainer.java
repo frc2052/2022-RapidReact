@@ -31,10 +31,8 @@ import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.commands.climber.RetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
-import frc.robot.commands.climber.autoclimbs.HighBarAutoClimbCommand;
-import frc.robot.commands.climber.autoclimbs.MidBarAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
-import frc.robot.commands.climber.autoclimbs.NextBarAutoClimbCommand;
+import frc.robot.commands.climber.autoclimbs.HighToTraversalAutoClimbCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
@@ -294,9 +292,6 @@ public class RobotContainer {
     shootLowGoalButton.whileHeld(shootLowGoalCommand);
     limelightLineupNonvisionShootButton.whileHeld(lineupShootCommand); // Button for lining up target in Limelight's crosshair and shooting without any vision calculation (requires limelight to be sending video data, rather useless right now)
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
-
-    traversalAutoClimbButton.whenPressed(new NextBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get()));
-    highAutoClimbButton.whenPressed(new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get()));
     
       
     // Climber Button Command Bindings
@@ -305,12 +300,12 @@ public class RobotContainer {
     climberSolenoidToggleButton.whenPressed(toggleClimberAngleCommand);
     climberUnlockButton.whenPressed(unlockClimberCommand);
     climberLockButton.whenPressed(lockClimberCommand);
+    traversalAutoClimbButton.whenPressed(new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get()));
+    highAutoClimbButton.whenPressed(new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get()));
 
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
-    SmartDashboard.putData("Mid Bar Auto Climb", new MidBarAutoClimbCommand(climber).withInterrupt(() -> commandInterruptButton.get()));
-    SmartDashboard.putData("Mid Bar Auto Climb", new HighBarAutoClimbCommand(climber, drivetrain).withInterrupt(() -> commandInterruptButton.get()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));

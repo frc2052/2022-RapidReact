@@ -13,10 +13,10 @@ import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 
-public class NextBarAutoClimbCommand extends SequentialCommandGroup{
+public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
-    public NextBarAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
+    public HighToTraversalAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
         this.climber = climber;
 
         addRequirements(this.climber);
