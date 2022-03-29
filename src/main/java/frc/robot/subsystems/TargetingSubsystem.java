@@ -21,6 +21,7 @@ public class TargetingSubsystem extends SubsystemBase {
     private final ShooterSubsystem shooter;
 
     private TargetingMode targetingMode;
+    private Rotation2d currentRotation;
     private Rotation2d rotation;
     private boolean isLinedUpToShoot;
 
@@ -69,7 +70,8 @@ public class TargetingSubsystem extends SubsystemBase {
         double lineToHubDistanceMeters = Math.hypot(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS , shooterDistanceMeters); // Gets the length for t
         double currentWheelVelocityMPS = drivetrain.getIntendedYVelocityMPS(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
         double offsetRadians = Math.atan(Math.toRadians(shooterDistanceMeters*currentWheelVelocityMPS/xLaunchVelocity/lineToHubDistanceMeters));  // Plugs everything needed into the equation TODO Figure out if the Math.toRadians needs to be omitted
-        return Rotation2d.fromDegrees(Math.toDegrees(offsetRadians));   // Returns the needed offset in degrees
+        rotation = Rotation2d.fromDegrees(Math.toDegrees(offsetRadians));
+        return rotation;
         // return 0.0; // doesn't work yet
     }
 
@@ -77,15 +79,9 @@ public class TargetingSubsystem extends SubsystemBase {
         if(vision.getLedMode() != 3.0) {
             vision.setLEDMode(LEDMode.ON);
         }
-        Rotation2d rotation;
         if(vision.getHasValidTarget()) {
             double rotationDegrees = vision.getTx() + offsetAngle;
             rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
-            if (Math.abs(rotation.getDegrees()) <= 3) {
-                isLinedUpToShoot = true;
-            } else {
-                isLinedUpToShoot = false;
-            }
         } else {
             rotation = Rotation2d.fromDegrees(noTargetAngle);
         }
@@ -115,20 +111,42 @@ public class TargetingSubsystem extends SubsystemBase {
         this.targetingMode = targetingMode;
     }
 
-    // @Override
-    // public void periodic() {
-    //     switch (targetingMode) {
-    //         case CALCULATED_DRIVE_AND_SHOOT:
-    //             rotation = getDrivingHorizontalFiringOffsetAngleDegrees();
-    //             break;
-    //         case TRACK_HUB_WITH_OFFSET:
-    //             rotation = createHubTrackingSupplierWithOffset(noTargetAngle, offsetAngle);
-    //             break;
-    //         default:
-    //             System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
-    //             break;
-    //     }
-    // }
+    @Override
+    public void periodic() {
+        currentRotation = drivetrain.getGyroscopeRotation();
+
+        if (targetingMode != TargetingMode.NONE) {
+            if (Math.abs(rotation.getDegrees()) <= vision.getTolerance()) { // currentRotation.minus(rotation).getDegrees()
+                isLinedUpToShoot = true;
+            } else {
+                isLinedUpToShoot = false;
+            }
+        } else {
+            isLinedUpToShoot = false;
+        }
+
+        // switch (targetingMode) {
+        //     case CALCULATED_DRIVE_AND_SHOOT:
+        //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
+        //             isLinedUpToShoot = true;
+        //         } else {
+        //             isLinedUpToShoot = false;
+        //         }
+        //         break;
+        //     case TRACK_HUB_WITH_OFFSET:
+        //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
+        //             isLinedUpToShoot = true;
+        //         } else {
+        //             isLinedUpToShoot = false;
+        //         }
+        //         break;
+        //     case NONE:
+        //         break;
+        //     default:
+        //         System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
+        //         break;
+        // }
+    }
 
     public void setIsLinedUpToShoot(boolean isLinedUpToShoot) {
         this.isLinedUpToShoot = isLinedUpToShoot;
@@ -136,6 +154,7 @@ public class TargetingSubsystem extends SubsystemBase {
 
     public enum TargetingMode {
         CALCULATED_DRIVE_AND_SHOOT,
-        TRACK_HUB_WITH_OFFSET
+        TRACK_HUB_WITH_OFFSET,
+        NONE
     }
 }
