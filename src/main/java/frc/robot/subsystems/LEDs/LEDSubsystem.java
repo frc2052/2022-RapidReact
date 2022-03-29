@@ -13,59 +13,42 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.HsvToRgb;
 
-public abstract class LEDSubsystem extends SubsystemBase {
+public class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
-    PWM redChannel, blueChannel, greenChannel;
-
-    private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
-
-    private double saturation;
-    private double hue;
-    private double value;
-    private double externalBrightnessModifier;
-    private double counter;
-    private long lastOnChangeTime = 0;
-
-    private boolean areLedsOn = false;
-    private boolean isGoingUp = true;
-
-    private Timer timer;
-
-    private LEDStatusMode currentLEDStatusMode; // Default Modes
-    private LEDStatusMode lastLEDStatusMode;
-
-    private LEDStatusMode runningStatusMode;
-    private LEDStatusMode lastRunningStatusMode;
-
-    // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
-    public LEDSubsystem(int redPWMPort, int greenPWMPort, int bluePWMPort) {
-//        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
-
-        redChannel = new PWM(redPWMPort);
-        greenChannel = new PWM(greenPWMPort);
-        blueChannel = new PWM(bluePWMPort);
-
-        externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
-
-        isGoingUp = true;
-        timer = new Timer();
-
-        currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-        lastLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-
-        runningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-        lastRunningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+    private LEDSubsystem() {}
+    private static LEDSubsystem instance;
+    private static LEDLoop channel1Instance;
+    private static LEDLoop channel2Instance;
+    public static LEDLoop getChannel1Instance() {
+        if (instance == null) {
+            instance = new LEDSubsystem();
+        }
+        if (channel1Instance == null) {
+            channel1Instance = instance.new LEDLoop(Constants.LEDs.R_1_PWM_PORT, Constants.LEDs.G_1_PWM_PORT, Constants.LEDs.B_1_PWM_PORT);
+        }
+        return channel1Instance;
     }
-    // private static LEDSubsystem instance;       // Static that stores the instance of class
-    // public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
-    //     if (instance == null) {
-    //         instance = new LEDSubsystem();
-    //     }
-    //     return instance;
-    // }
-    
+    public static LEDLoop getChannel2Instance() {
+        if (instance == null) {
+            instance = new LEDSubsystem();
+        }
+        if (channel2Instance == null) {
+            channel2Instance = instance.new LEDLoop(Constants.LEDs.R_2_PWM_PORT, Constants.LEDs.G_2_PWM_PORT, Constants.LEDs.B_2_PWM_PORT);
+        }
+        return channel2Instance;
+    }
+    public static void setBothChannelModes(LEDStatusMode statusMode) {
+        getChannel1Instance().setLEDStatusMode(statusMode);
+        getChannel2Instance().setLEDStatusMode(statusMode);
+    }
+
+    public static void setBothChannelBrightnesses(double brightness) {
+        getChannel1Instance().setBrightness(brightness);
+        getChannel2Instance().setBrightness(brightness);
+    }
+
     public enum LEDStatusMode {
         RAINBOW("Rainbow"),
         OFF("Off"),
@@ -98,6 +81,56 @@ public abstract class LEDSubsystem extends SubsystemBase {
             this.name = name;
         }
     }
+
+    private class LEDLoop extends SubsystemBase {
+        PWM redChannel, blueChannel, greenChannel;
+
+    private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
+
+    private double saturation;
+    private double hue;
+    private double value;
+    private double externalBrightnessModifier;
+    private double counter;
+    private long lastOnChangeTime = 0;
+
+    private boolean areLedsOn = false;
+    private boolean isGoingUp = true;
+
+    private Timer timer;
+
+    private LEDStatusMode currentLEDStatusMode; // Default Modes
+    private LEDStatusMode lastLEDStatusMode;
+
+    private LEDStatusMode runningStatusMode;
+    private LEDStatusMode lastRunningStatusMode;
+
+    // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
+    public LEDLoop(int redPWMPort, int greenPWMPort, int bluePWMPort) {
+//        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
+
+        redChannel = new PWM(redPWMPort);
+        greenChannel = new PWM(greenPWMPort);
+        blueChannel = new PWM(bluePWMPort);
+
+        externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
+
+        isGoingUp = true;
+        timer = new Timer();
+
+        currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        lastLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+
+        runningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        lastRunningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+    }
+    // private static LEDSubsystem instance;       // Static that stores the instance of class
+    // public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
+    //     if (instance == null) {
+    //         instance = new LEDSubsystem();
+    //     }
+    //     return instance;
+    // }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
         currentLEDStatusMode = statusMode;
@@ -596,5 +629,6 @@ public abstract class LEDSubsystem extends SubsystemBase {
 
     //Converts HSV (Hue Saturation Value) to RGB (Red Green Blue)
         rgb = HsvToRgb.convert(hue, saturation, value);
+    }
     }
 }

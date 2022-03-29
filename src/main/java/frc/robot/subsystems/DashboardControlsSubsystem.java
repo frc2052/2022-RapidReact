@@ -183,14 +183,12 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (selectedLEDStatusMode != lastLEDStatusMode) {
-            LEDChannel1.getInstance().setLEDStatusMode(selectedLEDStatusMode);
-            LEDChannel2.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            LEDSubsystem.setBothChannelModes(selectedLEDStatusMode);
             lastLEDStatusMode = selectedLEDStatusMode;
         }
 
         if (ledBrightness != lastLEDBrightness) {
-            LEDChannel1.getInstance().setBrightness(ledBrightness);
-            LEDChannel2.getInstance().setBrightness(ledBrightness);
+            LEDSubsystem.setBothChannelBrightnesses(ledBrightness);
             lastLEDBrightness = ledBrightness;
         }
 
@@ -239,8 +237,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
-            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
-            LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            LEDSubsystem.setBothChannelModes(LEDStatusMode.LIGHT_SHOW);
             lastIsDrivetrainDead = isDrivetrainDead;
         }
 

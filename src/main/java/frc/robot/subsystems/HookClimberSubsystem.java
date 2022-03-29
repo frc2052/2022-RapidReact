@@ -68,7 +68,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         } else {
             System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
-            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         }
     }
 
