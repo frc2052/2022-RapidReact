@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class HookClimberSubsystem extends SubsystemBase{
     // DoubleSolenoid that controls both in and out solenoids for both climbing arms.
@@ -127,7 +125,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         System.err.println("************************ CLIMBER LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
-        LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
+        LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
     public void unlock() {

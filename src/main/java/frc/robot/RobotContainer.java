@@ -49,14 +49,12 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDChannel2;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.buttonbindings.profiles.Default;
@@ -154,9 +152,6 @@ public class RobotContainer {
 
     TargetingSubsystem.init(vision, drivetrain, shooter);
     targeting = TargetingSubsystem.getInstance();
-    
-    LEDChannel1.getInstance();
-    LEDChannel2.getInstance();
 
     init();
   }

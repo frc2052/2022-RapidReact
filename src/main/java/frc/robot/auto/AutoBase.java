@@ -38,12 +38,10 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDChannel2;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoBase  extends SequentialCommandGroup {
@@ -136,7 +134,7 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected ParallelCommandGroup newIntakeArmOutCommand() {
-        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
@@ -156,7 +154,8 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected Command autonomousFinishedCommandGroup() {
-        return new InstantCommand(() -> LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED)).andThen(() -> drivetrain.stop(), drivetrain);
+        return new InstantCommand(() -> LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_FINISHED))
+                    .andThen(() -> drivetrain.stop(), drivetrain);
     }
 
     protected ParallelDeadlineGroup newAutoAimAndShootAllCommandGroup() {

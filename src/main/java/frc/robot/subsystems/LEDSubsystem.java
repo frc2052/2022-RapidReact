@@ -1,9 +1,6 @@
-package frc.robot.subsystems.LEDs;
+package frc.robot.subsystems;
 
-// Subsystem to Control CANifier LED Controller
-
-import com.ctre.phoenix.CANifier;
-import com.ctre.phoenix.CANifier.LEDChannel;
+// Subsystem to Control LEDs.
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
@@ -82,7 +79,7 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    private class LEDLoop extends SubsystemBase {
+    public class LEDLoop extends SubsystemBase {
         PWM redChannel, blueChannel, greenChannel;
 
     private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
@@ -106,7 +103,7 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDStatusMode lastRunningStatusMode;
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
-    public LEDLoop(int redPWMPort, int greenPWMPort, int bluePWMPort) {
+    protected LEDLoop(int redPWMPort, int greenPWMPort, int bluePWMPort) {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
         redChannel = new PWM(redPWMPort);
@@ -142,11 +139,19 @@ public class LEDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() { // Loop for updating LEDs in parallel with all other loops on the robot - Currently commented out becasue Canifier is fried
-        
+
         double matchTime = DriverStation.getMatchTime(); // The current approximate match time
 
         if (matchTime >= 120 && matchTime <= 125) {
             currentLEDStatusMode = LEDStatusMode.ENG_GAME_WARNING;
+        } else if (currentLEDStatusMode == null) {
+            if (DriverStation.isAutonomous()) {
+                currentLEDStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
+            } else if (DriverStation.isTeleop()) {
+                currentLEDStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+            } else if (DriverStation.isTest()) {
+                currentLEDStatusMode = LEDStatusMode.TEST_MODE;
+            }
         }
 
         if (currentLEDStatusMode != lastLEDStatusMode) {
