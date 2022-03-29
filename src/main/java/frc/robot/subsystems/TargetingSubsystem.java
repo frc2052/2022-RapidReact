@@ -20,6 +20,8 @@ public class TargetingSubsystem extends SubsystemBase {
     private final DrivetrainSubsystem drivetrain;
     private final ShooterSubsystem shooter;
 
+    private TargetingMode targetingMode;
+    private Rotation2d rotation;
     private boolean isLinedUpToShoot;
 
     private TargetingSubsystem(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
@@ -48,9 +50,9 @@ public class TargetingSubsystem extends SubsystemBase {
     //     this.mode = mode;
     // }
 
-    public double getDrivingHorizontalFiringOffsetAngleDegrees() {
+    public Rotation2d getDrivingHorizontalFiringOffsetAngleDegrees() {
         if(drivetrain.getIntendedCurrentVelocity() < 0.1) {    // Just avoids doing all the math if we're not or barely moving anyway
-            return 0.0;
+            return Rotation2d.fromDegrees(0.0);
         }
         // Ends up using theta = tan^-1(d*(velocity of the robot)/(x velocity of the ball leaving the shooter)/sqrt(height^2+distance^2)) to calculate offset angle.
         int distanceInches = VisionCalculator.getInstance().getDistanceInches(vision.getTy());  // Gets the calculated distance from the VisionCalculator
@@ -64,33 +66,34 @@ public class TargetingSubsystem extends SubsystemBase {
         double xLaunchVelocity = launchVelocity * Math.cos(Math.toRadians(shooter.getShootAngleDegrees())); //TODO Change to get current shooter firing angle or somthing
         // double yLaunchVelocity = launchVelocity * Math.sin(Math.toRadians(Constants.Shooter.SHOOTER_FIRING_ANGLE_DEGREES));
 
-
         double lineToHubDistanceMeters = Math.hypot(Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS , shooterDistanceMeters); // Gets the length for t
-        double currentWheelVelocityMPS = drivetrain.getIntendedCurrentVelocity(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
+        double currentWheelVelocityMPS = drivetrain.getIntendedYVelocityMPS(); // Gets the current target velocity for the chasis being sent to the drivetrain's drive method
         double offsetRadians = Math.atan(Math.toRadians(shooterDistanceMeters*currentWheelVelocityMPS/xLaunchVelocity/lineToHubDistanceMeters));  // Plugs everything needed into the equation TODO Figure out if the Math.toRadians needs to be omitted
-        return Math.toDegrees(offsetRadians);   // Returns the needed offset in degrees
+        return Rotation2d.fromDegrees(Math.toDegrees(offsetRadians));   // Returns the needed offset in degrees
         // return 0.0; // doesn't work yet
     }
 
-    public Supplier<Rotation2d> createHubTrackingSupplierWithOffset(double noTargetAngle, double offsetAngle) {
-        return () -> {
-            if(vision.getLedMode() != 3.0) {
-                vision.setLEDMode(LEDMode.ON);
-            }
-            Rotation2d rotation;
-            if(vision.getHasValidTarget()) {
-                double rotationDegrees = vision.getTx() + offsetAngle;
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
-                if (Math.abs(rotation.getDegrees()) <= 3) {
-                    isLinedUpToShoot = true;
-                } else {
-                    isLinedUpToShoot = false;
-                }
+    public Rotation2d createHubTrackingSupplierWithOffset(double noTargetAngle, double offsetAngle) {
+        if(vision.getLedMode() != 3.0) {
+            vision.setLEDMode(LEDMode.ON);
+        }
+        Rotation2d rotation;
+        if(vision.getHasValidTarget()) {
+            double rotationDegrees = vision.getTx() + offsetAngle;
+            rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
+            if (Math.abs(rotation.getDegrees()) <= 3) {
+                isLinedUpToShoot = true;
             } else {
-                rotation = Rotation2d.fromDegrees(noTargetAngle);
+                isLinedUpToShoot = false;
             }
-            return rotation;
-        };
+        } else {
+            rotation = Rotation2d.fromDegrees(noTargetAngle);
+        }
+        return rotation;
+    }
+
+    public Rotation2d getRotation() {
+        return rotation;
     }
 
     // public Rotation2d getRotation() {
@@ -108,13 +111,31 @@ public class TargetingSubsystem extends SubsystemBase {
         return isLinedUpToShoot;
     }
 
-    @Override
-    public void periodic() {
-        // TODO Auto-generated method stub
-        super.periodic();
+    public void setTargetingMode(TargetingMode targetingMode) {
+        this.targetingMode = targetingMode;
     }
+
+    // @Override
+    // public void periodic() {
+    //     switch (targetingMode) {
+    //         case CALCULATED_DRIVE_AND_SHOOT:
+    //             rotation = getDrivingHorizontalFiringOffsetAngleDegrees();
+    //             break;
+    //         case TRACK_HUB_WITH_OFFSET:
+    //             rotation = createHubTrackingSupplierWithOffset(noTargetAngle, offsetAngle);
+    //             break;
+    //         default:
+    //             System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
+    //             break;
+    //     }
+    // }
 
     public void setIsLinedUpToShoot(boolean isLinedUpToShoot) {
         this.isLinedUpToShoot = isLinedUpToShoot;
+    }
+
+    public enum TargetingMode {
+        CALCULATED_DRIVE_AND_SHOOT,
+        TRACK_HUB_WITH_OFFSET
     }
 }

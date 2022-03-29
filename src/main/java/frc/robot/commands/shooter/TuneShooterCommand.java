@@ -25,6 +25,7 @@ public class TuneShooterCommand extends CommandBase {
 
     SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 1000);
     SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 1000);
+    SmartDashboard.putBoolean("Is Angle 2", false);
     
     addRequirements(shooter, indexer, intake, hopper);
   }
@@ -38,6 +39,11 @@ public class TuneShooterCommand extends CommandBase {
   public void execute() {
     double topSpeedTP100MS = SmartDashboard.getNumber("Top shooter wheel speed TP100MS", 0);
     double bottomSpeedTP100MS = SmartDashboard.getNumber("Bottom shooter wheel speed TP100MS", 0);
+    if (SmartDashboard.getBoolean("Is Angle 2", false)) {
+        shooter.setShootAngle2();
+    } else {
+        shooter.setShootAngle1();
+    } 
     shooter.shootAtSpeed(topSpeedTP100MS, bottomSpeedTP100MS);
 
     if (shooter.isAtSpeed()) {

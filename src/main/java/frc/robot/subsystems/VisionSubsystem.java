@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
 
@@ -112,6 +113,7 @@ public class VisionSubsystem extends SubsystemBase{
         // SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
         SmartDashboard.putNumber("Test Equation Distance", testEquationDistance());
         SmartDashboard.putNumber("Limelight Tolerance", getTolerance());
+        SmartDashboard.putNumber("Calculator Distance", VisionCalculator.getInstance().getDistanceInches(ty));
 
         // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }
@@ -178,6 +180,14 @@ public class VisionSubsystem extends SubsystemBase{
 
     public boolean getHasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
+    }
+
+    public Rotation2d getXRotation() {
+        return Rotation2d.fromDegrees(tx);
+    }
+
+    public Rotation2d getYRotation() {
+        return Rotation2d.fromDegrees(ty);
     }
 
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').

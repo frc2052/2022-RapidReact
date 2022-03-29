@@ -59,7 +59,7 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         AutoTrajectoryConfig trajectoryConfig5 = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 3, 3, 2);
 
         SwerveControllerCommand driveCommand1 = super.createSwerveTrajectoryCommand(trajectoryConfig1, startPos, pos1);  // Drive to first ball pos
-        SwerveControllerCommand driveCommand2 = super.createSwerveTrajectoryCommand(trajectoryConfig2, super.getLastEndingPosCreated(170), pos2, targeting.createHubTrackingSupplierWithOffset(170, 10)); // Drive and shoot 2
+        SwerveControllerCommand driveCommand2 = super.createSwerveTrajectoryCommand(trajectoryConfig2, super.getLastEndingPosCreated(170), pos2, () -> targeting.createHubTrackingSupplierWithOffset(170, 10)); // Drive and shoot 2
         SwerveControllerCommand driveCommand3 = super.createSwerveTrajectoryCommand(trajectoryConfig3, super.getLastEndingPosCreated(150), pos3, alignWithWallMidpoint, super.createRotationAngle(150)); // Drive to alliance ball 2 and opposing ball 1
         SwerveControllerCommand driveCommand4 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withEndVelocity(2), super.getLastEndingPosCreated(-23), pos4, super.createHubTrackingSupplier(-110)); // Drive and aim ball 2
         SwerveControllerCommand driveCommand5 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withStartAndEndVelocity(2, 1), super.getLastEndingPosCreated(-23), pos5, super.createRotationAngle(-90)); // Drive to terminal and aim at hanger

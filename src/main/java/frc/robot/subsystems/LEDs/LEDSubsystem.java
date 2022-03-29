@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.LEDs;
 
 // Subsystem to Control CANifier LED Controller
 
@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.HsvToRgb;
 
-public class LEDSubsystem extends SubsystemBase {
+public abstract class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
@@ -40,23 +40,15 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDStatusMode lastRunningStatusMode;
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
-    private LEDSubsystem() {
+    public LEDSubsystem(int redPWMPort, int greenPWMPort, int bluePWMPort) {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
-        redChannel = new PWM(Constants.LEDs.R_PWM_PORT);
-        greenChannel = new PWM(Constants.LEDs.G_PWM_PORT);
-        blueChannel = new PWM(Constants.LEDs.B_PWM_PORT);
+        redChannel = new PWM(redPWMPort);
+        greenChannel = new PWM(greenPWMPort);
+        blueChannel = new PWM(bluePWMPort);
 
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
 
-        // Setting initial values and making sure variables aren't going to be null and cause any potential issues
-        saturation = 0;
-        hue = 0;
-        value = 0;
-
-        counter = 0;
-        lastOnChangeTime = 0;
-        areLedsOn = false;
         isGoingUp = true;
         timer = new Timer();
 
@@ -66,13 +58,13 @@ public class LEDSubsystem extends SubsystemBase {
         runningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
         lastRunningStatusMode = LEDStatusMode.TELEOP_DEFAULT;
     }
-    private static LEDSubsystem instance;       // Static that stores the instance of class
-    public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
-        if (instance == null) {
-            instance = new LEDSubsystem();
-        }
-        return instance;
-    }
+    // private static LEDSubsystem instance;       // Static that stores the instance of class
+    // public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
+    //     if (instance == null) {
+    //         instance = new LEDSubsystem();
+    //     }
+    //     return instance;
+    // }
     
     public enum LEDStatusMode {
         RAINBOW("Rainbow"),

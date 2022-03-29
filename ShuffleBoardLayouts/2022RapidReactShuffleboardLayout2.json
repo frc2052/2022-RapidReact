@@ -439,52 +439,48 @@
               "_title": "SmartDashboard/Gyro Yaw"
             }
           },
+          "9,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Is Angle 2",
+              "_title": "SmartDashboard/Is Angle 2"
+            }
+          },
           "3,2": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Gyro Roll",
-              "_title": "SmartDashboard/Gyro Roll"
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Button Bindings Profiles",
+              "_title": "SmartDashboard/Button Bindings Profiles"
             }
           },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Swing Backward",
-              "_title": "SmartDashboard/Swing Backward",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Is Top Of Swing",
-              "_title": "SmartDashboard/Is Top Of Swing",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,2": {
+          "9,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Times at the top",
-              "_title": "SmartDashboard/Times at the top"
+              "_source0": "network_table:///SmartDashboard/Calculator Distance",
+              "_title": "/SmartDashboard/Calculator Distance"
+            }
+          },
+          "9,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vertical Distance from Crosshair: ",
+              "_title": "SmartDashboard/Vertical Distance from Crosshair: "
             }
           }
         }

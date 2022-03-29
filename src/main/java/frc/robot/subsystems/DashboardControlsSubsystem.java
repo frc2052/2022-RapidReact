@@ -4,7 +4,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDChannel2;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -23,16 +26,15 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     private int ledBrightness;
     private int lastLEDBrightness;
-    private double shooterBoostPct;
     private double lastShooterBoostPct;
 
-    private boolean limelightLEDsEnabled;
-    private boolean limelightDriveCamToggle;
+    // private boolean limelightLEDsEnabled;
+    // private boolean limelightDriveCamToggle;
     // private boolean limelightPowerRelayToggle;
-    private boolean limelightLEDOverride;
+    // private boolean limelightLEDOverride;
     private boolean isLimelightDead;
-    private boolean isDrivetrainDead;
-    private boolean isPnuematicsDead;
+    // private boolean isDrivetrainDead;
+    // private boolean isPnuematicsDead;
 
     private boolean lastLimelightLEDsEnabled;
     private boolean lastIsDriverCamera;
@@ -52,26 +54,28 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         this.robotContainer = robotContainer;
         this.shooter = shooter;
         
-        limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
-        limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
-        // limelightPowerRelayToggle = vision.getRelayState();
-        limelightLEDOverride = false;
         selectedAuto = Autos.NONE_SELECTED;
         isLimelightDead = false;
-        isDrivetrainDead = false;
-        isPnuematicsDead = false;
+        // limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
+        // limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        // limelightPowerRelayToggle = vision.getRelayState();
+        // limelightLEDOverride = false;
+        // isDrivetrainDead = false;
+        // isPnuematicsDead = false;
 
-        lastLimelightLEDsEnabled = limelightLEDsEnabled;
         lastLEDBrightness = ledBrightness;
-        lastIsDriverCamera = limelightDriveCamToggle;
         lastLEDStatusMode = LEDStatusMode.RAINBOW;
-        // lastLimelightPowerRelayState = limelightPowerRelayToggle;
-        lastLimelightLEDOverride = limelightLEDOverride;
         lastSelectedAuto = selectedAuto;
         lastIsLimelightDead = isLimelightDead;
-        lastIsDrivetrainDead = isDrivetrainDead;
-        lastIsPnuematicsDead = isPnuematicsDead;
+        // lastLimelightPowerRelayState = limelightPowerRelayToggle;
+
+        // Unnecessary, but might be nice for understanding
+        lastLimelightLEDsEnabled = false;
+        lastIsDriverCamera = false;
+        lastLimelightLEDOverride = false;
+        lastIsDrivetrainDead = false;
+        lastIsPnuematicsDead = false;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -123,39 +127,38 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
         SmartDashboard.putData("LED Status Modes", ledStatusModeSelector);
         SmartDashboard.putData("Button Bindings Profiles", buttonBindingsProfileSelector);
+        SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
 
         SmartDashboard.putNumber("LED Brightness", ledBrightness);
         SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
         SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
 
-        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
-        SmartDashboard.putBoolean("Toggle Limelight Driver Camera", limelightDriveCamToggle);
-        SmartDashboard.putBoolean("Enable Limelight LEDs", limelightLEDsEnabled);
+        SmartDashboard.putBoolean("Enable Limelight LEDs", false);
+        SmartDashboard.putBoolean("Toggle Limelight Driver Camera", false);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
-        // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
-        SmartDashboard.putBoolean("Limelight LED Override", limelightLEDOverride);
-
-        SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+        SmartDashboard.putBoolean("Limelight LED Override", false);
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
         SmartDashboard.putBoolean("Drivetrain Is Dead", false);
         SmartDashboard.putBoolean("Pnuematics Is Dead", false);
+        // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
     }
 
     @Override
     public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops. Intended to only do logic when somthing has changed.
-        limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
-        limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
-        ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
-        shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
+        Autos selectedAuto = getSelectedAuto();
+        ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        int ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
+        double shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
+        Boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
+        Boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        boolean limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
+        boolean isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead", false);
+        boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
+        boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
-        limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
-        selectedAuto = getSelectedAuto();
-        isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead", false);
-        isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
-        isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -180,12 +183,14 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (selectedLEDStatusMode != lastLEDStatusMode) {
-            LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            LEDChannel1.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            LEDChannel2.getInstance().setLEDStatusMode(selectedLEDStatusMode);
             lastLEDStatusMode = selectedLEDStatusMode;
         }
 
         if (ledBrightness != lastLEDBrightness) {
-            LEDSubsystem.getInstance().setBrightness(ledBrightness);
+            LEDChannel1.getInstance().setBrightness(ledBrightness);
+            LEDChannel2.getInstance().setBrightness(ledBrightness);
             lastLEDBrightness = ledBrightness;
         }
 
@@ -223,19 +228,19 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastSelectedAuto = selectedAuto;
         }
 
-        if (getSelectButtonBindingsProfile() != lastSelectedButtonBindingsProfile) {
-            robotContainer.assignButtonBindings(getSelectButtonBindingsProfile());
-            lastSelectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        if (selectedButtonBindingsProfile != lastSelectedButtonBindingsProfile && selectedButtonBindingsProfile != null) {
+            robotContainer.assignButtonBindings(selectedButtonBindingsProfile);
+            lastSelectedButtonBindingsProfile = selectedButtonBindingsProfile;
         }
 
         if (isLimelightDead != lastIsLimelightDead) {
-            //System.err.println("SWITCHED !!!!!!!!!!!!!!!!!");
-            // trigger Limelight relay
+            this.isLimelightDead = isLimelightDead;
             lastIsLimelightDead = isLimelightDead;
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
             lastIsDrivetrainDead = isDrivetrainDead;
         }
 
@@ -243,6 +248,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             // Override shooter angle changing
             lastIsPnuematicsDead = isPnuematicsDead;
         }
+    }
+
+    public void resetSelectedAuto() {
+        SmartDashboard.putData("Autos", null);
+        SmartDashboard.putData("Autos", autoSelector);
     }
 
     public boolean getIsLimelightDead() {

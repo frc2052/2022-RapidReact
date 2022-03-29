@@ -49,11 +49,14 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDChannel2;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.buttonbindings.profiles.Default;
@@ -75,8 +78,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   private DrivetrainSubsystem drivetrain;
   private VisionSubsystem vision;
-  private DashboardControlsSubsystem dashboardControlsSubsystem;
+  private DashboardControlsSubsystem dashboardControls;
   private ShooterSubsystem shooter;
+  private TargetingSubsystem targeting;
   private IndexerSubsystem indexer;
   private IntakeSubsystem intake;
   private HopperSubsystem hopper;
@@ -121,7 +125,7 @@ public class RobotContainer {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private boolean initComplete = false;
-  private boolean competitionMode = false;
+  private boolean competitionMode = true;
 
   private Command autonomousCommand;
 
@@ -130,11 +134,11 @@ public class RobotContainer {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
     vision = new VisionSubsystem();
+    shooter = new ShooterSubsystem();
+
     DashboardControlsSubsystem.init(vision, this, shooter);
-    dashboardControlsSubsystem = DashboardControlsSubsystem.getInstance();
-    dashboardControlsSubsystem.addSelectorsToSmartDashboard();
-    
-    LEDSubsystem.getInstance();
+    dashboardControls = DashboardControlsSubsystem.getInstance();
+    dashboardControls.addSelectorsToSmartDashboard();
 
     drivetrain = new DrivetrainSubsystem();
 
@@ -148,6 +152,12 @@ public class RobotContainer {
 		  )
     );
 
+    TargetingSubsystem.init(vision, drivetrain, shooter);
+    targeting = TargetingSubsystem.getInstance();
+    
+    LEDChannel1.getInstance();
+    LEDChannel2.getInstance();
+
     init();
   }
 
@@ -159,7 +169,7 @@ public class RobotContainer {
 
     // //The following subsystems have a dependency on CAN
 
-        shooter = new ShooterSubsystem();
+        // shooter = new ShooterSubsystem();
         indexer = new IndexerSubsystem();
         intake = new IntakeSubsystem();
         hopper = new HopperSubsystem();
@@ -225,7 +235,7 @@ public class RobotContainer {
         new ConditionalCommand(
           new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
           new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-          dashboardControlsSubsystem::getIsLimelightDead
+          dashboardControls::getIsLimelightDead
         ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
@@ -303,6 +313,7 @@ public class RobotContainer {
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
+    SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
@@ -357,7 +368,7 @@ public class RobotContainer {
   }
 
   public void initializeAutonomousCommand() {
-    switch(dashboardControlsSubsystem.getSelectedAuto()) {
+    switch(dashboardControls.getSelectedAuto()) {
       case AUTO_TESTING:
         autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         break;

@@ -9,11 +9,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-//import frc.robot.subsystems.PixyCamSubsystem;
-//import frc.robot.subsystems.PixyCamSubsystem.BallColor;
-//import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,7 +38,7 @@ public class Robot extends TimedRobot {
     robotContainer.initializeAutonomousCommand();
 //    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
 
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);
+    LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);
   }
 
   /**
@@ -78,7 +76,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
+    LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
 
     robotContainer.resetRobot();
   }
@@ -119,7 +117,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
+    LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
   /** This function is called periodically during operator control. */
@@ -131,7 +129,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
+    LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }
 
   /** This function is called periodically during test mode. */

@@ -5,7 +5,9 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class VisionTurnInPlaceCommand extends CommandBase {
@@ -51,9 +53,9 @@ public class VisionTurnInPlaceCommand extends CommandBase {
           }
 
         if (isLinedUp) {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
         } else {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
         }
 
         //if(vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
@@ -77,7 +79,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     public void end(boolean interrupted) {
         vision.setLEDMode(LEDMode.OFF);
         drivetrain.stop();
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
+        LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
     }
 
     @Override

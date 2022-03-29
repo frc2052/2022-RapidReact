@@ -11,15 +11,18 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     private final VisionSubsystem vision;
     private final DrivetrainSubsystem drivetrain;
+    private final TargetingSubsystem targeting;
     private ProfiledPIDController pidController;
 
     /**
@@ -42,6 +45,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         
         this.vision = vision;
         this.drivetrain = drivetrain;
+        this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
             1, 0, 0,
@@ -58,11 +62,13 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
+        Rotation2d horizontalAngle = vision.getXRotation().minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
+
         pidController.setTolerance(vision.getTolerance());
 
         return pidController.calculate(
             drivetrain.getGyroscopeRotation().getDegrees(),
-            drivetrain.getGyroscopeRotation().getDegrees() + vision.getTx()
+            drivetrain.getGyroscopeRotation().plus(horizontalAngle).getDegrees()
             );
     }
     
@@ -70,6 +76,6 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLEDMode(LEDMode.OFF);
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
+        LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
     }
 }

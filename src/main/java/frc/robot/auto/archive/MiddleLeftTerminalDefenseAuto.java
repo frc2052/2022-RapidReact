@@ -18,10 +18,11 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDs.LEDChannel1;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
 
 public class MiddleLeftTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;
@@ -74,7 +75,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         this.addCommands(returnToShoot);   // returnToShoot
         this.addCommands(shoot2CargoCommand.withTimeout(2.5));
 
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
+        this.andThen(() -> LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }

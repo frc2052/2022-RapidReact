@@ -85,13 +85,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 //   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
-  private double intendedCurrentVelocity;
   private double lastRollValue;
   private boolean lastRollDelta;
   private boolean isTopOfSwing;
-  private int counter = 0;
-  private double intendedXVelocityMPS = 0;
-  private double intendedYVelocityMPS = 0;
+  private int counter;
+  private double intendedXVelocityMPS;
+  private double intendedYVelocityMPS;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -249,8 +248,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getGyroPitchDegrees() {
-        // Get the pitch of the robot, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
-        // Wanted for making an auto climb that makes sure the robot isn't swinging in the wrong place before extending the climber.
         return navx.getPitch();
   }
 
@@ -258,7 +255,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       return navx.getYaw();
   }
 
-  public double getGyroRoll() {
+  public double getGyroRoll() { // Gets the robot's roll from the gyro, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
+    // For auto climb commands that make sure the robot isn't swinging in the wrong place before extending the climber.
       return navx.getRoll();
   }
 
@@ -300,17 +298,16 @@ public void periodic() {
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
         // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
-
-        SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
-        SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
+        // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
+        // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
         SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
         
         SmartDashboard.putBoolean("Swing Backward", isForward);
         SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
 
-        if (isTopOfSwing) {
-            counter++;
-        }
-        SmartDashboard.putNumber("Times at the top", counter);
+        // if (isTopOfSwing) {
+        //     counter++;
+        // }
+        // SmartDashboard.putNumber("Times at the top", counter);
     }
 }
