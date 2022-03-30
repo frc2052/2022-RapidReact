@@ -92,7 +92,7 @@ public class VisionSubsystem extends SubsystemBase{
             timer = new Timer();
             timer.start();
         }
-        if (timer.hasElapsed(1)) {
+        if (timer.hasElapsed(2)) {
           System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
         }
       } else {
