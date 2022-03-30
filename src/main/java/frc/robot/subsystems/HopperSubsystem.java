@@ -17,6 +17,10 @@ public class HopperSubsystem extends SubsystemBase {
         hopperMotor.set(ControlMode.PercentOutput, Constants.Intake.kHopperSpeed);
     }
 
+    public void runReverse() {
+        hopperMotor.set(ControlMode.PercentOutput, -Constants.Intake.kHopperSpeed);
+    }
+
     public void stop() {
         hopperMotor.set(ControlMode.PercentOutput, 0);
     }

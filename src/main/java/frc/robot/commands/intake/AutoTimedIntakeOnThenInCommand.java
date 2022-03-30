@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class AutoTimedIntakeOnThenInCommand extends HopperBaseCommand {
   private final IntakeSubsystem intake;
@@ -17,8 +18,8 @@ public class AutoTimedIntakeOnThenInCommand extends HopperBaseCommand {
    * @param hopper
    * @param deadlineSeconds seconds that the intake will stay down
    */
-  public AutoTimedIntakeOnThenInCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, double deadlineSeconds) {
-    super(indexer, hopper);
+  public AutoTimedIntakeOnThenInCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, ShooterSubsystem shooter, double deadlineSeconds) {
+    super(indexer, hopper, shooter);
     this.intake = intake;
     this.deadlineSeconds = deadlineSeconds;
 
