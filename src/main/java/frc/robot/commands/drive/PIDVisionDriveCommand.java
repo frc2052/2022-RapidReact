@@ -48,10 +48,11 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
-            1, 0, 0,
+            0.1, 0.01, 0.01,
             new TrapezoidProfile.Constraints(Math.PI, Math.PI)
         );
         pidController.enableContinuousInput(-180, 180);
+        // pidController.
     }
 
     @Override
@@ -62,14 +63,19 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
-        Rotation2d horizontalAngle = vision.getXRotation().minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
+        Rotation2d horizontalAngle = vision.getXRotation(); //vision.getXRotation().minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
 
-        pidController.setTolerance(vision.getTolerance());
+        pidController.setTolerance(0.5);
 
         return pidController.calculate(
             drivetrain.getGyroscopeRotation().getDegrees(),
-            drivetrain.getGyroscopeRotation().plus(horizontalAngle).getDegrees()
+            drivetrain.getGyroscopeRotation().minus(horizontalAngle).getDegrees()
             );
+    }
+
+    @Override
+    public boolean isFinished() {
+        return pidController.atSetpoint();
     }
     
     @Override

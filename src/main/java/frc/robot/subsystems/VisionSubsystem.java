@@ -281,7 +281,7 @@ public class VisionSubsystem extends SubsystemBase{
       double cameraToTargetHeight = Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS;
       double distance = Math.hypot(x, y) / (cameraToTargetHeight / -z);
 
-      return distance;
+      return Units.metersToInches(distance);
     }
 
     public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation.

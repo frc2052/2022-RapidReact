@@ -17,7 +17,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
         super(
             profiledPIDController,
             drivetrain, 
-            () -> { return Rotation2d.fromDegrees(-vision.getTx()); }
+            () -> { return Rotation2d.fromDegrees(vision.getTx()); }
         );
         this.vision = vision;
     }
@@ -25,7 +25,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
     public ProfiledPIDVisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(
             drivetrain, 
-            () -> { return Rotation2d.fromDegrees(-vision.getTx()); }
+            () -> { return Rotation2d.fromDegrees(vision.getTx()); }
         );
         this.vision = vision;
     }

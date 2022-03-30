@@ -31,6 +31,7 @@ public class TargetingSubsystem extends SubsystemBase {
         this.shooter = shooter;
 
         isLinedUpToShoot = false;
+        rotation = Rotation2d.fromDegrees(0);
     }
     private static TargetingSubsystem instance;
     public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
