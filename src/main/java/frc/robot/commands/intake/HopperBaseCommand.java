@@ -5,8 +5,12 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.shooter.NonVisionShootCommand;
+import frc.robot.commands.shooter.ShootCommand.ShootMode;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * Class for the base command to run and control the hopper, being the indexer blue and green wheels and hopper omni wheels 
@@ -14,16 +18,21 @@ import frc.robot.subsystems.IndexerSubsystem;
 public class HopperBaseCommand extends CommandBase {
   protected final IndexerSubsystem indexer;
   protected final HopperSubsystem hopper;
+  protected final ShooterSubsystem shooter;
+
+  private boolean preStagedIsAllianceColor;
+  private boolean stagedIsAllianceColor;
   
   /**
    * @param indexer
    * @param hopper
    */
-  public HopperBaseCommand(IndexerSubsystem indexer, HopperSubsystem hopper) {
+  public HopperBaseCommand(IndexerSubsystem indexer, HopperSubsystem hopper, ShooterSubsystem shooter) {
     this.indexer = indexer;
     this.hopper = hopper;
+    this.shooter = shooter;
 
-    addRequirements(indexer, hopper);
+    addRequirements(indexer, hopper, shooter);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +55,10 @@ public class HopperBaseCommand extends CommandBase {
       indexer.stopFeeder();
       indexer.stopPreload();
       hopper.stop();
+    }
+
+    if (!preStagedIsAllianceColor) {
+      CommandScheduler.getInstance().schedule(new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, 2000, ));
     }
   }
 

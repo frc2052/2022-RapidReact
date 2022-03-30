@@ -251,7 +251,7 @@ public class RobotContainer {
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new OnlyIntakeCommand(intake, indexer), 
         new IntakeInCommand(intake, indexer, hopper),
-        shootAllButton::get
+        () -> shootAllButton.get() || shootSingleButton.get() || shootLowGoalButton.get() || nonVisionShootAllButton.get()
       );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
