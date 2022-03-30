@@ -48,7 +48,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
-            0.1, 0.01, 0.01,
+            0.1, 0, 0,//0.01, 0.01,
             new TrapezoidProfile.Constraints(Math.PI, Math.PI)
         );
         pidController.enableContinuousInput(-180, 180);
@@ -73,10 +73,10 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
             );
     }
 
-    @Override
-    public boolean isFinished() {
-        return pidController.atSetpoint();
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return pidController.atSetpoint();
+    // }
     
     @Override
     public void end(boolean interrupted) {

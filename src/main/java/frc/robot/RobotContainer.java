@@ -126,7 +126,7 @@ public class RobotContainer {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private boolean initComplete = false;
-  private boolean competitionMode = true;
+  private boolean competitionMode = false;
 
   private Command autonomousCommand;
 
@@ -230,13 +230,13 @@ public class RobotContainer {
           shooter
         )
       );
-      Command visionShootAllCommand = 
-        new PIDVisionDriveCommand(
-            drivetrain, 
-            () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-            () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-            vision
-        );
+    //   Command visionShootAllCommand = 
+    //     new PIDVisionDriveCommand(
+    //         drivetrain, 
+    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         vision
+    //     );
     //     Command visionShootAllCommand =
     //   new ParallelCommandGroup(
     //     // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
@@ -252,22 +252,22 @@ public class RobotContainer {
     //         vision
     //   )
     //   );
-    // Command visionShootAllCommand =
-    //   new ParallelCommandGroup(
-    //     // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-    //     new ConditionalCommand(
-    //       new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
-    //       new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-    //       dashboardControls::getIsLimelightDead
-    //     ),
-    //     new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
-    //       drivetrain,
-    //       () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //       () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-    //       vision,
-    //       shooter
-    //     )
-    //   );
+    Command visionShootAllCommand =
+      new ParallelCommandGroup(
+        // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+        new ConditionalCommand(
+          new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
+          new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
+          dashboardControls::getIsLimelightDead
+        ),
+        new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
+          drivetrain,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          vision,
+          shooter
+        )
+      );
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
     Command intakeOnCommand =
@@ -368,7 +368,8 @@ public class RobotContainer {
 
           switch (buttonBindingsProfile) {
               case DEFAULT:
-                  Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+                //   Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+                configureButtonBindings();
                   break;
               case SOLO_DRIVER:
                   SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
