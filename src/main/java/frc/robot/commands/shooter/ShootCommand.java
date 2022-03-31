@@ -38,6 +38,7 @@ public class ShootCommand extends CommandBase {
   private ShooterDistanceConfig shooterConfig;
   private boolean secondBallOnTheWay;
   private Timer timer;
+  private boolean lastSawStaged;
 
   public ShootCommand(
     ShootMode shootMode, 
@@ -112,18 +113,18 @@ public class ShootCommand extends CommandBase {
     );
 
     if (!secondBallOnTheWay) {
-      if (!indexer.getCargoPreStagedDetected()) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+      if (indexer.getCargoPreStagedDetected()) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
         secondBallOnTheWay = true;
       }
     }
 
-    if (secondBallOnTheWay && !indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+    if (secondBallOnTheWay && indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
       indexer.stopFeeder();
       if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
           timer = new Timer();
           timer.start();
       }
-      if (timer.get() >= 0.25) { // If the beam's been broken for a quarter second, we can feed again.
+      if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
         secondBallOnTheWay = false;
         clearTimer();
       }
@@ -140,6 +141,12 @@ public class ShootCommand extends CommandBase {
       indexer.stopPreload();
       clearTimer();
     }
+
+    if (!indexer.getCargoStagedDetected() && lastSawStaged) {
+        System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
+        + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
+    }
+    lastSawStaged = indexer.getCargoStagedDetected();
   }
 
   @Override

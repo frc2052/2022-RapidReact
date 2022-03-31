@@ -147,6 +147,22 @@ public class ShooterSubsystem extends SubsystemBase {
     return currentAngle;
   }
 
+  public double getTopWheelVelocity() {
+    return topMotor.getSelectedSensorVelocity();
+  }
+
+  public double getBottomWheelVelocity() {
+    return bottomMotor.getSelectedSensorVelocity();
+  }
+
+  public double getTargetTopWheelVelocity() {
+      return topWheelTargetVelocity;
+  }
+
+  public double getTargetBottomWheelVelocity() {
+    return bottomWheelTargetVelocity;
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());

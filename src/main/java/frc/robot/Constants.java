@@ -58,10 +58,10 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final double INDEXER_SPEED = .75;
+        public static final double PRELOAD_WHEEL_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
-        public static final double FEEDER_SPEED = 1;
+        public static final double INDEXER_WHEEL_SPEED = 0.5;
 
         public static final double SHOOTER_TOLERANCE = 0.05;
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
