@@ -38,6 +38,8 @@ import frc.robot.commands.intake.IntakeArmToggleCommand;
 import frc.robot.commands.intake.IntakeInCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
+import frc.robot.commands.intake.OuttakeCommand;
+import frc.robot.commands.intake.OuttakeCommand.OuttakeMode;
 import frc.robot.commands.shooter.TuneShooterCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.commands.shooter.ShootCommand.ShootMode;
@@ -113,9 +115,10 @@ public class RobotContainer {
   private JoystickButton commandInterruptButton;
   private JoystickButton traversalAutoClimbButton;
   private JoystickButton highAutoClimbButton;
-
-  private JoystickButton hopperTestButton;
   private JoystickButton tempFieldCentricButton;
+  private JoystickButton ejectStagedCargoButton;
+  private JoystickButton rejectPreStagedCargoButton;
+  private JoystickButton rejectBothCargoButton;
 
   private JoystickButton pidTestingButton;
 
@@ -218,6 +221,7 @@ public class RobotContainer {
     highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
     pidTestingButton = new JoystickButton(secondaryPannel, 9);
+    rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -296,6 +300,8 @@ public class RobotContainer {
     Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
     Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
 
+    Command rejectBothCargoCommand = new OuttakeCommand(OuttakeMode.ALL_BALLS, intake, hopper, indexer);
+
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
     //     drivetrain,
@@ -337,6 +343,8 @@ public class RobotContainer {
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
     SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
+
+    rejectBothCargoButton.whenHeld(rejectBothCargoCommand);
 
     // TODO: Delete this when done
     //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
