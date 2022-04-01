@@ -14,25 +14,17 @@ public class LEDSubsystem extends SubsystemBase {
 
 //    private final CANifier canifier;
 
-    private LEDSubsystem() {}
-    private static LEDSubsystem instance;
-    private static LEDLoop channel1Instance;
-    private static LEDLoop channel2Instance;
-    public static LEDLoop getChannel1Instance() {
-        if (instance == null) {
-            instance = new LEDSubsystem();
-        }
+    private static LEDSubsystem channel1Instance;
+    private static LEDSubsystem channel2Instance;
+    public static LEDSubsystem getChannel1Instance() {
         if (channel1Instance == null) {
-            channel1Instance = instance.new LEDLoop(Constants.LEDs.R_1_PWM_PORT, Constants.LEDs.G_1_PWM_PORT, Constants.LEDs.B_1_PWM_PORT);
+            channel1Instance = new LEDSubsystem(Constants.LEDs.R_1_PWM_PORT, Constants.LEDs.G_1_PWM_PORT, Constants.LEDs.B_1_PWM_PORT);
         }
         return channel1Instance;
     }
-    public static LEDLoop getChannel2Instance() {
-        if (instance == null) {
-            instance = new LEDSubsystem();
-        }
+    public static LEDSubsystem getChannel2Instance() {
         if (channel2Instance == null) {
-            channel2Instance = instance.new LEDLoop(Constants.LEDs.R_2_PWM_PORT, Constants.LEDs.G_2_PWM_PORT, Constants.LEDs.B_2_PWM_PORT);
+            channel2Instance = new LEDSubsystem(Constants.LEDs.R_2_PWM_PORT, Constants.LEDs.G_2_PWM_PORT, Constants.LEDs.B_2_PWM_PORT);
         }
         return channel2Instance;
     }
@@ -44,6 +36,11 @@ public class LEDSubsystem extends SubsystemBase {
     public static void setBothChannelBrightnesses(double brightness) {
         getChannel1Instance().setBrightness(brightness);
         getChannel2Instance().setBrightness(brightness);
+    }
+
+    public static void clearBothChannels() {
+        getChannel1Instance().setLEDStatusMode(null);
+        getChannel2Instance().setLEDStatusMode(null);
     }
 
     public enum LEDStatusMode {
@@ -79,8 +76,7 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    public class LEDLoop extends SubsystemBase {
-        PWM redChannel, blueChannel, greenChannel;
+    PWM redChannel, blueChannel, greenChannel;
 
     private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
 
@@ -103,7 +99,7 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDStatusMode lastRunningStatusMode;
 
     // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
-    protected LEDLoop(int redPWMPort, int greenPWMPort, int bluePWMPort) {
+    private LEDSubsystem(int redPWMPort, int greenPWMPort, int bluePWMPort) {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
         redChannel = new PWM(redPWMPort);
@@ -634,6 +630,5 @@ public class LEDSubsystem extends SubsystemBase {
 
     //Converts HSV (Hue Saturation Value) to RGB (Red Green Blue)
         rgb = HsvToRgb.convert(hue, saturation, value);
-    }
     }
 }
