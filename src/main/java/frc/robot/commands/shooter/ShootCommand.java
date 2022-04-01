@@ -92,6 +92,9 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
 
+    boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+    boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
+
     if(vision.getHasValidTarget()) {
         distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
 
@@ -112,41 +115,44 @@ public class ShootCommand extends CommandBase {
       shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
-    if (!secondBallOnTheWay) {
-      if (indexer.getCargoPreStagedDetected()) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
-        secondBallOnTheWay = true;
+    // Lots of logic here
+    if (shooter.getBottomWheelVelocity() + shooter.getBottomWheelVelocity() > 1000) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
+      if (!secondBallOnTheWay) {
+        if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+          secondBallOnTheWay = true;
+        }
       }
-    }
 
-    if (secondBallOnTheWay && indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
-      indexer.stopFeeder();
-      if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
-          timer = new Timer();
-          timer.start();
-      }
-      if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
-        secondBallOnTheWay = false;
+      if (secondBallOnTheWay && stagedCargoDetected && !preStagedCargoDetected) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+        indexer.stopFeeder();
+        if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
+            timer = new Timer();
+            timer.start();
+        }
+        if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
+          secondBallOnTheWay = false;
+          clearTimer();
+        }
+      } else if (shooter.isAtSpeed() && isLinedUSupplier.getAsBoolean()) {
+        indexer.runFeeder();
+        hopper.run();
+        if (shootMode == ShootMode.SHOOT_ALL) {
+          indexer.runPreload();
+        }
+        clearTimer();
+      } else {
+        hopper.stop();
+        indexer.stopFeeder();
+        indexer.stopPreload();
         clearTimer();
       }
-    } else if (shooter.isAtSpeed() && isLinedUSupplier.getAsBoolean()) {
-      indexer.runFeeder();
-      hopper.run();
-      if (shootMode == ShootMode.SHOOT_ALL) {
-        indexer.runPreload();
-      }
-      clearTimer();
-    } else {
-      hopper.stop();
-      indexer.stopFeeder();
-      indexer.stopPreload();
-      clearTimer();
-    }
 
-    if (!indexer.getCargoStagedDetected() && lastSawStaged) {
-        System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
-        + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
+      if (!stagedCargoDetected && lastSawStaged) {
+          System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
+          + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
+      }
+      lastSawStaged = stagedCargoDetected;
     }
-    lastSawStaged = indexer.getCargoStagedDetected();
   }
 
   @Override
