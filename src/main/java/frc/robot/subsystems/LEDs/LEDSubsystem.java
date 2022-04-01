@@ -5,9 +5,11 @@ package frc.robot.subsystems.LEDs;
 import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.CANifier.LEDChannel;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,6 +20,8 @@ public abstract class LEDSubsystem extends SubsystemBase {
 //    private final CANifier canifier;
 
     PWM redChannel, blueChannel, greenChannel;
+
+    AnalogInput ag, ab, ar;
 
     private double [] rgb = new double[3]; // Array of RGB values, is actually GRB in the order of the array
 
@@ -46,6 +50,9 @@ public abstract class LEDSubsystem extends SubsystemBase {
         redChannel = new PWM(redPWMPort);
         greenChannel = new PWM(greenPWMPort);
         blueChannel = new PWM(bluePWMPort);
+        redChannel.setPeriodMultiplier(PeriodMultiplier.k1X);
+        redChannel.setPeriodMultiplier(PeriodMultiplier.k1X);
+        redChannel.setPeriodMultiplier(PeriodMultiplier.k1X);
 
         externalBrightnessModifier = (int)(SmartDashboard.getNumber("LED Brightness", 100) - 100) / 100.0;
 
@@ -125,9 +132,17 @@ public abstract class LEDSubsystem extends SubsystemBase {
 
         runLEDStatusMode();
 
-        greenChannel.setRaw((int) (rgb[0] / 255));
-        redChannel.setRaw((int) (rgb[1] / 255));
-        blueChannel.setRaw((int) (rgb[2] / 255));
+//        System.err.println("IN LED PERIODIC: RED " + rgb[1] + " BLUE " + rgb[2] + " GREEN " + rgb[0]);
+        System.err.println("IN LED PERIODIC: WHITE 2");
+
+        greenChannel.setRaw(255);
+        redChannel.setRaw(255);
+        blueChannel.setRaw(255);
+
+
+//        greenChannel.setRaw(rgb[0]);
+//        redChannel.setRaw(rgb[1]);
+//        blueChannel.setRaw(rgb[2]);
 
         // canifier.setLEDOutput(rgb[0] + externalBrightnessModifier, LEDChannel.LEDChannelA);  // G (Green)
         // canifier.setLEDOutput(rgb[1] + externalBrightnessModifier, LEDChannel.LEDChannelB);  // R (Red)
@@ -570,9 +585,9 @@ public abstract class LEDSubsystem extends SubsystemBase {
     }
 
     private void LEDsOnWhite() {
-        rgb[0] = 0.3;
-        rgb[1] = 0.3;
-        rgb[2] = 0.3;
+        rgb[0] = 0.9;
+        rgb[1] = 0.9;
+        rgb[2] = 0.9;
     }
 
     private void setRGBfromHSV() {

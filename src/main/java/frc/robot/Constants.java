@@ -167,11 +167,11 @@ public final class Constants {
     public static final class LEDs {
         // public static final int CANIFIER_PORT = 21;
 
-        public static final int R_1_PWM_PORT = 0;
-        public static final int G_1_PWM_PORT = 1;
-        public static final int B_1_PWM_PORT = 2;
-        public static final int R_2_PWM_PORT = 3;
-        public static final int G_2_PWM_PORT = 4;
+        public static final int R_1_PWM_PORT = 1;
+        public static final int G_1_PWM_PORT = 2;
+        public static final int B_1_PWM_PORT = 0;
+        public static final int R_2_PWM_PORT = 4;
+        public static final int G_2_PWM_PORT = 3;
         public static final int B_2_PWM_PORT = 5;
     }
 
