@@ -280,6 +280,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return Math.hypot(Math.abs(intendedXVelocityMPS), Math.abs(intendedYVelocityMPS));
   }
 
+  public Rotation2d getOdometryRotation() { // Returns odometry rotation from -180 to 180
+        return odometry.getPoseMeters().getRotation();
+  }
+
 @Override
 public void periodic() {
         boolean isForward = getGyroRoll() < lastRollValue ? true : false;
@@ -304,6 +308,9 @@ public void periodic() {
         
         SmartDashboard.putBoolean("Swing Backward", isForward);
         SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
+
+        SmartDashboard.putNumber("Gyro Rotation", odometry.getPoseMeters().getRotation().getDegrees()); 
+
 
         // if (isTopOfSwing) {
         //     counter++;

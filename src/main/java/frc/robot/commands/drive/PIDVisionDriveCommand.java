@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
@@ -49,11 +50,13 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
-            0.1, 0, 0,//0.01, 0.01,
+            20, 0, 0,//0.01, 0.01,
             new TrapezoidProfile.Constraints(Math.PI, Math.PI)
         );
-        pidController.enableContinuousInput(-180, 180);
+        pidController.enableContinuousInput(-Math.PI, Math.PI);
         // pidController.
+
+        pidController.setTolerance(Units.degreesToRadians(1));
     }
 
     @Override
@@ -65,24 +68,26 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     @Override
     protected double getTurnValue() {
         Rotation2d horizontalAngle = vision.getXRotation(); //vision.getXRotation().minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
+        double rotation = 0;
 
-        pidController.setTolerance(0.5);
-
-        double rotation = pidController.calculate(
-            drivetrain.getGyroscopeRotation().getDegrees(),
-            drivetrain.getGyroscopeRotation().minus(horizontalAngle).getDegrees()
+        if (vision.getHasValidTarget()) {
+            rotation = pidController.calculate(
+                drivetrain.getOdometryRotation().getRadians(),
+                drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians()
+            //drivetrain.getOdometryRotationDegrees() - vision.getTx()//.minus(horizontalAngle).getDegrees()
             );
+        }
 
 
-        System.err.println("Vision angle: " + vision.getXRotation().getDegrees());
-        System.err.println("Gyro Rotation: " + drivetrain.getGyroscopeRotation().getDegrees());
-        System.err.println("PID Controller output: " + rotation);
-        System.err.println("PID Controller Position Error: " + pidController.getPositionError());
+        // System.err.println("Vision angle: " + vision.getTx());
+        // System.err.println("Gyro Rotation: " + drivetrain.getGyroscopeRotation().getDegrees());
+        // System.err.println("PID Controller output: " + rotation);
+        // System.err.println("PID Controller Position Error: " + pidController.getPositionError());
 
-        // SmartDashboard.putNumber("Vision angle", vision.getXRotation().getDegrees());
-        // SmartDashboard.putNumber("Gyro Rotation", drivetrain.getGyroscopeRotation().getDegrees());
-        // SmartDashboard.putNumber("PID Controller output", rotation);
-        // SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
+        SmartDashboard.putNumber("Vision angle", vision.getTx()); //vision.getXRotation().getDegrees());
+        SmartDashboard.putNumber("Target Rotation", drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians());
+        SmartDashboard.putNumber("PID Controller output", rotation);
+        SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
 
         return rotation;
     }

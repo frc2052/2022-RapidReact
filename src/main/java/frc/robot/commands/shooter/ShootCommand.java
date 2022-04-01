@@ -116,7 +116,7 @@ public class ShootCommand extends CommandBase {
     );
 
     // Lots of logic here
-    if (shooter.getBottomWheelVelocity() + shooter.getBottomWheelVelocity() > 1000) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
+    if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
       if (!secondBallOnTheWay) {
         if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
           secondBallOnTheWay = true;
@@ -152,6 +152,8 @@ public class ShootCommand extends CommandBase {
           + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
       }
       lastSawStaged = stagedCargoDetected;
+    } else {
+        System.err.println("PROBLEM");
     }
   }
 
