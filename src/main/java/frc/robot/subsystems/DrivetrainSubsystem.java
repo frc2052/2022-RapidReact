@@ -123,7 +123,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
             // This is the ID of the steer encoder
             Constants.DriveTrain.FRONT_LEFT_MODULE_STEER_ENCODER,
             // This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
-            Constants.DriveTrain.FRONT_LEFT_MODULE_STEER_OFFSET
+            Constants.DriveTrain.FRONT_LEFT_MODULE_STEER_OFFSET,
+            // Optional paramater - name of CAN bus for use with CANifier
+            Constants.DriveTrain.CANIVOR_NAME
+
     );
 
     // We will do the same for the other modules
@@ -135,7 +138,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
             Constants.DriveTrain.FRONT_RIGHT_MODULE_STEER_MOTOR,
             Constants.DriveTrain.FRONT_RIGHT_MODULE_STEER_ENCODER,
-            Constants.DriveTrain.FRONT_RIGHT_MODULE_STEER_OFFSET
+            Constants.DriveTrain.FRONT_RIGHT_MODULE_STEER_OFFSET,
+            Constants.DriveTrain.CANIVOR_NAME
     );
 
     backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
@@ -146,7 +150,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.BACK_LEFT_MODULE_DRIVE_MOTOR,
             Constants.DriveTrain.BACK_LEFT_MODULE_STEER_MOTOR,
             Constants.DriveTrain.BACK_LEFT_MODULE_STEER_ENCODER,
-            Constants.DriveTrain.BACK_LEFT_MODULE_STEER_OFFSET
+            Constants.DriveTrain.BACK_LEFT_MODULE_STEER_OFFSET,
+            Constants.DriveTrain.CANIVOR_NAME
+
     );
 
     backRightModule = Mk3SwerveModuleHelper.createFalcon500(
@@ -157,7 +163,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Constants.DriveTrain.BACK_RIGHT_MODULE_DRIVE_MOTOR,
             Constants.DriveTrain.BACK_RIGHT_MODULE_STEER_MOTOR,
             Constants.DriveTrain.BACK_RIGHT_MODULE_STEER_ENCODER,
-            Constants.DriveTrain.BACK_RIGHT_MODULE_STEER_OFFSET
+            Constants.DriveTrain.BACK_RIGHT_MODULE_STEER_OFFSET,
+            Constants.DriveTrain.CANIVOR_NAME
     );
 
     zeroGyroscope();

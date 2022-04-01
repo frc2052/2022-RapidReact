@@ -27,6 +27,16 @@ public final class Mk3SwerveModuleHelper {
                         .build());
     }
 
+    private static SteerControllerFactory<?, Falcon500SteerConfiguration<CanCoderAbsoluteConfiguration>> getFalcon500SteerFactory(Mk3ModuleConfiguration configuration, String canbus) {
+        return new Falcon500SteerControllerFactoryBuilder()
+                .withVoltageCompensation(configuration.getNominalVoltage())
+                .withPidConstants(0.2, 0.0, 0.1)
+                .withCurrentLimit(configuration.getSteerCurrentLimit())
+                .build(new CanCoderFactoryBuilder()
+                        .withReadingUpdatePeriod(100)
+                        .build(canbus));
+    }
+
     private static DriveControllerFactory<?, Integer> getNeoDriveFactory(Mk3ModuleConfiguration configuration) {
         return new NeoDriveControllerFactoryBuilder()
                 .withVoltageCompensation(configuration.getNominalVoltage())
@@ -80,6 +90,44 @@ public final class Mk3SwerveModuleHelper {
         );
     }
 
+        /**
+     * Creates a Mk3 swerve module that uses Falcon 500s for driving and steering.
+     * Module information is displayed in the specified ShuffleBoard container.
+     *
+     * @param container        The container to display module information in.
+     * @param configuration    Module configuration parameters to use.
+     * @param gearRatio        The gearing configuration the module is in.
+     * @param driveMotorPort   The CAN ID of the drive Falcon 500.
+     * @param steerMotorPort   The CAN ID of the steer Falcon 500.
+     * @param steerEncoderPort The CAN ID of the steer CANCoder.
+     * @param steerOffset      The offset of the CANCoder in radians.
+     * @param canbus           String name of desired CAN bus - for CANifier
+     * @return The configured swerve module.
+     */
+    public static SwerveModule createFalcon500(
+            ShuffleboardLayout container,
+            Mk3ModuleConfiguration configuration,
+            GearRatio gearRatio,
+            int driveMotorPort,
+            int steerMotorPort,
+            int steerEncoderPort,
+            double steerOffset,
+            String canbus
+    ) {
+        return new SwerveModuleFactory<>(
+                gearRatio.getConfiguration(),
+                getFalcon500DriveFactory(configuration),
+                getFalcon500SteerFactory(configuration, canbus)
+        ).create(
+                container,
+                driveMotorPort,
+                new Falcon500SteerConfiguration<>(
+                        steerMotorPort,
+                        new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
+                )
+        );
+    }
+
     /**
      * Creates a Mk3 swerve module that uses Falcon 500s for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
@@ -99,6 +147,30 @@ public final class Mk3SwerveModuleHelper {
             int steerMotorPort,
             int steerEncoderPort,
             double steerOffset
+    ) {
+        return createFalcon500(container, new Mk3ModuleConfiguration(), gearRatio, driveMotorPort, steerMotorPort, steerEncoderPort, steerOffset);
+    }
+
+    /**
+     * Creates a Mk3 swerve module that uses Falcon 500s for driving and steering.
+     * Module information is displayed in the specified ShuffleBoard container.
+     *
+     * @param container        The container to display module information in.
+     * @param gearRatio        The gearing configuration the module is in.
+     * @param driveMotorPort   The CAN ID of the drive Falcon 500.
+     * @param steerMotorPort   The CAN ID of the steer Falcon 500.
+     * @param steerEncoderPort The CAN ID of the steer CANCoder.
+     * @param steerOffset      The offset of the CANCoder in radians.
+     * @return The configured swerve module.
+     */
+    public static SwerveModule createFalcon500(
+            ShuffleboardLayout container,
+            GearRatio gearRatio,
+            int driveMotorPort,
+            int steerMotorPort,
+            int steerEncoderPort,
+            double steerOffset,
+            String canbus
     ) {
         return createFalcon500(container, new Mk3ModuleConfiguration(), gearRatio, driveMotorPort, steerMotorPort, steerEncoderPort, steerOffset);
     }
