@@ -35,7 +35,7 @@ import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.HighToTraversalAutoClimbCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
-import frc.robot.commands.intake.IntakeInCommand;
+import frc.robot.commands.intake.IntakeAndHopperRunCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.intake.OuttakeCommand;
@@ -99,6 +99,8 @@ public class RobotContainer {
   private JoystickButton intakeArmToggleButton;
   private JoystickButton intakeInButton;
   private JoystickButton intakeReverseButton;
+  private JoystickButton intakeArmOutButton;
+  private JoystickButton intakeArmInButton;
 
   private JoystickButton shootSingleButton;
   private JoystickButton shootAllButton;
@@ -200,6 +202,8 @@ public class RobotContainer {
     intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
     intakeInButton = new JoystickButton(secondaryPannel, 7);
     intakeReverseButton = new JoystickButton(secondaryPannel, 6);
+    //intakeArmOutButton = when secondary pannel x or y increase
+    //intakeArmInButton = when secondary pannel x or y decrease
 
     // Shooter Buttons Bindings
     shootSingleButton = new JoystickButton(turnJoystick, 1);
@@ -277,7 +281,7 @@ public class RobotContainer {
     Command intakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new OnlyIntakeCommand(intake, indexer), 
-        new IntakeInCommand(intake, indexer, hopper),
+        new IntakeAndHopperRunCommand(intake, indexer, hopper),
         shootAllButton::get
       );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);

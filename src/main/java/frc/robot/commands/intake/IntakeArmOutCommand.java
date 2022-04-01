@@ -1,39 +1,31 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands.intake;
 
-import frc.robot.subsystems.HopperSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
 /**
- * Command used in auto to lower the intake.
+ * Command used in auto to raise the intake.
  */
-public class IntakeArmOutCommand extends HopperBaseCommand {
-  private final IntakeSubsystem intake;
+public class IntakeArmOutCommand extends CommandBase {
+    private final IntakeSubsystem intake;
+    
+    public IntakeArmOutCommand(IntakeSubsystem intake) {
+        this.intake = intake;
 
-  public IntakeArmOutCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
-    super(indexer, hopper);
-    this.intake = intake;
+        addRequirements(this.intake);
+    }
 
-    addRequirements(this.intake);
-  }
-      
-  @Override
-  public void execute() {
-    super.execute(); // Runs the HopperBaseCommand execute method
+    @Override
+    public void initialize() {
+        intake.armIn();
+    }
 
-    // Extend the intake arm and stops the intake wheels.
-    intake.armOut();
-    intake.run();
-  }
-
-  @Override 
-  public void end(boolean interrupted){
-    super.end(interrupted);
-    intake.stop();
-  }
-
-  @Override
-  public boolean isFinished(){
-    return super.isFinished();
-  }
+    @Override
+    public boolean isFinished(){
+        return true;
+    }
 }

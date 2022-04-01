@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -67,10 +68,23 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
         pidController.setTolerance(0.5);
 
-        return pidController.calculate(
+        double rotation = pidController.calculate(
             drivetrain.getGyroscopeRotation().getDegrees(),
             drivetrain.getGyroscopeRotation().minus(horizontalAngle).getDegrees()
             );
+
+
+        System.err.println("Vision angle: " + vision.getXRotation().getDegrees());
+        System.err.println("Gyro Rotation: " + drivetrain.getGyroscopeRotation().getDegrees());
+        System.err.println("PID Controller output: " + rotation);
+        System.err.println("PID Controller Position Error: " + pidController.getPositionError());
+
+        // SmartDashboard.putNumber("Vision angle", vision.getXRotation().getDegrees());
+        // SmartDashboard.putNumber("Gyro Rotation", drivetrain.getGyroscopeRotation().getDegrees());
+        // SmartDashboard.putNumber("PID Controller output", rotation);
+        // SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
+
+        return rotation;
     }
 
     // @Override
