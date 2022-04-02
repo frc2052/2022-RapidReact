@@ -5,6 +5,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -44,34 +45,38 @@ public class ShooterIndexingCommand extends CommandBase {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
     boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
 
+    SmartDashboard.putBoolean("Is Indexing Lined UP", isLinedUp);
+
     if (!wasTwoBallsDetected) {
       if (preStagedCargoDetected && stagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
         wasTwoBallsDetected = true;
       }
     }
 
-    if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+    if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected && !delayOverride) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
       indexer.stopFeeder();
       if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
           timer = new Timer();
           timer.start();
       }
-      if (timer.get() >= 0.5 || delayOverride) { // If the beam's been broken for a quarter second, we can feed again.
+      //System.err.println("Delaying Shooting for" + timer.get());
+      if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
         wasTwoBallsDetected = false;
         clearTimer();
       }
     } else if (shooter.isAtSpeed() && isLinedUp) {
+        //System.err.println("Trying to Shoot 1st Ball");
       indexer.runFeeder();
       hopper.run();
       if (shootMode == ShootMode.SHOOT_ALL) {
+        // System.err.println("Trying to Shoot 2nd Ball");
         indexer.runPreload();
       }
-      clearTimer();
     } else {
+        //System.err.println("Stopping Indexing");
       hopper.stop();
       indexer.stopFeeder();
       indexer.stopPreload();
-      clearTimer();
     }
   }
 

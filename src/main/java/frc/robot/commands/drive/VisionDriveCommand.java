@@ -54,7 +54,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
     @Override
     protected double getTurnValue() {
-        Rotation2d horizontalAngle = vision.getXRotation().minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
+        Rotation2d horizontalAngle = vision.getXRotation();//.minus(targeting.getDrivingHorizontalFiringOffsetAngleDegrees());      // Horizontal offset from the Limelight's crosshair to target + driving while shooting offset.
         double horizontalAngleDegrees = horizontalAngle.getDegrees();
         isLinedUp = false;
 

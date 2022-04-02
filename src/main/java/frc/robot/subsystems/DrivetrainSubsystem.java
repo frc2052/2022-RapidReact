@@ -309,7 +309,7 @@ public void periodic() {
         SmartDashboard.putBoolean("Swing Backward", isForward);
         SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
 
-        SmartDashboard.putNumber("Gyro Rotation", odometry.getPoseMeters().getRotation().getDegrees()); 
+        SmartDashboard.putNumber("Gyro Rotation", odometry.getPoseMeters().getRotation().getRadians()); 
 
 
         // if (isTopOfSwing) {

@@ -50,7 +50,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
-            20, 0, 0,//0.01, 0.01,
+            7, 0, 0.3,//0.01, 0.01,
             new TrapezoidProfile.Constraints(Math.PI, Math.PI)
         );
         pidController.enableContinuousInput(-Math.PI, Math.PI);
@@ -83,10 +83,10 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         // System.err.println("PID Controller output: " + rotation);
         // System.err.println("PID Controller Position Error: " + pidController.getPositionError());
 
-        // SmartDashboard.putNumber("Vision angle", vision.getTx()); //vision.getXRotation().getDegrees());
-        // SmartDashboard.putNumber("Target Rotation", drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians());
-        // SmartDashboard.putNumber("PID Controller output", rotation);
-        // SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
+        SmartDashboard.putNumber("Vision angle", vision.getTx()); //vision.getXRotation().getDegrees());
+        SmartDashboard.putNumber("Target Rotation", drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians());
+        SmartDashboard.putNumber("PID Controller output", rotation);
+        SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
 
         return rotation;
     }

@@ -37,7 +37,7 @@ public class Left2Ball2DefenseAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, 0); // new Pose2d(0,0, Rotation2d.fromDegrees(0));
-        Pose2d firstBallPos = super.newPose2dInches(50, 20, 30); new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
+        Pose2d firstBallPos = super.newPose2dInches(48, 10, 30); new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
         // Pose2d closeShootPos = super.newPose2dInches(10, 10, -160);
         Pose2d behindOpponentBall1Pos = super.newPose2dInches(70, -20, -135);
         Pose2d opponentBall1Pos = super.newPose2dInches(65, -25, -135); //new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-25), Rotation2d.fromDegrees(-135)); // 30 to make it curve
@@ -62,7 +62,7 @@ public class Left2Ball2DefenseAuto extends AutoBase {
         IntakeReverseCommand intakeRevese = new IntakeReverseCommand(intake, hopper);
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
+        ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand().withTimeout(3), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
         ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newIntakeArmOutCommand());
         ParallelDeadlineGroup driveThroughHanger = new ParallelDeadlineGroup(driveToThroughHangerPos, super.newAutoTimedIntakeOnThenInCommand(2));
         ParallelDeadlineGroup intakeOpposingBall2 = new ParallelDeadlineGroup(driveToOpponentBall2, super.newIntakeArmOutCommand());

@@ -228,9 +228,9 @@ public class VisionCalculator {
         }
 
         // deltaInches is the difference between the lower and upper pre-measured inches values.
-        double deltaInches = lowerDistanceConfig.getDistanceInches() - upperDistanceConfig.getDistanceInches();
+        double deltaInches = upperDistanceConfig.getDistanceInches() - lowerDistanceConfig.getDistanceInches();
         // offsetInches is the difference between our actual current distance inches and the upper distance inches.
-        double offsetInches = distanceInches - upperDistanceConfig.getDistanceInches();
+        double offsetInches = upperDistanceConfig.getDistanceInches() - distanceInches;
 
         // The percentage of offsetInches that is deltaInches.
         double pct = offsetInches / deltaInches;
@@ -248,9 +248,9 @@ public class VisionCalculator {
         return new ShooterDistanceConfig(
             distanceInches,
             // Add the final offsets to our lower distance so the bottom shooter cofniguration can safely be assumed.
-            lowerDistanceConfig.getBottomMotorVelocityTicksPerSecond() + offsetBottomMotorVelocityTicksPerSecond,
+            upperDistanceConfig.getBottomMotorVelocityTicksPerSecond() - offsetBottomMotorVelocityTicksPerSecond,
             // Add the final offsets to our lower distance so the top shooter cofniguration can safely be assumed.
-            lowerDistanceConfig.getTopMotorVelocityTicksPerSecond() + offsetTopMotorVelocityTicksPerSecond
+            upperDistanceConfig.getTopMotorVelocityTicksPerSecond() - offsetTopMotorVelocityTicksPerSecond
         );
     }
 

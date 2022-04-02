@@ -92,7 +92,7 @@ public class VisionSubsystem extends SubsystemBase{
             timer = new Timer();
             timer.start();
         }
-        if (timer.hasElapsed(2)) {
+        if (timer.hasElapsed(1)) {
           System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
         }
       } else {
@@ -177,7 +177,11 @@ public class VisionSubsystem extends SubsystemBase{
     
     public boolean getIsLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
-      return Math.abs(tx) <= getTolerance();
+      if (hasValidTarget) {
+        return Math.abs(tx) <= getTolerance();
+      } else {
+          return false;
+      }
     }
 
     public boolean getHasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.

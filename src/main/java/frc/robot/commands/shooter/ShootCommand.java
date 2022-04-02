@@ -80,7 +80,7 @@ public class ShootCommand extends ShooterIndexingCommand {
       indexer, 
       hopper, 
       vision, 
-      TargetingSubsystem.getInstance()::getIsLinedUpToShoot,
+      vision::getIsLinedUp,//TargetingSubsystem.getInstance()::getIsLinedUpToShoot,
       drivetrain
     );
   }

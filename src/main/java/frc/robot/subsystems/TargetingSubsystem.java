@@ -110,7 +110,7 @@ public class TargetingSubsystem extends SubsystemBase {
     // }
 
     public boolean getIsLinedUpToShoot() {
-        if (Math.abs(rotation.getDegrees()) <= vision.getTolerance()) { // currentRotation.minus(rotation).getDegrees()
+        if (/*vision.getHasValidTarget() &&*/ Math.abs(rotation.getDegrees()) <= vision.getTolerance()) { // currentRotation.minus(rotation).getDegrees()
             isLinedUpToShoot = true;
         } else {
             isLinedUpToShoot = false;

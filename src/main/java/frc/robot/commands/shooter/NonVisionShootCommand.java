@@ -34,6 +34,8 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
     this.topWheelVelocity = topWheelVelocity;
     this.bottomWheelVelocity = bottomWheelVelocity;
 
+    super.isLinedUp = true;
+
     addRequirements(shooter, indexer);
   }
 
@@ -61,7 +63,6 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
   public void execute() {
 
     shooter.shootAtSpeed(topWheelVelocity, bottomWheelVelocity);
-
     super.execute();
   }
 

@@ -7,7 +7,7 @@ import frc.robot.RobotContainer.ButtonCommands;
 public class SoloDriver {
     public static void configureButtons(Joystick driveJoystick, Joystick turnJoystick, Joystick secondaryPannel) {
 
-        new JoystickButton(driveJoystick, 1).whenHeld(ButtonCommands.INTAKE_ON.command);
+        new JoystickButton(driveJoystick, 1).whenHeld(ButtonCommands.VISION_SHOOT_ALL.command);
         new JoystickButton(driveJoystick, 2).whenPressed(ButtonCommands.INTAKE_TOGGLE.command);
         new JoystickButton(driveJoystick, 3).whenHeld(ButtonCommands.INTAKE_ON.command);
         new JoystickButton(driveJoystick, 4).whileHeld(ButtonCommands.NON_VISION_SHOOT_ALL.command);
@@ -19,7 +19,7 @@ public class SoloDriver {
         new JoystickButton(driveJoystick, 10);
         new JoystickButton(driveJoystick, 11);
 
-        new JoystickButton(turnJoystick, 1).whenHeld(ButtonCommands.INTAKE_ON.command);
+        new JoystickButton(turnJoystick, 1).whenHeld(ButtonCommands.SHOOT_SINGLE.command);
         new JoystickButton(turnJoystick, 2);
         new JoystickButton(turnJoystick, 3);
         new JoystickButton(turnJoystick, 4);
