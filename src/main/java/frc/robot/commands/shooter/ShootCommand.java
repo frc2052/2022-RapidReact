@@ -95,14 +95,14 @@ public class ShootCommand extends CommandBase {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
     boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
 
-    if(vision.getHasValidTarget()) {
+    if (vision.getHasValidTarget()) {
         distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
 
         // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
-        if(vision.getTy() < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DEGREES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
-        shooter.setShootAngle2();
-        } else if (vision.getTy() > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_TY + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DEGREES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
+        if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
         shooter.setShootAngle1();
+        } else if (distanceInches > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
+        shooter.setShootAngle2();
         }
 
         shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());

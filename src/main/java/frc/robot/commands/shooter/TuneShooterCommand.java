@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
@@ -17,6 +18,9 @@ public class TuneShooterCommand extends CommandBase {
   private final IntakeSubsystem intake;
   private final HopperSubsystem hopper;
 
+  private boolean secondBallOnTheWay;
+  private Timer timer;
+
   public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake, HopperSubsystem hopper) {
     this.shooter = shooter;
     this.indexer = indexer;
@@ -26,6 +30,8 @@ public class TuneShooterCommand extends CommandBase {
     SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 1000);
     SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 1000);
     SmartDashboard.putBoolean("Is Angle 2", false);
+
+
     
     addRequirements(shooter, indexer, intake, hopper);
   }
@@ -39,6 +45,10 @@ public class TuneShooterCommand extends CommandBase {
   public void execute() {
     double topSpeedTP100MS = SmartDashboard.getNumber("Top shooter wheel speed TP100MS", 0);
     double bottomSpeedTP100MS = SmartDashboard.getNumber("Bottom shooter wheel speed TP100MS", 0);
+
+    boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+    boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
+
     if (SmartDashboard.getBoolean("Is Angle 2", false)) {
         shooter.setShootAngle2();
     } else {
@@ -46,15 +56,34 @@ public class TuneShooterCommand extends CommandBase {
     } 
     shooter.shootAtSpeed(topSpeedTP100MS, bottomSpeedTP100MS);
 
-    if (shooter.isAtSpeed()) {
-      indexer.runFeeder();
-      hopper.run();
-      indexer.runPreload();
-    } else {
-      hopper.stop();
-      indexer.stopFeeder();
-      indexer.stopPreload();
-    }
+    // Lots of logic here
+      if (!secondBallOnTheWay) {
+        if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+          secondBallOnTheWay = true;
+        }
+      }
+
+      if (secondBallOnTheWay && stagedCargoDetected && !preStagedCargoDetected) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+        indexer.stopFeeder();
+        if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
+            timer = new Timer();
+            timer.start();
+        }
+        if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
+          secondBallOnTheWay = false;
+          clearTimer();
+        }
+      } else if (shooter.isAtSpeed()) {
+        indexer.runFeeder();
+        hopper.run();
+        indexer.runPreload();
+        clearTimer();
+      } else {
+        hopper.stop();
+        indexer.stopFeeder();
+        indexer.stopPreload();
+        clearTimer();
+      }
 
   }
 
@@ -66,6 +95,13 @@ public class TuneShooterCommand extends CommandBase {
     indexer.stopPreload();
     intake.stop();
     hopper.stop();
+  }
+
+  private void clearTimer() {
+    if(timer != null) {
+        timer.stop();
+        timer = null;
+    }
   }
 
   // Returns true when the command should end.

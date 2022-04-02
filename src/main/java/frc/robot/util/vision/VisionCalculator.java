@@ -43,14 +43,15 @@ public class VisionCalculator {
      * and the top and bottom motor percent values.
      */
     private void setupShooterDistanceConfigs() {
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 5000, 10000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 7400, 7400));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 7900, 7900));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 8500, 8500));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 10000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 11500, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(1 * 12, 4800, 4800)); // Low goal shot if pushed up against the wall
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 8000, 8000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 8000, 8000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 8000, 8000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 9000, 9000));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 9500, 9500));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 9800, 9800));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 10500));
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 10900, 10900));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
@@ -64,24 +65,24 @@ public class VisionCalculator {
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
 
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 5000, 5000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 7300, 7300));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 7800, 7800));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 8100, 8100));
+        // angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 5000, 5000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(5 * 12, 7400, 7400));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(6 * 12, 7700, 7700));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 7900, 7900));
         angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 8300, 8100));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 8500, 8300));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 9200, 8700));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 9400, 9000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 9500, 9200));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 9800, 9500));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 10100, 9800));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 10300, 10000));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 10500, 10200));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 10750, 10450));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 11000, 10700));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 11250, 10950));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 11500, 11200));
-        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 11750, 11450));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 8700, 8500));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 9050, 8750));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 9300, 9000));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 9400, 9100));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 9700, 9400));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 9950, 9650));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 10050, 9750));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 10200, 9900));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 10400, 10100));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 10600, 10300));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 11000, 10700));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 11350, 11050));
+        angle2ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 11750, 11450));
     }
 
     /**
@@ -111,25 +112,26 @@ public class VisionCalculator {
         // visionDistances.add(new VisionDistance(20 * 12, -21.33));
         // visionDistances.add(new VisionDistance(21 * 12, -22.44));
 
-        visionDistances.add(new VisionDistance(2 * 12,  21.1));
-        visionDistances.add(new VisionDistance(3 * 12,  14.32));
-        visionDistances.add(new VisionDistance(4 * 12, 8.84));
-        visionDistances.add(new VisionDistance(5 * 12, 1.03));
-        visionDistances.add(new VisionDistance(6 * 12, -2.05));
-        visionDistances.add(new VisionDistance(7 * 12, -5.26));
-        visionDistances.add(new VisionDistance(8 * 12, -7.62));
-        visionDistances.add(new VisionDistance(9 * 12, -10.18));
-        visionDistances.add(new VisionDistance(10 * 12, -12.23));
-        visionDistances.add(new VisionDistance(11 * 12, -14.08));
-        visionDistances.add(new VisionDistance(12 * 12, -15.6));
-        visionDistances.add(new VisionDistance(13 * 12, -16.93));
-        visionDistances.add(new VisionDistance(14 * 12, -18.34));
-        visionDistances.add(new VisionDistance(15 * 12, -19.29));
-        visionDistances.add(new VisionDistance(16 * 12, -20.56));
-        visionDistances.add(new VisionDistance(17 * 12, -21.43));
-        visionDistances.add(new VisionDistance(18 * 12, -22.15));
-        visionDistances.add(new VisionDistance(19 * 12, -22.81));
-        visionDistances.add(new VisionDistance(20 * 12, -23.56));
+        visionDistances.add(new VisionDistance(1 * 12,  24.14));
+        visionDistances.add(new VisionDistance(2 * 12,  17.67));
+        visionDistances.add(new VisionDistance(3 * 12,  12.06));
+        visionDistances.add(new VisionDistance(4 * 12, 7.06));
+        visionDistances.add(new VisionDistance(5 * 12, 2.87));
+        visionDistances.add(new VisionDistance(6 * 12, -0.88));
+        visionDistances.add(new VisionDistance(7 * 12, -3.98));
+        visionDistances.add(new VisionDistance(8 * 12, -6.42));
+        visionDistances.add(new VisionDistance(9 * 12, -8.89));
+        visionDistances.add(new VisionDistance(10 * 12, -11.09));
+        visionDistances.add(new VisionDistance(11 * 12, -12.98));
+        visionDistances.add(new VisionDistance(12 * 12, -14.55));
+        visionDistances.add(new VisionDistance(13 * 12, -16.14));
+        visionDistances.add(new VisionDistance(14 * 12, -17.76));
+        visionDistances.add(new VisionDistance(15 * 12, -19.05));
+        visionDistances.add(new VisionDistance(16 * 12, -20.23));
+        visionDistances.add(new VisionDistance(17 * 12, -21.10));
+        visionDistances.add(new VisionDistance(18 * 12, -21.86));
+        visionDistances.add(new VisionDistance(19 * 12, -22.52));
+        visionDistances.add(new VisionDistance(20 * 12, -23.23));
         visionDistances.add(new VisionDistance(21 * 12, -24.3));
     }
 
@@ -179,7 +181,7 @@ public class VisionCalculator {
         double offsetInches = deltaInches * pct;
 
         // Add the final offset to our lower distance so the inches from the target can safely be assumed.
-        return (int)(lowerDistance.getDistanceInches() + offsetInches);
+        return (int)(upperDistance.getDistanceInches() - offsetInches);
     }
 
 

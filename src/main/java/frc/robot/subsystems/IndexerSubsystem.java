@@ -34,8 +34,16 @@ public class IndexerSubsystem extends SubsystemBase {
     largeIndexer.set(ControlMode.PercentOutput, Constants.Shooter.PRELOAD_WHEEL_SPEED);
   }
 
+  public void runPreloadReverse() {
+    largeIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.PRELOAD_WHEEL_SPEED);
+  }
+
   public void runFeeder() {
     feederIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.INDEXER_WHEEL_SPEED);
+  }
+
+  public void runFeederReverse() {
+    feederIndexer.set(ControlMode.PercentOutput, Constants.Shooter.INDEXER_WHEEL_SPEED);
   }
 
   public void stopPreload() {

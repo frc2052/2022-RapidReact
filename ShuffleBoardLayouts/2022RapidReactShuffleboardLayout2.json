@@ -399,17 +399,6 @@
               "_title": "SmartDashboard/Shooter Target Top Wheel Speed"
             }
           },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///limelight/pipeline",
-              "_title": "/limelight/pipeline"
-            }
-          },
           "8,1": {
             "size": [
               1,
@@ -476,7 +465,7 @@
               "_title": "/SmartDashboard/Calculator Distance"
             }
           },
-          "9,3": {
+          "8,0": {
             "size": [
               1,
               1
@@ -496,6 +485,72 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Test Equation Distance",
               "_title": "/SmartDashboard/Test Equation Distance"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Angle",
+              "_title": "SmartDashboard/Gyro Angle"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vision angle",
+              "_title": "/SmartDashboard/Vision angle"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/PID Controller output",
+              "_title": "SmartDashboard/PID Controller output"
+            }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/PID Controller Position Error",
+              "_title": "SmartDashboard/PID Controller Position Error"
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro Rotation",
+              "_title": "SmartDashboard/Gyro Rotation"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Target Rotation",
+              "_title": "/SmartDashboard/Target Rotation"
             }
           }
         }
@@ -605,6 +660,234 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {}
+      }
+    },
+    {
+      "title": "Shooter Tuning",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "6,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://limelight",
+              "_title": "limelight",
+              "Crosshair/Show crosshair": false,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": false,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 0,
+              "imageHeight": 0
+            }
+          },
+          "4,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Top shooter wheel speed TP100MS",
+              "_title": "SmartDashboard/Top shooter wheel speed TP100MS"
+            }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Bottom shooter wheel speed TP100MS",
+              "_title": "SmartDashboard/Bottom shooter wheel speed TP100MS"
+            }
+          },
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Has Target?",
+              "_title": "SmartDashboard/Has Target?",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Is Angle 2",
+              "_title": "SmartDashboard/Is Angle 2"
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Limelight LED Override",
+              "_title": "SmartDashboard/Limelight LED Override"
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Limelight Tolerance",
+              "_title": "SmartDashboard/Limelight Tolerance"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Target Top Wheel Speed",
+              "_title": "SmartDashboard/Shooter Target Top Wheel Speed"
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
+              "_title": "SmartDashboard/Shooter Top Wheel Speed"
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
+              "_title": "SmartDashboard/Shooter Bottom Wheel Speed"
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Target Bottom Wheel Speed",
+              "_title": "SmartDashboard/Shooter Target Bottom Wheel Speed"
+            }
+          },
+          "7,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Staged Cargo Detected",
+              "_title": "SmartDashboard/Staged Cargo Detected",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/PreStaged Cargo Detected",
+              "_title": "SmartDashboard/PreStaged Cargo Detected",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Calculator Distance Feet",
+              "_title": "SmartDashboard/Calculator Distance Feet"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Calculator Distance Inches",
+              "_title": "SmartDashboard/Calculator Distance Inches"
+            }
+          },
+          "9,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/Enable Limelight LEDs",
+              "_title": "SmartDashboard/Enable Limelight LEDs"
+            }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
+              "_title": "SmartDashboard/Shooter Wheels At Speed?",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vertical Distance from Crosshair: ",
+              "_title": "SmartDashboard/Vertical Distance from Crosshair: "
+            }
+          }
+        }
       }
     }
   ],

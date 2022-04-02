@@ -50,8 +50,8 @@ public class AutoTesting extends AutoBase {
         
         ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(visionTurnInPlace));
 
-        this.addCommands(driveToFirstBallPos);
+        //this.addCommands(driveToFirstBallPos);
         this.addCommands(turnInPlace);
-        this.addCommands(aimAndShoot);
+        //this.addCommands(aimAndShoot);
     }
 }

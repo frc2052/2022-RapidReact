@@ -30,9 +30,9 @@ public class OuttakeCommand extends CommandBase {
     // Spin the intake wheels in reverse.
     intake.reverse();
     hopper.reverse();
-    //indexer.runPreloadReverse()
+    indexer.runPreloadReverse();
     if (outtakeMode == OuttakeMode.ALL_BALLS) {
-        //indexer.runFeederReverse();
+        indexer.runFeederReverse();
     }
   }
 
@@ -40,6 +40,8 @@ public class OuttakeCommand extends CommandBase {
   public void end(boolean interrupted) {
     intake.stop();
     hopper.stop();
+    indexer.stopPreload();
+    indexer.stopFeeder();
   }
 
   @Override
