@@ -12,6 +12,7 @@ import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.vision.ShooterDistanceConfig;
 
 public class AutoNonVisionShootCommand extends NonVisionShootCommand {
+  private final IndexerSubsystem indexer;
 
   private Timer timer;
   private double deadlineSeconds;
@@ -28,7 +29,7 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
    * @param bottomWheelVelocity
    */
   public AutoNonVisionShootCommand(
-    NonVisionShootMode nonVisionShootMode, 
+    ShootMode nonVisionShootMode, 
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer,
     HopperSubsystem hopper,
@@ -47,21 +48,23 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
         bottomWheelVelocity
     );
 
+    this.indexer = indexer;
     this.deadlineSeconds = deadlineSeconds;
   }
 
-  public AutoNonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
+  public AutoNonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
     super(shootMode, shooter, indexer, hopper, firingAngleMode, shooterDistanceConfig);
+    this.indexer = indexer;
     deadlineSeconds = 0.5;
   }
 
-  public AutoNonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+  public AutoNonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
     this(shootMode, shooter, indexer, hopper, FiringAngle.ANGLE_1, topWheelVelocity, bottomWheelVelocity, 0.5);
   }
 
   @Override
   public boolean isFinished() {
-    if (!super.indexer.getCargoStagedDetected() && !super.indexer.getCargoPreStagedDetected()) {
+    if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       if (timer == null) { // This is the first time we've not seen a ball
           timer = new Timer();
           timer.start();

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -121,8 +122,8 @@ public class TargetingSubsystem extends SubsystemBase {
         this.targetingMode = targetingMode;
     }
 
-    // @Override
-    // public void periodic() {
+    @Override
+    public void periodic() {
     //     currentRotation = drivetrain.getGyroscopeRotation();
 
     //     if (targetingMode != TargetingMode.NONE) {
@@ -156,7 +157,9 @@ public class TargetingSubsystem extends SubsystemBase {
     //     //         System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
     //     //         break;
     //     // }
-    // }
+
+        SmartDashboard.putBoolean("Targeting Is Lined Up", isLinedUpToShoot);
+    }
 
     public void setIsLinedUpToShoot(boolean isLinedUpToShoot) {
         this.isLinedUpToShoot = isLinedUpToShoot;

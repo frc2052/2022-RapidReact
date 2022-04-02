@@ -62,10 +62,10 @@ public class VisionDriveCommand extends DefaultDriveCommand {
             if(Math.abs(horizontalAngleDegrees) > 4) {
 //                visionRotation = -Math.copySign(Math.PI/2, horizontalAngle);
                 visionRotation = -Math.copySign(Math.toRadians(horizontalAngleDegrees * 9) , horizontalAngleDegrees); // Dynamically changes rotation speed to be faster at a larger tx,
-                targeting.setIsLinedUpToShoot(true);
+                targeting.setIsLinedUpToShoot(false);
             } else if(Math.abs(horizontalAngleDegrees) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
                 visionRotation = -Math.copySign(Math.PI /4, horizontalAngleDegrees);
-                targeting.setIsLinedUpToShoot(true);
+                targeting.setIsLinedUpToShoot(false);
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
                 targeting.setIsLinedUpToShoot(true);

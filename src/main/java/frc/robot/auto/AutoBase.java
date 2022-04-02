@@ -26,13 +26,12 @@ import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutAndRunCommand;
+import frc.robot.commands.intake.AutoIntakeCommand;
 import frc.robot.commands.shooter.AutoNonVisionShootCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -120,23 +119,23 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected AutoNonVisionShootCommand newAutoNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new AutoNonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new AutoNonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected ParallelCommandGroup newIntakeArmOutCommand() {
-        return new IntakeArmOutAndRunCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+        return new AutoIntakeCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
@@ -168,7 +167,7 @@ public class AutoBase  extends SequentialCommandGroup {
      * perfect for firing the preloaded cargo when initially aiming at the hub in the least amount of time possible.
      */
     protected Command newInitialNonVisionShootPreloadedCommand() {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.7);
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.7);
     }
 
     /**

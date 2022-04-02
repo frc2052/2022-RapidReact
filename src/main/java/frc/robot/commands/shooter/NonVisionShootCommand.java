@@ -11,24 +11,25 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.vision.ShooterDistanceConfig;
 
-public class NonVisionShootCommand extends CommandBase {
+public class NonVisionShootCommand extends ShooterIndexingCommand {
   private final ShooterSubsystem shooter;
-  protected final IndexerSubsystem indexer;
-  private final HopperSubsystem hopper;
+
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
-  private final NonVisionShootMode nonVisionShootMode;
   private FiringAngle firingAngleMode;
-
   private double topWheelVelocity;
   private double bottomWheelVelocity;
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
-    this.nonVisionShootMode = shootMode;
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
+    super(
+      shootMode, 
+      indexer, 
+      hopper, 
+      shooter
+    );
+
     this.shooter = shooter;
-    this.indexer = indexer;
-    this.hopper = hopper;
     this.firingAngleMode = firingAngleMode;
     this.topWheelVelocity = topWheelVelocity;
     this.bottomWheelVelocity = bottomWheelVelocity;
@@ -36,17 +37,19 @@ public class NonVisionShootCommand extends CommandBase {
     addRequirements(shooter, indexer);
   }
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
     this(shootMode, shooter, indexer, hopper, firingAngleMode, shooterDistanceConfig.getTopMotorVelocityTicksPerSecond(), shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond());
   }
 
-  public NonVisionShootCommand(NonVisionShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
     this(shootMode, shooter, indexer, hopper, FiringAngle.ANGLE_1, topWheelVelocity, bottomWheelVelocity);
   }
 
   @Override
   public void initialize() {
-      if (firingAngleMode == FiringAngle.ANGLE_1) {
+      if (firingAngleMode == null) {
+        // Do nothing, keep same firing angle already set somewhere else.
+      } else if (firingAngleMode == FiringAngle.ANGLE_1) {
         shooter.setShootAngle1();
       } else {
         shooter.setShootAngle2();
@@ -59,30 +62,21 @@ public class NonVisionShootCommand extends CommandBase {
 
     shooter.shootAtSpeed(topWheelVelocity, bottomWheelVelocity);
 
-    if (shooter.isAtSpeed()) {
-      indexer.runFeeder();
-      hopper.run();
-      if (nonVisionShootMode == NonVisionShootMode.SHOOT_ALL) {
-        indexer.runPreload();
-      }
-    }
+    super.execute();
   }
 
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     shooter.stop();
-    indexer.stopFeeder();
-    indexer.stopPreload();
-    hopper.stop();
+  }
+
+  public void overrideDelay() {
+    super.delayOverride = true;
   }
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  public static enum NonVisionShootMode {
-    SHOOT_SINGLE,
-    SHOOT_ALL
   }
 }

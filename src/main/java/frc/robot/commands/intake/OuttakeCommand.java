@@ -23,8 +23,7 @@ public class OuttakeCommand extends CommandBase {
 
     addRequirements(this.intake, this.hopper, this.indexer);
   }
-    
-  // TODO: If the stage or prestages are full run them in reverse to flush the system.
+  
   @Override
   public void execute() {
     // Spin the intake wheels in reverse.

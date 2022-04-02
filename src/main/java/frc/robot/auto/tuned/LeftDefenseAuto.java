@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.robot.commands.shooter.NonVisionShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.climber.ClimberArmsBackCommand;

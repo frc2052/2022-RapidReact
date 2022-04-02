@@ -8,10 +8,10 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeAndHopperRunCommand extends HopperBaseCommand {
+public class IntakeHopperRunCommand extends HopperBaseCommand {
   private final IntakeSubsystem intake;
 
-  public IntakeAndHopperRunCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
+  public IntakeHopperRunCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
     super(indexer, hopper);
     this.intake = intake;
     

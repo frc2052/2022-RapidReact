@@ -21,23 +21,19 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 import frc.robot.util.vision.ShooterDistanceConfig;
 import frc.robot.util.vision.VisionCalculator;
 
-public class ShootCommand extends CommandBase {
+public class ShootCommand extends ShooterIndexingCommand {
   private final ShooterSubsystem shooter;
   protected final IndexerSubsystem indexer;
   private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
-  private final DrivetrainSubsystem drivetrain;
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
-  private final ShootMode shootMode;
   private final BooleanSupplier isLinedUSupplier;
   private final VisionCalculator visionCalculator;
 
   private double distanceInches;
   private ShooterDistanceConfig shooterConfig;
-  private boolean secondBallOnTheWay;
-  private Timer timer;
   private boolean lastSawStaged;
 
   public ShootCommand(
@@ -49,13 +45,19 @@ public class ShootCommand extends CommandBase {
     BooleanSupplier isLinedUSupplier,
     DrivetrainSubsystem drivetrain
   ) {
+    super (
+      shootMode,
+      indexer,
+      hopper,
+      shooter
+    );
+
+
     this.shooter = shooter;
     this.indexer = indexer;
     this.hopper = hopper;
     this.vision = vision;
-    this.shootMode = shootMode;
     this.isLinedUSupplier = isLinedUSupplier;
-    this.drivetrain = drivetrain;
 
     visionCalculator = VisionCalculator.getInstance();
     shooterConfig = new ShooterDistanceConfig(0, 0, 0); // Initial speed (0) for shooter that'll make it just not run if no vision target.
@@ -93,7 +95,6 @@ public class ShootCommand extends CommandBase {
   public void execute() {
 
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
-    boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
 
     if (vision.getHasValidTarget()) {
         distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
@@ -115,72 +116,29 @@ public class ShootCommand extends CommandBase {
       shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
-    // Lots of logic here
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
-      if (!secondBallOnTheWay) {
-        if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
-          secondBallOnTheWay = true;
-        }
-      }
 
-      if (secondBallOnTheWay && stagedCargoDetected && !preStagedCargoDetected) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
-        indexer.stopFeeder();
-        if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
-            timer = new Timer();
-            timer.start();
-        }
-        if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
-          secondBallOnTheWay = false;
-          clearTimer();
-        }
-      } else if (shooter.isAtSpeed() && isLinedUSupplier.getAsBoolean()) {
-        indexer.runFeeder();
-        hopper.run();
-        if (shootMode == ShootMode.SHOOT_ALL) {
-          indexer.runPreload();
-        }
-        clearTimer();
-      } else {
-        hopper.stop();
-        indexer.stopFeeder();
-        indexer.stopPreload();
-        clearTimer();
-      }
+      super.isLinedUp = isLinedUSupplier.getAsBoolean();
+      super.execute();
 
       if (!stagedCargoDetected && lastSawStaged) {
           System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
           + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
       }
       lastSawStaged = stagedCargoDetected;
-    } else {
-        System.err.println("PROBLEM");
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    // Stop the shooter, feeder, and preloader.
+    // Stop the shooter, feeder, and preloader, hopper, and turns off Limelight LEDs.
+    super.end(interrupted);
     shooter.stop();
-    hopper.stop();
-    indexer.stopFeeder();
-    indexer.stopPreload();
     vision.setLEDMode(LEDMode.OFF);
   }
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  private void clearTimer() {
-    if(timer != null) {
-        timer.stop();
-        timer = null;
-    }
-  }
-
-  public static enum ShootMode {
-    SHOOT_SINGLE,
-    SHOOT_ALL
   }
 }
