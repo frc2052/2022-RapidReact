@@ -36,5 +36,7 @@ public class OneBallAuto extends AutoBase{
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(3));
         this.addCommands(backUp);
+        this.addCommands(super.autonomousFinishedCommandGroup());
+
     }
 }

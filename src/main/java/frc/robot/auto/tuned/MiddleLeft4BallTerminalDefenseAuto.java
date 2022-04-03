@@ -81,5 +81,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         this.addCommands(intakeBall4Command);
         // this.andThen(() -> intake.intakeArmOut());
         this.addCommands(aimingAndShooting2);
+        this.addCommands(super.autonomousFinishedCommandGroup());
+
     }
 }

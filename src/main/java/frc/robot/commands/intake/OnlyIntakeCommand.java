@@ -23,12 +23,6 @@ public class OnlyIntakeCommand extends CommandBase {
     
     addRequirements(this.intake);
   }
-    
-  @Override
-  public void initialize() {
-    // Extend intake arm and spin the intake wheels.
-    intake.armOut();
-  }
 
   @Override
   public void execute() {

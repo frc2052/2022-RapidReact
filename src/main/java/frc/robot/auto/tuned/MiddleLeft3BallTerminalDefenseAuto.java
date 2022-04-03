@@ -72,8 +72,7 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
         this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
         this.addCommands(returnToShoot);
         this.addCommands(aimingAndShooting);
-        
-
+        this.addCommands(super.autonomousFinishedCommandGroup());
 
         // Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
         // Pose2d shootPreloadedPos = new Pose2d(Units.inchesToMeters(-24), Units.inchesToMeters(24), Rotation2d.fromDegrees(0));

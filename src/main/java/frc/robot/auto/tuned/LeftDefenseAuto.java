@@ -66,6 +66,6 @@ public class LeftDefenseAuto extends AutoBase {
         this.addCommands(super.newAutoNonVisionShootAllCommand(6000, 6000));
         this.addCommands(turnToFirstTeleopBall);
         
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.addCommands(super.autonomousFinishedCommandGroup());
     }
 }

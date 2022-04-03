@@ -39,6 +39,11 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
     addRequirements(shooter, indexer);
   }
 
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideDelay) {
+    this(shootMode, shooter, indexer, hopper, firingAngleMode, topWheelVelocity, bottomWheelVelocity);
+    if (overrideDelay) { overrideDelay(); }
+  }
+
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
     this(shootMode, shooter, indexer, hopper, firingAngleMode, shooterDistanceConfig.getTopMotorVelocityTicksPerSecond(), shooterDistanceConfig.getBottomMotorVelocityTicksPerSecond());
   }

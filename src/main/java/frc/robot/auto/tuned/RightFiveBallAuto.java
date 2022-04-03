@@ -70,8 +70,7 @@ public class RightFiveBallAuto extends AutoBase {
         this.addCommands(super.newIntakeArmOutCommand().withTimeout(0.75));
         this.addCommands(driveBackAndShoot);
         this.addCommands(aimAndShoot2.withTimeout(3));
+        this.addCommands(super.autonomousFinishedCommandGroup());
 
-        //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }

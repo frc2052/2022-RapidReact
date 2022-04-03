@@ -56,8 +56,6 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(new PerpetualCommand(super.newAutoAimAndShootAllCommandGroup()));
-
-    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.addCommands(super.autonomousFinishedCommandGroup());
     }
 }
