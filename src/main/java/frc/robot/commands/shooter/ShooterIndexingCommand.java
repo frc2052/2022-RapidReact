@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class ShooterIndexingCommand extends CommandBase {
   private final IndexerSubsystem indexer;
@@ -72,6 +74,7 @@ public class ShooterIndexingCommand extends CommandBase {
         // System.err.println("Trying to Shoot 2nd Ball");
         indexer.runPreload();
       }
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SHOOTING);
     } else {
         //System.err.println("Stopping Indexing");
       hopper.stop();
@@ -86,6 +89,7 @@ public class ShooterIndexingCommand extends CommandBase {
     hopper.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
+    LEDSubsystem.getInstance().clearStatusMode();
   }
 
   @Override

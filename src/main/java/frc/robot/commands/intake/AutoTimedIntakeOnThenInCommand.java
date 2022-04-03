@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
   private final IntakeSubsystem intake;
@@ -30,7 +32,9 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
 
   @Override
   public void initialize() {
+    super.initialize();
     intake.armOut(); // Makes sure the intake arm is out when the command begins
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
   }
 
   @Override
@@ -46,6 +50,7 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
     super.end(interrupted);
     intake.stop();
     intake.armIn();
+    LEDSubsystem.getInstance().clearStatusMode();
   }
 
 }

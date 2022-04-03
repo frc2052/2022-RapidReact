@@ -4,6 +4,8 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class ExtendClimberCommand extends CommandBase {
     private final HookClimberSubsystem climberSubsystem;
@@ -20,6 +22,8 @@ public class ExtendClimberCommand extends CommandBase {
         // Climber extends. 
         if (!climberSubsystem.getIsLocked()) {
             climberSubsystem.extend(overrideButtonPressed.getAsBoolean());
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
+
         } else {
             System.err.println("Climber locked!");
         }

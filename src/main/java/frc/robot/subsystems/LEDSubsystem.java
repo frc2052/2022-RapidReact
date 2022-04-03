@@ -52,8 +52,8 @@ public class LEDSubsystem extends SubsystemBase {
         AUTONOMOUS_DEFAULT(6, 10),
         AUTONOMOUS_FINISHED(7, 10),
         TELEOP_DEFAULT(8, 10),
-        VISION_TARGETING(9, 10),
-        VISION_TARGET_FOUND(10, 10),
+        VISION_TARGETING(9, 4),
+        VISION_TARGET_LINED_UP(10, 3),
         ENG_GAME_WARNING(11, 10),
         CLIMBING_DEFAULT(12, 10),
         CLIMBER_EXTENDING(13, 10),
@@ -63,9 +63,12 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_MID_BAR(17, 10),
         CLIMBING_HIGH_BAR(18, 10),
         CLIMBING_TRAVERSAL(19, 10),
-        CLIMBING_LOCK_ENGAGED(20, 10),
+        CLIMBING_LOCK_ENGAGED(20, 2),
         TEST_MODE(21, 10),
-        LIGHT_SHOW(22, 10); // Meant for either demonstration or when the drivetrian is dead
+        CLIMBER_ARMS_BACK(22, 10),
+        CLIMBER_ARMS_FORWARD(23, 10),
+        SHOOTING(24, 2),
+        LIGHT_SHOW(30, 10); // Meant for either demonstration or when the drivetrian is dead
 
         private final int code; // Code to be encoded into the DIO pins to be received by arduino
         private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not

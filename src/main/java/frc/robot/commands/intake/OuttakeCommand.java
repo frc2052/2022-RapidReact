@@ -4,10 +4,13 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class OuttakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
@@ -22,6 +25,11 @@ public class OuttakeCommand extends CommandBase {
     this.outtakeMode = outtakeMode;
 
     addRequirements(this.intake, this.hopper, this.indexer);
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
   }
   
   @Override
@@ -41,6 +49,7 @@ public class OuttakeCommand extends CommandBase {
     hopper.stop();
     indexer.stopPreload();
     indexer.stopFeeder();
+    LEDSubsystem.getInstance().clearStatusMode();
   }
 
   @Override

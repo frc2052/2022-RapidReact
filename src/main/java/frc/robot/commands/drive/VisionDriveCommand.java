@@ -65,6 +65,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
             } else if(Math.abs(horizontalAngleDegrees) > 2) {                                                   // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
                 visionRotation = -Math.copySign(Math.PI /4, horizontalAngleDegrees);
                 targeting.setIsLinedUpToShoot(false);
+                isLinedUp = true;
             } else {
                 visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
                 targeting.setIsLinedUpToShoot(true);
@@ -75,11 +76,8 @@ public class VisionDriveCommand extends DefaultDriveCommand {
             visionRotation = 0;
         }
 
-        if (isLinedUp) {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
-        } else {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
-        }
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+        
         return visionRotation;
     }
 
@@ -91,6 +89,6 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLEDMode(LEDMode.OFF);
-        LEDSubsystem.getInstance().setLEDStatusMode(null);
+        LEDSubsystem.getInstance().clearStatusMode();
     }
 }

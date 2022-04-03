@@ -7,6 +7,8 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class OnlyIntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
@@ -25,6 +27,11 @@ public class OnlyIntakeCommand extends CommandBase {
   }
 
   @Override
+  public void initialize() {
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
+  }
+
+  @Override
   public void execute() {
     if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
       intake.run();
@@ -34,6 +41,7 @@ public class OnlyIntakeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.stop();
+    LEDSubsystem.getInstance().clearStatusMode();
   }
   
   @Override

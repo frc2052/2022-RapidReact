@@ -51,7 +51,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
           }
 
             if (isLinedUp) {
-                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_LINED_UP);
             } else {
                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
             }

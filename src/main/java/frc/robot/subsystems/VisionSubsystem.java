@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
@@ -178,7 +179,12 @@ public class VisionSubsystem extends SubsystemBase{
     public boolean getIsLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
       if (hasValidTarget) {
-        return Math.abs(tx) <= getTolerance();
+        if (Math.abs(tx) <= getTolerance()) {
+          LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_LINED_UP);
+          return true;
+        } else {
+          return false;
+        }
       } else {
           return false;
       }

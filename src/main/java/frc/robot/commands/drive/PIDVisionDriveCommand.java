@@ -55,7 +55,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         pidController.enableContinuousInput(-Math.PI, Math.PI);
         // pidController.
 
-        pidController.setTolerance(Units.degreesToRadians(1));
+        pidController.setTolerance(Units.degreesToRadians(2));
     }
 
     @Override
@@ -82,10 +82,10 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         // System.err.println("PID Controller output: " + rotation);
         // System.err.println("PID Controller Position Error: " + pidController.getPositionError());
 
-        SmartDashboard.putNumber("Vision angle", vision.getTx()); //vision.getXRotation().getDegrees());
-        SmartDashboard.putNumber("Target Rotation", drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians());
-        SmartDashboard.putNumber("PID Controller output", rotation);
-        SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
+        // SmartDashboard.putNumber("Vision angle", vision.getTx()); //vision.getXRotation().getDegrees());
+        // SmartDashboard.putNumber("Target Rotation", drivetrain.getOdometryRotation().minus(horizontalAngle).getRadians());
+        // SmartDashboard.putNumber("PID Controller output", rotation);
+        // SmartDashboard.putNumber("PID Controller Position Error", pidController.getPositionError());
 
         return rotation;
     }
