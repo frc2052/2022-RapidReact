@@ -51,9 +51,9 @@ public class VisionTurnInPlaceCommand extends CommandBase {
           }
 
             if (isLinedUp) {
-                LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
             } else {
-                LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
             }
 
         //if(vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
@@ -77,7 +77,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     public void end(boolean interrupted) {
         vision.setLEDMode(LEDMode.OFF);
         drivetrain.stop();
-        LEDSubsystem.getChannel1Instance().setLEDStatusMode(null);
+        LEDSubsystem.getInstance().setLEDStatusMode(null);
     }
 
     @Override

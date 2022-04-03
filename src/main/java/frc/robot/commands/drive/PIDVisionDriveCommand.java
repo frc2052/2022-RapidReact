@@ -75,6 +75,6 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLEDMode(LEDMode.OFF);
-        LEDSubsystem.setBothChannelModes(null);
+        LEDSubsystem.getInstance().clearStatusMode();
     }
 }

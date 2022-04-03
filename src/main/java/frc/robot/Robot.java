@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     robotContainer.initializeAutonomousCommand();
 //    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
 
-    LEDSubsystem.setBothChannelModes(LEDStatusMode.TEST_MODE);
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }
 
   /**
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_DEFAULT);
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
 
     robotContainer.resetRobot();
   }
@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    LEDSubsystem.setBothChannelModes(LEDStatusMode.TELEOP_DEFAULT);
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
   /** This function is called periodically during operator control. */
@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
-    LEDSubsystem.setBothChannelModes(LEDStatusMode.TEST_MODE);
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }
 
   /** This function is called periodically during test mode. */

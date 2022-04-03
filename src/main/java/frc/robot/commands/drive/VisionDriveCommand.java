@@ -76,9 +76,9 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         }
 
         if (isLinedUp) {
-            LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
         } else {
-            LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
         }
         return visionRotation;
     }
@@ -91,6 +91,6 @@ public class VisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLEDMode(LEDMode.OFF);
-        LEDSubsystem.getChannel1Instance().setLEDStatusMode(null);
+        LEDSubsystem.getInstance().setLEDStatusMode(null);
     }
 }

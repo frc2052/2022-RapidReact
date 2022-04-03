@@ -66,7 +66,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         } else {
             System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
-            LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         }
     }
 
@@ -125,7 +125,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         System.err.println("************************ CLIMBER LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
-        LEDSubsystem.getChannel1Instance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
     public void unlock() {

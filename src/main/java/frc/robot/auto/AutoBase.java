@@ -134,7 +134,7 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected ParallelCommandGroup newIntakeArmOutCommand() {
-        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
@@ -154,7 +154,7 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected Command autonomousFinishedCommandGroup() {
-        return new InstantCommand(() -> LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_FINISHED))
+        return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED))
                     .andThen(() -> drivetrain.stop(), drivetrain);
     }
 

@@ -74,7 +74,7 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         this.addCommands(returnToShoot);   // returnToShoot
         this.addCommands(shoot2CargoCommand.withTimeout(2.5));
 
-        this.andThen(() -> LEDSubsystem.setBothChannelModes(LEDStatusMode.AUTONOMOUS_FINISHED));
+        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
         this.andThen(() -> drivetrain.stop(), drivetrain);
     }
 }
