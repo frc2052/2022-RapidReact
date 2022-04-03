@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDChannel2;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
@@ -88,9 +85,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             autoSelector.addOption(Autos.values()[i].name, Autos.values()[i]);
         }
 
-        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].name, LEDStatusMode.RAINBOW);
+        ledStatusModeSelector.setDefaultOption(LEDStatusMode.values()[0].toString(), LEDStatusMode.RAINBOW);
         for (int i = 1; i < LEDStatusMode.values().length; i++) {
-            ledStatusModeSelector.addOption(LEDStatusMode.values()[i].name, LEDStatusMode.values()[i]);
+            ledStatusModeSelector.addOption(LEDStatusMode.values()[i].toString(), LEDStatusMode.values()[i]);
         }
     
         driveModeSelector.setDefaultOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
@@ -183,16 +180,14 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (selectedLEDStatusMode != lastLEDStatusMode) {
-            LEDChannel1.getInstance().setLEDStatusMode(selectedLEDStatusMode);
-            LEDChannel2.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
             lastLEDStatusMode = selectedLEDStatusMode;
         }
 
-        if (ledBrightness != lastLEDBrightness) {
-            LEDChannel1.getInstance().setBrightness(ledBrightness);
-            LEDChannel2.getInstance().setBrightness(ledBrightness);
-            lastLEDBrightness = ledBrightness;
-        }
+        // if (ledBrightness != lastLEDBrightness) {
+        //     LEDSubsystem.setBothChannelBrightnesses(ledBrightness);
+        //     lastLEDBrightness = ledBrightness;
+        // }
 
         if (shooterBoostPct != lastShooterBoostPct) {
             shooter.setShooterVelocityBoost(shooterBoostPct);
@@ -239,8 +234,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
-            LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
-            LEDChannel2.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
             lastIsDrivetrainDead = isDrivetrainDead;
         }
 

@@ -11,11 +11,10 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MiddleRightTerminal3CargoAuto extends AutoBase {
 
@@ -58,8 +57,7 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         this.addCommands(driveBackToShoot2);
         this.addCommands(super.newShootAllCommand());
 
-        this.andThen(() -> LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.andThen(super.autonomousFinishedCommandGroup());
 
     }
 }

@@ -13,11 +13,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDs.LEDChannel1;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class PIDVisionDriveCommand extends DefaultDriveCommand {
@@ -100,6 +99,6 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         vision.setLEDMode(LEDMode.OFF);
-        LEDChannel1.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
+        LEDSubsystem.getInstance().clearStatusMode();
     }
 }
