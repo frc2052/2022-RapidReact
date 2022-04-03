@@ -245,7 +245,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isPnuematicsDead != lastIsPnuematicsDead) {
-            // Override shooter angle changing
+            shooter.setShootAngle1();
+            shooter.setShootAngle1Override(true);
             lastIsPnuematicsDead = isPnuematicsDead;
         }
     }

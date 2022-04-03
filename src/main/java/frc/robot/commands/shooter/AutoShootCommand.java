@@ -12,13 +12,20 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoShootCommand extends ShootCommand {
+  private final IndexerSubsystem indexer;
 
   private Timer timer;
-  private int ballsThroughStagedSensor;
-  private boolean stagedCargoDetected;
-  private boolean lastSawStaged;
-  private ShootMode shootMode;
 
+  /**
+   * Command that extends ShootCommand to be used in Auto.
+   * Finishes if the neither the preStaged or staged cargo sensors have seen a ball in 0.5 seconds.
+   * @param shootMode
+   * @param shooter
+   * @param indexer
+   * @param hopper
+   * @param vision
+   * @param drivetrain
+   */
   public AutoShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
@@ -36,45 +43,21 @@ public class AutoShootCommand extends ShootCommand {
       drivetrain
     );    
 
-    this.shootMode = shootMode;
+    this.indexer = indexer;
   }
 
   @Override
   public boolean isFinished() {
-    // if (!super.indexer.getCargoStagedDetected() && !super.indexer.getCargoPreStagedDetected()) {
-    //   if (timer == null) { // This is the first time we've not seen a ball
-    //       timer = new Timer();
-    //       timer.start();
-    //   }
-    //   if (timer.get() >= 0.5) { // At least 1 sec has passed since a ball was last seen
-    //     return true;
-    //   }
-    // } else {
-    //     clearTimer();   // Ball showed up, stop the timer
-    // }
-    // return false;
-
-    if (!stagedCargoDetected && lastSawStaged) {
-        ballsThroughStagedSensor++;
-    }
-    lastSawStaged = stagedCargoDetected;
-
-    if (shootMode == ShootMode.SHOOT_SINGLE && ballsThroughStagedSensor >= 1) {
-        if (timer == null) {
+    if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
+      if (timer == null) { // This is the first time we've not seen a ball
           timer = new Timer();
           timer.start();
-        }
-        if (timer.hasElapsed(0.25)) {
-            return true;
-        }
-    } else if (shootMode == ShootMode.SHOOT_ALL && ballsThroughStagedSensor >= 2) {
-        if (timer == null) {
-            timer = new Timer();
-            timer.start();
-          }
-        if (timer.hasElapsed(0.25)) {
-            return true;
-        }
+      }
+      if (timer.get() >= 0.5) { // At least 1 sec has passed since a ball was last seen
+        return true;
+      }
+    } else {
+        clearTimer();   // Ball showed up, stop the timer
     }
     return false;
   }

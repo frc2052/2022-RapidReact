@@ -27,6 +27,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double bottomWheelTargetVelocity;
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
+  private boolean shootAngle1Override;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -130,13 +131,21 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShootAngle1() {
-    angleChangeSolenoid.set(Value.kReverse);
-    currentAngle = FiringAngle.ANGLE_1;
+    if (!shootAngle1Override) {
+      angleChangeSolenoid.set(Value.kReverse);
+      currentAngle = FiringAngle.ANGLE_1;
+    }
   }
 
   public void setShootAngle2() {
-    angleChangeSolenoid.set(Value.kForward);
-    currentAngle = FiringAngle.ANGLE_2;
+    if (!shootAngle1Override) {
+      angleChangeSolenoid.set(Value.kForward);
+      currentAngle = FiringAngle.ANGLE_2;
+    }
+  }
+
+  public void setShootAngle1Override(boolean override) {
+    shootAngle1Override = override;
   }
 
   public double getShootAngleDegrees() {
