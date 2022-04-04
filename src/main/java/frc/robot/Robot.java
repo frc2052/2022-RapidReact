@@ -129,6 +129,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
+    
   }
 
   /** This function is called periodically during test mode. */

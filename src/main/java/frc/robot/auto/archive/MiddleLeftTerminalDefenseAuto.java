@@ -58,9 +58,9 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
 
         NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, 6000, 6000);
 
-        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command);
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newAutoIntakeCommand());
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded

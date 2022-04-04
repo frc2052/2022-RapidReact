@@ -51,11 +51,11 @@ public class LeftDefenseAuto extends AutoBase {
         TurnInPlaceCommand turnToHanger = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(30));
         TurnInPlaceCommand turnToFirstTeleopBall = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(-175));
         
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup backToShoot2 = new ParallelDeadlineGroup(driveBackToShootPos, super.newAutoTimedIntakeOnThenInCommand(1.5));
         ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
-        ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup turnToHangerIntakeStayOn = new ParallelDeadlineGroup(turnToHanger, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newAutoIntakeCommand());
+        ParallelDeadlineGroup turnToHangerIntakeStayOn = new ParallelDeadlineGroup(turnToHanger, super.newAutoIntakeCommand());
         
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(intakeBall1);

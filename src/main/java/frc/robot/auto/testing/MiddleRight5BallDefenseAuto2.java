@@ -69,12 +69,12 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         ShootCommand shootAll1 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
         ShootCommand shootAll2 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
-        ParallelDeadlineGroup driveAndIntakeFirstBall       = new ParallelDeadlineGroup(driveCommand1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveAndIntakeFirstBall       = new ParallelDeadlineGroup(driveCommand1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootBall1            = new ParallelDeadlineGroup(driveCommand2, shootAll1, super.newAutoTimedIntakeOnThenInCommand(0.5));
-        ParallelDeadlineGroup intakeBall2AndOpposingBall1   = new ParallelDeadlineGroup(driveCommand3, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall2AndOpposingBall1   = new ParallelDeadlineGroup(driveCommand3, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootBall2            = new ParallelDeadlineGroup(driveCommand4, shootAll2, super.newIntakeArmInCommand());
         ParallelDeadlineGroup shootEnemyBall1ToHanger       = new ParallelDeadlineGroup(driveCommand5, super.newNonVisionShoot1Command(4000, 4000));
-        ParallelDeadlineGroup intakeBall3                   = new ParallelDeadlineGroup(driveCommand6, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall3                   = new ParallelDeadlineGroup(driveCommand6, super.newAutoIntakeCommand());
         ParallelDeadlineGroup goBackToShootFinalBall        = new ParallelDeadlineGroup(driveCommand7, super.newAutoTimedIntakeOnThenInCommand(0.5));
 
         this.addCommands(driveAndIntakeFirstBall);

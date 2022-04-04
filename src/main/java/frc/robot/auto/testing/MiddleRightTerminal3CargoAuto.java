@@ -47,7 +47,7 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);
-        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, super.newIntakeArmOutCommand());
+        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, super.newAutoIntakeCommand());
         ParallelCommandGroup goBackToShoot = new ParallelCommandGroup(driveBackToShoot2, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPos);

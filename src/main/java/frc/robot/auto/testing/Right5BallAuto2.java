@@ -59,12 +59,12 @@ public class Right5BallAuto2 extends AutoBase {
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(-130), terminalBallPos, super.createRotationAngle(-45));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(backToShootTrajectoryConfig, super.getLastEndingPosCreated(150), shootPos2, createHubTrackingSupplier(130));
 
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootToBall2 = new ParallelDeadlineGroup(driveBehindBall2, super.newIntakeArmInCommand(), new ConditionalCommand(super.newNonVisionShootAllCommand(FiringAngle.ANGLE_2, 9500, 9500, true), new WaitCommand(0.5), targeting::getIsLinedUpToShoot)); //targeting::getIsLinedUpToShoot
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(super.newAutoShoot1Command(), driveToBall2, super.newOnlyIntakeCommand());
         //ParallelDeadlineGroup driveToShoot1 = new ParallelDeadlineGroup(driveToShoot, super.newIntakeArmOutCommand());
         //ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
-        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(2));
         ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
@@ -79,7 +79,7 @@ public class Right5BallAuto2 extends AutoBase {
         //this.addCommands(aimAndShoot1); // Drives and rotates to position to shoot ball into upper hub\
         this.addCommands(driveToTerminalMidPoint);
         this.addCommands(intakeTerminalBalls);
-        this.addCommands(super.newIntakeArmOutCommand().withTimeout(0.75));
+        this.addCommands(super.newAutoIntakeCommand().withTimeout(0.75));
         this.addCommands(driveBackAndShoot);
         this.addCommands(aimAndShoot2.withTimeout(3));
 

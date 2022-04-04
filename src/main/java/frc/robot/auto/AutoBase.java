@@ -26,6 +26,7 @@ import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
+import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.intake.AutoIntakeCommand;
 import frc.robot.commands.shooter.AutoNonVisionShootCommand;
@@ -148,8 +149,12 @@ public class AutoBase  extends SequentialCommandGroup {
         return new AutoNonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected ParallelCommandGroup newIntakeArmOutCommand() {
+    protected ParallelCommandGroup newAutoIntakeCommand() {
         return new AutoIntakeCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+    }
+
+    protected IntakeArmOutCommand newIntakeArmOutCommand() {
+        return new IntakeArmOutCommand(intake);
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {

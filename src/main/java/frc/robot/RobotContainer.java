@@ -179,6 +179,7 @@ public class RobotContainer {
     //intakeArmInButton = when secondary pannel x or y decrease
     Button intakeArmOutButton = new Button(() -> (secondaryPannel.getY() == 1));
     Button intakeArmInButton = new Button(() -> (secondaryPannel.getY() == -1));
+    JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
 
     // Shooter Buttons Bindings
     JoystickButton shootSingleButton = new JoystickButton(turnJoystick, 1);
@@ -201,8 +202,7 @@ public class RobotContainer {
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
     // In Testing
-    JoystickButton pidTestingButton = new JoystickButton(secondaryPannel, 9);
-    JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
+    JoystickButton testingButton = new JoystickButton(turnJoystick, 8);
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -215,28 +215,7 @@ public class RobotContainer {
           shooter
         )
       );
-    //   Command visionShootAllCommand = 
-    //     new PIDVisionDriveCommand(
-    //         drivetrain, 
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         vision
-    //     );
-    //     Command visionShootAllCommand =
-    //   new ParallelCommandGroup(
-    //     // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-    //     new ConditionalCommand(
-    //       new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
-    //       new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-    //       dashboardControls::getIsLimelightDead
-    //     ),
-    //     new PIDVisionDriveCommand(
-    //         drivetrain, 
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         vision
-    //   )
-    //   );
+
     Command visionShootAllCommand =
       new ParallelCommandGroup(
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
@@ -342,8 +321,32 @@ public class RobotContainer {
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
     SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
 
-    // TODO: Delete this when done
-    //pidTestingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+    Command testCommand = new OnlyIntakeCommand(intake, indexer);
+    //testingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
+        //   Command testCommand = 
+    //     new PIDVisionDriveCommand(
+    //         drivetrain, 
+    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         vision
+    //     );
+    //     Command testCommand =
+    //   new ParallelCommandGroup(
+    //     // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
+    //     new ConditionalCommand(
+    //       new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
+    //       new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
+    //       dashboardControls::getIsLimelightDead
+    //     ),
+    //     new PIDVisionDriveCommand(
+    //         drivetrain, 
+    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //         vision
+    //   )
+    //   );
+
+    testingButton.whenHeld(testCommand);
 
     if (!competitionMode) { // Makes sure not to do any processing of this if we're at compeition because we don't need it
       ButtonCommands.VISION_SHOOT_ALL.setCommand(visionShootAllCommand);
