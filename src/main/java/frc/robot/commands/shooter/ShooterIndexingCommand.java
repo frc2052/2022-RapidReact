@@ -89,7 +89,6 @@ public class ShooterIndexingCommand extends CommandBase {
     hopper.stop();
     indexer.stopFeeder();
     indexer.stopPreload();
-    LEDSubsystem.getInstance().clearStatusMode();
   }
 
   @Override

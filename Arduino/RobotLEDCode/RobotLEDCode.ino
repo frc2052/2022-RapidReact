@@ -135,6 +135,30 @@ void loop(){
     case 21:
       testStatusMode();
       break;   
+    case 22:
+      climberArmsBackStatusMode();
+      break;
+    case 23:
+      climberArmsForwardStatusMode();
+      break;
+    case 24:
+      shootingStatusMode();
+      break;
+    case 25:
+      climberSwingingForwardStatusMode();
+      break;
+    case 26:
+      climberSwingingBackwardStatusMode();
+      break;
+    case 27:
+      climbingTopOfSwingStatusMode();
+      break;
+    case 30:
+      rainbowStatusMode();
+      break;
+    default:
+      LEDsOff();
+      break;
 //    case 22:
 //      lightShowStatusMode();
 //      break;   
@@ -145,12 +169,12 @@ void loop(){
   greenVal = (greenVal < 0) ? 0 : greenVal;
   blueVal = (blueVal < 0) ? 0 : blueVal;
 
-  //make sure not more than 255 due to rounding and multiplication
-  redVal = (redVal > 255) ? 255 : redVal;
-  greenVal = (greenVal > 255) ? 255 : greenVal;
-  blueVal = (blueVal > 255) ? 255 : blueVal;
+  //make sure not more than 1 due to rounding and multiplication
+  redVal = (redVal > 1) ? 1 : redVal;
+  greenVal = (greenVal > 1) ? 1 : greenVal;
+  blueVal = (blueVal > 1) ? 1 : blueVal;
 
-  setColor(redVal, greenVal, blueVal);
+  setColor(redVal * 255, greenVal * 255, blueVal * 255);
 }
 
 void runStatusModeInitialActions(int code)
@@ -262,9 +286,9 @@ void pulseColor(int colorCode, int highR, int highG, int highB, int lowR, int lo
 
 void LEDsOnWhite() 
 {
-  redVal = 255;
-  greenVal = 255;
-  blueVal = 255;
+  redVal = 1;
+  greenVal = 1;
+  blueVal = 1;
 }
 
 void LEDsOff() 
@@ -525,6 +549,42 @@ void testStatusMode() {
         LEDsOff();
     }
 }
+
+void climberArmsForwardStatusMode() {
+  greenVal = 1; 
+}
+
+void climberArmsBackStatusMode() {
+  redVal = 1; 
+}
+
+void shootingStatusMode() {
+  greenVal = redVal = blueVal;
+  if (isCycleUp) {
+      blueVal += 0.15;
+  } else {
+      blueVal -= 0.15;
+  }
+
+  if (greenVal >= 1) {
+      isCycleUp = false;
+  } else if (greenVal <= 0) {
+      isCycleUp = true;
+  }
+}
+
+void climberSwingingForwardStatusMode() {
+  greenVal = 1;
+}
+
+void climberSwingingBackwardStatusMode() {
+  greenVal = 1;
+}
+
+void climbingTopOfSwingStatusMode() {
+  LEDsOnWhite();
+}
+
 
 void setRGBFromHSV() {
     if (hue > 360) {

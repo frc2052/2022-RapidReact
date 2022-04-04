@@ -34,7 +34,12 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
   public void initialize() {
     super.initialize();
     intake.armOut(); // Makes sure the intake arm is out when the command begins
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
+  }
+
+  @Override
+  public void execute() {
+      super.execute();
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
   }
 
   @Override
@@ -50,7 +55,6 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
     super.end(interrupted);
     intake.stop();
     intake.armIn();
-    LEDSubsystem.getInstance().clearStatusMode();
   }
 
 }

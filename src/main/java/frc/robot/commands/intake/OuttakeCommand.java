@@ -26,11 +26,6 @@ public class OuttakeCommand extends CommandBase {
 
     addRequirements(this.intake, this.hopper, this.indexer);
   }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
-  }
   
   @Override
   public void execute() {
@@ -49,7 +44,6 @@ public class OuttakeCommand extends CommandBase {
     hopper.stop();
     indexer.stopPreload();
     indexer.stopFeeder();
-    LEDSubsystem.getInstance().clearStatusMode();
   }
 
   @Override

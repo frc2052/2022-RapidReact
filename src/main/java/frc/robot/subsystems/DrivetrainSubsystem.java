@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /**
@@ -91,6 +93,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private int counter;
   private double intendedXVelocityMPS;
   private double intendedYVelocityMPS;
+  private boolean climbingSwingingLEDOutput;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -284,12 +287,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return odometry.getPoseMeters().getRotation();
   }
 
+  public void setClimbingLEDOutput(boolean output) {
+        climbingSwingingLEDOutput = output;
+  }
+
 @Override
 public void periodic() {
         boolean isForward = getGyroRoll() < lastRollValue ? true : false;
         lastRollValue = getGyroRoll();
         isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
         lastRollDelta = isForward;
+
+        if (climbingSwingingLEDOutput) {
+                if (isTopOfSwing) {
+                        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
+                } else if (isForward) {
+                        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
+                } else {
+                        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
+                }
+        }
+        climbingSwingingLEDOutput = false; // Turns off output if no longer being set true every cycle by auto-climb commands
 
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));
@@ -298,14 +316,14 @@ public void periodic() {
         // SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         // SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
-        
+
         // For comparing gyro and wheel velocities
         SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
         // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
         // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
         // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
         SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
-        
+
         SmartDashboard.putBoolean("Swing Backward", isForward);
         SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
 
@@ -316,5 +334,5 @@ public void periodic() {
         //     counter++;
         // }
         // SmartDashboard.putNumber("Times at the top", counter);
-    }
+        }
 }

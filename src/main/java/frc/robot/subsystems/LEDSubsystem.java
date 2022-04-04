@@ -17,7 +17,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     private LEDStatusMode currentStatusMode;
     private LEDStatusMode lastStatusMode;
-    private LEDStatusMode alertStatusMode;
+    private LEDAlertStatusMode alertStatusMode;
 
     private Timer timer;
 
@@ -45,30 +45,29 @@ public class LEDSubsystem extends SubsystemBase {
     
     public enum LEDStatusMode {
         RAINBOW(1, 10),
-        BLINK_RED(2, 2),
-        SOLID_WHITE(3, 2),
-        DISABLED(4, 10),
+        BLINK_RED(2, 10),
+        SOLID_WHITE(3, 10),
+        DISABLED(4, 1),
         AUTONOMOUS_INTAKE_ON(5, 10),
         AUTONOMOUS_DEFAULT(6, 10),
-        AUTONOMOUS_FINISHED(7, 10),
+        AUTONOMOUS_FINISHED(7, 9),
         TELEOP_DEFAULT(8, 10),
         VISION_TARGETING(9, 4),
         VISION_TARGET_LINED_UP(10, 3),
-        ENG_GAME_WARNING(11, 10),
         CLIMBING_DEFAULT(12, 10),
         CLIMBER_EXTENDING(13, 10),
         CLIMBER_RETRACTING(14, 10),
-        CLIMBER_MAX_EXTENSION(15, 10),
-        CLIMBER_MIN_EXTENSION(16, 10),
-        CLIMBING_MID_BAR(17, 10),
-        CLIMBING_HIGH_BAR(18, 10),
-        CLIMBING_TRAVERSAL(19, 10),
-        CLIMBING_LOCK_ENGAGED(20, 2),
+        CLIMBING_SWINGING_FORWARD(25, 3),
+        CLIMBING_SWINGING_BACKWARD(26, 3),
+        CLIMBER_MAX_EXTENSION(15, 3),
+        CLIMBER_MIN_EXTENSION(16, 3),
+        CLIMBING_MID_BAR(17, 8),
+        CLIMBING_HIGH_BAR(18, 8),
+        CLIMBING_TRAVERSAL(19, 8),
         TEST_MODE(21, 10),
         CLIMBER_ARMS_BACK(22, 10),
         CLIMBER_ARMS_FORWARD(23, 10),
-        SHOOTING(24, 2),
-        LIGHT_SHOW(30, 10); // Meant for either demonstration or when the drivetrian is dead
+        SHOOTING(24, 2);
 
         private final int code; // Code to be encoded into the DIO pins to be received by arduino
         private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not
@@ -83,23 +82,57 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
-        double matchTime = DriverStation.getMatchTime(); // The current approximate match time
+    public enum LEDAlertStatusMode {
+        CLIMBING_LOCK_ENGAGED(20, 1, Integer.MAX_VALUE),
+        ENG_GAME_WARNING(11, 2, 5),
+        CLIMBING_TOP_OF_SWING(27, 3, 0.5),
+        LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
 
-        if (matchTime >= 120 && matchTime <= 125) {
-            currentStatusMode = LEDStatusMode.ENG_GAME_WARNING;
-        } else if (currentStatusMode == null) {
-            if (DriverStation.isAutonomous()) {
-                currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
-            } else if (DriverStation.isTeleop()) {
-                currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-            } else if (DriverStation.isTest()) {
-                currentStatusMode = LEDStatusMode.TEST_MODE;
-            }
+        private final int code; // Code to be encoded into the DIO pins to be received by arduino
+        private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not
+        private final double duration;
+
+        LEDAlertStatusMode(int code, int rank, double duration) {
+            this.code = code;
+            this.rank = rank;
+            this.duration = duration;
         }
 
-        int code = currentStatusMode.code;
+        public int getRank() {
+            return rank;
+        }
+    }
+
+    @Override
+    public void periodic() {
+        int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
+        int code = 0;
+
+        if (matchTime == 120) {
+            alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
+        }
+
+        if (alertStatusMode == null) {
+            if (currentStatusMode == null) {
+                if (DriverStation.isAutonomous()) {
+                    currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
+                } else if (DriverStation.isTeleop()) {
+                    currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+                } else if (DriverStation.isTest()) {
+                    currentStatusMode = LEDStatusMode.TEST_MODE;
+                } else {
+                    currentStatusMode = LEDStatusMode.DISABLED;
+                }
+            }
+
+            code = currentStatusMode.code;
+        } else {
+            code = alertStatusMode.code;
+
+            if (timer.hasElapsed(alertStatusMode.duration)) {
+                clearAlertStatusMode();
+            }
+        }
 
         // Code for encoding the code to binary on the digitalOutput pins
         codeChannel1.set(code / 16 % 2 == 1 ? true : false);
@@ -107,24 +140,55 @@ public class LEDSubsystem extends SubsystemBase {
         codeChannel3.set(code / 4 % 2 == 1 ? true : false);
         codeChannel4.set(code / 2 % 2 == 1 ? true : false);
         codeChannel5.set(code % 2 == 1 ? true : false);
+
+        lastStatusMode = currentStatusMode;
+        clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
     }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
         if (statusMode == null) {
             currentStatusMode = null;
         } else {
-            if (statusMode.getRank() >= currentStatusMode.getRank()) {
+            if (currentStatusMode == null) {
+                currentStatusMode = statusMode;
+            } else if (statusMode.getRank() >= currentStatusMode.getRank()) {
                 currentStatusMode = statusMode;
             }
         }
     }
 
-    public void setAlertLEDStatusMode(LEDStatusMode statusMode) {
-        alertStatusMode = statusMode;
+    public void setAlertLEDStatusMode(LEDAlertStatusMode statusMode) {
+        if (alertStatusMode != statusMode) {
+            alertStatusMode = statusMode;
+            clearTimer();
+            timer.start();
+        }
     }
 
     public void clearStatusMode() {
         currentStatusMode = null;
+    }
+
+    public void clearAlertStatusMode() {
+        alertStatusMode = null;
+    }
+
+    private void lightShow() {
+        double time = timer.get();
+        if (time < 15) {
+            currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        } else if (time < 8) {
+            currentStatusMode = LEDStatusMode.RAINBOW;
+        } else {
+            timer.reset();
+        }
+    }
+
+    private void clearTimer() {
+        if(timer != null) {
+            timer.stop();
+            timer = null;
+        }
     }
 
 //    private final CANifier canifier;

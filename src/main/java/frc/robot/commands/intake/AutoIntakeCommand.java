@@ -23,7 +23,12 @@ public class AutoIntakeCommand extends IntakeHopperRunCommand {
   public void initialize() {
     super.initialize();
     intake.armOut();
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
+  }
+
+  @Override
+  public void execute() {
+      super.execute();
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
   }
 
   @Override
@@ -34,6 +39,5 @@ public class AutoIntakeCommand extends IntakeHopperRunCommand {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    LEDSubsystem.getInstance().clearStatusMode();
   }
 }

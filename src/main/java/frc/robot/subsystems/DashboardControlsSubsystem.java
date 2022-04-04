@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -234,7 +235,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIGHT_SHOW);
+            if (isDrivetrainDead) {
+                LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.LIGHT_SHOW);
+            } else {
+                LEDSubsystem.getInstance().clearAlertStatusMode();
+            }
             lastIsDrivetrainDead = isDrivetrainDead;
         }
 

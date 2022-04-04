@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class HookClimberSubsystem extends SubsystemBase{
@@ -129,14 +130,14 @@ public class HookClimberSubsystem extends SubsystemBase{
         System.err.println("************************ CLIMBER LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
+        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
     public void unlock() {
         System.err.println("************************ CLIMBER UNLOCKED");
         lockSolenoid.set(Value.kForward);
         isLocked = false;
-        LEDSubsystem.getInstance().clearStatusMode();
+        LEDSubsystem.getInstance().clearAlertStatusMode();
     }
 
     public void zeroEncoder() {
