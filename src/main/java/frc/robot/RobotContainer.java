@@ -58,6 +58,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
+import frc.robot.subsystems.UsbCameraSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.ButtonBindingsProfile;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
@@ -84,6 +85,7 @@ public class RobotContainer {
   private VisionSubsystem vision;
   private DashboardControlsSubsystem dashboardControls;
   private ShooterSubsystem shooter;
+  private UsbCameraSubsystem intakeCamera;
   private TargetingSubsystem targeting;
   private IndexerSubsystem indexer;
   private IntakeSubsystem intake;
@@ -104,6 +106,7 @@ public class RobotContainer {
   private boolean initComplete = false;
   private boolean competitionMode = false;
   private boolean isShooting = false;
+  private boolean lastIsShooting = false;
 
   private Command autonomousCommand;
 
@@ -127,9 +130,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
       new DefaultDriveCommand(
         drivetrain,
-        () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(turnJoystick.getX(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+        () -> -modifyAxis(driveJoystick.getY(), xLimiter),
+        () -> -modifyAxis(driveJoystick.getX(), yLimiter),
+        () -> -modifyAxis(turnJoystick.getX(), turnLimiter),
         () -> { return tempFieldCentricButton.get(); }
 		  )
     );
@@ -144,11 +147,10 @@ public class RobotContainer {
     if (!initComplete) {
         initComplete = true;
 
-    //intakeCamera = new UsbCameraSubsystem();  
-
     // //The following subsystems have a dependency on CAN
 
         // shooter = new ShooterSubsystem();
+        intakeCamera = new UsbCameraSubsystem();  
         indexer = new IndexerSubsystem();
         intake = new IntakeSubsystem();
         hopper = new HopperSubsystem();
@@ -177,8 +179,8 @@ public class RobotContainer {
     JoystickButton intakeReverseButton = new JoystickButton(secondaryPannel, 6);
     //intakeArmOutButton = when secondary pannel x or y increase
     //intakeArmInButton = when secondary pannel x or y decrease
-    Button intakeArmOutButton = new Button(() -> (secondaryPannel.getY() == 1));
-    Button intakeArmInButton = new Button(() -> (secondaryPannel.getY() == -1));
+    Button intakeArmOutButton = new Button(() -> (secondaryPannel.getY() >= 0.5));
+    Button intakeArmInButton = new Button(() -> (secondaryPannel.getY() <= -0.5));
     JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
 
     // Shooter Buttons Bindings
@@ -202,7 +204,7 @@ public class RobotContainer {
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
     // In Testing
-    JoystickButton testingButton = new JoystickButton(turnJoystick, 8);
+    JoystickButton testingButton = new JoystickButton(turnJoystick, 10);
 
     Command shootSingleCommand =
       new ParallelCommandGroup(
@@ -219,11 +221,11 @@ public class RobotContainer {
     Command visionShootAllCommand =
       new ParallelCommandGroup(
         // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-        new ConditionalCommand(
-          new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
+        //new ConditionalCommand(
+        //  new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
           new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-          dashboardControls::getIsLimelightDead
-        ),
+        //  dashboardControls::getIsLimelightDead
+       // ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -234,12 +236,13 @@ public class RobotContainer {
       );
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake, indexer, hopper);
-    Command intakeOnCommand =
+    /*Command intakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new OnlyIntakeCommand(intake, indexer), 
         new IntakeHopperRunCommand(intake, indexer, hopper),
         this::getIsShooting
-      );
+      ).withInterrupt(() -> getIsShooting());*/
+    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
     Command nonVisionShootLowGoalCommand = new ShootLowCommand(shooter, indexer);
@@ -285,7 +288,7 @@ public class RobotContainer {
     
     // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(intakeToggleCommand);
-    intakeInButton.whileHeld(intakeOnCommand);
+    intakeInButton.whenPressed(intakeOnCommand);
     intakeReverseButton.whileHeld(intakeReverseCommand);
     intakeArmOutButton.whenPressed(intakeArmOutCommand);
     intakeArmInButton.whenPressed(intakeArmInCommand);

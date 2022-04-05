@@ -248,6 +248,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             shooter.setShootAngle1Override(true);
             lastIsPnuematicsDead = isPnuematicsDead;
         }
+
+        SmartDashboard.putBoolean("Shooting", robotContainer.getIsShooting());
     }
 
     public void resetSelectedAuto() {

@@ -134,12 +134,18 @@ public class LEDSubsystem extends SubsystemBase {
             }
         }
 
+        SmartDashboard.putBoolean("channel1", (code & 1) > 0);
+        SmartDashboard.putBoolean("channel2", (code & 2) > 0);
+        SmartDashboard.putBoolean("channel3", (code & 4) > 0);
+        SmartDashboard.putBoolean("channel4", (code & 8) > 0);
+        SmartDashboard.putBoolean("channel5", (code & 16) > 0);
+
         // Code for encoding the code to binary on the digitalOutput pins
-        codeChannel1.set(code / 16 % 2 == 1 ? true : false);
-        codeChannel2.set(code / 8 % 2 == 1 ? true : false);
-        codeChannel3.set(code / 4 % 2 == 1 ? true : false);
-        codeChannel4.set(code / 2 % 2 == 1 ? true : false);
-        codeChannel5.set(code % 2 == 1 ? true : false);
+        // codeChannel1.set((code & 1) > 0);
+        // codeChannel2.set((code & 2) > 0);
+        // codeChannel3.set((code & 4) > 0);
+        // codeChannel4.set((code & 8) > 0);
+        // codeChannel5.set((code & 16) > 0);
 
         lastStatusMode = currentStatusMode;
         clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
