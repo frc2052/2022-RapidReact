@@ -88,7 +88,7 @@ public class Left2Ball2DefenseAuto extends AutoBase {
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(driveToHideOpponentBalls);
         this.addCommands(super.newIntakeArmOutCommand());
-        this.addCommands(outtakeBalls);
+        this.addCommands(outtakeBalls.withTimeout(1));
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(driveBackToBeginTeleop);
         this.addCommands(super.newIntakeArmOutCommand());
