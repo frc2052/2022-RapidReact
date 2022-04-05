@@ -211,10 +211,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  private void clearTimer() {
-    if(timer != null) {
-        timer.stop();
-        timer = null;
-    }
-}
+  // private void clearTimer() {
+  //   if(timer != null) {
+  //       timer.stop();
+  //       timer = null;
+  //   }
+  // }
 }

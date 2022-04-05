@@ -15,12 +15,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class TuneShooterCommand extends ShooterIndexingCommand {
   private ShooterSubsystem shooter;
-  private final IndexerSubsystem indexer;
-  private final IntakeSubsystem intake;
-  private final HopperSubsystem hopper;
-
-  private boolean secondBallOnTheWay;
-  private Timer timer;
 
   public TuneShooterCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, IntakeSubsystem intake, HopperSubsystem hopper) {
     super(
@@ -31,9 +25,6 @@ public class TuneShooterCommand extends ShooterIndexingCommand {
     );
     
     this.shooter = shooter;
-    this.indexer = indexer;
-    this.intake = intake;
-    this.hopper = hopper;
 
     SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 5000);
     SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 5000);

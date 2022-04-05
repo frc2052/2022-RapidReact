@@ -7,10 +7,8 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;

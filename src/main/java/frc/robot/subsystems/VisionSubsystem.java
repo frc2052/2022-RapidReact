@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -26,6 +25,7 @@ public class VisionSubsystem extends SubsystemBase{
     private double lastTl;
     
     private boolean ledOverride = false;
+    private boolean isUpdating = true;
     private Timer timer;
 
     private NetworkTableEntry ltv; // If the Limelight has any targets.              Value between 0.0 and 1.0.
@@ -94,10 +94,11 @@ public class VisionSubsystem extends SubsystemBase{
             timer.start();
         }
         if (timer.hasElapsed(1)) {
-          System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
+          isUpdating = false;
         }
       } else {
-          clearTimer();
+        isUpdating = true;
+        clearTimer();
       }
 
       lastTl = tl;
@@ -195,11 +196,15 @@ public class VisionSubsystem extends SubsystemBase{
     }
 
     public Rotation2d getXRotation() {
-        return Rotation2d.fromDegrees(tx);
+      return Rotation2d.fromDegrees(tx);
     }
 
     public Rotation2d getYRotation() {
-        return Rotation2d.fromDegrees(ty);
+      return Rotation2d.fromDegrees(ty);
+    }
+
+    public boolean getIsUpdating() {
+      return isUpdating;
     }
 
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').

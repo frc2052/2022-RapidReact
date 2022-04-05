@@ -270,8 +270,7 @@ public class RobotContainer {
     Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get());
     Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
     Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 4000, 4000);
-    NonVisionShootCommand eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 4000, 4000);
-    eject2Command.overrideDelay();
+    Command eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 4000, 4000, true);
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
@@ -325,6 +324,7 @@ public class RobotContainer {
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
     SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
 
+    // Testing Zone
     Command testCommand = new OnlyIntakeCommand(intake, indexer);
     //testingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
         //   Command testCommand = 

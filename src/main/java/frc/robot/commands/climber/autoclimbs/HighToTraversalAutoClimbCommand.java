@@ -1,6 +1,5 @@
 package frc.robot.commands.climber.autoclimbs;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
@@ -8,13 +7,14 @@ import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
     /**
+     * Command for automatically transferring robot from the Mid bar to the High bar, by extending the hooks just a bit,
+     * puts the arms back, extends them to be just slightly below the traversal bar, and then waits for the robot to be robot
+     * to be at the top of its swing before extending the arms again and shifting them forward. 
      * Requires being already clipped onto Mid Bar correctly.
      * @param climber
      * @param drivetrain

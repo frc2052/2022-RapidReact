@@ -4,7 +4,6 @@
 
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -41,7 +40,9 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideDelay) {
     this(shootMode, shooter, indexer, hopper, firingAngleMode, topWheelVelocity, bottomWheelVelocity);
-    if (overrideDelay) { overrideDelay(); }
+    if (overrideDelay) { 
+      overrideDelay(); 
+    }
   }
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {

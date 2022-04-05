@@ -205,6 +205,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches), Rotation2d.fromDegrees(wheelRotationDegrees));
     }
 
+    protected Translation2d newTranslation2dInches(double xInches, double yInches) {
+        return new Translation2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches));
+    }
+
     /**
      * Creates a custom Trajectory Config from AutoTrajectoryConfig
      * @param maxXYVelocityMPS - Max driving velocity in meters per second

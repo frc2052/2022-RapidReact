@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +25,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     private int ledBrightness;
     private int lastLEDBrightness;
+    private int limelightDeadSeconds;
     private double lastShooterBoostPct;
 
     // private boolean limelightLEDsEnabled;
@@ -46,6 +48,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
     private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
+    private Timer timer;
 
     private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer, ShooterSubsystem shooter) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
@@ -135,6 +138,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", false);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         SmartDashboard.putBoolean("Limelight LED Override", false);
+        SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
@@ -153,7 +157,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         Boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         Boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         boolean limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
-        boolean isLimelightDead = SmartDashboard.getBoolean("Limelight Is Dead", false);
+        boolean isLimelightDead = !vision.getIsUpdating(); //SmartDashboard.getBoolean("Limelight Is Dead", false);
         boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
@@ -229,9 +233,13 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastSelectedButtonBindingsProfile = selectedButtonBindingsProfile;
         }
 
-        if (isLimelightDead != lastIsLimelightDead) {
-            this.isLimelightDead = isLimelightDead;
-            lastIsLimelightDead = isLimelightDead;
+        if (isLimelightDead) {
+            flashLostLimelightCommunicationWarning();
+            // this.isLimelightDead = isLimelightDead;
+            // lastIsLimelightDead = isLimelightDead;
+        } else {
+            limelightDeadSeconds = 0;
+            clearTimer();
         }
 
         if (isDrivetrainDead != lastIsDrivetrainDead) {
@@ -244,8 +252,12 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (isPnuematicsDead != lastIsPnuematicsDead) {
-            shooter.setShootAngle1();
-            shooter.setShootAngle1Override(true);
+            if (isPnuematicsDead) {
+                shooter.setShootAngle1();
+                shooter.setShootAngle1Override(true);
+            } else {
+                shooter.setShootAngle1Override(false);
+            }
             lastIsPnuematicsDead = isPnuematicsDead;
         }
 
@@ -283,6 +295,23 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     public void setLastLimelightLEDsEnabled(boolean state) {
         lastLimelightLEDsEnabled = state;
+    }
+
+    public void flashLostLimelightCommunicationWarning() {
+        if (timer == null) {
+            timer = new Timer();
+            timer.start();
+        }
+
+        if (timer.hasElapsed(1)) {
+            limelightDeadSeconds++;
+            System.err.println("*** LIMELIGHT HASN't UPDATED IN " + limelightDeadSeconds + " SECONDS");
+            timer.reset();
+        } else if (timer.hasElapsed(0.5)) {
+            SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
+        } else {
+            SmartDashboard.putBoolean("Lost Limelight Comm Warning", true);
+        }
     }
 
     public enum Autos {
@@ -336,5 +365,12 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         //     this.driveJoystickBindings = driveJoystickBindings;
         //     this.secondaryPannelBindings = secondaryPannelBindings;
         // }
+    }
+
+    private void clearTimer() {
+        if(timer != null) {
+            timer.stop();
+            timer = null;
+        }
     }
 }

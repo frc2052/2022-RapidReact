@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.OuttakeCommand;
 import frc.robot.commands.intake.OuttakeCommand.OuttakeMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
