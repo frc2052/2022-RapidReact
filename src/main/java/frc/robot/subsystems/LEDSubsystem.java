@@ -25,13 +25,13 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDSubsystem() {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
-        codeChannel1 = new DigitalOutput(0);
-        codeChannel2 = new DigitalOutput(1);
-        codeChannel3 = new DigitalOutput(2);
-        codeChannel4 = new DigitalOutput(3);
-        codeChannel5 = new DigitalOutput(4);
+        // codeChannel1 = new DigitalOutput(0);
+        // codeChannel2 = new DigitalOutput(1);
+        // codeChannel3 = new DigitalOutput(2);
+        // codeChannel4 = new DigitalOutput(3);
+        // codeChannel5 = new DigitalOutput(4);
 
-        timer = new Timer();
+        // timer = new Timer();
 
         currentStatusMode = LEDStatusMode.DISABLED;
     }
@@ -103,36 +103,36 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
-        int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
-        int code = 0;
+    // @Override
+    // public void periodic() {
+    //     int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
+    //     int code = 0;
 
-        if (matchTime == 120) {
-            alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
-        }
+    //     if (matchTime == 120) {
+    //         alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
+    //     }
 
-        if (alertStatusMode == null) {
-            if (currentStatusMode == null) {
-                if (DriverStation.isAutonomous()) {
-                    currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
-                } else if (DriverStation.isTeleop()) {
-                    currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-                } else if (DriverStation.isTest()) {
-                    currentStatusMode = LEDStatusMode.TEST_MODE;
-                } else {
-                    currentStatusMode = LEDStatusMode.DISABLED;
-                }
-            }
+    //     if (alertStatusMode == null) {
+    //         if (currentStatusMode == null) {
+    //             if (DriverStation.isAutonomous()) {
+    //                 currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
+    //             } else if (DriverStation.isTeleop()) {
+    //                 currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+    //             } else if (DriverStation.isTest()) {
+    //                 currentStatusMode = LEDStatusMode.TEST_MODE;
+    //             } else {
+    //                 currentStatusMode = LEDStatusMode.DISABLED;
+    //             }
+    //         }
 
-            code = currentStatusMode.code;
-        } else {
-            code = alertStatusMode.code;
+    //         code = currentStatusMode.code;
+    //     } else {
+    //         code = alertStatusMode.code;
 
-            if (timer.hasElapsed(alertStatusMode.duration)) {
-                clearAlertStatusMode();
-            }
-        }
+    //         if (timer.hasElapsed(alertStatusMode.duration)) {
+    //             clearAlertStatusMode();
+    //         }
+    //     }
 
         // SmartDashboard.putBoolean("channel1", (code & 1) > 0);
         // SmartDashboard.putBoolean("channel2", (code & 2) > 0);
@@ -140,55 +140,55 @@ public class LEDSubsystem extends SubsystemBase {
         // SmartDashboard.putBoolean("channel4", (code & 8) > 0);
         // SmartDashboard.putBoolean("channel5", (code & 16) > 0);
 
-        code = 1;
-        // Code for encoding the code to binary on the digitalOutput pins
-        codeChannel1.set((code & 1) > 0);
-        codeChannel2.set((code & 2) > 0);
-        codeChannel3.set((code & 4) > 0);
-        codeChannel4.set((code & 8) > 0);
-        codeChannel5.set((code & 16) > 0);
+        // code = 1;
+        // // Code for encoding the code to binary on the digitalOutput pins
+        // codeChannel1.set((code & 1) > 0);
+        // codeChannel2.set((code & 2) > 0);
+        // codeChannel3.set((code & 4) > 0);
+        // codeChannel4.set((code & 8) > 0);
+        // codeChannel5.set((code & 16) > 0);
 
-        lastStatusMode = currentStatusMode;
-        clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
-    }
+        // lastStatusMode = currentStatusMode;
+        // clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
+    // }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
-        if (statusMode == null) {
-            currentStatusMode = null;
-        } else {
-            if (currentStatusMode == null) {
-                currentStatusMode = statusMode;
-            } else if (statusMode.getRank() >= currentStatusMode.getRank()) {
-                currentStatusMode = statusMode;
-            }
-        }
+        // if (statusMode == null) {
+        //     currentStatusMode = null;
+        // } else {
+        //     if (currentStatusMode == null) {
+        //         currentStatusMode = statusMode;
+        //     } else if (statusMode.getRank() >= currentStatusMode.getRank()) {
+        //         currentStatusMode = statusMode;
+        //     }
+        // }
     }
 
     public void setAlertLEDStatusMode(LEDAlertStatusMode statusMode) {
-        if (alertStatusMode != statusMode) {
-            alertStatusMode = statusMode;
-            clearTimer();
-            timer.start();
-        }
+        // if (alertStatusMode != statusMode) {
+        //     alertStatusMode = statusMode;
+        //     clearTimer();
+        //     timer.start();
+        // }
     }
 
     public void clearStatusMode() {
-        currentStatusMode = null;
+        // currentStatusMode = null;
     }
 
     public void clearAlertStatusMode() {
-        alertStatusMode = null;
+        // alertStatusMode = null;
     }
 
     private void lightShow() {
-        double time = timer.get();
-        if (time < 15) {
-            currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-        } else if (time < 8) {
-            currentStatusMode = LEDStatusMode.RAINBOW;
-        } else {
-            timer.reset();
-        }
+        // double time = timer.get();
+        // if (time < 15) {
+        //     currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        // } else if (time < 8) {
+        //     currentStatusMode = LEDStatusMode.RAINBOW;
+        // } else {
+        //     timer.reset();
+        // }
     }
 
     private void clearTimer() {

@@ -31,7 +31,7 @@ public class ShootCommand extends ShooterIndexingCommand {
 
   private double distanceInches;
   private ShooterDistanceConfig shooterConfig;
-  private boolean lastSawStaged;
+  // private boolean lastSawStaged;
 
   public ShootCommand(
     ShootMode shootMode, 
@@ -91,22 +91,22 @@ public class ShootCommand extends ShooterIndexingCommand {
   @Override
   public void execute() {
 
-    boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+    // boolean stagedCargoDetected = indexer.getCargoStagedDetected();
 
     if (vision.getHasValidTarget()) {
-        distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
+      distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
 
-        // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
-        if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
+      // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
+      if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
         shooter.setShootAngle1();
-        } else if (distanceInches > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
+      } else if (distanceInches > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
         shooter.setShootAngle2();
-        }
+      }
 
-        shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
+      shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
     }
 
-    SmartDashboard.putNumber("Distance Inches", distanceInches);
+    // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     shooter.shootAtSpeed(
       shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
@@ -118,11 +118,11 @@ public class ShootCommand extends ShooterIndexingCommand {
       super.isLinedUp = isLinedUSupplier.getAsBoolean();
       super.execute();
 
-      if (!stagedCargoDetected && lastSawStaged) {
-          System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
-          + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
-      }
-      lastSawStaged = stagedCargoDetected;
+      // if (!stagedCargoDetected && lastSawStaged) {
+      //     System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + " Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
+      //     + " Top Velocity: " + shooter.getTopWheelVelocity() + " Bottom Velocity: " + shooter.getBottomWheelVelocity());
+      // }
+      // lastSawStaged = stagedCargoDetected;
     }
   }
 

@@ -105,7 +105,7 @@ public class RobotContainer {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private boolean initComplete = false;
-  private boolean competitionMode = true;
+  // private boolean competitionMode = true;
   private boolean isShooting = false;
   private boolean lastIsShooting = false;
 
@@ -283,7 +283,7 @@ public class RobotContainer {
     // );
 
     // Drivetrain Button Command Bindings
-    resetGyroButton.whenPressed(() -> { this.resetGyro(); });
+    resetGyroButton.whenPressed(resetGyroCommand);
     tempFieldCentricButton.whenPressed(() -> { this.resetGyro(); });
     
     // Intake Button Command Bindings
@@ -352,46 +352,46 @@ public class RobotContainer {
 
     testingButton.whenHeld(testCommand);
 
-    if (!competitionMode) { // Makes sure not to do any processing of this if we're at compeition because we don't need it
-      ButtonCommands.VISION_SHOOT_ALL.setCommand(visionShootAllCommand);
-      ButtonCommands.NONVISION_SHOOT_LOW_GOAL.setCommand(nonVisionShootLowGoalCommand);
-      ButtonCommands.NONVISION_SHOOT_ALL.setCommand(nonVisionShootAllCommand);
-      ButtonCommands.MANUAL_SHOOT.setCommand(tuneShooterCommand);
-      // ButtonCommands.LINEUP_SHOOT.setCommand(lineupShootCommand);
-      ButtonCommands.TUNE_SHOOTER.setCommand(tuneShooterCommand);
-      ButtonCommands.RESET_GYRO.setCommand(resetGyroCommand);
-      ButtonCommands.VISION_SHOOT_SINGLE.setCommand(shootSingleCommand);
-      ButtonCommands.CLIMBER_RETRACT.setCommand(climberRetractCommand);
-      ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(toggleClimberAngleCommand);
-      ButtonCommands.CLIMBER_EXTEND.setCommand(climberExtendCommand);
-      ButtonCommands.INTAKE_TOGGLE.setCommand(intakeToggleCommand);
-      ButtonCommands.INTAKE_REVERSE.setCommand(intakeReverseCommand);
-      ButtonCommands.INTAKE_ON.setCommand(intakeOnCommand);
-      ButtonCommands.CLIMBER_LIMIT_OVERRIDE.setCommand(null);
-      ButtonCommands.UNLOCK_CLIMBER.setCommand(unlockClimberCommand);
-      ButtonCommands.LOCK_CLIMBER.setCommand(lockClimberCommand);
-    }
+    // if (!competitionMode) { // Makes sure not to do any processing of this if we're at compeition because we don't need it
+    //   ButtonCommands.VISION_SHOOT_ALL.setCommand(visionShootAllCommand);
+    //   ButtonCommands.NONVISION_SHOOT_LOW_GOAL.setCommand(nonVisionShootLowGoalCommand);
+    //   ButtonCommands.NONVISION_SHOOT_ALL.setCommand(nonVisionShootAllCommand);
+    //   ButtonCommands.MANUAL_SHOOT.setCommand(tuneShooterCommand);
+    //   // ButtonCommands.LINEUP_SHOOT.setCommand(lineupShootCommand);
+    //   ButtonCommands.TUNE_SHOOTER.setCommand(tuneShooterCommand);
+    //   ButtonCommands.RESET_GYRO.setCommand(resetGyroCommand);
+    //   ButtonCommands.VISION_SHOOT_SINGLE.setCommand(shootSingleCommand);
+    //   ButtonCommands.CLIMBER_RETRACT.setCommand(climberRetractCommand);
+    //   ButtonCommands.TOGGLE_CLIMBER_ANGLE.setCommand(toggleClimberAngleCommand);
+    //   ButtonCommands.CLIMBER_EXTEND.setCommand(climberExtendCommand);
+    //   ButtonCommands.INTAKE_TOGGLE.setCommand(intakeToggleCommand);
+    //   ButtonCommands.INTAKE_REVERSE.setCommand(intakeReverseCommand);
+    //   ButtonCommands.INTAKE_ON.setCommand(intakeOnCommand);
+    //   ButtonCommands.CLIMBER_LIMIT_OVERRIDE.setCommand(null);
+    //   ButtonCommands.UNLOCK_CLIMBER.setCommand(unlockClimberCommand);
+    //   ButtonCommands.LOCK_CLIMBER.setCommand(lockClimberCommand);
+    // }
   }
 
-  public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
-      if (!competitionMode) {
-          CommandScheduler.getInstance().clearButtons();
+  // public void assignButtonBindings(ButtonBindingsProfile buttonBindingsProfile) {
+  //     if (!competitionMode) {
+  //         CommandScheduler.getInstance().clearButtons();
 
-          switch (buttonBindingsProfile) {
-              case DEFAULT:
-                //   Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-                configureButtonBindings();
-                  break;
-              case SOLO_DRIVER:
-                  SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
-                  break;
-              default:
-                  System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
-                  configureButtonBindings();
-                  break;
-          }
-      }
-  }
+  //         switch (buttonBindingsProfile) {
+  //             case DEFAULT:
+  //               //   Default.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+  //               configureButtonBindings();
+  //                 break;
+  //             case SOLO_DRIVER:
+  //                 SoloDriver.configureButtons(driveJoystick, turnJoystick, secondaryPannel);
+  //                 break;
+  //             default:
+  //                 System.err.println("REASSIGN BUTTON BINDINGS FELL THROUGH");
+  //                 configureButtonBindings();
+  //                 break;
+  //         }
+  //     }
+  // }
 
   public boolean getIsShooting() {
     return isShooting;
@@ -408,9 +408,9 @@ public class RobotContainer {
 
   public void initializeAutonomousCommand() {
     switch(dashboardControls.getSelectedAuto()) {
-      case AUTO_TESTING:
-        autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
-        break;
+      // case AUTO_TESTING:
+      //   autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+      //   break;
       case ONE_BALL:
         autonomousCommand = new OneBallAuto(drivetrain, shooter, indexer, hopper, climber);
         break;
@@ -435,9 +435,9 @@ public class RobotContainer {
       case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
         autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case RIGHT_FIVE_BALL_2:
-        autonomousCommand = new Right5BallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-        break;
+      // case RIGHT_FIVE_BALL_2:
+      //   autonomousCommand = new Right5BallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      //   break;
       case RIGHT_FIVE_BALL_3:
         autonomousCommand = new Right5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;

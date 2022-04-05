@@ -104,8 +104,8 @@ public class VisionSubsystem extends SubsystemBase{
       lastTl = tl;
 
       SmartDashboard.putBoolean("Has Target?", hasValidTarget);
-      SmartDashboard.putNumber("Pipeline", pipeline);
-      SmartDashboard.putString("Latency", tl + "ms");
+      // SmartDashboard.putNumber("Pipeline", pipeline);
+      // SmartDashboard.putString("Latency", tl + "ms");
       SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
       if (hasValidTarget) {
@@ -115,9 +115,9 @@ public class VisionSubsystem extends SubsystemBase{
         // SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
         // SmartDashboard.putNumber("Test Equation Distance", testEquationDistance());
         SmartDashboard.putNumber("Limelight Tolerance", getTolerance());
-        double distanceInches = VisionCalculator.getInstance().getDistanceInches(ty);
-        SmartDashboard.putNumber("Calculator Distance Inches", distanceInches);
-        SmartDashboard.putNumber("Calculator Distance Feet", distanceInches / 12);
+        // double distanceInches = VisionCalculator.getInstance().getDistanceInches(ty);
+        // SmartDashboard.putNumber("Calculator Distance Inches", distanceInches);
+        // SmartDashboard.putNumber("Calculator Distance Feet", distanceInches / 12);
 
         // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }

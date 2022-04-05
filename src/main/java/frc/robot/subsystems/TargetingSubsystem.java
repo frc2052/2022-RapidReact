@@ -122,44 +122,44 @@ public class TargetingSubsystem extends SubsystemBase {
         this.targetingMode = targetingMode;
     }
 
-    @Override
-    public void periodic() {
-    //     currentRotation = drivetrain.getGyroscopeRotation();
+    // @Override
+    // public void periodic() {
+    // //     currentRotation = drivetrain.getGyroscopeRotation();
 
-    //     if (targetingMode != TargetingMode.NONE) {
-    //         if (Math.abs(rotation.getDegrees()) <= vision.getTolerance()) { // currentRotation.minus(rotation).getDegrees()
-    //             isLinedUpToShoot = true;
-    //         } else {
-    //             isLinedUpToShoot = false;
-    //         }
-    //     } else {
-    //         isLinedUpToShoot = false;
-    //     }
+    // //     if (targetingMode != TargetingMode.NONE) {
+    // //         if (Math.abs(rotation.getDegrees()) <= vision.getTolerance()) { // currentRotation.minus(rotation).getDegrees()
+    // //             isLinedUpToShoot = true;
+    // //         } else {
+    // //             isLinedUpToShoot = false;
+    // //         }
+    // //     } else {
+    // //         isLinedUpToShoot = false;
+    // //     }
 
-    //     // switch (targetingMode) {
-    //     //     case CALCULATED_DRIVE_AND_SHOOT:
-    //     //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
-    //     //             isLinedUpToShoot = true;
-    //     //         } else {
-    //     //             isLinedUpToShoot = false;
-    //     //         }
-    //     //         break;
-    //     //     case TRACK_HUB_WITH_OFFSET:
-    //     //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
-    //     //             isLinedUpToShoot = true;
-    //     //         } else {
-    //     //             isLinedUpToShoot = false;
-    //     //         }
-    //     //         break;
-    //     //     case NONE:
-    //     //         break;
-    //     //     default:
-    //     //         System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
-    //     //         break;
-    //     // }
+    // //     // switch (targetingMode) {
+    // //     //     case CALCULATED_DRIVE_AND_SHOOT:
+    // //     //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
+    // //     //             isLinedUpToShoot = true;
+    // //     //         } else {
+    // //     //             isLinedUpToShoot = false;
+    // //     //         }
+    // //     //         break;
+    // //     //     case TRACK_HUB_WITH_OFFSET:
+    // //     //         if (currentRotation.minus(rotation).getDegrees() <= vision.getTolerance()) {
+    // //     //             isLinedUpToShoot = true;
+    // //     //         } else {
+    // //     //             isLinedUpToShoot = false;
+    // //     //         }
+    // //     //         break;
+    // //     //     case NONE:
+    // //     //         break;
+    // //     //     default:
+    // //     //         System.err.println("TARGETING MODE EXECUTE SWITCH FELL THROUGH");
+    // //     //         break;
+    // //     // }
 
-        SmartDashboard.putBoolean("Targeting Is Lined Up", isLinedUpToShoot);
-    }
+    //     SmartDashboard.putBoolean("Targeting Is Lined Up", isLinedUpToShoot);
+    // }
 
     public void setIsLinedUpToShoot(boolean isLinedUpToShoot) {
         this.isLinedUpToShoot = isLinedUpToShoot;
