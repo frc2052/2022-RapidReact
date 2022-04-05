@@ -29,13 +29,10 @@ public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 130000), // Just slightly below the bar
-            new WaitUntilCommand(() -> {
-                drivetrain.setClimbingLEDOutput(true);
-                return drivetrain.getIsTopOfSwing();
-            }),
+            new WaitUntilCommand(() ->  drivetrain.getIsTopOfSwing()),
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> !climber.getIsBelowMaxHeight()),
-            new ClimberArmsForwardCommand(climber),
-            new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_TRAVERSAL))
+            new ClimberArmsForwardCommand(climber)
+            // new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_TRAVERSAL))
             // new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)
         );
     }

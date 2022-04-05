@@ -81,7 +81,7 @@
           },
           "2,0": {
             "size": [
-              3,
+              6,
               3
             ],
             "content": {
@@ -101,8 +101,8 @@
                   "Controls/Rotation": "NONE",
                   "compression": -1.0,
                   "fps": -1,
-                  "imageWidth": -1,
-                  "imageHeight": -1
+                  "imageWidth": 0,
+                  "imageHeight": 0
                 }
               }
             }

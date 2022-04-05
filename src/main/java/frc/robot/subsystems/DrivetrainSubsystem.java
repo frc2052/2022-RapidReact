@@ -298,16 +298,16 @@ public void periodic() {
         isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
         lastRollDelta = isForward;
 
-        if (climbingSwingingLEDOutput) {
-                if (isTopOfSwing) {
-                        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
-                } else if (isForward) {
-                        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
-                } else {
-                        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
-                }
-        }
-        climbingSwingingLEDOutput = false; // Turns off output if no longer being set true every cycle by auto-climb commands
+        // if (climbingSwingingLEDOutput) {
+        //         if (isTopOfSwing) {
+        //                 LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
+        //         } else if (isForward) {
+        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
+        //         } else {
+        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
+        //         }
+        // }
+        // climbingSwingingLEDOutput = false; // Turns off output if no longer being set true every cycle by auto-climb commands
 
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));

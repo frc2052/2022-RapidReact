@@ -29,7 +29,8 @@ public class Right5BallAuto3 extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);
-        Pose2d ball1Pos = super.newPose2dInches(-41, 38, 90);
+        Pose2d ball1Pos = super.newPose2dInches(-35, 38, 90);
+        Pose2d behindBall2Pos = super.newPose2dInches(0, -180, 120);
         Pose2d ball2Pos = super.newPose2dInches(-26, 133, 50);
         Pose2d shootPos = super.newPose2dInches(0, 110, 45);
         Pose2d terminalBallMidPointPos = super.newPose2dInches(32, 287, 150);
@@ -43,8 +44,8 @@ public class Right5BallAuto3 extends AutoBase {
         AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(2.5, 1.5, 2, 5, 2);
         AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 2, 5, 2);
 
-        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(2), startPos, ball1Pos, super.createRotationAngle(175));
-        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(50), ball2Pos, super.createRotationAngle(50));
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(2), startPos, ball1Pos, super.createRotationAngle(170));
+        SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(50), behindBall2Pos, super.createRotationAngle(-30));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(shoot1TrajectoryConfig, super.getLastEndingPosCreated(-60), shootPos, super.createHubTrackingSupplier(-20));
         SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(toTerminalTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(150), terminalBallMidPointPos, super.createRotationAngle(130));
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(135));

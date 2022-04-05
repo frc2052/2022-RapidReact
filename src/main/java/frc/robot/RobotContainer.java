@@ -177,7 +177,7 @@ public class RobotContainer {
     // Intake Buttons Bindings
     JoystickButton intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
     JoystickButton intakeInButton = new JoystickButton(secondaryPannel, 7);
-    JoystickButton intakeReverseButton = new JoystickButton(secondaryPannel, 6);
+    JoystickButton intakeReverseButton = new JoystickButton(secondaryPannel, 9);
     //intakeArmOutButton = when secondary pannel x or y increase
     //intakeArmInButton = when secondary pannel x or y decrease
     Button intakeArmOutButton = new Button(() -> (secondaryPannel.getY() >= 0.5));

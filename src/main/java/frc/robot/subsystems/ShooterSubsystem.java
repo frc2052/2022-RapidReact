@@ -92,18 +92,20 @@ public class ShooterSubsystem extends SubsystemBase {
     boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
         && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    if (topIsOnTarget && bottomIsOnTarget) {
-        if (timer == null) {
-            timer = new Timer();
-            timer.start();
-        }
-        if (timer.hasElapsed(0.25)) {
-            return true;
-        }
-    } else {
-        clearTimer();
-    }
-    return false;
+    return topIsOnTarget && bottomIsOnTarget;
+
+    // if (topIsOnTarget && bottomIsOnTarget) {
+    //     if (timer == null) {
+    //         timer = new Timer();
+    //         timer.start();
+    //     }
+    //     if (timer.hasElapsed(0.25)) {
+    //         return true;
+    //     }
+    // } else {
+    //     clearTimer();
+    // }
+    // return false;
   }
 
   // public void setTopWheelVelocity(double velocity) {
