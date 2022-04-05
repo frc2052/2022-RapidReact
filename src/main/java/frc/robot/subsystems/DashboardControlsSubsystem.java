@@ -300,7 +300,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         RIGHT_FIVE_BALL("*TUNED* Right Five Ball Auto", "Far Right Start (A2) Facing Towards Hub"),
         LEFT_2_BALL_2_DEFENSE("-INITIAL TESTING- Left 2 Ball 2 Defense", "Far Left Start (D) Facing Away From Hub"),
         RIGHT_MIDDLE_5_BALL_1_DEFENSE("_TUNING_ Right Middle 5 Ball 1 Defense", "Right Middle Start (B) Facing Away From Hub"),
-        RIGHT_FIVE_BALL_2("-INITIAL TESTING- Right Five Ball Auto 2 - Faster", "Far Right Start (A2) Facing Away From Hub");
+        RIGHT_FIVE_BALL_2("-INITIAL TESTING- Right Five Ball Auto 2 - Drive And Shoot", "Far Right Start (A2) Facing Away From Hub"),
+        RIGHT_FIVE_BALL_3("-INITIAL TESTING- Right Five Ball Auto 3 - Faster", "Far Right Start (A2) Facing Away From Hub");
 
         public String name;
         public String description;

@@ -20,6 +20,7 @@ import frc.robot.auto.tuned.MiddleLeft4BallTerminalDefenseAuto;
 import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.testing.MiddleRightTerminal3CargoAuto;
 import frc.robot.auto.testing.Right5BallAuto2;
+import frc.robot.auto.testing.Right5BallAuto3;
 import frc.robot.auto.tuned.OneBallAuto;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
@@ -104,7 +105,7 @@ public class RobotContainer {
   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private boolean initComplete = false;
-  private boolean competitionMode = false;
+  private boolean competitionMode = true;
   private boolean isShooting = false;
   private boolean lastIsShooting = false;
 
@@ -150,7 +151,7 @@ public class RobotContainer {
     // //The following subsystems have a dependency on CAN
 
         // shooter = new ShooterSubsystem();
-        intakeCamera = new UsbCameraSubsystem();  
+       // intakeCamera = new UsbCameraSubsystem();  
         indexer = new IndexerSubsystem();
         intake = new IntakeSubsystem();
         hopper = new HopperSubsystem();
@@ -436,6 +437,9 @@ public class RobotContainer {
         break;
       case RIGHT_FIVE_BALL_2:
         autonomousCommand = new Right5BallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case RIGHT_FIVE_BALL_3:
+        autonomousCommand = new Right5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
     //   case THREE_BALL_DRIVE_AND_SHOOT:
     //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);

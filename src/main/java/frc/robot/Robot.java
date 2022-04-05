@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
 
     robotContainer.initializeAutonomousCommand();
 //    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
+
+   // CameraServer.startAutomaticCapture();
 
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }

@@ -50,7 +50,7 @@ public class ShooterIndexingCommand extends CommandBase {
     SmartDashboard.putBoolean("Is Indexing Lined UP", isLinedUp);
 
     if (!wasTwoBallsDetected) {
-      if (preStagedCargoDetected && stagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+      if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
         wasTwoBallsDetected = true;
       }
     }

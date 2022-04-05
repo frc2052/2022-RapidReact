@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
   private boolean shootAngle1Override;
+  private Timer timer;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -90,7 +92,18 @@ public class ShooterSubsystem extends SubsystemBase {
     boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
         && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    return topIsOnTarget && bottomIsOnTarget;
+    if (topIsOnTarget && bottomIsOnTarget) {
+        if (timer == null) {
+            timer = new Timer();
+            timer.start();
+        }
+        if (timer.hasElapsed(0.25)) {
+            return true;
+        }
+    } else {
+        clearTimer();
+    }
+    return false;
   }
 
   // public void setTopWheelVelocity(double velocity) {
@@ -195,4 +208,11 @@ public class ShooterSubsystem extends SubsystemBase {
         return angleDegrees;
     }
   }
+
+  private void clearTimer() {
+    if(timer != null) {
+        timer.stop();
+        timer = null;
+    }
+}
 }

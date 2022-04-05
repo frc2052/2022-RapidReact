@@ -61,7 +61,7 @@ public final class Constants {
         public static final double PRELOAD_WHEEL_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
-        public static final double INDEXER_WHEEL_SPEED = 0.5;
+        public static final double INDEXER_WHEEL_SPEED = .50;
 
         public static final double SHOOTER_TOLERANCE = 0.05;
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
@@ -70,8 +70,8 @@ public final class Constants {
         // public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TODO Tune this
         // public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TODO Tune this
 
-        public static final double ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES = 80; // TODO Tune this
-        public static final double ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES = 18; // TODO Tune this
+        public static final double ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES = 66;
+        public static final double ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES = 6;
 
         public static final double FIRING_ANGLE_1_DEGREES = 72.0;
         public static final double FIRING_ANGLE_2_DEGREES = 60.0;

@@ -296,34 +296,6 @@
               "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
               "_title": "SmartDashboard/Zero Climber Encoder"
             }
-          },
-          "5,0": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Grid Layout",
-              "_title": "Grid Layout",
-              "Layout/Number of columns": 3,
-              "Layout/Number of rows": 3,
-              "Layout/Label position": "BOTTOM",
-              "_children": {
-                "0,1": {
-                  "_type": "Camera Stream",
-                  "_source0": "camera_server://Intake",
-                  "_title": "Intake",
-                  "Crosshair/Show crosshair": true,
-                  "Crosshair/Crosshair color": "#FFFFFFFF",
-                  "Controls/Show controls": true,
-                  "Controls/Rotation": "NONE",
-                  "compression": -1.0,
-                  "fps": -1,
-                  "imageWidth": 0,
-                  "imageHeight": 0
-                }
-              }
-            }
           }
         }
       }
@@ -589,7 +561,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Shooting",
-              "_title": "/SmartDashboard/Shooting",
+              "_title": "SmartDashboard/Shooting",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
