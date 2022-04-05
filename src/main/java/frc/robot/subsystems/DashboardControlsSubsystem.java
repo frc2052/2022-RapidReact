@@ -264,10 +264,13 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Shooting", robotContainer.getIsShooting());
     }
 
-    public void resetSelectedAuto() {
-        SmartDashboard.putData("Autos", null);
-        SmartDashboard.putData("Autos", autoSelector);
-    }
+    // Didn't work
+    // public void reset SelectedAuto() {
+    //     SendableChooser<Autos> autoSelector1 = new SendableChooser<Autos>();
+    //     autoSelector1.setDefaultOption(Autos.NONE_SELECTED.name, Autos.NONE_SELECTED);
+    //     SmartDashboard.putData("Autos", autoSelector1);
+    //     SmartDashboard.putData("Autos", autoSelector);
+    // }
 
     public boolean getIsLimelightDead() {
         return isLimelightDead;
@@ -303,11 +306,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             timer.start();
         }
 
-        if (timer.hasElapsed(1)) {
-            limelightDeadSeconds++;
+        if (timer.hasElapsed(0.5)) {
+            limelightDeadSeconds += 0.5;
             System.err.println("*** LIMELIGHT HASN't UPDATED IN " + limelightDeadSeconds + " SECONDS");
             timer.reset();
-        } else if (timer.hasElapsed(0.5)) {
+        } else if (timer.hasElapsed(0.25)) {
             SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
         } else {
             SmartDashboard.putBoolean("Lost Limelight Comm Warning", true);

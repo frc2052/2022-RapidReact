@@ -177,11 +177,14 @@ public class RobotContainer {
     // Intake Buttons Bindings
     JoystickButton intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
     JoystickButton intakeInButton = new JoystickButton(secondaryPannel, 7);
+    JoystickButton intakeInButton2 = new JoystickButton(secondaryPannel, 6);
     JoystickButton intakeReverseButton = new JoystickButton(secondaryPannel, 9);
     //intakeArmOutButton = when secondary pannel x or y increase
     //intakeArmInButton = when secondary pannel x or y decrease
     Button intakeArmOutButton = new Button(() -> (secondaryPannel.getY() >= 0.5));
     Button intakeArmInButton = new Button(() -> (secondaryPannel.getY() <= -0.5));
+    Button intakeArmOutButton2 = new Button(() -> (secondaryPannel.getX() >= 0.5));
+    Button intakeArmInButton2 = new Button(() -> (secondaryPannel.getX() <= -0.5));
     JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
 
     // Shooter Buttons Bindings
@@ -289,9 +292,12 @@ public class RobotContainer {
     // Intake Button Command Bindings
     intakeArmToggleButton.whenPressed(intakeToggleCommand);
     intakeInButton.whenPressed(intakeOnCommand);
+    intakeInButton2.whenPressed(intakeOnCommand);
     intakeReverseButton.whileHeld(intakeReverseCommand);
     intakeArmOutButton.whenPressed(intakeArmOutCommand);
     intakeArmInButton.whenPressed(intakeArmInCommand);
+    intakeArmOutButton2.whenPressed(intakeArmOutCommand);
+    intakeArmInButton2.whenPressed(intakeArmInCommand);
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);
@@ -322,7 +328,7 @@ public class RobotContainer {
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
-    SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
+    // SmartDashboard.putData("Reset selected Auto Test", new InstantCommand(() -> dashboardControls.resetSelectedAuto()));
 
     // Testing Zone
     Command testCommand = new OnlyIntakeCommand(intake, indexer);

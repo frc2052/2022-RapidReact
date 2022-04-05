@@ -21,7 +21,7 @@ public class IntakeArmOutCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        intake.armIn();
+        intake.armOut();
     }
 
     @Override
