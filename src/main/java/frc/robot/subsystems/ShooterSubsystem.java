@@ -59,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.Solenoids.SHOOTER_ANGLE_OUT_SOLENOID
     );
 
-    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_1 : FiringAngle.ANGLE_2;
+    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_2 : FiringAngle.ANGLE_1;
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
@@ -150,6 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kReverse);
       currentAngle = FiringAngle.ANGLE_1;
     }
+    System.err.println("Setting Angle 1");
   }
 
   public void setShootAngle2() {
@@ -157,6 +158,8 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kForward);
       currentAngle = FiringAngle.ANGLE_2;
     }
+    System.err.println("Setting Angle 2");
+
   }
 
   public void setShootAngle1Override(boolean override) {
@@ -194,6 +197,9 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+
+    // SmartDashboard.putString("Firing Angle", currentAngle.toString());
+    // SmartDashboard.putBoolean("Angle Override", shootAngle1Override);
   }
 
   public enum FiringAngle {

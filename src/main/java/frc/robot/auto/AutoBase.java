@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
+import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
@@ -81,7 +82,7 @@ public class AutoBase  extends SequentialCommandGroup {
         slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(swerveDriveKinematics), 
             new PIDController(1, 0, 0),
-            new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
+            new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
         );
 
         fastTurnTrajectoryConfig = new AutoTrajectoryConfig(
@@ -167,6 +168,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected AutoTimedIntakeOnThenInCommand newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
         return new AutoTimedIntakeOnThenInCommand(intake, indexer, hopper, deadlineSeconds);
+    }
+
+    protected TurnInPlaceCommand newTurnInPlaceCommand(double angleDegrees) {
+        return new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(angleDegrees));
     }
 
     protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
