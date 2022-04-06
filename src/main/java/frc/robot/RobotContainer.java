@@ -232,8 +232,8 @@ public class RobotContainer {
        // ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
-          () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-          () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+          () -> -modifyAxis(driveJoystick.getY(), xLimiter),
+          () -> -modifyAxis(driveJoystick.getX(), yLimiter),
           vision,
           shooter
         )
