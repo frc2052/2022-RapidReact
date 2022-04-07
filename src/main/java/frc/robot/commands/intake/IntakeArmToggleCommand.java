@@ -4,16 +4,16 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeArmToggleCommand extends HopperBaseCommand {
+public class IntakeArmToggleCommand extends CommandBase {
   private final IntakeSubsystem intake;
 
   /** Creates a new IntakeArmToggleCommand. */
-  public IntakeArmToggleCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
-    super(indexer, hopper);
+  public IntakeArmToggleCommand(IntakeSubsystem intake) {
     this.intake = intake;
 
     //addRequirements(this.intake);

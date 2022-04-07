@@ -9,7 +9,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
-        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -64,8 +63,7 @@
                   "_title": "LED Brightness",
                   "Slider Settings/Min": 0.0,
                   "Slider Settings/Max": 100.0,
-                  "Slider Settings/Block increment": 1.0,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 1.0
                 },
                 {
                   "_type": "Number Slider",
@@ -73,8 +71,7 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 0.01
                 }
               ]
             }
@@ -192,31 +189,24 @@
                   ]
                 },
                 {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
-                  "_title": "SmartDashboard/Shooter Bottom Wheel Speed"
-                },
-                {
-                  "_type": "Text View",
+                  "_type": "Simple Dial",
                   "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
-                  "_title": "SmartDashboard/Shooter Top Wheel Speed"
-                },
-                {
-                  "_type": "Toggle Button",
-                  "_source0": "network_table:///SmartDashboard/Limelight Is Dead Button",
-                  "_title": "SmartDashboard/Limelight Is Dead Button"
-                },
-                {
-                  "_type": "Toggle Button",
-                  "_source0": "network_table:///SmartDashboard/Drivetrain Is Dead Button",
-                  "_title": "SmartDashboard/Drivetrain Is Dead Button"
+                  "_title": "SmartDashboard/Shooter Top Wheel Speed",
+                  "Range/Min": 0.0,
+                  "Range/Max": 20000.0,
+                  "Visuals/Show value": true
                 },
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
-                  "_title": "SmartDashboard/Shooter Wheels At Speed?",
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
+                  "_source0": "network_table:///SmartDashboard/Lost Limelight Comm Warning",
+                  "_title": "/SmartDashboard/Lost Limelight Comm Warning",
+                  "Colors/Color when true": "#FF0000FF",
+                  "Colors/Color when false": "#FFFFFFFF"
+                },
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Pnuematics Is Dead",
+                  "_title": "SmartDashboard/Pnuematics Is Dead"
                 }
               ]
             }
@@ -268,9 +258,9 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/PreStaged Cargo Detected",
-              "_title": "SmartDashboard/PreStaged Cargo Detected",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_title": "PreStaged Cargo",
+              "Colors/Color when true": "#800080FF",
+              "Colors/Color when false": "#FFFFFFFF"
             }
           },
           "5,3": {
@@ -281,9 +271,9 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Staged Cargo Detected",
-              "_title": "SmartDashboard/Staged Cargo Detected",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_title": "Staged Cargo",
+              "Colors/Color when true": "#800080FF",
+              "Colors/Color when false": "#FFFFFFFF"
             }
           },
           "4,4": {
@@ -309,7 +299,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "7,0": {
             "size": [
@@ -578,7 +567,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "1,0": {
             "size": [
@@ -671,7 +659,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {}
       }
     },
@@ -684,7 +671,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "6,0": {
             "size": [
@@ -905,9 +891,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 4.0,
-    "y": 0.0,
-    "width": 1531.199951171875,
-    "height": 830.4000244140625
+    "x": -6.400000095367432,
+    "y": 1.600000023841858,
+    "width": 1547.199951171875,
+    "height": 828.7999877929688
   }
 }

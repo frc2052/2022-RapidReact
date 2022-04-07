@@ -14,8 +14,8 @@ public class IntakeHopperRunCommand extends HopperBaseCommand {
   public IntakeHopperRunCommand(IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper) {
     super(indexer, hopper);
     this.intake = intake;
-    
-    addRequirements(this.intake);
+  
+    //addRequirements(this.intake);
   }
     
   @Override

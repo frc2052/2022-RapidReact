@@ -32,13 +32,13 @@ public class FastRight5BallAuto3 extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);
-        Pose2d ball1Pos = super.newPose2dInches(-35, 38, 90);
+        Pose2d ball1Pos = super.newPose2dInches(-23, 38, 90);
         //Pose2d behindBall2Pos = super.newPose2dInches(0, 180, -45);
         List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-9, 160));
         Pose2d ball2Pos = super.newPose2dInches(22, 158, 30); //super.newPose2dInches(-26, 133, -45);
         //Pose2d shootPos = super.newPose2dInches(0, 110, 45);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(7, 289, 150); //super.newPose2dInches(32, 287, 150);
-        Pose2d terminalBallPos = super.newPose2dInches(-10, 313, 150); //super.newPose2dInches(18, 311, 150);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(2, 281, 150); //super.newPose2dInches(32, 287, 150);
+        Pose2d terminalBallPos = super.newPose2dInches(-5, 305, 150); //super.newPose2dInches(18, 311, 150);
         Pose2d shootPos2 = super.newPose2dInches(25, 230, -70);
 
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
