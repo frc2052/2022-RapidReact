@@ -1,10 +1,9 @@
-package frc.robot.auto.testing;
+package frc.robot.auto.tuned;
 
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -19,7 +18,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class Right5BallAuto3 extends AutoBase {
+public class FastRight5BallAuto3 extends AutoBase {
     /**
      * Position A Start (Far Right Parallel with Outer Tarmac Line) Facing Towards the Hub.
      * 1. Immediatley shoot preloaded cargo, turn around, and intake closest alliance cargo.
@@ -29,7 +28,7 @@ public class Right5BallAuto3 extends AutoBase {
      * @param drivetrain
      * @param vision
      */
-    public Right5BallAuto3(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public FastRight5BallAuto3(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);

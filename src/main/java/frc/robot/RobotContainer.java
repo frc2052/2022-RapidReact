@@ -20,8 +20,8 @@ import frc.robot.auto.tuned.MiddleLeft4BallTerminalDefenseAuto;
 import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.testing.MiddleRightTerminal3CargoAuto;
 import frc.robot.auto.testing.Right5BallAuto2;
-import frc.robot.auto.testing.Right5BallAuto3;
 import frc.robot.auto.tuned.OneBallAuto;
+import frc.robot.auto.tuned.FastRight5BallAuto3;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
 import frc.robot.auto.testing.ThreeballDriveAndShoot;
@@ -435,18 +435,18 @@ public class RobotContainer {
       case RIGHT_FIVE_BALL:
         autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case LEFT_2_BALL_2_DEFENSE:
-        autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      case FAST_RIGHT_FIVE_BALL_3:
+        autonomousCommand = new FastRight5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
-        autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-        break;
+      // case LEFT_2_BALL_2_DEFENSE:
+      //   autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      //   break;
+      // case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
+      //   autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+      //   break;
       // case RIGHT_FIVE_BALL_2:
       //   autonomousCommand = new Right5BallAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       //   break;
-      case RIGHT_FIVE_BALL_3:
-        autonomousCommand = new Right5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-        break;
     //   case THREE_BALL_DRIVE_AND_SHOOT:
     //     return new ThreeballDriveAndShoot(drivetrain, vision, shooter, intake, hopper, indexer, climber);
     //   case LEFT_TERMINAL_3_BALL: 

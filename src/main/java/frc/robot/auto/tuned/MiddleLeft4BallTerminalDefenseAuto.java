@@ -20,6 +20,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;
@@ -72,7 +73,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1));
+        this.addCommands(this.newNonVisionShoot1Command(FiringAngle.ANGLE_1, 7900, 7900).withTimeout(1));
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(driveToArriveAtTerminalBalls);
         //this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));

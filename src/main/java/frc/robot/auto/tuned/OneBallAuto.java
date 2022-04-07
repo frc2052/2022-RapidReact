@@ -11,6 +11,7 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 public class OneBallAuto extends AutoBase{
     
@@ -34,7 +35,7 @@ public class OneBallAuto extends AutoBase{
         SwerveControllerCommand backUp = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, backUpPos);
 
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(super.newNonVisionShootAllCommand(7900, 7900).withTimeout(3));
+        this.addCommands(super.newNonVisionShootAllCommand(FiringAngle.ANGLE_1, 7900, 7900).withTimeout(3));
         this.addCommands(backUp);
         this.addCommands(super.autonomousFinishedCommandGroup());
 

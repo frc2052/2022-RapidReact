@@ -128,6 +128,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
+    protected NonVisionShootCommand newNonVisionShoot1Command(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
     protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
@@ -196,7 +200,7 @@ public class AutoBase  extends SequentialCommandGroup {
      * perfect for firing the preloaded cargo when initially aiming at the hub in the least amount of time possible.
      */
     protected Command newInitialNonVisionShootPreloadedCommand() {
-        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.75);
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, 7900, 7900).withTimeout(0.75);
     }
 
     /**
