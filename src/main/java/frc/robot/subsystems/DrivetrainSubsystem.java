@@ -315,7 +315,7 @@ public void periodic() {
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(backRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         // SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
-        // SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
+        SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
 
         // For comparing gyro and wheel velocities
         // SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
