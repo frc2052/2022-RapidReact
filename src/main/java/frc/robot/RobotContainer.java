@@ -113,6 +113,16 @@ public class RobotContainer {
 
   private JoystickButton tempFieldCentricButton;
   private JoystickButton climberOverrideButton;
+  private JoystickButton shootLowGoalButton;
+  private JoystickButton shootSingleButton;
+  private JoystickButton shootAllButton;
+  private JoystickButton tuneShooterButton;
+  private JoystickButton nonVisionShootAllButton;
+  private JoystickButton nonVisionShootAllButton2;
+  private JoystickButton nonVisionShootAllButton3;
+  private JoystickButton eject1Button;
+  private JoystickButton ejectAllButton;
+
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -186,15 +196,15 @@ public class RobotContainer {
     JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
 
     // Shooter Buttons Bindings
-    JoystickButton shootSingleButton = new JoystickButton(turnJoystick, 1);
-    JoystickButton shootAllButton = new JoystickButton(driveJoystick, 1);
-    JoystickButton tuneShooterButton = new JoystickButton(driveJoystick, 8);
-    JoystickButton shootLowGoalButton = new JoystickButton(turnJoystick, 4);
-    JoystickButton nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
-    JoystickButton nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 2);
-    JoystickButton nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 5);
-    JoystickButton eject1Button = new JoystickButton(turnJoystick, 5);
-    JoystickButton eject2Button = new JoystickButton(turnJoystick, 3);
+    shootSingleButton = new JoystickButton(turnJoystick, 1);
+    shootAllButton = new JoystickButton(driveJoystick, 1);
+    tuneShooterButton = new JoystickButton(driveJoystick, 8);
+    shootLowGoalButton = new JoystickButton(turnJoystick, 4);
+    nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
+    nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 2);
+    nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 5);
+    eject1Button = new JoystickButton(turnJoystick, 5);
+    ejectAllButton = new JoystickButton(turnJoystick, 3);
     
     // Climber Buttons Bindings
     JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -240,13 +250,13 @@ public class RobotContainer {
       );
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake);
-    /*Command intakeOnCommand =
+    Command intakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new OnlyIntakeCommand(intake, indexer), 
         new IntakeHopperRunCommand(intake, indexer, hopper),
-        this::getIsShooting
-      ).withInterrupt(() -> getIsShooting());*/
-    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
+        () -> isShooting
+    );//.withInterrupt(() -> getIsShooting());
+    // Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
     Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton2.get() || intakeInButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
@@ -323,22 +333,22 @@ public class RobotContainer {
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);
-    shootSingleButton.whenPressed(() -> isShooting = true);
-    shootAllButton.whenReleased(() -> isShooting = false);
+    // shootSingleButton.whenPressed(() -> isShooting = true);
+    // shootAllButton.whenReleased(() -> isShooting = false);
     shootAllButton.whileHeld(visionShootAllCommand);
-    shootAllButton.whenPressed(() -> isShooting = true);
-    shootAllButton.whenReleased(() -> isShooting = false);
+    // shootAllButton.whenPressed(() -> isShooting = true);
+    // shootAllButton.whenReleased(() -> isShooting = false);
     tuneShooterButton.whileHeld(tuneShooterCommand);
     shootLowGoalButton.whileHeld(nonVisionShootLowGoalCommand);
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
-    nonVisionShootAllButton.whenPressed(() -> isShooting = true);
-    nonVisionShootAllButton.whenReleased(() -> isShooting = false);
+    // nonVisionShootAllButton.whenPressed(() -> isShooting = true);
+    // nonVisionShootAllButton.whenReleased(() -> isShooting = false);
     nonVisionShootAllButton2.whileHeld(nonVisionShootAllCommand2);
-    nonVisionShootAllButton2.whenPressed(() -> isShooting = true);
-    nonVisionShootAllButton2.whenReleased(() -> isShooting = false);
+    // nonVisionShootAllButton2.whenPressed(() -> isShooting = true);
+    // nonVisionShootAllButton2.whenReleased(() -> isShooting = false);
     nonVisionShootAllButton3.whileHeld(nonVisionShootAllCommand3);
-    nonVisionShootAllButton3.whenPressed(() -> isShooting = true);
-    nonVisionShootAllButton3.whenReleased(() -> isShooting = false);
+    // nonVisionShootAllButton3.whenPressed(() -> isShooting = true);
+    // nonVisionShootAllButton3.whenReleased(() -> isShooting = false);
       
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
@@ -351,7 +361,7 @@ public class RobotContainer {
 
     rejectBothCargoButton.whenHeld(outtakeAllCargoCommand);
     eject1Button.whenHeld(eject1Command);
-    eject2Button.whenHeld(eject2Command);
+    ejectAllButton.whenHeld(eject2Command);
 
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
@@ -429,6 +439,10 @@ public class RobotContainer {
 
   public boolean getIsShooting() {
     return isShooting;
+  }
+
+  public void evaluateIsShooting() {
+      isShooting = shootAllButton.get() || shootSingleButton.get() || shootLowGoalButton.get() || eject1Button.get() || ejectAllButton.get();
   }
 
   /**
