@@ -81,7 +81,7 @@ public class VisionSubsystem extends SubsystemBase{
       hasValidTarget = ltv.getDouble(0.0) == 1.0;
 
       // Values here are always being calculated anyway (probably because of SmartDashboard), so they're done periodic.
-      tx = ltx.getDouble(0.0);
+      tx = ltx.getDouble(0.0) - 3;
       ty = lty.getDouble(0.0);
 
       tl = ltl.getDouble(0.0);

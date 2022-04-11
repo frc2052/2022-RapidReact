@@ -53,19 +53,6 @@
                   "_title": "Limelight LED Toggle"
                 },
                 {
-                  "_type": "ComboBox Chooser",
-                  "_source0": "network_table:///SmartDashboard/LED Status Modes",
-                  "_title": "LED Status Modes"
-                },
-                {
-                  "_type": "Number Slider",
-                  "_source0": "network_table:///SmartDashboard/LED Brightness",
-                  "_title": "LED Brightness",
-                  "Slider Settings/Min": 0.0,
-                  "Slider Settings/Max": 100.0,
-                  "Slider Settings/Block increment": 1.0
-                },
-                {
                   "_type": "Number Slider",
                   "_source0": "network_table:///SmartDashboard/Shooter Velocity Boost Pct",
                   "_title": "Shooter Velocity Boost Percent",
@@ -884,6 +871,19 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Vertical Distance from Crosshair: ",
               "_title": "SmartDashboard/Vertical Distance from Crosshair: "
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Is Shooting",
+              "_title": "SmartDashboard/Is Shooting",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
