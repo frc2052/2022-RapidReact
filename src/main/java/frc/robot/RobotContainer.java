@@ -256,8 +256,8 @@ public class RobotContainer {
     //     new IntakeHopperRunCommand(intake, indexer, hopper),
     //     () -> isShooting
     // );//.withInterrupt(() -> getIsShooting());
-    Command newIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting);
-    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton.get() || driverIntakeButton.get(); } );
+    Command driverIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting);
+    Command intakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton.get() || driverIntakeButton.get(); } );
     Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton2.get() || intakeInButton.get() || driverIntakeButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
@@ -331,7 +331,7 @@ public class RobotContainer {
     intakeArmInButton.whenPressed(intakeArmInCommand);
     pannelOuttakeAllCargoButton.whenPressed(outtakeAllCargoCommand);
     pannelOuttakePreloadedCargoButton.whenPressed(outtakePreloadedCargoCommand);
-    driverIntakeButton.whenHeld(newIntakeOnCommand);
+    driverIntakeButton.whenHeld(driverIntakeOnCommand);
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);

@@ -21,7 +21,6 @@ public class ShooterIndexingCommand extends CommandBase {
   private ShootMode shootMode;
   private boolean wasTwoBallsDetected;
   private Timer timer;
-  protected boolean isLinedUp;
   protected boolean delayOverride = true;
 
   /** 
@@ -47,8 +46,6 @@ public class ShooterIndexingCommand extends CommandBase {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
     boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
 
-    SmartDashboard.putBoolean("Is Indexing Lined UP", isLinedUp);
-
     if (!wasTwoBallsDetected) {
       if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
         wasTwoBallsDetected = true;
@@ -66,7 +63,7 @@ public class ShooterIndexingCommand extends CommandBase {
         wasTwoBallsDetected = false;
         clearTimer();
       }
-    } else if (shooter.isAtSpeed() && isLinedUp) {
+    } else if (isReadyToShoot()) {
         //System.err.println("Trying to Shoot 1st Ball");
       indexer.runFeeder();
       hopper.run();
@@ -81,6 +78,11 @@ public class ShooterIndexingCommand extends CommandBase {
       indexer.stopFeeder();
       indexer.stopPreload();
     }
+  }
+
+  // Override this in different shoot commands for custom shoot control
+  public boolean isReadyToShoot() {
+    return shooter.isAtSpeed();
   }
 
   // Called once the command ends or is interrupted.

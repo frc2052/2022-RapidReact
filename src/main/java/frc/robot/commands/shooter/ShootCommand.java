@@ -114,8 +114,6 @@ public class ShootCommand extends ShooterIndexingCommand {
     );
 
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
-
-      super.isLinedUp = isLinedUSupplier.getAsBoolean();
       super.execute();
 
       // if (!stagedCargoDetected && lastSawStaged) {
@@ -124,6 +122,11 @@ public class ShootCommand extends ShooterIndexingCommand {
       // }
       // lastSawStaged = stagedCargoDetected;
     }
+  }
+
+  @Override
+  public boolean isReadyToShoot() {
+      return shooter.isAtSpeed() && vision.getIsLinedUp();
   }
 
   @Override
