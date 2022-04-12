@@ -41,8 +41,11 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberMotor.setInverted(true);
         climberMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
         climberMotor.setSelectedSensorPosition(0, 0, 10);
-        climberMotor.configMotionCruiseVelocity(0, 10);
-        climberMotor.configMotionAcceleration(0, 10);
+        climberMotor.config_kP(0, 3, 0);
+        climberMotor.config_kI(0, 0, 0);
+        climberMotor.config_kD(0, 0, 0);
+        climberMotor.configMotionCruiseVelocity(100, 10);
+        climberMotor.configMotionAcceleration(100, 10);
 
         lockSolenoid = new DoubleSolenoid(
             Constants.Solenoids.COMPRESSOR_MODULE_ID,
