@@ -279,7 +279,7 @@ public class RobotContainer {
         indexer, 
         hopper,
         FiringAngle.ANGLE_2,
-        VisionCalculator.getInstance().getShooterConfig(7*12, FiringAngle.ANGLE_2)
+        VisionCalculator.getInstance().getShooterConfig(21*12, FiringAngle.ANGLE_2)
       );
 
     Command nonVisionShootAllCommand3 =

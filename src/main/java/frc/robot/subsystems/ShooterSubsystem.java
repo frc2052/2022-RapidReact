@@ -46,7 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // topMotor.setSelectedSensorPosition(0, 0, 10);
     // topMotor.config_kP(0, 1, 10);
     topMotor.config_kP(0, 0.15, 10);
-    topMotor.config_kI(0, 0.001, 10);
+    topMotor.config_kI(0, 0.001, 10); 
     topMotor.config_kD(0, 1, 10);
     // topMotor.config_kP(0, 0.1, 10);
     // topMotor.config_kI(0, 0.0004, 10);
@@ -59,13 +59,13 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
-    // bottomMotor.config_kP(0, 0.15, 10);
-    // bottomMotor.config_kI(0, 0.001, 10);
-    // bottomMotor.config_kD(0, 1, 10);
-    bottomMotor.config_kP(0, 0.05, 10);
-    bottomMotor.config_kI(0, 0, 10);
-    bottomMotor.config_kD(0, 0, 10);
-    bottomMotor.config_kF(0, 0.0522, 10);
+    bottomMotor.config_kP(0, 0.15, 10);
+    bottomMotor.config_kI(0, 0.001, 10);
+    bottomMotor.config_kD(0, 1, 10);
+    // bottomMotor.config_kP(0, 0.05, 10);
+    // bottomMotor.config_kI(0, 0, 10);
+    // bottomMotor.config_kD(0, 0, 10);
+    // bottomMotor.config_kF(0, 0.0522, 10);
 
     angleChangeSolenoid = new DoubleSolenoid(
       Constants.Solenoids.COMPRESSOR_MODULE_ID,

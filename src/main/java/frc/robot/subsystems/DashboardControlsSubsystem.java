@@ -25,7 +25,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     // private int ledBrightness;
     // private int lastLEDBrightness;
-    private int limelightDeadSeconds;
+    private double limelightDeadSeconds;
     private double lastShooterBoostPct;
 
     // private boolean limelightLEDsEnabled;
