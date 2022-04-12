@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
+import frc.robot.commands.climber.MoveClimberCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 
@@ -26,11 +27,11 @@ public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
 
         //170000
         this.addCommands(
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
+            new MoveClimberCommand(climber, 25000).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> climber.getEncoderPosition() >= 130000), // Just slightly below the bar
+            new MoveClimberCommand(climber, 130000).withInterrupt(() -> climber.getEncoderPosition() >= 130000), // Just slightly below the bar
             new WaitUntilCommand(() ->  drivetrain.getIsTopOfSwing()),
-            new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> !climber.getIsBelowMaxHeight()),
+            new ExtendClimberCommand(climber).withInterrupt(() -> !climber.getIsBelowMaxHeight()),
             new ClimberArmsForwardCommand(climber)
             // new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_TRAVERSAL))
             // new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)

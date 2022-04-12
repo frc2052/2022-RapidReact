@@ -1,32 +1,25 @@
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class ExtendClimberCommand extends CommandBase {
+public class ExtendClimberCommand extends MoveClimberCommand {
     private final HookClimberSubsystem climber;
-    private final BooleanSupplier overrideButtonPressed;
-    private double heightTP100MS;
 
-    public ExtendClimberCommand(HookClimberSubsystem climber, double heightTP100MS) {
-        this.climber = climber;
-        this.overrideButtonPressed = overrideButtonPressed;
-        this.heightTP100MS = heightTP100MS;        
-        addRequirements(this.climber);   
+    public ExtendClimberCommand(HookClimberSubsystem climber) {
+        super(climber, Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL);
+        this.climber = climber; 
     }
 
     @Override
     public void execute() {
-        if (overrideButtonPressed.getAsBoolean()) {
-            climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
+        if (climber.getIsVertical()) {
+            super.heightTP100MS = Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL;
         } else {
-            climber.moveToHeight(heightTP100MS);
+            super.heightTP100MS = Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED;
         }
+
+        super.execute();
     }
 
      @Override

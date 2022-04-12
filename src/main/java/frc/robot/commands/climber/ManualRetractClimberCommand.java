@@ -8,19 +8,24 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class MoveClimberCommand extends CommandBase {
+public class ManualRetractClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
-    protected double heightTP100MS;
+    private double retractPctOutput;
 
-    public MoveClimberCommand(HookClimberSubsystem climber, double heightTP100MS) {
+    public ManualRetractClimberCommand(HookClimberSubsystem climber, double retractPctOutput) {
         this.climber = climber;
-        this.heightTP100MS = heightTP100MS;        
+        this.retractPctOutput = retractPctOutput;
+
         addRequirements(this.climber);   
+    }
+
+    public ManualRetractClimberCommand(HookClimberSubsystem climber) {
+        this(climber, Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
     }
 
     @Override
     public void execute() {
-        climber.moveToHeight(heightTP100MS);
+        climber.movePctOutput(retractPctOutput);
     }
 
      @Override
@@ -28,4 +33,5 @@ public class MoveClimberCommand extends CommandBase {
         climber.stop();
     }
 }
+
 

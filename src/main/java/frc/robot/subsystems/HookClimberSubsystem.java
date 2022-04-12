@@ -20,11 +20,10 @@ public class HookClimberSubsystem extends SubsystemBase{
     private ClimberSolenoidState currentSolenoidState;
     // Motor that controls the wenches for climbing.
     private final TalonFX climberMotor;
-    private double desiredPositionTicks;
+    private double targetHeightTicks;
 
     private final DoubleSolenoid lockSolenoid;
     private boolean isLocked;
-
     private boolean isVertical;
 
     public HookClimberSubsystem() {
@@ -82,9 +81,16 @@ public class HookClimberSubsystem extends SubsystemBase{
         }
     }
 
-    public void moveToHeight(double heightTP100MS) {
+    public void moveToHeight(double targetHeightTicks) {
+        this.targetHeightTicks = targetHeightTicks;
         if (!isLocked) {
-            climberMotor.set(ControlMode.MotionMagic, heightTP100MS);
+            climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
+        }
+    }
+
+    public void moveToHeight() {
+        if (!isLocked) {
+            climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
         }
     }
 
@@ -163,6 +169,10 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberMotor.setSelectedSensorPosition(0);
     }
 
+    public boolean getIsVertical() {
+        return isVertical;
+    }
+
     public boolean getIsLocked() {
         return isLocked;
     }
@@ -183,14 +193,22 @@ public class HookClimberSubsystem extends SubsystemBase{
         return climberMotor.getSelectedSensorPosition();
     }
 
+    public boolean getEncoderIsAbove(double ticks) {
+        return climberMotor.getSelectedSensorPosition() >= ticks;
+    }
+
     public void setArmPostionInches(double inches){
         double ticks = heightInchesToTicks(inches);
         climberMotor.set(ControlMode.Position, ticks);
-        desiredPositionTicks = ticks;
+        targetHeightTicks = ticks;
+    }
+
+    public void setTargetClimberHeight(double targetHeightTicks) {
+        this.targetHeightTicks = targetHeightTicks;
     }
 
     public boolean isAtDesiredPosition(){
-        return climberMotor.getSelectedSensorPosition() == desiredPositionTicks;
+        return Math.abs(targetHeightTicks - climberMotor.getSelectedSensorPosition()) < 1000;
     }
 
     private double heightInchesToTicks(double inches) {

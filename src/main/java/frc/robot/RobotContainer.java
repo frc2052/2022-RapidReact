@@ -31,7 +31,9 @@ import frc.robot.commands.drive.PIDVisionDriveCommand;
 import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
 import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
-import frc.robot.commands.climber.RetractClimberCommand;
+import frc.robot.commands.climber.ManualExtendClimberCommand;
+import frc.robot.commands.climber.MoveClimberCommand;
+import frc.robot.commands.climber.ManualRetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
@@ -216,6 +218,7 @@ public class RobotContainer {
     // commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
     JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 2);
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
+    JoystickButton anticipatoryClimbingButton = new JoystickButton(secondaryPannel, 0); // TODO Decide Button
 
     // In Testing
     // JoystickButton testingButton = new JoystickButton(turnJoystick, 10);
@@ -293,8 +296,8 @@ public class RobotContainer {
         VisionCalculator.getInstance().getShooterConfig(14*12, FiringAngle.ANGLE_2)
       );
 
-    Command climberExtendCommand = new ExtendClimberCommand(climber, () -> climberOverrideButton.get());
-    Command climberRetractCommand = new RetractClimberCommand(climber, () -> climberOverrideButton.get());
+    Command climberExtendCommand = new ConditionalCommand(new ManualExtendClimberCommand(climber), new ExtendClimberCommand(climber), climberOverrideButton::get);
+    Command climberRetractCommand = new ConditionalCommand(new ManualRetractClimberCommand(climber), new MoveClimberCommand(climber, Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS), climberOverrideButton::get);
     Command toggleClimberAngleCommand = new ToggleClimberSolenoidCommand(climber);
     Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
     Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
