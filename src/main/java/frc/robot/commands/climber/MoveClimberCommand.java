@@ -8,12 +8,12 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class ExtendClimberCommand extends CommandBase {
+public class MoveClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     private final BooleanSupplier overrideButtonPressed;
     private double heightTP100MS;
 
-    public ExtendClimberCommand(HookClimberSubsystem climber, double heightTP100MS) {
+    public MoveClimberCommand(HookClimberSubsystem climber, double heightTP100MS, BooleanSupplier overrideButtonPressed) {
         this.climber = climber;
         this.overrideButtonPressed = overrideButtonPressed;
         this.heightTP100MS = heightTP100MS;        

@@ -42,6 +42,8 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberMotor.setInverted(true);
         climberMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
         climberMotor.setSelectedSensorPosition(0, 0, 10);
+        climberMotor.configMotionCruiseVelocity(0, 10);
+        climberMotor.configMotionAcceleration(0, 10);
 
         lockSolenoid = new DoubleSolenoid(
             Constants.Solenoids.COMPRESSOR_MODULE_ID,
@@ -60,14 +62,29 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void extend(double extendPctOutput, boolean override) {
         if (override) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-        } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
-            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
-        } else if (getIsBelowMaxHeight()) {
-            climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
+        // } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
+        //     climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
+        // } else if (getIsBelowMaxHeight()) {
+        //     climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
+        // } else {
+        //     // System.err.println("Climber extended to (or past) the max height!");
+        //     climberMotor.set(ControlMode.PercentOutput, 0);
+        //     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+        // }
         } else {
-            // System.err.println("Climber extended to (or past) the max height!");
-            climberMotor.set(ControlMode.PercentOutput, 0);
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            climberMotor.set(ControlMode.MotionMagic, Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL);
+        }
+    }
+
+    public void movePctOutput(double pctOutput) {
+        if (!isLocked) {
+            climberMotor.set(ControlMode.PercentOutput, pctOutput);
+        }
+    }
+
+    public void moveToHeight(double heightTP100MS) {
+        if (!isLocked) {
+            climberMotor.set(ControlMode.MotionMagic, heightTP100MS);
         }
     }
 
@@ -81,12 +98,14 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void retract(double retractPctOutput, boolean override) {
         if (override) {
             climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
-        } else if (getIsAtMinHeight()) {
-            climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
+        // } else if (getIsAtMinHeight()) {
+        //     climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
+        // } else {
+        //     // System.err.println("Climber retracted to (or past) the min height!");
+        //     climberMotor.set(ControlMode.PercentOutput, 0);
+        //     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
         } else {
-            // System.err.println("Climber retracted to (or past) the min height!");
-            climberMotor.set(ControlMode.PercentOutput, 0);
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
+            climberMotor.set(ControlMode.MotionMagic, Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS);
         }
     }
 
