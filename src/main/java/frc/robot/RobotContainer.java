@@ -43,6 +43,7 @@ import frc.robot.commands.intake.IntakeHopperRunCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.intake.OuttakeCommand;
+import frc.robot.commands.intake.TeleopIntakeCommand;
 import frc.robot.commands.intake.OuttakeCommand.OuttakeMode;
 import frc.robot.commands.shooter.TuneShooterCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
@@ -123,8 +124,6 @@ public class RobotContainer {
   private JoystickButton eject1Button;
   private JoystickButton ejectAllButton;
 
-
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
@@ -182,7 +181,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Drivetrain Button Bindings
     JoystickButton resetGyroButton = new JoystickButton(driveJoystick, 11);
-    tempFieldCentricButton = new JoystickButton(driveJoystick, 3);
+    tempFieldCentricButton = new JoystickButton(turnJoystick, 2);
 
     // Intake Buttons Bindings
     JoystickButton intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
@@ -194,6 +193,7 @@ public class RobotContainer {
     Button intakeArmInButton = new Button(() -> (secondaryPannel.getX() >= 0.5));
     Button intakeArmOutButton = new Button(() -> (secondaryPannel.getX() <= -0.5));
     JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
+    JoystickButton driverIntakeButton = new JoystickButton(driveJoystick, 2);
 
     // Shooter Buttons Bindings
     shootSingleButton = new JoystickButton(turnJoystick, 1);
@@ -201,7 +201,7 @@ public class RobotContainer {
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(turnJoystick, 4);
     nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
-    nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 2);
+    nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 3);
     nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 5);
     eject1Button = new JoystickButton(turnJoystick, 5);
     ejectAllButton = new JoystickButton(turnJoystick, 3);
@@ -256,8 +256,9 @@ public class RobotContainer {
     //     new IntakeHopperRunCommand(intake, indexer, hopper),
     //     () -> isShooting
     // );//.withInterrupt(() -> getIsShooting());
-    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
-    Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton2.get() || intakeInButton.get(); } );
+    Command newIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting);
+    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton.get() || driverIntakeButton.get(); } );
+    Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton2.get() || intakeInButton.get() || driverIntakeButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
     Command nonVisionShootLowGoalCommand = new ShootLowCommand(shooter, indexer);
@@ -330,6 +331,7 @@ public class RobotContainer {
     intakeArmInButton.whenPressed(intakeArmInCommand);
     pannelOuttakeAllCargoButton.whenPressed(outtakeAllCargoCommand);
     pannelOuttakePreloadedCargoButton.whenPressed(outtakePreloadedCargoCommand);
+    driverIntakeButton.whenHeld(newIntakeOnCommand);
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);
