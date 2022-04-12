@@ -213,7 +213,6 @@ public class RobotContainer {
     JoystickButton climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     JoystickButton climberLockButton = new JoystickButton(secondaryPannel, 12);
     climberOverrideButton = new JoystickButton(secondaryPannel, 10);
-    // commandInterruptButton = new JoystickButton(secondaryPannel, 10); // TEMP BUTTON PORT
     JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 2);
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
 
@@ -280,7 +279,7 @@ public class RobotContainer {
         indexer, 
         hopper,
         FiringAngle.ANGLE_2,
-        VisionCalculator.getInstance().getShooterConfig(21*12, FiringAngle.ANGLE_2)
+        VisionCalculator.getInstance().getShooterConfig(7*12, FiringAngle.ANGLE_2)
       );
 
     Command nonVisionShootAllCommand3 =
@@ -335,22 +334,12 @@ public class RobotContainer {
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);
-    // shootSingleButton.whenPressed(() -> isShooting = true);
-    // shootAllButton.whenReleased(() -> isShooting = false);
     shootAllButton.whileHeld(visionShootAllCommand);
-    // shootAllButton.whenPressed(() -> isShooting = true);
-    // shootAllButton.whenReleased(() -> isShooting = false);
     tuneShooterButton.whileHeld(tuneShooterCommand);
     shootLowGoalButton.whileHeld(nonVisionShootLowGoalCommand);
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
-    // nonVisionShootAllButton.whenPressed(() -> isShooting = true);
-    // nonVisionShootAllButton.whenReleased(() -> isShooting = false);
     nonVisionShootAllButton2.whileHeld(nonVisionShootAllCommand2);
-    // nonVisionShootAllButton2.whenPressed(() -> isShooting = true);
-    // nonVisionShootAllButton2.whenReleased(() -> isShooting = false);
     nonVisionShootAllButton3.whileHeld(nonVisionShootAllCommand3);
-    // nonVisionShootAllButton3.whenPressed(() -> isShooting = true);
-    // nonVisionShootAllButton3.whenReleased(() -> isShooting = false);
       
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
@@ -518,15 +507,6 @@ public class RobotContainer {
     }
   }
 
-//   public void setShooterPIDF() {
-//     double p = SmartDashboard.getNumber("Shooter P", 0.115);
-//     double i = SmartDashboard.getNumber("Shooter I", 0);
-//     double d = SmartDashboard.getNumber("Shooter D", 0);
-//     double f = SmartDashboard.getNumber("Shooter F", 0.048);
-
-//     shooter.updatePIDF(p, i, d, f);
-//   }
-
   // This code borrowed from the SwerverDriveSpecialist Sample code
   private static double modifyAxis(double value, SlewRateLimiter limiter) {
     // Deadband
@@ -545,13 +525,17 @@ public class RobotContainer {
     drivetrain.stop();
   }
 
+  public void periodic() {
+    evaluateIsShooting();
+    SmartDashboard.putBoolean("Is Shooting", isShooting);
+  }
+
   public enum ButtonCommands {
     VISION_SHOOT_ALL(null),
     VISION_SHOOT_SINGLE(null),
     NONVISION_SHOOT_LOW_GOAL(null),
     NONVISION_SHOOT_ALL(null),
     MANUAL_SHOOT(null),
-    // LINEUP_SHOOT(null),
     TUNE_SHOOTER(null),
     RESET_GYRO(null),
     CLIMBER_RETRACT(null),
