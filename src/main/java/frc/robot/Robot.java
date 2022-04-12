@@ -123,6 +123,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
+    // robotContainer.setShooterPIDF();
   }
 
   /** This function is called periodically during operator control. */

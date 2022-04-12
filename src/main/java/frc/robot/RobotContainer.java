@@ -250,13 +250,13 @@ public class RobotContainer {
       );
     Command resetGyroCommand = new InstantCommand(() -> { this.resetGyro(); });
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake);
-    Command intakeOnCommand =
-      new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
-        new OnlyIntakeCommand(intake, indexer), 
-        new IntakeHopperRunCommand(intake, indexer, hopper),
-        () -> isShooting
-    );//.withInterrupt(() -> getIsShooting());
-    // Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
+    // Command intakeOnCommand =
+    //   new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
+    //     new OnlyIntakeCommand(intake, indexer), 
+    //     new IntakeHopperRunCommand(intake, indexer, hopper),
+    //     () -> isShooting
+    // );//.withInterrupt(() -> getIsShooting());
+    Command intakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton.get(); } );
     Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return getIsShooting() || !intakeInButton2.get() || intakeInButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
@@ -515,6 +515,15 @@ public class RobotContainer {
       return 0.0;
     }
   }
+
+//   public void setShooterPIDF() {
+//     double p = SmartDashboard.getNumber("Shooter P", 0.115);
+//     double i = SmartDashboard.getNumber("Shooter I", 0);
+//     double d = SmartDashboard.getNumber("Shooter D", 0);
+//     double f = SmartDashboard.getNumber("Shooter F", 0.048);
+
+//     shooter.updatePIDF(p, i, d, f);
+//   }
 
   // This code borrowed from the SwerverDriveSpecialist Sample code
   private static double modifyAxis(double value, SlewRateLimiter limiter) {

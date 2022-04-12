@@ -31,22 +31,37 @@ public class ShooterSubsystem extends SubsystemBase {
   private boolean shootAngle1Override;
   private Timer timer;
 
+//   private double p;
+//   private double p;
+
+//   private double p;
+//   private double p;
+
+
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
     topMotor.configFactoryDefault();
     topMotor.setNeutralMode(NeutralMode.Coast);
     topMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // topMotor.setSelectedSensorPosition(0, 0, 10);
-    topMotor.config_kP(0, 0.05, 10);
-    topMotor.config_kI(0, 0, 10);
-    topMotor.config_kD(0, 0, 10);
-    topMotor.config_kF(0, 0.0522, 10);
+    // topMotor.config_kP(0, 1, 10);
+    topMotor.config_kP(0, 0.15, 10);
+    topMotor.config_kI(0, 0.001, 10);
+    topMotor.config_kD(0, 1, 10);
+    // topMotor.config_kP(0, 0.1, 10);
+    // topMotor.config_kI(0, 0.0004, 10);
+    // topMotor.config_kD(0, 0.1, 10);
+    //topMotor.config_kF(0, 0.048, 10); // PID Feed forward value - 12 (volts) devided by Maximum RPM - Maximum ticks per 100ms / 2048 (ticks per 1 revolution of a falcon) * 600 (amount of 100ms in a minute)
+    //topMotor.configAllowableClosedloopError(0, 20, 10);
 
     bottomMotor = new TalonFX(MotorIDs.BOTTOM_SHOOTER_MOTOR);
     bottomMotor.configFactoryDefault();
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
+    // bottomMotor.config_kP(0, 0.15, 10);
+    // bottomMotor.config_kI(0, 0.001, 10);
+    // bottomMotor.config_kD(0, 1, 10);
     bottomMotor.config_kP(0, 0.05, 10);
     bottomMotor.config_kI(0, 0, 10);
     bottomMotor.config_kD(0, 0, 10);
@@ -60,7 +75,20 @@ public class ShooterSubsystem extends SubsystemBase {
     );
 
     currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_2 : FiringAngle.ANGLE_1;
+
+    // SmartDashboard.putNumber("Shooter P", 0.115);
+    // SmartDashboard.putNumber("Shooter I", 0);
+    // SmartDashboard.putNumber("Shooter D", 0);
+    // SmartDashboard.putNumber("Shooter F", 0.048);
   }
+
+//   public void updatePIDF(double p, double i, double d, double f) {
+//     topMotor.config_kP(0, p, 10);
+//     topMotor.config_kI(0, i, 10);
+//     topMotor.config_kD(0, d, 10);
+//     topMotor.config_kF(0, f, 10); 
+
+//   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
     //System.err.println("***************************** RUNNING SHOOTER");
@@ -69,8 +97,8 @@ public class ShooterSubsystem extends SubsystemBase {
     topWheelTargetVelocity = topVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
     bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity);// * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity);// * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {

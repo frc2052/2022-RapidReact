@@ -44,6 +44,7 @@ public class VisionCalculator {
      */
     private void setupShooterDistanceConfigs() {
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(1 * 12, 4800, 4800)); // Low goal shot if pushed up against the wall
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 11, 4800, 4800)); // Low goal shot if pushed up against the wall
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 8000, 8000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 8000, 8000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 8000, 8000));

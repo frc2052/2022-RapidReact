@@ -22,7 +22,7 @@ public class ShooterIndexingCommand extends CommandBase {
   private boolean wasTwoBallsDetected;
   private Timer timer;
   protected boolean isLinedUp;
-  protected boolean delayOverride;
+  protected boolean delayOverride = true;
 
   /** 
    * Command for indexing balls for shooter in shoot commands.
@@ -62,7 +62,7 @@ public class ShooterIndexingCommand extends CommandBase {
           timer.start();
       }
       //System.err.println("Delaying Shooting for" + timer.get());
-      if (timer.get() >= 0.5) { // If the beam's been broken for a quarter second, we can feed again.
+      if (timer.get() >= 0.0) { // If the beam's been broken for a quarter second, we can feed again.
         wasTwoBallsDetected = false;
         clearTimer();
       }
