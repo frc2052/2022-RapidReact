@@ -46,8 +46,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // topMotor.setSelectedSensorPosition(0, 0, 10);
     // topMotor.config_kP(0, 1, 10);
     topMotor.config_kP(0, 0.15, 10);
-    topMotor.config_kI(0, 0.001, 10); 
-    topMotor.config_kD(0, 1, 10);
+    topMotor.config_kI(0, 0.0012, 10); 
+    topMotor.config_kD(0, 0.5, 10);
     // topMotor.config_kP(0, 0.1, 10);
     // topMotor.config_kI(0, 0.0004, 10);
     // topMotor.config_kD(0, 0.1, 10);
