@@ -63,7 +63,7 @@ public final class Constants {
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double INDEXER_WHEEL_SPEED = .50;
 
-        public static final double SHOOTER_TOLERANCE = 0.025;
+        public static final double SHOOTER_TOLERANCE = 0.03;
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
@@ -163,8 +163,8 @@ public final class Constants {
 
         // TODO: These Value Needs To Change
         public static final double MIN_CLIMBER_HEIGHT_TICKS = -10000; //allow to climb below zero because under weight, the rope will wind tigher, test show we lose 1.125 inches when retracting under weight)
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 264000;
-        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 335000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 220000;
+        public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 300000;
     }
 
     public static final class LEDs {

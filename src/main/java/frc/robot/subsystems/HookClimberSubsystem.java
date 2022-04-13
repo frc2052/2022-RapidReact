@@ -60,8 +60,8 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void extend(double extendPctOutput, boolean override) {
         if (override) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-        } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
-            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
+        } else if (getIsAbove95PctHeight() && getIsBelowMaxHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
         } else if (getIsBelowMaxHeight()) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
         } else {
@@ -81,7 +81,9 @@ public class HookClimberSubsystem extends SubsystemBase{
     public void retract(double retractPctOutput, boolean override) {
         if (override) {
             climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
-        } else if (getIsAtMinHeight()) {
+        } else if (getIsBelow3PctHeight() && getIsAboveMinHeight()) {
+            climberMotor.set(ControlMode.PercentOutput, retractPctOutput * 0.5);
+        } else if (getIsAboveMinHeight()) {
             climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
         } else {
             // System.err.println("Climber retracted to (or past) the min height!");
@@ -152,11 +154,15 @@ public class HookClimberSubsystem extends SubsystemBase{
         return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED);
     }
 
-    public boolean getIsAbove90PctHeight() {
-        return climberMotor.getSelectedSensorPosition() >= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED) * 0.9;
+    public boolean getIsAbove95PctHeight() {
+        return climberMotor.getSelectedSensorPosition() >= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED) * 0.95;
     }
 
-    public boolean getIsAtMinHeight() {
+    public boolean getIsBelow3PctHeight() {
+        return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED) * 0.03;
+    }
+
+    public boolean getIsAboveMinHeight() {
         return climberMotor.getSelectedSensorPosition() >= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS;
     }
 
