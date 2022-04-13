@@ -1,26 +1,38 @@
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MoveClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
-    protected double heightTP100MS;
+    protected double heightTicks;
 
-    public MoveClimberCommand(HookClimberSubsystem climber, double heightTP100MS) {
+    public MoveClimberCommand(HookClimberSubsystem climber, double heightTicks) {
         this.climber = climber;
-        this.heightTP100MS = heightTP100MS;        
+        this.heightTicks = heightTicks;        
         addRequirements(this.climber);   
     }
 
     @Override
     public void execute() {
-        climber.moveToHeight(heightTP100MS);
+        double currentHeightTicks = climber.getEncoderPosition();
+
+        if (currentHeightTicks > heightTicks + 5000) {
+            if (currentHeightTicks >= heightTicks * 1.03) {
+                climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * 0.5);
+            } else {
+            climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
+            }
+        } else if (currentHeightTicks < heightTicks - 5000) {
+            if (currentHeightTicks >= heightTicks * 0.95) {
+                climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
+            } else {
+            climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+            }
+        } else {
+            climber.stop();
+        }
     }
 
      @Override

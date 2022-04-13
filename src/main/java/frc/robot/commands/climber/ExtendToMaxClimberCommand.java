@@ -1,41 +1,33 @@
 package frc.robot.commands.climber;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class ExtendToMaxClimberCommand extends MoveClimberCommand {
+public class ExtendToMaxClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
 
     public ExtendToMaxClimberCommand(HookClimberSubsystem climber) {
-        super(climber, Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL);
-        this.climber = climber; 
+        this.climber = climber;
+
+        addRequirements(this.climber);
     }
 
     @Override
     public void execute() {
         double maxHeight = climber.getIsVertical() ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED;
-        double currentHeightTicks
-        if (climber.getIsAboveMaxHeight()) {
+        double currentHeightTicks = climber.getEncoderPosition();
+
+        if (currentHeightTicks >= maxHeight) {
             climber.stop();
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
-        } else if (getIsBelowMaxHeight()) {
-            climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
+        } else if (currentHeightTicks >= maxHeight * 0.95) {
+            climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
         } else {
-            // System.err.println("Climber extended to (or past) the max height!");
+            climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
         }
-        } else {
-            climberMotor.set(ControlMode.MotionMagic, Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL);
-        }
-
-        if (climber.getIsVertical()) {
-            super.heightTP100MS = Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL;
-        } else {
-            super.heightTP100MS = Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED;
-        }
-
-        super.execute();
     }
 
      @Override

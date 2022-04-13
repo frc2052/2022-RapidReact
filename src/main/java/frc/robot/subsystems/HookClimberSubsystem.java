@@ -61,21 +61,51 @@ public class HookClimberSubsystem extends SubsystemBase{
     /**
      * Extends the climbing arm at a set speed
      */
-    public void extend(double extendPctOutput, boolean override) {
-        if (override) {
-            climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-        // } else if (getIsAbove90PctHeight() && getIsBelowMaxHeight()) {
-        //     climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.3);
-        // } else if (getIsBelowMaxHeight()) {
-        //     climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
-        // } else {
-        //     // System.err.println("Climber extended to (or past) the max height!");
-        //     climberMotor.set(ControlMode.PercentOutput, 0);
-        //     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
-        // }
+    public void oldExtend(double extendPctOutput, boolean override) {
+        if (!isLocked) {
+            if (override) {
+                climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
+            } else if (getIsAbove95PctHeight() && getIsBelowMaxHeight()) {
+                climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
+            } else if (getIsBelowMaxHeight()) {
+                climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
+            } else {
+                // System.err.println("Climber extended to (or past) the max height!");
+                climberMotor.set(ControlMode.PercentOutput, 0);
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            }
         } else {
-            climberMotor.set(ControlMode.MotionMagic, Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL);
+            System.err.println("ATTEMPTED TO MOVE CLIMBER WHEN LOCKED");
         }
+    }
+
+    public void oldExtend(boolean override) {
+        oldExtend(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT, override);
+    }
+
+    /**
+     * Retracts the climbing arm at a set speed
+     */
+    public void oldRetract(double retractPctOutput, boolean override) {
+        if (!isLocked) {
+            if (override) {
+                climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
+            } else if (getIsBelow3PctHeight() && getIsAboveMinHeight()) {
+                climberMotor.set(ControlMode.PercentOutput, retractPctOutput * 0.5);
+            } else if (getIsAboveMinHeight()) {
+                climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
+            } else {
+                // System.err.println("Climber retracted to (or past) the min height!");
+                climberMotor.set(ControlMode.PercentOutput, 0);
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
+            }
+        } else {
+            System.err.println("ATTEMPTED TO MOVE CLIMBER WHEN LOCKED");
+        }
+    }
+
+    public void oldRetract(boolean override) {
+        oldRetract(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT, override);
     }
 
     public void movePctOutput(double pctOutput) {
@@ -84,43 +114,18 @@ public class HookClimberSubsystem extends SubsystemBase{
         }
     }
 
-    public void moveToHeight(double targetHeightTicks) {
-        this.targetHeightTicks = targetHeightTicks;
-        if (!isLocked) {
-            climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
-        }
-    }
+    // public void moveToHeight(double targetHeightTicks) {
+    //     this.targetHeightTicks = targetHeightTicks;
+    //     if (!isLocked) {
+    //         climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
+    //     }
+    // }
 
-    public void moveToHeight() {
-        if (!isLocked) {
-            climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
-        }
-    }
-
-    public void extend(boolean override) {
-        extend(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT, override);
-    }
-
-    /**
-     * Retracts the climbing arm at a set speed
-     */
-    public void retract(double retractPctOutput, boolean override) {
-        if (override) {
-            climberMotor.set(ControlMode.PercentOutput, retractPctOutput * .75); //slower climb speed when doing override
-        // } else if (getIsAtMinHeight()) {
-        //     climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
-        // } else {
-        //     // System.err.println("Climber retracted to (or past) the min height!");
-        //     climberMotor.set(ControlMode.PercentOutput, 0);
-        //     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
-        } else {
-            climberMotor.set(ControlMode.MotionMagic, Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS);
-        }
-    }
-
-    public void retract(boolean override) {
-        retract(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT, override);
-    }
+    // public void moveToHeight() {
+    //     if (!isLocked) {
+    //         climberMotor.set(ControlMode.MotionMagic, targetHeightTicks);
+    //     }
+    // }
 
     /**
      * Stops all climber motor activity.
