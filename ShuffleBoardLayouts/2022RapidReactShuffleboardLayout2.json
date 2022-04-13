@@ -955,7 +955,11 @@
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
               "_title": "SmartDashboard/Shooter Bottom Wheel Speed",
+<<<<<<< HEAD
               "Graph/Visible time": 5.0,
+=======
+              "Graph/Visible time": 30.0,
+>>>>>>> ClimberMotionMagic
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
