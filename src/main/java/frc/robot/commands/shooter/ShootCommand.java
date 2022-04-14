@@ -108,14 +108,12 @@ public class ShootCommand extends ShooterIndexingCommand {
 
     // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
-    shooter.shootAtSpeed(
+    shooter.runAtSpeed(
       shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
       shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
 
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
-
-      super.isLinedUp = isLinedUSupplier.getAsBoolean();
       super.execute();
 
       // if (!stagedCargoDetected && lastSawStaged) {
@@ -124,6 +122,11 @@ public class ShootCommand extends ShooterIndexingCommand {
       // }
       // lastSawStaged = stagedCargoDetected;
     }
+  }
+
+  @Override
+  public boolean isReadyToShoot() {
+      return shooter.isAtSpeed() && vision.getIsLinedUp();
   }
 
   @Override

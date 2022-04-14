@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
   private boolean shootAngle1Override;
-  private Timer timer;
+  private boolean idleSpeedEnabled = true;
 
 //   private double p;
 //   private double p;
@@ -46,8 +46,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // topMotor.setSelectedSensorPosition(0, 0, 10);
     // topMotor.config_kP(0, 1, 10);
     topMotor.config_kP(0, 0.15, 10);
-    topMotor.config_kI(0, 0.001, 10);
-    topMotor.config_kD(0, 1, 10);
+    topMotor.config_kI(0, 0.0012, 10); 
+    topMotor.config_kD(0, 0.5, 10);
     // topMotor.config_kP(0, 0.1, 10);
     // topMotor.config_kI(0, 0.0004, 10);
     // topMotor.config_kD(0, 0.1, 10);
@@ -59,13 +59,13 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
-    // bottomMotor.config_kP(0, 0.15, 10);
-    // bottomMotor.config_kI(0, 0.001, 10);
-    // bottomMotor.config_kD(0, 1, 10);
-    bottomMotor.config_kP(0, 0.05, 10);
-    bottomMotor.config_kI(0, 0, 10);
-    bottomMotor.config_kD(0, 0, 10);
-    bottomMotor.config_kF(0, 0.0522, 10);
+    bottomMotor.config_kP(0, 0.15, 10);
+    bottomMotor.config_kI(0, 0.0012, 10);
+    bottomMotor.config_kD(0, 0.5, 10);
+    // bottomMotor.config_kP(0, 0.05, 10);
+    // bottomMotor.config_kI(0, 0, 10);
+    // bottomMotor.config_kD(0, 0, 10);
+    // bottomMotor.config_kF(0, 0.0522, 10);
 
     angleChangeSolenoid = new DoubleSolenoid(
       Constants.Solenoids.COMPRESSOR_MODULE_ID,
@@ -80,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Shooter I", 0);
     // SmartDashboard.putNumber("Shooter D", 0);
     // SmartDashboard.putNumber("Shooter F", 0.048);
+    stop();
   }
 
 //   public void updatePIDF(double p, double i, double d, double f) {
@@ -90,7 +91,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 //   }
 
-  public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
+  public void runAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
     //System.err.println("***************************** RUNNING SHOOTER");
     //System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
     //System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
@@ -114,13 +115,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean isAtSpeed() {
     // Consider the shooter on target if we are within a shooter tolerance of target speeds
-    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
-        && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
+    if (topWheelTargetVelocity != 0 && bottomWheelTargetVelocity != 0) { // To make sure indexing doesn't move balls into shooter because we're in fact at target speed 0
+      boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+          && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
-        && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
+      boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+          && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    return topIsOnTarget && bottomIsOnTarget;
+      return topIsOnTarget && bottomIsOnTarget;
+    } else {
+      return false;
+    }
 
     // if (topIsOnTarget && bottomIsOnTarget) {
     //     if (timer == null) {
@@ -151,17 +156,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop() {
     //System.err.println("***************************** STOPPING SHOOTER");
-    topWheelTargetVelocity = 0;
-    bottomWheelTargetVelocity = 0;
-
-    topMotor.set(ControlMode.PercentOutput, 0);
-    bottomMotor.set(ControlMode.PercentOutput, 0);
+    if (idleSpeedEnabled) { // Implemented idle speed not long before champs, so this was the easy solution to that rather than rewriting much more
+      runAtSpeed(7400, 7400);
+    } else {
+      topWheelTargetVelocity = 4000;
+      bottomWheelTargetVelocity = 4000;
+      topMotor.set(ControlMode.PercentOutput, 0);
+      bottomMotor.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   public void shootAtPercentage(double topWheelPercent, double bottomWheelPercent) {
     //System.err.println("***************************** RUN BY PERCENT SHOOTER");
     topMotor.set(ControlMode.PercentOutput, topWheelPercent/100);
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
+  }
+
+  public void setIdleSpeedEnabled(boolean enabled) {
+    idleSpeedEnabled = enabled;
+    SmartDashboard.putBoolean("Disable Shooter Idle", enabled);
   }
 
   public void setShooterVelocityBoost(double boostPct) {

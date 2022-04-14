@@ -59,6 +59,19 @@
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
                   "Slider Settings/Block increment": 0.01
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/One Ball Delay",
+                  "_title": "/SmartDashboard/One Ball Delay"
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SmartDashboard/Vision X Aim Offset",
+                  "_title": "SmartDashboard/Vision X Aim Offset",
+                  "Slider Settings/Min": -5.0,
+                  "Slider Settings/Max": 5.0,
+                  "Slider Settings/Block increment": 1.0
                 }
               ]
             }
@@ -594,7 +607,24 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "tiles": {}
+        "tiles": {
+          "4,0": {
+            "size": [
+              5,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Climber Height Ticks",
+              "_title": "SmartDashboard/Climber Height Ticks",
+              "Graph/Visible time": 10.0,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/SmartDashboard/Climber Height Ticks": true
+            }
+          }
+        }
       }
     },
     {
@@ -847,36 +877,20 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "6,0": {
+          "0,0": {
             "size": [
-              3,
+              4,
               2
             ],
             "content": {
               "_type": "Graph",
               "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
               "_title": "SmartDashboard/Shooter Top Wheel Speed",
-              "Graph/Visible time": 10.0,
+              "Graph/Visible time": 5.0,
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 10000.0,
               "Y-axis/Lower bound": 5000.0,
               "Visible data/SmartDashboard/Shooter Top Wheel Speed": true
-            }
-          },
-          "3,0": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Shooter Target Top Wheel Speed",
-              "_title": "SmartDashboard/Shooter Target Top Wheel Speed",
-              "Graph/Visible time": 10.0,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Visible data/SmartDashboard/Shooter Target Top Wheel Speed": true
             }
           },
           "4,2": {
@@ -944,15 +958,57 @@
               "_source0": "network_table:///SmartDashboard/Shooter F",
               "_title": "SmartDashboard/Shooter F"
             }
+          },
+          "6,0": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
+              "_title": "SmartDashboard/Shooter Bottom Wheel Speed",
+              "Graph/Visible time": 5.0,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Visible data/SmartDashboard/Shooter Bottom Wheel Speed": true
+            }
+          },
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
+              "_title": "SmartDashboard/Shooter Wheels At Speed?",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "8,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Is Shooting",
+              "_title": "SmartDashboard/Is Shooting",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 0.0,
-    "width": 1536.0,
-    "height": 824.0
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 838.4000244140625
   }
 }

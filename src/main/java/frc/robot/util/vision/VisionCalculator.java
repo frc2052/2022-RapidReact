@@ -222,10 +222,8 @@ public class VisionCalculator {
         // Returns a default shooter configuration if either of the bounds are null
         if (lowerDistanceConfig == null && upperDistanceConfig == null) {
             return distanceToConfigList.get(Constants.Shooter.DEFAULT_ASSUMED_SHOOTER_CONFIG);
-        } else if (lowerDistanceConfig == null) {
-            return upperDistanceConfig;
-        } else if (upperDistanceConfig == null) {
-            return lowerDistanceConfig;
+        } else if (lowerDistanceConfig == null || upperDistanceConfig == null) {
+            return new ShooterDistanceConfig(0, 0, 0);
         }
 
         // deltaInches is the difference between the lower and upper pre-measured inches values.

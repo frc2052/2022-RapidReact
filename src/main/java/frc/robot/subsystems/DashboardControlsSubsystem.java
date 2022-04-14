@@ -25,8 +25,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
     // private int ledBrightness;
     // private int lastLEDBrightness;
-    private int limelightDeadSeconds;
+    private double limelightDeadSeconds;
     private double lastShooterBoostPct;
+    private double lastXAimOffset;
 
     // private boolean limelightLEDsEnabled;
     // private boolean limelightDriveCamToggle;
@@ -43,6 +44,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean lastIsLimelightDead;
     // private boolean lastIsDrivetrainDead;
     private boolean lastIsPnuematicsDead;
+    private boolean lastDisableShooterIdle;
 
     // private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
@@ -133,12 +135,15 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("LED Brightness", ledBrightness);
         // SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
         SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
+        SmartDashboard.putNumber("One Ball Delay", 0);
+        SmartDashboard.putNumber("Vision X Aim Offset", vision.getXAimOffset());
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", false);
         SmartDashboard.putBoolean("Toggle Limelight Driver Camera", false);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         SmartDashboard.putBoolean("Limelight LED Override", false);
         SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
+        SmartDashboard.putBoolean("Disable Shooter Idle", false);
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
@@ -154,6 +159,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
         // int ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         double shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
+        double visionXAimOffset = SmartDashboard.getNumber("Vision X Aim Offset", vision.getXAimOffset());
         Boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         Boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         boolean limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
@@ -161,6 +167,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
+        boolean disableShooterIdle = SmartDashboard.getBoolean("Disable Shooter Idle", false);
+
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -199,6 +207,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastShooterBoostPct = shooterBoostPct;
         }
 
+        if (visionXAimOffset != lastXAimOffset) {
+            vision.setXAimOffset(visionXAimOffset);
+            lastXAimOffset = visionXAimOffset;
+        }
+
         if (selectedAuto == Autos.NONE_SELECTED) {
             SmartDashboard.putBoolean("Is An Auto Selected?", false);
         } else {
@@ -220,6 +233,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
                 vision.setLEDMode(LEDMode.OFF);
                 lastLimelightLEDOverride = false;
             }
+        }
+
+        if (disableShooterIdle != lastDisableShooterIdle) {
+            shooter.setIdleSpeedEnabled(disableShooterIdle);
+            lastDisableShooterIdle = disableShooterIdle;
         }
 
         if (selectedAuto != lastSelectedAuto && selectedAuto != null) {
@@ -297,6 +315,10 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         return SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
     }
 
+    public double getOneBallDelay() {
+        return SmartDashboard.getNumber("One Ball Delay", 0);
+    }
+
     public void setLastLimelightLEDsEnabled(boolean state) {
         lastLimelightLEDsEnabled = state;
     }
@@ -321,6 +343,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     public enum Autos {
         NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
         ONE_BALL("*TUNED* One Ball", "Any Starting Location Facing Towards Hub"),
+        ONE_BALL_CUSTOM_DELAY("_TESTING_ One Ball with Custom Delay", "Any Starting Location Facing Towards Hub"),
         // AUTO_TESTING("Auto Testing", "Auto Testing"),
         SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A) Facing Towards Hub"),
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),

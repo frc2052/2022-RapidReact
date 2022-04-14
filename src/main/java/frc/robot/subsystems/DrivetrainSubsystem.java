@@ -246,8 +246,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getGyroVelocity() {
-        // Gets X and Y velocity from the navx and gets their resulting velocity vector - Probably innaccurate, but is to be tested
-        return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
+        // Gets X and Y velocity from the navx and gets their resulting velocity vector length - Probably innaccurate, but is to be tested
+        return Math.hypot(Math.abs(navx.getVelocityY()), Math.abs(navx.getVelocityX()));
   }
 
   public double getGyroPitchDegrees() {
@@ -319,7 +319,7 @@ public void periodic() {
 
         // For comparing gyro and wheel velocities
         // SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
-        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+        SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
         // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
         // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
         // SmartDashboard.putNumber("Gyro Roll", getGyroRoll());

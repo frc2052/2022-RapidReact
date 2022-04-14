@@ -23,6 +23,7 @@ public class VisionSubsystem extends SubsystemBase{
     private double tx, ty, tl, pipeline, camMode; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
     private double lastTl;
+    private double xAimOffset = -3;
     
     private boolean ledOverride = false;
     private boolean isUpdating = true;
@@ -81,7 +82,7 @@ public class VisionSubsystem extends SubsystemBase{
       hasValidTarget = ltv.getDouble(0.0) == 1.0;
 
       // Values here are always being calculated anyway (probably because of SmartDashboard), so they're done periodic.
-      tx = ltx.getDouble(0.0) - 3;
+      tx = ltx.getDouble(0.0) + xAimOffset;
       ty = lty.getDouble(0.0);
 
       tl = ltl.getDouble(0.0);
@@ -207,11 +208,19 @@ public class VisionSubsystem extends SubsystemBase{
       return isUpdating;
     }
 
+    public double getXAimOffset() {
+      return xAimOffset;
+    }
+
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').
       if(pipeline >= 0 && pipeline <= 9)  // 10 availible pipelines.
         lpipeline.setDouble(pipeline);
       else
         System.err.println("SELECT A PIPLINE BETWEEN 0 AND 9!");
+    }
+
+    public void setXAimOffset(double xAimOffset) {
+        this.xAimOffset = xAimOffset;
     }
 
     public void setLEDOverride(boolean override) {
