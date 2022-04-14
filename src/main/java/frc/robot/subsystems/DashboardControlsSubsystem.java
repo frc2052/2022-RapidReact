@@ -236,7 +236,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
 
         if (disableShooterIdle != lastDisableShooterIdle) {
-            shooter.setIdleSpeedEnabled(disableShooterIdle);
+            shooter.setIdleSpeedEnabled(!disableShooterIdle);
+            shooter.stop();
             lastDisableShooterIdle = disableShooterIdle;
         }
 
@@ -356,6 +357,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         FAST_RIGHT_FIVE_BALL_3("*TUNED* Right Five Ball Auto 3 - Faster", "Far Right Start (A2) Facing Towards From Hub"),
         MIDDLE_RIGHT_4_BALL("_TESTING_ Middle Right 4 Ball", "Middle Right Start (B) Facing Away From Hub"),
         LEFT_2_BALL_2_DEFENSE("_TESTING_ Left 2 Ball 2 Defense", "Far Left Start (D) Facing Away From Hub"),
+        LEFT_2_BALL_2_DEFENSE_2("_TESTING_ Left 2 Ball 2 Defense 2", "Far Left Start (D) Facing Away From Hub"),
         RIGHT_2_BALL("_TESTING_ Right 2 Ball", "Far Right Start (A2) Facing Away From Hub")
         // RIGHT_MIDDLE_5_BALL_1_DEFENSE("_TUNING_ Right Middle 5 Ball 1 Defense", "Right Middle Start (B) Facing Away From Hub"),
         // RIGHT_FIVE_BALL_2("-INITIAL TESTING- Right Five Ball Auto 2 - Drive And Shoot", "Far Right Start (A2) Facing Away From Hub"),

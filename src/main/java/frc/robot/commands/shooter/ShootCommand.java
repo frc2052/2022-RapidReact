@@ -60,7 +60,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     shooterConfig = new ShooterDistanceConfig(0, 0, 0); // Initial speed (0) for shooter that'll make it just not run if no vision target.
     // Doesn't fix case where limelight breaks and leaves hasValidTarget true, to which the Limelight Is Dead Smart Dashboard button will need to be pressed.
 
-    addRequirements(this.shooter, this.indexer, this.hopper);
+    addRequirements(this.shooter);
   }
 
   public ShootCommand(
@@ -108,12 +108,12 @@ public class ShootCommand extends ShooterIndexingCommand {
 
     // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
-    shooter.runAtSpeed(
-      shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
-      shooterConfig.getBottomMotorVelocityTicksPerSecond()
-    );
-
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
+      shooter.runAtSpeed(
+        shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
+        shooterConfig.getBottomMotorVelocityTicksPerSecond()
+      );
+
       super.execute();
 
       // if (!stagedCargoDetected && lastSawStaged) {
@@ -121,6 +121,8 @@ public class ShootCommand extends ShooterIndexingCommand {
       //     + " Top Velocity: " + shooter.getTopWheelVelocity() + " Bottom Velocity: " + shooter.getBottomWheelVelocity());
       // }
       // lastSawStaged = stagedCargoDetected;
+    } else {
+        shooter.stop();
     }
   }
 

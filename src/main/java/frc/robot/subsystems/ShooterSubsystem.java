@@ -29,7 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
   private boolean shootAngle1Override;
-  private boolean idleSpeedEnabled = true;
+  private boolean idleSpeedEnabled;
 
 //   private double p;
 //   private double p;
@@ -80,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Shooter I", 0);
     // SmartDashboard.putNumber("Shooter D", 0);
     // SmartDashboard.putNumber("Shooter F", 0.048);
+    idleSpeedEnabled = !SmartDashboard.getBoolean("Disable Shooter Idle", false);
     stop();
   }
 
@@ -159,8 +160,8 @@ public class ShooterSubsystem extends SubsystemBase {
     if (idleSpeedEnabled) { // Implemented idle speed not long before champs, so this was the easy solution to that rather than rewriting much more
       runAtSpeed(7400, 7400);
     } else {
-      topWheelTargetVelocity = 4000;
-      bottomWheelTargetVelocity = 4000;
+      topWheelTargetVelocity = 0;
+      bottomWheelTargetVelocity = 0;
       topMotor.set(ControlMode.PercentOutput, 0);
       bottomMotor.set(ControlMode.PercentOutput, 0);
     }
@@ -174,7 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setIdleSpeedEnabled(boolean enabled) {
     idleSpeedEnabled = enabled;
-    SmartDashboard.putBoolean("Disable Shooter Idle", enabled);
+    SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
   }
 
   public void setShooterVelocityBoost(double boostPct) {

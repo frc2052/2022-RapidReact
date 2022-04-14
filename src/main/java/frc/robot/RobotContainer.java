@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.testing.AutoTesting;
 import frc.robot.auto.testing.CustomDelayOneBallAuto;
 import frc.robot.auto.testing.Left2Ball2DefenseAuto;
+import frc.robot.auto.testing.Left2Ball2DefenseAuto2;
 import frc.robot.auto.tuned.LeftDefenseAuto;
 import frc.robot.auto.testing.LeftTerminal3BallAuto;
 import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
@@ -79,6 +80,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -265,11 +270,14 @@ public class RobotContainer {
     // Command driverIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting);
     Command intakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
-        new TeleopOnlyIntakeCommand(intake, indexer), 
-        new TeleopIntakeCommand(intake, indexer, hopper),
+        // new ProxyScheduleCommand(new TeleopOnlyIntakeCommand(intake, indexer)).withInterrupt(() -> !getIsShooting()), 
+        //new StartEndCommand(() -> intake.run(), () -> intake.stop()),
+        //new InstantCommand(() -> intake.run()),
+        new WaitCommand(0.25),
+        new ScheduleCommand(new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting)),
         () -> isShooting
     );//.withInterrupt(() -> getIsShooting());
-    //Command intakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton.get() || driverIntakeButton.get(); } );
+    // Command intakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting );
     Command intakeOnCommand2 = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton2.get() || intakeInButton.get() || driverIntakeButton.get(); } );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
     Command tuneShooterCommand = new TuneShooterCommand(shooter, indexer, intake, hopper);
@@ -491,6 +499,9 @@ public class RobotContainer {
         break;
       case LEFT_2_BALL_2_DEFENSE:
         autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case LEFT_2_BALL_2_DEFENSE_2:
+        autonomousCommand = new Left2Ball2DefenseAuto2(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         autonomousCommand = new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
