@@ -70,6 +70,7 @@ public class FastRight5BallAuto3 extends AutoBase {
         this.addCommands(aimAndShoot1); // Drives and rotates to position to shoot ball into upper hub\
         this.addCommands(driveToTerminalMidPoint);
         this.addCommands(intakeTerminalBalls);
+        this.addCommands(super.newStopDrivetrainCommand()); // Makes sure the drivetrain wasn't left in a wheel speed that could have been causing us to hit the terminal.
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1.5));
         this.addCommands(driveBackAndShoot);
         this.addCommands(aimAndShoot2.withTimeout(4));

@@ -46,42 +46,43 @@ public class ShooterIndexingCommand extends CommandBase {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
     boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
 
-    if (!wasTwoBallsDetected) {
-      if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
-        wasTwoBallsDetected = true;
-      }
-    }
+    // Old Logic for having a delay in stopping the preloaded ball to make it lose its momentum and solve shooter wheel speed issues
+    // if (!wasTwoBallsDetected) {
+    //   if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+    //     wasTwoBallsDetected = true;
+    //   }
+    // }
 
-    if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected && !delayOverride) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
-      indexer.stopFeeder();
-      if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
-          timer = new Timer();
-          timer.start();
-      }
-      //System.err.println("Delaying Shooting for" + timer.get());
-      if (timer.get() >= 0.0) { // If the beam's been broken for a quarter second, we can feed again.
-        wasTwoBallsDetected = false;
-        clearTimer();
-      }
-    } else if (shootMode == ShootMode.SHOOT_ALL && !indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) {
-      //The staged detector shows a ball ready to be fired but no second ball is detected
+    // if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected && !delayOverride) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+    //   indexer.stopFeeder();
+    //   if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
+    //       timer = new Timer();
+    //       timer.start();
+    //   }
+    //   if (timer.get() >= 0.0) { // If the beam's been broken for a quarter second, we can feed again.
+    //     wasTwoBallsDetected = false;
+    //     clearTimer();
+    //   }
+    // } else 
+    if (shootMode == ShootMode.SHOOT_ALL && !stagedCargoDetected && preStagedCargoDetected) {  //The staged detector shows a ball ready to be fired but no second ball is detected
       indexer.runFeeder();
       indexer.runPreload();
       hopper.run();
     } else if (isReadyToShoot()) {
-        //System.err.println("Trying to Shoot 1st Ball");
       indexer.runFeeder();
       hopper.run();
       if (shootMode == ShootMode.SHOOT_ALL) {
-        // System.err.println("Trying to Shoot 2nd Ball");
         indexer.runPreload();
       }
       LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SHOOTING);
     } else {
-        //System.err.println("Stopping Indexing");
       hopper.stop();
       indexer.stopFeeder();
-      indexer.stopPreload();
+      if (preStagedCargoDetected) {
+        indexer.stopPreload();
+      } else {
+        indexer.runPreload();
+      }
     }
   }
 
@@ -103,12 +104,12 @@ public class ShooterIndexingCommand extends CommandBase {
     return false;
   }
 
-  private void clearTimer() {
-    if(timer != null) {
-        timer.stop();
-        timer = null;
-    }
-  }
+  // private void clearTimer() {
+  //   if(timer != null) {
+  //       timer.stop();
+  //       timer = null;
+  //   }
+  // }
 
   public enum ShootMode {
     SHOOT_SINGLE,

@@ -104,89 +104,93 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
-    protected AutoShootCommand newAutoShoot1Command() {
+    protected Command newStopDrivetrainCommand() {
+        return new InstantCommand(() -> drivetrain.stop());
+    }
+
+    protected Command newAutoShoot1Command() {
         return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
-    protected AutoShootCommand newAutoShootAllCommand() {
+    protected Command newAutoShootAllCommand() {
         return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
-    protected ShootCommand newShoot1Command() {
+    protected Command newShoot1Command() {
         return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
-    protected ShootCommand newShootAllCommand() {
+    protected Command newShootAllCommand() {
         return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
-    protected ShootCommand newShootAllCommand(BooleanSupplier isLinedUSupplier) {
+    protected Command newShootAllCommand(BooleanSupplier isLinedUSupplier) {
         return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, isLinedUSupplier, drivetrain);
     }
 
-    protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected NonVisionShootCommand newNonVisionShoot1Command(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newNonVisionShoot1Command(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected NonVisionShootCommand newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected NonVisionShootCommand newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean delayOverride) {
+    protected Command newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean delayOverride) {
         NonVisionShootCommand nonVisionShootCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
         if (delayOverride) { nonVisionShootCommand.overrideDelay(); }
         return nonVisionShootCommand;
     }
 
-    protected AutoNonVisionShootCommand newAutoNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newAutoNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new AutoNonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newAutoNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new AutoNonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+    protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected ParallelCommandGroup newAutoIntakeCommand() {
+    protected Command newAutoIntakeCommand() {
         return new AutoIntakeCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }
 
-    protected IntakeArmOutCommand newIntakeArmOutCommand() {
+    protected Command newIntakeArmOutCommand() {
         return new IntakeArmOutCommand(intake);
     }
 
-    protected IntakeArmInCommand newIntakeArmInCommand() {
+    protected Command newIntakeArmInCommand() {
         return new IntakeArmInCommand(intake);
     }
 
-    protected OnlyIntakeCommand newOnlyIntakeCommand() {
+    protected Command newOnlyIntakeCommand() {
         return new OnlyIntakeCommand(intake, indexer);
     }
 
-    protected AutoTimedIntakeOnThenInCommand newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
+    protected Command newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
         return new AutoTimedIntakeOnThenInCommand(intake, indexer, hopper, deadlineSeconds);
     }
 
-    protected TurnInPlaceCommand newTurnInPlaceCommand(double angleDegrees) {
+    protected Command newTurnInPlaceCommand(double angleDegrees) {
         return new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(angleDegrees));
     }
 
-    protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
+    protected Command newVisionTurnInPlaceCommand() {
         return new VisionTurnInPlaceCommand(drivetrain, vision);
     }
 
-    protected ClimberArmsBackCommand newClimberArmsBackCommand() {
+    protected Command newClimberArmsBackCommand() {
         return new ClimberArmsBackCommand(climber);
     }
 
@@ -195,7 +199,7 @@ public class AutoBase  extends SequentialCommandGroup {
                     .andThen(() -> drivetrain.stop(), drivetrain);
     }
 
-    protected ParallelDeadlineGroup newAutoAimAndShootAllCommandGroup() {
+    protected Command newAutoAimAndShootAllCommandGroup() {
         return new ParallelDeadlineGroup(newAutoShootAllCommand(), new PerpetualCommand(newVisionTurnInPlaceCommand()));
     }
 

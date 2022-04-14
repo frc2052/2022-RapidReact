@@ -59,20 +59,20 @@ public class HookClimberSubsystem extends SubsystemBase{
     }
 
     /**
-     * Extends the climbing arm at a set speed
+     * Extends the climbing arm at a set speed - old way we did it
      */
     public void oldExtend(double extendPctOutput, boolean override) {
         if (!isLocked) {
             if (override) {
                 climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-            } else if (getIsAbove95PctHeight() && getIsBelowMaxHeight()) {
-                climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
-            } else if (getIsBelowMaxHeight()) {
-                climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
-            } else {
-                // System.err.println("Climber extended to (or past) the max height!");
+            } else if (getIsAboveMaxHeight()) {
                 climberMotor.set(ControlMode.PercentOutput, 0);
                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            } else if (getIsAbove95PctHeight()) {
+                climberMotor.set(ControlMode.PercentOutput, extendPctOutput * 0.5);
+            } else {
+                // System.err.println("Climber extended to (or past) the max height!");
+                climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
             }
         } else {
             System.err.println("ATTEMPTED TO MOVE CLIMBER WHEN LOCKED");
@@ -183,10 +183,6 @@ public class HookClimberSubsystem extends SubsystemBase{
 
     public boolean getIsLocked() {
         return isLocked;
-    }
-
-    public boolean getIsBelowMaxHeight() {
-        return climberMotor.getSelectedSensorPosition() <= (isVertical ? Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_VERTICAL : Constants.Climber.MAX_CLIMBER_HEIGHT_TICKS_TILTED);
     }
 
     public boolean getIsAboveMaxHeight() {

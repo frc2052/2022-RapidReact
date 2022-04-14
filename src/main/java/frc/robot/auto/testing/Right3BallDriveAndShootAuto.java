@@ -16,7 +16,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class ThreeballDriveAndShoot extends AutoBase {
+public class Right3BallDriveAndShootAuto extends AutoBase {
 
     /**
     * Position A Start (Far Right Parallel with Outer Tarmac Line)
@@ -25,7 +25,7 @@ public class ThreeballDriveAndShoot extends AutoBase {
     * @param drivetrain
     * @param vision
     */
-    public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+    public Right3BallDriveAndShootAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         // Positions and rotations

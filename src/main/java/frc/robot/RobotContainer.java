@@ -15,17 +15,18 @@ import frc.robot.auto.testing.AutoTesting;
 import frc.robot.auto.testing.CustomDelayOneBallAuto;
 import frc.robot.auto.testing.Left2Ball2DefenseAuto;
 import frc.robot.auto.tuned.LeftDefenseAuto;
-import frc.robot.auto.testing.LeftTerminal3Cargo;
+import frc.robot.auto.testing.LeftTerminal3BallAuto;
 import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
 import frc.robot.auto.tuned.MiddleLeft4BallTerminalDefenseAuto;
 import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
-import frc.robot.auto.testing.MiddleRightTerminal3CargoAuto;
+import frc.robot.auto.testing.Right2BallAuto;
+import frc.robot.auto.testing.MiddleRight4BallAuto;
 import frc.robot.auto.testing.Right5BallAuto2;
 import frc.robot.auto.tuned.OneBallAuto;
 import frc.robot.auto.tuned.FastRight5BallAuto3;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
-import frc.robot.auto.testing.ThreeballDriveAndShoot;
+import frc.robot.auto.testing.Right3BallDriveAndShootAuto;
 
 import frc.robot.commands.drive.DefaultDriveCommand;
 import frc.robot.commands.drive.PIDVisionDriveCommand;
@@ -90,7 +91,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   private DrivetrainSubsystem drivetrain;
   private VisionSubsystem vision;
-  private DashboardControlsSubsystem dashboardControls;
+  private DashboardControlsSubsystem dashboard;
   private ShooterSubsystem shooter;
   private UsbCameraSubsystem intakeCamera;
   private TargetingSubsystem targeting;
@@ -137,8 +138,8 @@ public class RobotContainer {
     shooter = new ShooterSubsystem();
 
     DashboardControlsSubsystem.init(vision, this, shooter);
-    dashboardControls = DashboardControlsSubsystem.getInstance();
-    dashboardControls.addSelectorsToSmartDashboard();
+    dashboard = DashboardControlsSubsystem.getInstance();
+    dashboard.addSelectorsToSmartDashboard();
 
     drivetrain = new DrivetrainSubsystem();
 
@@ -195,8 +196,10 @@ public class RobotContainer {
     JoystickButton intakeReverseButton = new JoystickButton(secondaryPannel, 6);
     Button pannelOuttakePreloadedCargoButton = new Button(() -> (secondaryPannel.getY() >= 0.5)); // 'Fake' buttons because some of the secondary pannel buttons are connected to joystick x and y outputs
     Button pannelOuttakeAllCargoButton = new Button(() -> (secondaryPannel.getY() <= -0.5));
-    Button intakeArmInButton = new Button(() -> (secondaryPannel.getX() >= 0.5));
-    Button intakeArmOutButton = new Button(() -> (secondaryPannel.getX() <= -0.5));
+    // Button intakeArmInButton = new Button(() -> (secondaryPannel.getX() >= 0.5));
+    // Button intakeArmOutButton = new Button(() -> (secondaryPannel.getX() <= -0.5));
+    Button pannelEjectAllButton = new Button(() -> (secondaryPannel.getX() >= 0.5));
+    Button pannelEject1Button = new Button(() -> (secondaryPannel.getX() <= -0.5));
     JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
     JoystickButton driverIntakeButton = new JoystickButton(driveJoystick, 2);
 
@@ -315,7 +318,7 @@ public class RobotContainer {
     Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get());
     Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
     Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 7400, 7400).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
-    Command eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
+    Command ejectAllCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
     Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 80000);
     Command fineClimberUpCommand = new ManualExtendClimberCommand(climber, 0.1);
     Command fineClimberDownCommand = new ManualRetractClimberCommand(climber, 0.1);
@@ -341,8 +344,10 @@ public class RobotContainer {
     intakeInButton.whileHeld(intakeOnCommand);
     intakeInButton2.whenPressed(intakeOnCommand2);
     intakeReverseButton.whileHeld(intakeReverseCommand);
-    intakeArmOutButton.whenPressed(intakeArmOutCommand);
-    intakeArmInButton.whenPressed(intakeArmInCommand);
+    // intakeArmOutButton.whenPressed(intakeArmOutCommand);
+    // intakeArmInButton.whenPressed(intakeArmInCommand);
+    pannelEjectAllButton.whenHeld(ejectAllCommand);
+    pannelEject1Button.whenHeld(eject1Command);
     pannelOuttakeAllCargoButton.whenHeld(outtakeAllCargoCommand);
     pannelOuttakePreloadedCargoButton.whenHeld(outtakePreloadedCargoCommand);
     driverIntakeButton.whileHeld(intakeOnCommand);
@@ -371,7 +376,7 @@ public class RobotContainer {
 
     rejectBothCargoButton.whenHeld(outtakeAllCargoCommand);
     eject1Button.whenHeld(eject1Command);
-    ejectAllButton.whenHeld(eject2Command);
+    ejectAllButton.whenHeld(ejectAllCommand);
 
     // SmartDashboard Command Buttons
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
@@ -465,7 +470,7 @@ public class RobotContainer {
   }
 
   public void initializeAutonomousCommand() {
-    switch(dashboardControls.getSelectedAuto()) {
+    switch(dashboard.getSelectedAuto()) {
       // case AUTO_TESTING:
       //   autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
       //   break;
@@ -473,7 +478,10 @@ public class RobotContainer {
         autonomousCommand = new OneBallAuto(drivetrain, shooter, indexer, hopper, climber);
         break;
       case ONE_BALL_CUSTOM_DELAY:
-        autonomousCommand = new CustomDelayOneBallAuto(drivetrain, shooter, indexer, hopper, climber, dashboardControls);
+        autonomousCommand = new CustomDelayOneBallAuto(drivetrain, shooter, indexer, hopper, climber, dashboard);
+        break;
+      case RIGHT_2_BALL:
+        autonomousCommand = new Right2BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case SIMPLE_3_BALL:
         autonomousCommand = new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
@@ -481,11 +489,17 @@ public class RobotContainer {
       case LEFT_2_BALL_1_DEFENSE:
         autonomousCommand = new LeftDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
+      case LEFT_2_BALL_2_DEFENSE:
+        autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         autonomousCommand = new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case MIDDLE_RIGHT_TERMINAL_4_BALL:
+      case MIDDLE_LEFT_TERMINAL_4_BALL:
         autonomousCommand = new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case MIDDLE_RIGHT_4_BALL:
+        autonomousCommand = new MiddleRight4BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case RIGHT_FIVE_BALL:
         autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
@@ -493,9 +507,6 @@ public class RobotContainer {
       case FAST_RIGHT_FIVE_BALL_3:
         autonomousCommand = new FastRight5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      // case LEFT_2_BALL_2_DEFENSE:
-      //   autonomousCommand = new Left2Ball2DefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
-      //   break;
       // case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
       //   autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
       //   break;
