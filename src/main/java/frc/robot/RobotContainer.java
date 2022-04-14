@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.testing.AutoTesting;
+import frc.robot.auto.testing.CustomDelayOneBallAuto;
 import frc.robot.auto.testing.Left2Ball2DefenseAuto;
 import frc.robot.auto.tuned.LeftDefenseAuto;
 import frc.robot.auto.testing.LeftTerminal3Cargo;
@@ -33,6 +34,7 @@ import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
 import frc.robot.commands.climber.ManualExtendClimberCommand;
 import frc.robot.commands.climber.MoveClimberCommand;
+import frc.robot.commands.climber.RetractToMinClimberCommand;
 import frc.robot.commands.climber.ManualRetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.commands.climber.ZeroClimberEncoderCommand;
@@ -183,7 +185,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Drivetrain Button Bindings
     JoystickButton resetGyroButton = new JoystickButton(driveJoystick, 11);
-    tempFieldCentricButton = new JoystickButton(turnJoystick, 2);
+    tempFieldCentricButton = new JoystickButton(driveJoystick, 3);
 
     // Intake Buttons Bindings
     JoystickButton intakeArmToggleButton = new JoystickButton(secondaryPannel, 1);
@@ -203,8 +205,8 @@ public class RobotContainer {
     tuneShooterButton = new JoystickButton(driveJoystick, 8);
     shootLowGoalButton = new JoystickButton(turnJoystick, 4);
     nonVisionShootAllButton = new JoystickButton(driveJoystick, 4);
-    nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 3);
-    nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 5);
+    nonVisionShootAllButton2 = new JoystickButton(driveJoystick, 5);
+    nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 9);
     eject1Button = new JoystickButton(turnJoystick, 5);
     ejectAllButton = new JoystickButton(turnJoystick, 3);
     
@@ -217,7 +219,10 @@ public class RobotContainer {
     climberOverrideButton = new JoystickButton(secondaryPannel, 10);
     JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 2);
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
-    JoystickButton anticipatoryClimbingButton = new JoystickButton(secondaryPannel, 0); // TODO Decide Button
+    JoystickButton anticipatoryClimbingButton = new JoystickButton(turnJoystick, 10); // TODO Decide Button
+    JoystickButton fineClimberUpButton = new JoystickButton(driveJoystick, 6);
+    JoystickButton fineClimberDownButton = new JoystickButton(driveJoystick, 7);
+
 
     // In Testing
     // JoystickButton testingButton = new JoystickButton(turnJoystick, 10);
@@ -296,7 +301,7 @@ public class RobotContainer {
       );
 
     Command climberExtendCommand = new ConditionalCommand(new ManualExtendClimberCommand(climber), new ExtendToMaxClimberCommand(climber), climberOverrideButton::get);
-    Command climberRetractCommand = new ConditionalCommand(new ManualRetractClimberCommand(climber), new MoveClimberCommand(climber, Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS), climberOverrideButton::get);
+    Command climberRetractCommand = new ConditionalCommand(new ManualRetractClimberCommand(climber), new RetractToMinClimberCommand(climber), climberOverrideButton::get);
     Command toggleClimberAngleCommand = new ToggleClimberSolenoidCommand(climber);
     Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
     Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
@@ -309,6 +314,10 @@ public class RobotContainer {
     Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
     Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 4000, 4000);
     Command eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 4000, 4000, true);
+    Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 100000);
+    Command fineClimberUpCommand = new ManualExtendClimberCommand(climber, 0.1);
+    Command fineClimberDownCommand = new ManualRetractClimberCommand(climber, 0.1);
+
 
     // pixyDriveCommandSwitch.whenHeld(
     //   new PixyCamDriveCommand(
@@ -352,6 +361,9 @@ public class RobotContainer {
     climberLockButton.whenPressed(lockClimberCommand);
     traversalAutoClimbButton.whenPressed(traversalAutoClimbCommand);
     highAutoClimbButton.whenPressed(highAutoClimbCommand);
+    anticipatoryClimbingButton.whenHeld(anticipatoryClimbingCommand);
+    fineClimberUpButton.whenHeld(fineClimberUpCommand);
+    fineClimberDownButton.whenHeld(fineClimberDownCommand);
 
     rejectBothCargoButton.whenHeld(outtakeAllCargoCommand);
     eject1Button.whenHeld(eject1Command);
@@ -455,6 +467,9 @@ public class RobotContainer {
       //   break;
       case ONE_BALL:
         autonomousCommand = new OneBallAuto(drivetrain, shooter, indexer, hopper, climber);
+        break;
+      case ONE_BALL_CUSTOM_DELAY:
+        autonomousCommand = new CustomDelayOneBallAuto(drivetrain, shooter, indexer, hopper, climber, dashboardControls);
         break;
       case SIMPLE_3_BALL:
         autonomousCommand = new Simple3BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);

@@ -6,11 +6,11 @@ import frc.robot.subsystems.HookClimberSubsystem;
 
 public class ManualExtendClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
-    private double retractPctOutput;
+    private double extendPctOutput;
 
-    public ManualExtendClimberCommand(HookClimberSubsystem climber, double retractPctOutput) {
+    public ManualExtendClimberCommand(HookClimberSubsystem climber, double extendPctOutput) {
         this.climber = climber;
-        this.retractPctOutput = retractPctOutput;
+        this.extendPctOutput = extendPctOutput;
 
         addRequirements(this.climber);   
     }
@@ -21,7 +21,7 @@ public class ManualExtendClimberCommand extends CommandBase {
 
     @Override
     public void execute() {
-        climber.movePctOutput(retractPctOutput);
+        climber.movePctOutput(extendPctOutput);
     }
 
      @Override

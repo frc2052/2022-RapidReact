@@ -319,7 +319,7 @@ public void periodic() {
 
         // For comparing gyro and wheel velocities
         // SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
-        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+        SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
         // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
         // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
         // SmartDashboard.putNumber("Gyro Roll", getGyroRoll());

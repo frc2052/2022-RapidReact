@@ -25,7 +25,7 @@ public class ManualRetractClimberCommand extends CommandBase {
 
     @Override
     public void execute() {
-        climber.movePctOutput(retractPctOutput);
+        climber.movePctOutput(Math.copySign(retractPctOutput, -1)); // Math.copysign just to make sure the pctOutput is negative and therefor always a retract
     }
 
      @Override

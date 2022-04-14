@@ -18,17 +18,17 @@ public class MoveClimberCommand extends CommandBase {
     public void execute() {
         double currentHeightTicks = climber.getEncoderPosition();
 
-        if (currentHeightTicks > heightTicks + 5000) {
-            if (currentHeightTicks >= heightTicks * 1.03) {
+        if (currentHeightTicks > heightTicks + 2500) {
+            if (currentHeightTicks <= heightTicks * 1.03) {
                 climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * 0.5);
             } else {
-            climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
+                climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
             }
-        } else if (currentHeightTicks < heightTicks - 5000) {
-            if (currentHeightTicks >= heightTicks * 0.95) {
+        } else if (currentHeightTicks < heightTicks - 2500) {
+            if (currentHeightTicks >= heightTicks - 15000) {
                 climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
             } else {
-            climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+                climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
             }
         } else {
             climber.stop();

@@ -154,6 +154,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new AutoNonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
+    protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
     protected ParallelCommandGroup newAutoIntakeCommand() {
         return new AutoIntakeCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
     }

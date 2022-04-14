@@ -62,6 +62,10 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
     this(shootMode, shooter, indexer, hopper, FiringAngle.ANGLE_1, topWheelVelocity, bottomWheelVelocity, 0.5);
   }
 
+  public AutoNonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngle, double topWheelVelocity, double bottomWheelVelocity) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+    this(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocity, bottomWheelVelocity, 0.5);
+  }
+
   @Override
   public boolean isFinished() {
     if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {

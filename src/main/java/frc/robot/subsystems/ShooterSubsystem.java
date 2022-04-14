@@ -80,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Shooter I", 0);
     // SmartDashboard.putNumber("Shooter D", 0);
     // SmartDashboard.putNumber("Shooter F", 0.048);
+    stop();
   }
 
 //   public void updatePIDF(double p, double i, double d, double f) {
@@ -151,11 +152,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop() {
     //System.err.println("***************************** STOPPING SHOOTER");
-    topWheelTargetVelocity = 0;
-    bottomWheelTargetVelocity = 0;
+    // topWheelTargetVelocity = 4000;
+    // bottomWheelTargetVelocity = 4000;
+    shootAtSpeed(7400, 7400);
 
-    topMotor.set(ControlMode.PercentOutput, 0);
-    bottomMotor.set(ControlMode.PercentOutput, 0);
+    // topMotor.set(ControlMode.PercentOutput, 0);
+    // bottomMotor.set(ControlMode.PercentOutput, 0);
   }
 
   public void shootAtPercentage(double topWheelPercent, double bottomWheelPercent) {
