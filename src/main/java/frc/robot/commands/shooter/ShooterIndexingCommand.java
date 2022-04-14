@@ -63,6 +63,11 @@ public class ShooterIndexingCommand extends CommandBase {
         wasTwoBallsDetected = false;
         clearTimer();
       }
+    } else if (shootMode == ShootMode.SHOOT_ALL && !indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) {
+      //The staged detector shows a ball ready to be fired but no second ball is detected
+      indexer.runFeeder();
+      indexer.runPreload();
+      hopper.run();
     } else if (isReadyToShoot()) {
         //System.err.println("Trying to Shoot 1st Ball");
       indexer.runFeeder();

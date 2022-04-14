@@ -209,6 +209,7 @@ public class RobotContainer {
     nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 9);
     eject1Button = new JoystickButton(turnJoystick, 5);
     ejectAllButton = new JoystickButton(turnJoystick, 3);
+    JoystickButton disableShooterIdleButton = new JoystickButton(turnJoystick, 7);
     
     // Climber Buttons Bindings
     JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -300,8 +301,8 @@ public class RobotContainer {
         VisionCalculator.getInstance().getShooterConfig(14*12, FiringAngle.ANGLE_2)
       );
 
-    Command climberExtendCommand = new ConditionalCommand(new ManualExtendClimberCommand(climber), new ExtendToMaxClimberCommand(climber), climberOverrideButton::get);
-    Command climberRetractCommand = new ConditionalCommand(new ManualRetractClimberCommand(climber), new RetractToMinClimberCommand(climber), climberOverrideButton::get);
+    Command climberExtendCommand = new ConditionalCommand(new ManualExtendClimberCommand(climber, 0.5), new ExtendToMaxClimberCommand(climber), climberOverrideButton::get);
+    Command climberRetractCommand = new ConditionalCommand(new ManualRetractClimberCommand(climber, 0.4), new RetractToMinClimberCommand(climber), climberOverrideButton::get);
     Command toggleClimberAngleCommand = new ToggleClimberSolenoidCommand(climber);
     Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
     Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
@@ -312,11 +313,12 @@ public class RobotContainer {
     Command outtakePreloadedCargoCommand = new OuttakeCommand(OuttakeMode.ONE_BALL, intake, hopper, indexer).withInterrupt(() -> !pannelOuttakePreloadedCargoButton.get());
     Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get());
     Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
-    Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 4000, 4000);
-    Command eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 4000, 4000, true);
-    Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 100000);
+    Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 7400, 7400).withInterrupt(() -> isShooting);
+    Command eject2Command = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> isShooting);
+    Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 80000);
     Command fineClimberUpCommand = new ManualExtendClimberCommand(climber, 0.1);
     Command fineClimberDownCommand = new ManualRetractClimberCommand(climber, 0.1);
+    Command disableShooterIdleCommand = new InstantCommand(() -> shooter.setIdleSpeedEnabled(false));
 
 
     // pixyDriveCommandSwitch.whenHeld(
@@ -352,6 +354,7 @@ public class RobotContainer {
     nonVisionShootAllButton.whileHeld(nonVisionShootAllCommand);
     nonVisionShootAllButton2.whileHeld(nonVisionShootAllCommand2);
     nonVisionShootAllButton3.whileHeld(nonVisionShootAllCommand3);
+    disableShooterIdleButton.whenPressed(disableShooterIdleCommand);
       
     // Climber Button Command Bindings
     extendClimberButton.whileHeld(climberExtendCommand);
@@ -448,7 +451,7 @@ public class RobotContainer {
   }
 
   public void evaluateIsShooting() {
-      isShooting = shootAllButton.get() || shootSingleButton.get() || shootLowGoalButton.get() || eject1Button.get() || ejectAllButton.get();
+      isShooting = shootAllButton.get() || shootSingleButton.get() || shootLowGoalButton.get();// || eject1Button.get() || ejectAllButton.get();
   }
 
   /**

@@ -44,6 +44,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean lastIsLimelightDead;
     // private boolean lastIsDrivetrainDead;
     private boolean lastIsPnuematicsDead;
+    private boolean lastDisableShooterIdle;
 
     // private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
@@ -142,6 +143,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         SmartDashboard.putBoolean("Limelight LED Override", false);
         SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
+        SmartDashboard.putBoolean("Disable Shooter Idle", false);
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
@@ -165,6 +167,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
+        boolean disableShooterIdle = SmartDashboard.getBoolean("Disable Shooter Idle", false);
+
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -229,6 +233,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
                 vision.setLEDMode(LEDMode.OFF);
                 lastLimelightLEDOverride = false;
             }
+        }
+
+        if (disableShooterIdle != lastDisableShooterIdle) {
+            shooter.setIdleSpeedEnabled(disableShooterIdle);
+            lastDisableShooterIdle = disableShooterIdle;
         }
 
         if (selectedAuto != lastSelectedAuto && selectedAuto != null) {

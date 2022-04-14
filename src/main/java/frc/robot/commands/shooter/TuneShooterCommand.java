@@ -44,7 +44,7 @@ public class TuneShooterCommand extends ShooterIndexingCommand {
     } else {
         shooter.setShootAngle1();
     } 
-    shooter.shootAtSpeed(topSpeedTP100MS, bottomSpeedTP100MS);
+    shooter.runAtSpeed(topSpeedTP100MS, bottomSpeedTP100MS);
 
     super.execute();
   }

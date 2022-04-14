@@ -66,7 +66,7 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
   @Override
   public void execute() {
 
-    shooter.shootAtSpeed(topWheelVelocity, bottomWheelVelocity);
+    shooter.runAtSpeed(topWheelVelocity, bottomWheelVelocity);
     super.execute();
   }
 

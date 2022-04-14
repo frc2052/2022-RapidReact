@@ -108,7 +108,7 @@ public class ShootCommand extends ShooterIndexingCommand {
 
     // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
-    shooter.shootAtSpeed(
+    shooter.runAtSpeed(
       shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
       shooterConfig.getBottomMotorVelocityTicksPerSecond()
     );
