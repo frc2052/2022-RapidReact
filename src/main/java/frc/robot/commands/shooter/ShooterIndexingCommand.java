@@ -76,12 +76,13 @@ public class ShooterIndexingCommand extends CommandBase {
       }
       LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SHOOTING);
     } else {
-      hopper.stop();
       indexer.stopFeeder();
       if (preStagedCargoDetected) {
         indexer.stopPreload();
+        hopper.stop();
       } else {
         indexer.runPreload();
+        hopper.run();
       }
     }
   }

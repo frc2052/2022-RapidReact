@@ -116,9 +116,9 @@ public class VisionSubsystem extends SubsystemBase{
         // SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
         // SmartDashboard.putNumber("Test Equation Distance", testEquationDistance());
         SmartDashboard.putNumber("Limelight Tolerance", getTolerance());
-        // double distanceInches = VisionCalculator.getInstance().getDistanceInches(ty);
+        double distanceInches = VisionCalculator.getInstance().getDistanceInches(ty);
         // SmartDashboard.putNumber("Calculator Distance Inches", distanceInches);
-        // SmartDashboard.putNumber("Calculator Distance Feet", distanceInches / 12);
+        SmartDashboard.putNumber("Calculator Distance Feet", distanceInches / 12);
 
         // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }

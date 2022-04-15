@@ -23,10 +23,11 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             // The ProfiledPIDController used by the command
             profiledPIDController,
             // This should return the measurement
-            () -> deltaAngleSupplier.get().getRadians(),
-            //() -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
+            //() -> deltaAngleSupplier.get().getRadians(),
+            () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
             // This should return the goal (can also be a constant)
-            deltaAngleSupplier.get().minus(deltaAngleSupplier.get()).getRadians(),
+            //deltaAngleSupplier.get().minus(deltaAngleSupplier.get()).getRadians(),
+            () -> (deltaAngleSupplier.get().getRadians() / 4),
             // This uses the output
             (output, setpoint) -> {
                 // Use the output (and setpoint, if desired) here
@@ -52,7 +53,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
                 0.0, // Ki
                 0.0, // Kd
                 // The motion profile constraints
-                new TrapezoidProfile.Constraints(Math.PI, 2 * Math.PI)
+                new TrapezoidProfile.Constraints(Math.PI, Math.PI)
             ),
             drivetrain,
             deltaAngleSupplier);

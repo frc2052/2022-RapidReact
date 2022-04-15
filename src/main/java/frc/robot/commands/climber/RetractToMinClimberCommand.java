@@ -19,10 +19,10 @@ public class RetractToMinClimberCommand extends CommandBase {
     public void execute() {
         double currentHeightTicks = climber.getEncoderPosition();
 
-        if (currentHeightTicks <= 2000) {
+        if (currentHeightTicks <= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
             climber.stop();
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
-        } else if (currentHeightTicks <= 20000) {
+        } else if (currentHeightTicks <= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS + 5000) {
             climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * 0.5);
         } else {
             climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);

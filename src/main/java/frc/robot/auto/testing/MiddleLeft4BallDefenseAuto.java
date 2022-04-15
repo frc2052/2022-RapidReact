@@ -1,4 +1,4 @@
-package frc.robot.auto.tuned;
+package frc.robot.auto.testing;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
-public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
+public class MiddleLeft4BallDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;
 
     /**
@@ -40,47 +40,34 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
      * @param hopper
      * @param climber
      */
-    public MiddleLeft4BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public MiddleLeft4BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-160));
         Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-155), Units.inchesToMeters(-100), Rotation2d.fromDegrees(-160));
         List<Translation2d> kickBallMidpoint = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
         Pose2d arriveAtTerminalBalls = new Pose2d(Units.inchesToMeters(-182),Units.inchesToMeters(-111),Rotation2d.fromDegrees(-135));
-        //List<Translation2d> throughHangerMidpoints = List.of(new Translation2d(Units.inchesToMeters(-150), Units.inchesToMeters(70)), new Translation2d(Units.inchesToMeters(-120), Units.inchesToMeters(80)));   // Midpoints for going around hanger post
-        List<Translation2d> throughHangerMidpoint = List.of(new Translation2d(Units.inchesToMeters(-165), Units.inchesToMeters(88)));
-        Pose2d shootPos = new Pose2d(Units.inchesToMeters(-30), Units.inchesToMeters(105), Rotation2d.fromDegrees(-30));
-        //Pose2d shootPos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(-12), Rotation2d.fromDegrees(30));
-        Pose2d ball4Pos = new Pose2d(Units.inchesToMeters(-17), Units.inchesToMeters(97), Rotation2d.fromDegrees(-30));
 
         AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 4, 2);
         AutoTrajectoryConfig intakingBothTerminalBallsTrajectoryConfig = super.createTrajectoryConfig(1.5, 1, 1, 5, 2);
         AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 3, 2);
-        AutoTrajectoryConfig intakeBall4TrajectoryConfig = super.createTrajectoryConfig(3, 3, 1, 5, 2);
 
         SwerveControllerCommand driveTowardsTerminalBalls = super.createSwerveTrajectoryCommand(drivingToBall2TrajectoryConfig.withEndVelocity(3), startPos, approachTerminalBalls, kickBallMidpoint, super.createRotationAngle(-160));
         SwerveControllerCommand driveToArriveAtTerminalBalls = super.createSwerveTrajectoryCommand(intakingBothTerminalBallsTrajectoryConfig.withStartVelocity(3), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-135)), arriveAtTerminalBalls, super.createRotationAngle(-135));
-        SwerveControllerCommand drivebackThroughHangerToShootPos = super.createSwerveTrajectoryCommand(backToShootTrajectoryConfig, super.getLastEndingPosCreated(90), shootPos, throughHangerMidpoint, super.createRotationAngle(-30));
-        SwerveControllerCommand driveToBall4Pos = super.createSwerveTrajectoryCommand(intakeBall4TrajectoryConfig, super.getLastEndingPosCreated(-30), ball4Pos, super.createRotationAngle(-30));
 
         OnlyIntakeCommand onlyIntakeCommand = new OnlyIntakeCommand(intake, indexer);
 
         //ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
         //ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
         ParallelDeadlineGroup aimingAndShooting1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
-        ParallelDeadlineGroup intakeBall4Command = new ParallelDeadlineGroup(driveToBall4Pos, super.newAutoIntakeCommand());
-        ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), onlyIntakeCommand);
+        ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), super.newOnlyIntakeCommand());
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(this.newNonVisionShoot1Command(FiringAngle.ANGLE_1, 7900, 7900).withTimeout(1));
+        this.addCommands(this.newInitialNonVisionShootPreloadedCommand());
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(driveToArriveAtTerminalBalls);
-        //this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
-        this.addCommands(drivebackThroughHangerToShootPos);
         this.addCommands(aimingAndShooting1);
-        this.addCommands(intakeBall4Command);
-        // this.andThen(() -> intake.intakeArmOut());
         this.addCommands(aimingAndShooting2);
         this.addCommands(super.autonomousFinishedCommandGroup());
 

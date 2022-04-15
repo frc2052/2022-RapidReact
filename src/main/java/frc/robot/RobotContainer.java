@@ -18,7 +18,7 @@ import frc.robot.auto.testing.Left2Ball2DefenseAuto2;
 import frc.robot.auto.tuned.LeftDefenseAuto;
 import frc.robot.auto.testing.LeftTerminal3BallAuto;
 import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
-import frc.robot.auto.tuned.MiddleLeft4BallTerminalDefenseAuto;
+import frc.robot.auto.tuned.MiddleLeftHanger4BallDefenseAuto;
 import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.testing.Right2BallAuto;
 import frc.robot.auto.testing.MiddleRight4BallAuto;
@@ -205,7 +205,7 @@ public class RobotContainer {
     // Button intakeArmOutButton = new Button(() -> (secondaryPannel.getX() <= -0.5));
     Button pannelEjectAllButton = new Button(() -> (secondaryPannel.getX() >= 0.5));
     Button pannelEject1Button = new Button(() -> (secondaryPannel.getX() <= -0.5));
-    JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
+    //JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
     JoystickButton driverIntakeButton = new JoystickButton(driveJoystick, 2);
 
     // Shooter Buttons Bindings
@@ -218,7 +218,7 @@ public class RobotContainer {
     nonVisionShootAllButton3 = new JoystickButton(driveJoystick, 9);
     eject1Button = new JoystickButton(turnJoystick, 5);
     ejectAllButton = new JoystickButton(turnJoystick, 3);
-    JoystickButton disableShooterIdleButton = new JoystickButton(turnJoystick, 7);
+    JoystickButton disableShooterIdleButton = new JoystickButton(turnJoystick, 9);
     
     // Climber Buttons Bindings
     JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);
@@ -227,8 +227,8 @@ public class RobotContainer {
     JoystickButton climberUnlockButton = new JoystickButton(secondaryPannel, 11);
     JoystickButton climberLockButton = new JoystickButton(secondaryPannel, 12);
     climberOverrideButton = new JoystickButton(secondaryPannel, 10);
-    JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 2);
-    JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 8);
+    JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 8);
+    JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 2);
     JoystickButton anticipatoryClimbingButton = new JoystickButton(turnJoystick, 10); // TODO Decide Button
     JoystickButton fineClimberUpButton = new JoystickButton(driveJoystick, 6);
     JoystickButton fineClimberDownButton = new JoystickButton(driveJoystick, 7);
@@ -382,7 +382,7 @@ public class RobotContainer {
     fineClimberUpButton.whenHeld(fineClimberUpCommand);
     fineClimberDownButton.whenHeld(fineClimberDownCommand);
 
-    rejectBothCargoButton.whenHeld(outtakeAllCargoCommand);
+    //rejectBothCargoButton.whenHeld(outtakeAllCargoCommand);
     eject1Button.whenHeld(eject1Command);
     ejectAllButton.whenHeld(ejectAllCommand);
 
@@ -479,9 +479,9 @@ public class RobotContainer {
 
   public void initializeAutonomousCommand() {
     switch(dashboard.getSelectedAuto()) {
-      // case AUTO_TESTING:
-      //   autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
-      //   break;
+      case AUTO_TESTING:
+        autonomousCommand = new AutoTesting(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+        break;
       case ONE_BALL:
         autonomousCommand = new OneBallAuto(drivetrain, shooter, indexer, hopper, climber);
         break;
@@ -507,7 +507,7 @@ public class RobotContainer {
         autonomousCommand = new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case MIDDLE_LEFT_TERMINAL_4_BALL:
-        autonomousCommand = new MiddleLeft4BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        autonomousCommand = new MiddleLeftHanger4BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case MIDDLE_RIGHT_4_BALL:
         autonomousCommand = new MiddleRight4BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);

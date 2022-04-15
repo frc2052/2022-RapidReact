@@ -345,7 +345,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
         ONE_BALL("*TUNED* One Ball", "Any Starting Location Facing Towards Hub"),
         ONE_BALL_CUSTOM_DELAY("*TUNED* One Ball with Custom Delay", "Any Starting Location Facing Towards Hub"),
-        // AUTO_TESTING("Auto Testing", "Auto Testing"),
+        AUTO_TESTING("Auto Testing", "Auto Testing"),
         SIMPLE_3_BALL("*TUNED* Simple 3 Ball", "Far Right Start (A) Facing Towards Hub"),
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),

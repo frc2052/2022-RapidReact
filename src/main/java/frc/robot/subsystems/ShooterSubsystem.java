@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // topMotor.config_kP(0, 1, 10);
     topMotor.config_kP(0, 0.15, 10);
     topMotor.config_kI(0, 0.001, 10); 
-    topMotor.config_kD(0, 3, 10);
+    topMotor.config_kD(0, 1, 10);
     // topMotor.config_kP(0, 0.1, 10);
     // topMotor.config_kI(0, 0.0004, 10);
     // topMotor.config_kD(0, 0.1, 10);
@@ -61,7 +61,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
     bottomMotor.config_kP(0, 0.15, 10);
     bottomMotor.config_kI(0, 0.001, 10);
-    bottomMotor.config_kD(0, 3, 10);
+    bottomMotor.config_kD(0, 0.5, 10);
     // bottomMotor.config_kP(0, 0.05, 10);
     // bottomMotor.config_kI(0, 0, 10);
     // bottomMotor.config_kD(0, 0, 10);
@@ -175,7 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setIdleSpeedEnabled(boolean enabled) {
     idleSpeedEnabled = enabled;
-    SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
+    //SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
   }
 
   public void setShooterVelocityBoost(double boostPct) {
