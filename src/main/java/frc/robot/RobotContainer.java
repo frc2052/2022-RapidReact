@@ -18,12 +18,13 @@ import frc.robot.auto.testing.Left2Ball2DefenseAuto2;
 import frc.robot.auto.tuned.LeftDefenseAuto;
 import frc.robot.auto.testing.LeftTerminal3BallAuto;
 import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
+import frc.robot.auto.tuned.MiddleLeft4BallDefenseAuto;
 import frc.robot.auto.tuned.MiddleLeftHanger4BallDefenseAuto;
 import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
-import frc.robot.auto.testing.Right2BallAuto;
 import frc.robot.auto.testing.MiddleRight4BallAuto;
 import frc.robot.auto.testing.Right5BallAuto2;
 import frc.robot.auto.tuned.OneBallAuto;
+import frc.robot.auto.tuned.Right2BallAuto;
 import frc.robot.auto.tuned.FastRight5BallAuto3;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
@@ -207,6 +208,8 @@ public class RobotContainer {
     Button pannelEject1Button = new Button(() -> (secondaryPannel.getX() <= -0.5));
     //JoystickButton rejectBothCargoButton = new JoystickButton(turnJoystick, 9);
     JoystickButton driverIntakeButton = new JoystickButton(driveJoystick, 2);
+    JoystickButton driverOuttake1Button = new JoystickButton(turnJoystick, 10);
+    JoystickButton driverOuttakeAllButton = new JoystickButton(turnJoystick, 10);
 
     // Shooter Buttons Bindings
     shootSingleButton = new JoystickButton(turnJoystick, 1);
@@ -229,7 +232,7 @@ public class RobotContainer {
     climberOverrideButton = new JoystickButton(secondaryPannel, 10);
     JoystickButton traversalAutoClimbButton = new JoystickButton(secondaryPannel, 8);
     JoystickButton highAutoClimbButton = new JoystickButton(secondaryPannel, 2);
-    JoystickButton anticipatoryClimbingButton = new JoystickButton(turnJoystick, 10); // TODO Decide Button
+    // JoystickButton anticipatoryClimbingButton = new JoystickButton(turnJoystick, 10); // TODO Decide Button
     JoystickButton fineClimberUpButton = new JoystickButton(driveJoystick, 6);
     JoystickButton fineClimberDownButton = new JoystickButton(driveJoystick, 7);
 
@@ -325,9 +328,9 @@ public class RobotContainer {
     Command outtakePreloadedCargoCommand = new OuttakeCommand(OuttakeMode.ONE_BALL, intake, hopper, indexer);
     Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get());
     Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
-    Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 7400, 7400).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
+    Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
     Command ejectAllCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get() || intakeInButton2.get(); });
-    Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 80000);
+    // Command anticipatoryClimbingCommand = new MoveClimberCommand(climber, 80000);
     Command fineClimberUpCommand = new ManualExtendClimberCommand(climber, 0.1);
     Command fineClimberDownCommand = new ManualRetractClimberCommand(climber, 0.1);
     Command disableShooterIdleCommand = new InstantCommand(() -> shooter.setIdleSpeedEnabled(false));
@@ -359,6 +362,8 @@ public class RobotContainer {
     pannelOuttakeAllCargoButton.whenHeld(outtakeAllCargoCommand);
     pannelOuttakePreloadedCargoButton.whenHeld(outtakePreloadedCargoCommand);
     driverIntakeButton.whenHeld(intakeOnCommand);
+    driverOuttake1Button.whenHeld(outtakePreloadedCargoCommand);
+    driverOuttakeAllButton.whenHeld(outtakeAllCargoCommand);
 
     // Shooter Button Command Bindings
     shootSingleButton.whileHeld(shootSingleCommand);
@@ -378,7 +383,7 @@ public class RobotContainer {
     climberLockButton.whenPressed(lockClimberCommand);
     traversalAutoClimbButton.whenPressed(traversalAutoClimbCommand);
     highAutoClimbButton.whenPressed(highAutoClimbCommand);
-    anticipatoryClimbingButton.whenHeld(anticipatoryClimbingCommand);
+    // anticipatoryClimbingButton.whenHeld(anticipatoryClimbingCommand);
     fineClimberUpButton.whenHeld(fineClimberUpCommand);
     fineClimberDownButton.whenHeld(fineClimberDownCommand);
 
@@ -506,11 +511,14 @@ public class RobotContainer {
       case MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE:
         autonomousCommand = new MiddleLeft3BallTerminalDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case MIDDLE_LEFT_TERMINAL_4_BALL:
+      case MIDDLE_LEFT_HANGER_4_BALL:
         autonomousCommand = new MiddleLeftHanger4BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case MIDDLE_RIGHT_4_BALL:
         autonomousCommand = new MiddleRight4BallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case MIDDLE_LEFT_4_BALL:
+        autonomousCommand = new MiddleLeft4BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       case RIGHT_FIVE_BALL:
         autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);

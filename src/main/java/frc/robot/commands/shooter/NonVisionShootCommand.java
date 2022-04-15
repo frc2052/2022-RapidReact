@@ -19,6 +19,7 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
   private FiringAngle firingAngleMode;
   private double topWheelVelocity;
   private double bottomWheelVelocity;
+  private boolean overrideIsAtSpeed;
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
     super(
@@ -36,11 +37,9 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
     addRequirements(shooter, indexer);
   }
 
-  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideDelay) {
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideIsAtSpeed) {
     this(shootMode, shooter, indexer, hopper, firingAngleMode, topWheelVelocity, bottomWheelVelocity);
-    if (overrideDelay) { 
-      overrideDelay(); 
-    }
+    this.overrideIsAtSpeed = overrideIsAtSpeed;
   }
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
@@ -59,6 +58,15 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
         shooter.setShootAngle1();
       } else {
         shooter.setShootAngle2();
+      }
+  }
+
+  @Override
+  public boolean isReadyToShoot() {
+      if (overrideIsAtSpeed) {
+        return true;
+      } else {
+        return super.isReadyToShoot();
       }
   }
 

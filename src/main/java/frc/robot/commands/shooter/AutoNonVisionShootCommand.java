@@ -16,6 +16,7 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
 
   private Timer timer;
   private double deadlineSeconds;
+  private boolean overrideIsAtSpeed;
 
   /**
    * Command that extends NonVisionShootCommand, and just adds having a timer for making the command end after
@@ -66,6 +67,11 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
     this(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocity, bottomWheelVelocity, 0.5);
   }
 
+  public AutoNonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngle, double topWheelVelocity, double bottomWheelVelocity, boolean overrideIsAtSpeed) { // TODO Probably remove this constructor and add firing angle specification to all other NonVisionShootCommands, was only added to not break the functionality of already existing ones.
+    this(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocity, bottomWheelVelocity, 0.5);
+    this.overrideIsAtSpeed = overrideIsAtSpeed;
+  }
+
   @Override
   public boolean isFinished() {
     if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
@@ -80,6 +86,15 @@ public class AutoNonVisionShootCommand extends NonVisionShootCommand {
         clearTimer();   // Ball showed up, stop the timer
     }
     return false;
+  }
+
+  @Override
+  public boolean isReadyToShoot() {
+      if (overrideIsAtSpeed) {
+        return true;
+      } else {
+        return super.isReadyToShoot();
+      }
   }
 
   public void setDeadlineSeconds(double deadlineSeconds) {

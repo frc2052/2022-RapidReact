@@ -116,6 +116,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
+    protected Command newAutoShootAllCommand(double deadlineSeconds) {
+        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain, deadlineSeconds);
+    }
+
     protected Command newShoot1Command() {
         return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
@@ -160,6 +164,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean overrideIsAtSpeed) {
+        return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS, overrideIsAtSpeed);
     }
 
     protected Command newAutoIntakeCommand() {

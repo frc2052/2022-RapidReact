@@ -26,8 +26,8 @@ public class TuneShooterCommand extends ShooterIndexingCommand {
     
     this.shooter = shooter;
 
-    SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 5000);
-    SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 5000);
+    SmartDashboard.putNumber("Top shooter wheel speed TP100MS", 7400);
+    SmartDashboard.putNumber("Bottom shooter wheel speed TP100MS", 7400);
     SmartDashboard.putBoolean("Is Angle 2", false);
 
     addRequirements(shooter, indexer, intake, hopper);
@@ -36,8 +36,8 @@ public class TuneShooterCommand extends ShooterIndexingCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double topSpeedTP100MS = SmartDashboard.getNumber("Top shooter wheel speed TP100MS", 0);
-    double bottomSpeedTP100MS = SmartDashboard.getNumber("Bottom shooter wheel speed TP100MS", 0);
+    double topSpeedTP100MS = SmartDashboard.getNumber("Top shooter wheel speed TP100MS", 7400);
+    double bottomSpeedTP100MS = SmartDashboard.getNumber("Bottom shooter wheel speed TP100MS", 7400);
 
     if (SmartDashboard.getBoolean("Is Angle 2", false)) {
         shooter.setShootAngle2();

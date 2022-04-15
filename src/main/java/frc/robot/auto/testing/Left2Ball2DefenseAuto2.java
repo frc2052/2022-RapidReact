@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
+import frc.robot.commands.intake.OuttakeCommand;
+import frc.robot.commands.intake.OuttakeCommand.OuttakeMode;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -41,19 +43,20 @@ public class Left2Ball2DefenseAuto2 extends AutoBase {
         Pose2d startPos = super.newPose2dInches(0, 0, 0); // new Pose2d(0,0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = super.newPose2dInches(48, 10, 30); //new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
         // Pose2d closeShootPos = super.newPose2dInches(10, 10, -160);
-        Pose2d behindOpponentBall1Pos = super.newPose2dInches(95, 5, -135);
-        Pose2d opponentBall1Pos = super.newPose2dInches(72, -35, -135); //new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-25), Rotation2d.fromDegrees(-135)); // 30 to make it curve
+        Pose2d behindOpponentBall1Pos = super.newPose2dInches(90, 5, -135);
+        Pose2d opponentBall1Pos = super.newPose2dInches(68, -32, -135); //new Pose2d(Units.inchesToMeters(65),Units.inchesToMeters(-25), Rotation2d.fromDegrees(-135)); // 30 to make it curve
+        List<Translation2d> toOpponentBallMidpoint = List.of(new Translation2d(Units.inchesToMeters(50), Units.inchesToMeters(70)));//, new Translation2d(Units.inchesToMeters(120), Units.inchesToMeters(88)));
         //List<Translation2d> opponentSecondBallMidpoint = List.of();
         //Pose2d throughHangerMidpointPos = super.newPose2dInches(25, 180, -150);
-        Pose2d opponentBall2Pos = super.newPose2dInches(-28, 160, 110);
-        List<Translation2d> backThroughHangerMidpoints = List.of(new Translation2d(Units.inchesToMeters(100), Units.inchesToMeters(150)));//, new Translation2d(Units.inchesToMeters(120), Units.inchesToMeters(88)));
-        Pose2d hideTheBallsPos = super.newPose2dInches(150, 80, 30);
-        Pose2d readyForTeleopPos = super.newPose2dInches(50, -70, -135);
+        Pose2d opponentBall2Pos = super.newPose2dInches(-35, 115, 110);
+        List<Translation2d> backThroughHangerMidpoints = List.of(new Translation2d(Units.inchesToMeters(110), Units.inchesToMeters(170)));//, new Translation2d(Units.inchesToMeters(120), Units.inchesToMeters(88)));
+        Pose2d hideTheBallsPos = super.newPose2dInches(140, 95, 30);
+        Pose2d readyForTeleopPos = super.newPose2dInches(70, -50, -135);
 
         AutoTrajectoryConfig driveToFirstBallTrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 1, 5, 2);
         AutoTrajectoryConfig driveBehindOpponentFirstBallPosTrajectoryConfig = super.createTrajectoryConfig(2, 2, 1, 5, 3);
-        AutoTrajectoryConfig driveToOpponent1stBallTrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 2); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
-        AutoTrajectoryConfig driveToSecondOpponentBallTrajectoryConfig = super.createTrajectoryConfig(3.5, 2.5, 1, 3, 1); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
+        AutoTrajectoryConfig driveToOpponent1stBallTrajectoryConfig = super.createTrajectoryConfig(3, 2, 2, 5, 2); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
+        AutoTrajectoryConfig driveToSecondOpponentBallTrajectoryConfig = super.createTrajectoryConfig(4, 3.5, 1, 3, 1); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
         //AutoTrajectoryConfig driveToOpponentBall2TrajectoryConfig = super.createTrajectoryConfig(3, 2, 2, 3, 1); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
         AutoTrajectoryConfig driveToHideOpponentBallsTrajectoryConfig = super.createTrajectoryConfig(4, 4, 2, 3, 1); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
         AutoTrajectoryConfig driveBackToBeginTeleopTrajectoryConfig = super.createTrajectoryConfig(4, 4, 2, 3, 1);
@@ -63,8 +66,8 @@ public class Left2Ball2DefenseAuto2 extends AutoBase {
         SwerveControllerCommand driveBehindOpponentFirstBallPos = super.createSwerveTrajectoryCommand(driveBehindOpponentFirstBallPosTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(-30), behindOpponentBall1Pos, super.createHubTrackingSupplier(175));
         SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(driveToOpponent1stBallTrajectoryConfig, super.getLastEndingPosCreated(-30), opponentBall1Pos, super.createRotationAngle(-140));
         //SwerveControllerCommand driveToThroughHangerPos = super.createSwerveTrajectoryCommand(driveThroughHangerTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(30), throughHangerMidpointPos, throughHangerMidpoints, super.createRotationAngle(-130));
-        SwerveControllerCommand driveToOpponentBall2 = super.createSwerveTrajectoryCommand(driveToSecondOpponentBallTrajectoryConfig, super.getLastEndingPosCreated(110), opponentBall2Pos, super.createRotationAngle(110));
-        SwerveControllerCommand driveToHideOpponentBalls = super.createSwerveTrajectoryCommand(driveToHideOpponentBallsTrajectoryConfig, super.getLastEndingPosCreated(-60), hideTheBallsPos, backThroughHangerMidpoints, super.createRotationAngle(30));
+        SwerveControllerCommand driveToOpponentBall2 = super.createSwerveTrajectoryCommand(driveToSecondOpponentBallTrajectoryConfig, super.getLastEndingPosCreated(130), opponentBall2Pos, toOpponentBallMidpoint, super.createRotationAngle(130));
+        SwerveControllerCommand driveToHideOpponentBalls = super.createSwerveTrajectoryCommand(driveToHideOpponentBallsTrajectoryConfig, super.getLastEndingPosCreated(30), hideTheBallsPos, backThroughHangerMidpoints, super.createRotationAngle(30));
         SwerveControllerCommand driveBackToBeginTeleop = super.createSwerveTrajectoryCommand(driveBackToBeginTeleopTrajectoryConfig, super.getLastEndingPosCreated(-135), readyForTeleopPos, super.createRotationAngle(-135));
         
         //OuttakeCommand outtakeBalls = new OuttakeCommand(OuttakeMode.ALL_BALLS, intake, hopper, indexer);
@@ -75,6 +78,8 @@ public class Left2Ball2DefenseAuto2 extends AutoBase {
         ParallelDeadlineGroup intakeOpposingBall1 = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newAutoIntakeCommand());
         //ParallelDeadlineGroup driveThroughHanger = new ParallelDeadlineGroup(driveToThroughHangerPos, super.newAutoTimedIntakeOnThenInCommand(2));
         ParallelDeadlineGroup intakeOpposingBall2 = new ParallelDeadlineGroup(driveToOpponentBall2, super.newAutoIntakeCommand());
+
+        OuttakeCommand outtakeCommand = new OuttakeCommand(OuttakeMode.ALL_BALLS, intake, hopper, indexer);
         
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(intakeBall1);
@@ -88,11 +93,10 @@ public class Left2Ball2DefenseAuto2 extends AutoBase {
         this.addCommands(intakeOpposingBall2);
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(driveToHideOpponentBalls);
-        this.addCommands(super.newIntakeArmOutCommand());
         this.andThen(new InstantCommand(() -> drivetrain.stop()));
         //this.addCommands(outtakeBalls.withTimeout(2));
-        this.addCommands(new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, 3000, 3000, true).withTimeout(2));
-        this.addCommands(super.newIntakeArmInCommand());
+        //this.addCommands(super.newAutoNonVisionShootAllCommand(shootMode, firingAngle, 7400, 7400, true));
+        this.addCommands(outtakeCommand.withTimeout(2));
         this.addCommands(driveBackToBeginTeleop);
         this.addCommands(super.newIntakeArmOutCommand());
         

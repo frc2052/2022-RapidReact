@@ -1,4 +1,4 @@
-package frc.robot.auto.testing;
+package frc.robot.auto.tuned;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,8 +33,8 @@ public class Right2BallAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -60);
-        Pose2d ball1Pos = super.newPose2dInches(42, -30, 0);
-        Pose2d opponentBallPos = super.newPose2dInches(35, 25, 0);
+        Pose2d ball1Pos = super.newPose2dInches(40, -30, 0);
+        Pose2d opponentBallPos = super.newPose2dInches(33, 25, 0);
 
         AutoTrajectoryConfig driveToBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 4, 2);
         AutoTrajectoryConfig driveToOpponentBallTrajectoryConfig = super.createTrajectoryConfig(2, 1, 1, 3, 2);
@@ -54,8 +54,8 @@ public class Right2BallAuto extends AutoBase {
         this.addCommands(intakeOpponentBall);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1));
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(super.newTurnInPlaceCommand(-120));
-        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_2, 9000, 9000));
-        this.addCommands(super.newTurnInPlaceCommand(-150));
+        this.addCommands(super.newTurnInPlaceCommand(-116));
+        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_2, 9500, 9500));
+        this.addCommands(super.newTurnInPlaceCommand(-160));
     }
 }

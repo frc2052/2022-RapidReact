@@ -9,6 +9,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
+        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -58,7 +59,8 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01
+                  "Slider Settings/Block increment": 0.01,
+                  "Visuals/Display value": true
                 },
                 {
                   "_type": "Text View",
@@ -71,7 +73,8 @@
                   "_title": "SmartDashboard/Vision X Aim Offset",
                   "Slider Settings/Min": -5.0,
                   "Slider Settings/Max": 5.0,
-                  "Slider Settings/Block increment": 1.0
+                  "Slider Settings/Block increment": 1.0,
+                  "Visuals/Display value": true
                 }
               ]
             }
@@ -253,6 +256,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "7,0": {
             "size": [
@@ -513,127 +517,6 @@
       }
     },
     {
-      "title": "Shooter",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
-              "_title": "/SmartDashboard/Shooter Wheels At Speed?",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "5,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
-              "_title": "/SmartDashboard/Shooter Top Wheel Speed"
-            }
-          },
-          "5,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Target Top Wheel Speed",
-              "_title": "/SmartDashboard/Shooter Target Top Wheel Speed"
-            }
-          },
-          "3,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Target Bottom Wheel Speed",
-              "_title": "/SmartDashboard/Shooter Target Bottom Wheel Speed"
-            }
-          },
-          "3,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
-              "_title": "/SmartDashboard/Shooter Bottom Wheel Speed"
-            }
-          },
-          "1,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Top shooter wheel percentage",
-              "_title": "/SmartDashboard/Top shooter wheel percentage"
-            }
-          },
-          "1,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Bottom shooter wheel percentage",
-              "_title": "/SmartDashboard/Bottom shooter wheel percentage"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Tab 5",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "4,0": {
-            "size": [
-              5,
-              3
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Climber Height Ticks",
-              "_title": "SmartDashboard/Climber Height Ticks",
-              "Graph/Visible time": 10.0,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Visible data/SmartDashboard/Climber Height Ticks": true
-            }
-          }
-        }
-      }
-    },
-    {
       "title": "Shooter Tuning",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
@@ -642,6 +525,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "6,0": {
             "size": [
@@ -879,143 +763,6 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///SmartDashboard/Disable Shooter Idle",
               "_title": "SmartDashboard/Disable Shooter Idle"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "PID Tuning",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "0,0": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
-              "_title": "SmartDashboard/Shooter Top Wheel Speed",
-              "Graph/Visible time": 5.0,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 10000.0,
-              "Y-axis/Lower bound": 5000.0,
-              "Visible data/SmartDashboard/Shooter Top Wheel Speed": true
-            }
-          },
-          "4,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Target Top Wheel Speed",
-              "_title": "SmartDashboard/Shooter Target Top Wheel Speed"
-            }
-          },
-          "6,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
-              "_title": "SmartDashboard/Shooter Top Wheel Speed"
-            }
-          },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter P",
-              "_title": "SmartDashboard/Shooter P"
-            }
-          },
-          "5,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter I",
-              "_title": "/SmartDashboard/Shooter I"
-            }
-          },
-          "6,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter D",
-              "_title": "SmartDashboard/Shooter D"
-            }
-          },
-          "7,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter F",
-              "_title": "SmartDashboard/Shooter F"
-            }
-          },
-          "6,0": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
-              "_title": "SmartDashboard/Shooter Bottom Wheel Speed",
-              "Graph/Visible time": 5.0,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Visible data/SmartDashboard/Shooter Bottom Wheel Speed": true
-            }
-          },
-          "8,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Shooter Wheels At Speed?",
-              "_title": "SmartDashboard/Shooter Wheels At Speed?",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "8,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Is Shooting",
-              "_title": "SmartDashboard/Is Shooting",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
