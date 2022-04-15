@@ -63,7 +63,7 @@ public final class Constants {
         public static final double BOTTOM_WHEEL_SPEED = 5;
         public static final double INDEXER_WHEEL_SPEED = 0.75;
 
-        public static final double SHOOTER_TOLERANCE = 0.03;
+        public static final double SHOOTER_TOLERANCE = 0.01;
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 

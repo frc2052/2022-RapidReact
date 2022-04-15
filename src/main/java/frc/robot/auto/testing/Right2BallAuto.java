@@ -32,15 +32,15 @@ public class Right2BallAuto extends AutoBase {
     public Right2BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
-        Pose2d startPos = super.newPose2dInches(0, 0, 0);
-        Pose2d ball1Pos = super.newPose2dInches(-50, -30, -30);
-        Pose2d opponentBallPos = super.newPose2dInches(-50, 30, 30);
+        Pose2d startPos = super.newPose2dInches(0, 0, -60);
+        Pose2d ball1Pos = super.newPose2dInches(42, -30, 0);
+        Pose2d opponentBallPos = super.newPose2dInches(35, 25, 0);
 
         AutoTrajectoryConfig driveToBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 4, 2);
-        AutoTrajectoryConfig driveToOpponentBallTrajectoryConfig = super.createTrajectoryConfig(1, 0.5, 1, 5, 3);
+        AutoTrajectoryConfig driveToOpponentBallTrajectoryConfig = super.createTrajectoryConfig(2, 1, 1, 3, 2);
 
-        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(driveToBall1TrajectoryConfig, startPos, ball1Pos, super.createRotationAngle(-30));
-        SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(driveToOpponentBallTrajectoryConfig, super.getLastEndingPosCreated(150), opponentBallPos, super.createRotationAngle(30));
+        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(driveToBall1TrajectoryConfig, startPos, ball1Pos, super.createRotationAngle(-10));
+        SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(driveToOpponentBallTrajectoryConfig, super.getLastEndingPosCreated(150), opponentBallPos, super.createRotationAngle(10));
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup intakeOpponentBall = new ParallelDeadlineGroup(driveToOpponentBallPos, super.newAutoIntakeCommand());
@@ -49,14 +49,13 @@ public class Right2BallAuto extends AutoBase {
         this.addCommands(intakeBall1);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1));
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(super.newTurnInPlaceCommand(-160));
+        this.addCommands(super.newTurnInPlaceCommand(-150));
         this.addCommands(super.newAutoAimAndShootAllCommandGroup());
         this.addCommands(intakeOpponentBall);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1));
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(super.newTurnInPlaceCommand(165));
-        this.addCommands(super.newNonVisionShootAllCommand(FiringAngle.ANGLE_2, 9000, 9000));
-        this.addCommands(super.newTurnInPlaceCommand(-110));
-        this.addCommands(super.newIntakeArmOutCommand());
+        this.addCommands(super.newTurnInPlaceCommand(-120));
+        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_2, 9000, 9000));
+        this.addCommands(super.newTurnInPlaceCommand(-150));
     }
 }

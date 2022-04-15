@@ -9,7 +9,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
-        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -59,8 +58,7 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 0.01
                 },
                 {
                   "_type": "Text View",
@@ -73,8 +71,7 @@
                   "_title": "SmartDashboard/Vision X Aim Offset",
                   "Slider Settings/Min": -5.0,
                   "Slider Settings/Max": 5.0,
-                  "Slider Settings/Block increment": 1.0,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 1.0
                 }
               ]
             }
