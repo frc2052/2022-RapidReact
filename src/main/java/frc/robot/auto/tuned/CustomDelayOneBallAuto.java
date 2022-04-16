@@ -1,4 +1,4 @@
-package frc.robot.auto.testing;
+package frc.robot.auto.tuned;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,10 +20,11 @@ import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 public class CustomDelayOneBallAuto extends AutoBase{
     
     /**
-     * No starting position is needed, simply face the robot towards
+     * No starting position is needed, simply face the robot towards the hub.
      * target. This auto backs up to get the "off the trmac" point and shoots the preloaded ball
      * This auto is intended to be used either if we were unable to plan ahead with alliance partners
      * and get any good auto spot or as a last resort, in case of inability to use limelight or other malfunctions.
+     * Custom Delay - Allows a number of seconds to be input into shuffleboard for how long until the robot should begin backing up.
      * @param drivetrain
      * @param shooter
      * @param indexer
@@ -46,6 +47,5 @@ public class CustomDelayOneBallAuto extends AutoBase{
         this.addCommands(new WaitUntilCommand(() -> timer.hasElapsed(dashboard.getOneBallDelay())));
         this.addCommands(backUp);
         this.addCommands(super.autonomousFinishedCommandGroup());
-
     }
 }

@@ -5,14 +5,12 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.drive.WaitOdometryResetCommand;
-import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -32,7 +30,6 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
      * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
-     * TUNED
      * @param drivetrain
      * @param vision
      * @param shooter

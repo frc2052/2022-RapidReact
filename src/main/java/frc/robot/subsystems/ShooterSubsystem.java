@@ -175,7 +175,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setIdleSpeedEnabled(boolean enabled) {
     idleSpeedEnabled = enabled;
-    //SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
+    SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
   }
 
   public void setShooterVelocityBoost(double boostPct) {
@@ -192,7 +192,7 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kReverse);
       currentAngle = FiringAngle.ANGLE_1;
     }
-    System.err.println("Setting Angle 1");
+    // System.err.println("Setting Angle 1");
   }
 
   public void setShootAngle2() {
@@ -200,8 +200,7 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kForward);
       currentAngle = FiringAngle.ANGLE_2;
     }
-    System.err.println("Setting Angle 2");
-
+    // System.err.println("Setting Angle 2");
   }
 
   public void setShootAngle1Override(boolean override) {

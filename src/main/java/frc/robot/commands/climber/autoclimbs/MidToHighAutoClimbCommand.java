@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
-import frc.robot.commands.climber.MoveClimberCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 
@@ -23,7 +22,6 @@ public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
 
         addRequirements(this.climber);
 
-        //170000
         this.addCommands(
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),

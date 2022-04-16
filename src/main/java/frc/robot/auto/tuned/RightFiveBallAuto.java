@@ -24,6 +24,11 @@ public class RightFiveBallAuto extends AutoBase {
      * 4. Then drive back to location just outside tarmac but avoiding upper exit to score 1 or 2 cargo held.
      * @param drivetrain
      * @param vision
+     * @param shooter
+     * @param intake
+     * @param indexer
+     * @param hopper
+     * @param climber
      */
     public RightFiveBallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

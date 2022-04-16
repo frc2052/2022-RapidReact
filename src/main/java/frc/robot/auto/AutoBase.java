@@ -29,6 +29,8 @@ import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.OnlyIntakeCommand;
+import frc.robot.commands.intake.OuttakeCommand;
+import frc.robot.commands.intake.OuttakeCommand.OuttakeMode;
 import frc.robot.commands.intake.AutoIntakeCommand;
 import frc.robot.commands.shooter.AutoNonVisionShootCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
@@ -188,6 +190,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Command newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
         return new AutoTimedIntakeOnThenInCommand(intake, indexer, hopper, deadlineSeconds);
+    }
+
+    protected Command newOuttakeAllCommand() {
+        return new OuttakeCommand(OuttakeMode.ALL_BALLS, intake, hopper, indexer);
     }
 
     protected Command newTurnInPlaceCommand(double angleDegrees) {

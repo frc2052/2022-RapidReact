@@ -34,6 +34,8 @@ public class Left2Ball2DefenseAuto extends AutoBase {
      * @param shooter
      * @param intake
      * @param indexer
+     * @param hopper
+     * @param climber
      */
     public Left2Ball2DefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

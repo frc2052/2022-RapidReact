@@ -71,8 +71,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    robotContainer.init();
-
     robotContainer.resetGyro();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -81,8 +79,6 @@ public class Robot extends TimedRobot {
       autonomousCommand.schedule();
     }
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
-
-    robotContainer.resetRobot();
   }
 
   /** This function is called periodically during autonomous. */
@@ -107,13 +103,10 @@ public class Robot extends TimedRobot {
   //     System.err.println("**************BLOCK SIZE " + r.getHeight());
   //   }
   // }
-
   }
 
   @Override
   public void teleopInit() {
-    robotContainer.init();
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -122,7 +115,6 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
-    // robotContainer.setShooterPIDF();
   }
 
   /** This function is called periodically during operator control. */

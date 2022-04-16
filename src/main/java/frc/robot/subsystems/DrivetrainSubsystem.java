@@ -90,7 +90,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private double lastRollValue;
   private boolean lastRollDelta;
   private boolean isTopOfSwing;
-  private int counter;
   private double intendedXVelocityMPS;
   private double intendedYVelocityMPS;
   private boolean climbingSwingingLEDOutput;

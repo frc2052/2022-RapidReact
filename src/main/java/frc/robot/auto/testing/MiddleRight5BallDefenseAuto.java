@@ -81,7 +81,6 @@ public class MiddleRight5BallDefenseAuto extends AutoBase {
         this.addCommands(goBackToShootFinalBall);
         this.addCommands(new PerpetualCommand(super.newAutoAimAndShootAllCommandGroup()).withTimeout(5));
         
-        //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.addCommands(super.autonomousFinishedCommandGroup());
     }
 }

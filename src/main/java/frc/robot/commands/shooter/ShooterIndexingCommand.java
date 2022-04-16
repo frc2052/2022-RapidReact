@@ -88,7 +88,7 @@ public class ShooterIndexingCommand extends CommandBase {
   }
 
   // Override this in different shoot commands for custom shoot control
-  public boolean isReadyToShoot() {
+  protected boolean isReadyToShoot() {
     return shooter.isAtSpeed();
   }
 

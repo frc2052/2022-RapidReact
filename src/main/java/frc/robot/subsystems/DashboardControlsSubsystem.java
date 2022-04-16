@@ -20,8 +20,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private SendableChooser<Autos> autoSelector;
     private SendableChooser<DriveMode> driveModeSelector;
     private SendableChooser<CamMode> limelightCamModeSelector;
-    private SendableChooser<LEDStatusMode> ledStatusModeSelector;
-    private SendableChooser<ButtonBindingsProfile> buttonBindingsProfileSelector;
+    // private SendableChooser<LEDStatusMode> ledStatusModeSelector;
+    // private SendableChooser<ButtonBindingsProfile> buttonBindingsProfileSelector;
 
     // private int ledBrightness;
     // private int lastLEDBrightness;
@@ -41,7 +41,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private boolean lastIsDriverCamera;
     // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
-    private boolean lastIsLimelightDead;
+    // private boolean lastIsLimelightDead;
     // private boolean lastIsDrivetrainDead;
     private boolean lastIsPnuematicsDead;
     private boolean lastDisableShooterIdle;
@@ -70,7 +70,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // lastLEDBrightness = ledBrightness;
         // lastLEDStatusMode = LEDStatusMode.RAINBOW;
         lastSelectedAuto = selectedAuto;
-        lastIsLimelightDead = isLimelightDead;
+        // lastIsLimelightDead = isLimelightDead;
         // lastLimelightPowerRelayState = limelightPowerRelayToggle;
 
         // Unnecessary, but might be nice for understanding
@@ -83,8 +83,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
         limelightCamModeSelector = new SendableChooser<CamMode>();
-        ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
-        buttonBindingsProfileSelector = new SendableChooser<ButtonBindingsProfile>();
+        // ledStatusModeSelector = new SendableChooser<LEDStatusMode>();
+        // buttonBindingsProfileSelector = new SendableChooser<ButtonBindingsProfile>();
 
         autoSelector.setDefaultOption(Autos.values()[0].name, Autos.values()[0]);
         for (int i = 1; i < Autos.values().length; i++) {
@@ -152,23 +152,23 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
     }
 
+    // Periodic function to check for SmartDashboard changes in parallel with other loops. Intended to only do logic when somthing has changed.
     @Override
-    public void periodic() {    // Periodic function to check for SmartDashboard changes in parallel with other loops. Intended to only do logic when somthing has changed.
-        // LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
+    public void periodic() {
         Autos selectedAuto = getSelectedAuto();
-        // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
-        // int ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         double shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
         double visionXAimOffset = SmartDashboard.getNumber("Vision X Aim Offset", vision.getXAimOffset());
         Boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         Boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         boolean limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
-        boolean isLimelightDead = !vision.getIsUpdating(); //SmartDashboard.getBoolean("Limelight Is Dead", false);
-        // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
+        boolean isLimelightDead = !vision.getIsUpdating();
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
-        // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
         boolean disableShooterIdle = SmartDashboard.getBoolean("Disable Shooter Idle", false);
-
+        // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
+        // LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
+        // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
+        // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
+        // int ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
 
         if (limelightLEDsEnabled != lastLimelightLEDsEnabled) {
             if(limelightLEDsEnabled) {
@@ -192,16 +192,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             }
         }
 
-        // if (selectedLEDStatusMode != lastLEDStatusMode) {
-        //     LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
-        //     lastLEDStatusMode = selectedLEDStatusMode;
-        // }
-
-        // if (ledBrightness != lastLEDBrightness) {
-        //     LEDSubsystem.setBothChannelBrightnesses(ledBrightness);
-        //     lastLEDBrightness = ledBrightness;
-        // }
-
         if (shooterBoostPct != lastShooterBoostPct) {
             shooter.setShooterVelocityBoost(shooterBoostPct);
             lastShooterBoostPct = shooterBoostPct;
@@ -217,11 +207,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         } else {
             SmartDashboard.putBoolean("Is An Auto Selected?", true);
         }
-
-        // if (limelightPowerRelayToggle != lastLimelightPowerRelayState) {
-        //     vision.togglePowerRelay();
-        //     lastLimelightPowerRelayState = limelightPowerRelayToggle;
-        // }
 
         if (limelightLEDOverride != lastLimelightLEDOverride) {
             if (limelightLEDOverride) {
@@ -247,11 +232,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastSelectedAuto = selectedAuto;
         }
 
-        // if (selectedButtonBindingsProfile != lastSelectedButtonBindingsProfile && selectedButtonBindingsProfile != null) {
-        //     robotContainer.assignButtonBindings(selectedButtonBindingsProfile);
-        //     lastSelectedButtonBindingsProfile = selectedButtonBindingsProfile;
-        // }
-
         if (isLimelightDead) {
             flashLostLimelightCommunicationWarning();
             // this.isLimelightDead = isLimelightDead;
@@ -261,15 +241,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             limelightDeadSeconds = 0;
             clearTimer();
         }
-
-        // if (isDrivetrainDead != lastIsDrivetrainDead) {
-        //     if (isDrivetrainDead) {
-        //         LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.LIGHT_SHOW);
-        //     } else {
-        //         LEDSubsystem.getInstance().clearAlertStatusMode();
-        //     }
-        //     lastIsDrivetrainDead = isDrivetrainDead;
-        // }
 
         if (isPnuematicsDead != lastIsPnuematicsDead) {
             if (isPnuematicsDead) {
@@ -281,16 +252,35 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastIsPnuematicsDead = isPnuematicsDead;
         }
 
-        // SmartDashboard.putBoolean("Shooting", robotContainer.getIsShooting());
-    }
+        // if (selectedLEDStatusMode != lastLEDStatusMode) {
+        //     LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+        //     lastLEDStatusMode = selectedLEDStatusMode;
+        // }
 
-    // Didn't work
-    // public void reset SelectedAuto() {
-    //     SendableChooser<Autos> autoSelector1 = new SendableChooser<Autos>();
-    //     autoSelector1.setDefaultOption(Autos.NONE_SELECTED.name, Autos.NONE_SELECTED);
-    //     SmartDashboard.putData("Autos", autoSelector1);
-    //     SmartDashboard.putData("Autos", autoSelector);
-    // }
+        // if (ledBrightness != lastLEDBrightness) {
+        //     LEDSubsystem.setBothChannelBrightnesses(ledBrightness);
+        //     lastLEDBrightness = ledBrightness;
+        // }
+
+        // if (limelightPowerRelayToggle != lastLimelightPowerRelayState) {
+        //     vision.togglePowerRelay();
+        //     lastLimelightPowerRelayState = limelightPowerRelayToggle;
+        // }
+        
+        // if (selectedButtonBindingsProfile != lastSelectedButtonBindingsProfile && selectedButtonBindingsProfile != null) {
+        //     robotContainer.assignButtonBindings(selectedButtonBindingsProfile);
+        //     lastSelectedButtonBindingsProfile = selectedButtonBindingsProfile;
+        // }
+
+        // if (isDrivetrainDead != lastIsDrivetrainDead) {
+        //     if (isDrivetrainDead) {
+        //         LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.LIGHT_SHOW);
+        //     } else {
+        //         LEDSubsystem.getInstance().clearAlertStatusMode();
+        //     }
+        //     lastIsDrivetrainDead = isDrivetrainDead;
+        // }
+    }
 
     public boolean getIsLimelightDead() {
         return isLimelightDead;
@@ -303,14 +293,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     public DriveMode getSelectedDriveMode() {
         return driveModeSelector.getSelected();
     }
-
-    // public LEDStatusMode getSelectedLEDStatusMode() {
-    //     return ledStatusModeSelector.getSelected();
-    // }
-
-    // public ButtonBindingsProfile getSelectButtonBindingsProfile() {
-    //     return buttonBindingsProfileSelector.getSelected();
-    // }
 
     public double getShooterVelocityBoost() {
         return SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
@@ -340,6 +322,22 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             SmartDashboard.putBoolean("Lost Limelight Comm Warning", true);
         }
     }
+
+    // Didn't work
+    // public void reset SelectedAuto() {
+    //     SendableChooser<Autos> autoSelector1 = new SendableChooser<Autos>();
+    //     autoSelector1.setDefaultOption(Autos.NONE_SELECTED.name, Autos.NONE_SELECTED);
+    //     SmartDashboard.putData("Autos", autoSelector1);
+    //     SmartDashboard.putData("Autos", autoSelector);
+    // }
+
+    // public LEDStatusMode getSelectedLEDStatusMode() {
+    //     return ledStatusModeSelector.getSelected();
+    // }
+
+    // public ButtonBindingsProfile getSelectButtonBindingsProfile() {
+    //     return buttonBindingsProfileSelector.getSelected();
+    // }
 
     public enum Autos {
         NONE_SELECTED("NO AUTO SELECTED", "NO AUTO SELECTED"),
@@ -376,27 +374,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     public enum DriveMode {
         FIELD_CENTRIC,
         ROBOT_CENTRIC,
-    }
-
-    // This definately doesn't work but maybe it's steps in the rights direction
-    public enum ButtonBindingsProfile {
-        DEFAULT("Default"),
-        SOLO_DRIVER("Solo Driver");
-
-        public String name;
-        // public int[] turnJoystickBindings;
-        // public int[] driveJoystickBindings;
-        // public int[] secondaryPannelBindings;
-
-        ButtonBindingsProfile(String name) {
-            this.name = name;
-        } 
-        // ButtonBindingsProfile(String name, int[] turnJoystickBindings, int[] driveJoystickBindings, int[] secondaryPannelBindings) {
-        //     this.name = name;
-        //     this.turnJoystickBindings = turnJoystickBindings;
-        //     this.driveJoystickBindings = driveJoystickBindings;
-        //     this.secondaryPannelBindings = secondaryPannelBindings;
-        // }
     }
 
     private void clearTimer() {

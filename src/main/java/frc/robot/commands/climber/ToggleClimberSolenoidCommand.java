@@ -17,22 +17,15 @@ public class ToggleClimberSolenoidCommand extends CommandBase {
       addRequirements(this.climberSubsystem);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+  public void initialize() {
     if (climberSubsystem.getClimberSolenoidState() == ClimberSolenoidState.FORWARD) {
-      // TODO: Add safety to check if climber arm is high enough before moving the solenoid.
       climberSubsystem.shiftBackward();
     } else {
       climberSubsystem.shiftForward();
     }
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return true;

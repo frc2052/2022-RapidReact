@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
 
-public class MoveClimberCommand extends CommandBase {
+public class MoveClimberToHeightCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     protected double heightTicks;
 
-    public MoveClimberCommand(HookClimberSubsystem climber, double heightTicks) {
+    public MoveClimberToHeightCommand(HookClimberSubsystem climber, double heightTicks) {
         this.climber = climber;
         this.heightTicks = heightTicks;        
         addRequirements(this.climber);   

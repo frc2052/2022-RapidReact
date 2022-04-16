@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.drive.WaitOdometryResetCommand;
-import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -32,7 +31,6 @@ public class MiddleLeftHanger4BallDefenseAuto extends AutoBase {
      * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
-     * TUNED
      * @param drivetrain
      * @param vision
      * @param shooter
@@ -44,15 +42,13 @@ public class MiddleLeftHanger4BallDefenseAuto extends AutoBase {
     public MiddleLeftHanger4BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
-        Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-160));
-        Pose2d approachTerminalBalls = new Pose2d(Units.inchesToMeters(-158), Units.inchesToMeters(-100), Rotation2d.fromDegrees(-160));
-        List<Translation2d> kickBallMidpoint = List.of(new Translation2d(Units.inchesToMeters(-60), Units.inchesToMeters(-54)));
-        Pose2d arriveAtTerminalBalls = new Pose2d(Units.inchesToMeters(-186),Units.inchesToMeters(-111),Rotation2d.fromDegrees(-135));
-        //List<Translation2d> throughHangerMidpoints = List.of(new Translation2d(Units.inchesToMeters(-150), Units.inchesToMeters(70)), new Translation2d(Units.inchesToMeters(-120), Units.inchesToMeters(80)));   // Midpoints for going around hanger post
-        List<Translation2d> throughHangerMidpoint = List.of(new Translation2d(Units.inchesToMeters(-155), Units.inchesToMeters(62)));
-        Pose2d shootPos = new Pose2d(Units.inchesToMeters(-50), Units.inchesToMeters(100), Rotation2d.fromDegrees(-30));
-        //Pose2d shootPos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(-12), Rotation2d.fromDegrees(30));
-        Pose2d ball4Pos = new Pose2d(Units.inchesToMeters(-20), Units.inchesToMeters(97), Rotation2d.fromDegrees(-30));
+        Pose2d startPos = super.newPose2dInches(0, 0, -160);
+        Pose2d approachTerminalBalls = super.newPose2dInches(-158, -100, -160);
+        List<Translation2d> kickBallMidpoint = List.of(super.newTranslation2dInches(-60, -54));
+        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-186, -111, -135);
+        List<Translation2d> throughHangerMidpoint = List.of(super.newTranslation2dInches(-155, 62));
+        Pose2d shootPos = super.newPose2dInches(-50, 100, -30);
+        Pose2d ball4Pos = super.newPose2dInches(-20, 97, -30);
 
         AutoTrajectoryConfig drivingToBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 1, 4, 2);
         AutoTrajectoryConfig intakingBothTerminalBallsTrajectoryConfig = super.createTrajectoryConfig(2.5, 1.5, 1, 5, 2);
@@ -76,12 +72,10 @@ public class MiddleLeftHanger4BallDefenseAuto extends AutoBase {
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(intakeTerminalBalls);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1.5));
-        //this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
         this.addCommands(driveThroughHangerToShoot);
         this.addCommands(super.newIntakeArmOutCommand());
         this.addCommands(aimAndShoot1);
         this.addCommands(intakeBall4Command);
-        // this.andThen(() -> intake.intakeArmOut());
         this.addCommands(aimingAndShooting2);
         this.addCommands(super.autonomousFinishedCommandGroup());
 
