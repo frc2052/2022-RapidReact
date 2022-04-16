@@ -13,10 +13,8 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class ThreeballDriveAndShoot extends AutoBase {
 
@@ -64,7 +62,6 @@ public class ThreeballDriveAndShoot extends AutoBase {
         this.addCommands(driveToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(autoAim);      // Turns on an uses the Limelight to adjust it's aiming position to the center of the target
 
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.andThen(super.autonomousFinishedCommandGroup());
     }
 }

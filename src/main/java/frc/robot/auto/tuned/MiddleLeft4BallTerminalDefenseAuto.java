@@ -67,7 +67,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         //ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
         //ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackThroughHangerToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
         ParallelDeadlineGroup aimingAndShooting1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
-        ParallelDeadlineGroup intakeBall4Command = new ParallelDeadlineGroup(driveToBall4Pos, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall4Command = new ParallelDeadlineGroup(driveToBall4Pos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), onlyIntakeCommand);
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
@@ -81,5 +81,7 @@ public class MiddleLeft4BallTerminalDefenseAuto extends AutoBase {
         this.addCommands(intakeBall4Command);
         // this.andThen(() -> intake.intakeArmOut());
         this.addCommands(aimingAndShooting2);
+        this.addCommands(super.autonomousFinishedCommandGroup());
+
     }
 }

@@ -27,7 +27,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        vision.setLED(LEDMode.ON);
+        vision.setLEDMode(LEDMode.ON);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
         tx = vision.getTx();
         isLinedUp = false;
 
-        if(vision.hasValidTarget()) {
+        if(vision.getHasValidTarget()) {
             // Logic to set the chassis rotation speed based on horizontal offset.
             if(Math.abs(this.tx) > 5) {
               visionRotation = -Math.copySign(Math.toRadians(this.tx * 8) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
@@ -50,11 +50,11 @@ public class VisionTurnInPlaceCommand extends CommandBase {
             visionRotation = 0;
           }
 
-        if (isLinedUp) {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_FOUND);
-        } else {
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
-        }
+            if (isLinedUp) {
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_LINED_UP);
+            } else {
+                LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+            }
 
         //if(vision.hasValidTarget() || visionRotation == 0) { // Logic to set the chassis rotation speed based on horizontal offset.
             drivetrain.drive(
@@ -75,9 +75,9 @@ public class VisionTurnInPlaceCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        vision.setLED(LEDMode.OFF);
+        vision.setLEDMode(LEDMode.OFF);
         drivetrain.stop();
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
+        LEDSubsystem.getInstance().setLEDStatusMode(null);
     }
 
     @Override

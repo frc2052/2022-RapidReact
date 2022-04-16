@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.AutoShootCommand;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -58,9 +58,9 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand driveToArriveAtTerminalBalls = super.createSwerveTrajectoryCommand(intakingBothTerminalBallsTrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(Rotation2d.fromDegrees(-135)), arriveAtTerminalBalls, super.createRotationAngle(-135));
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(drivingBacktTrajectoryConfig, super.getLastEndingPosCreated(30), shootPos, super.createHubTrackingSupplier(20));
 
-        AutoShootCommand autoShootCommand = new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        AutoShootCommand autoShootCommand = new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
-        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToArriveAtTerminalBalls, super.newAutoIntakeCommand());
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newAutoTimedIntakeOnThenInCommand(0.5));
         //ParallelDeadlineGroup waitToIntake = new ParallelDeadlineGroup(new WaitCommand(1), super.newIntakeArmOutCommand());
         ParallelDeadlineGroup aimingAndShooting = new ParallelDeadlineGroup(autoShootCommand, new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
@@ -69,11 +69,10 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
         this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1));
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(intakeTerminalBalls);
-        this.addCommands(super.newIntakeArmOutCommand().withTimeout(1));
+        this.addCommands(super.newAutoIntakeCommand().withTimeout(1));
         this.addCommands(returnToShoot);
         this.addCommands(aimingAndShooting);
-        
-
+        this.addCommands(super.autonomousFinishedCommandGroup());
 
         // Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(30));
         // Pose2d shootPreloadedPos = new Pose2d(Units.inchesToMeters(-24), Units.inchesToMeters(24), Rotation2d.fromDegrees(0));

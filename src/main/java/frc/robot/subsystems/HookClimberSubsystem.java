@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class HookClimberSubsystem extends SubsystemBase{
@@ -64,7 +65,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         } else if (getIsBelowMaxHeight()) {
             climberMotor.set(ControlMode.PercentOutput, extendPctOutput);
         } else {
-            System.err.println("Climber extended to (or past) the max height!");
+            // System.err.println("Climber extended to (or past) the max height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         }
@@ -83,8 +84,9 @@ public class HookClimberSubsystem extends SubsystemBase{
         } else if (getIsAtMinHeight()) {
             climberMotor.set(ControlMode.PercentOutput, retractPctOutput);
         } else {
-            System.err.println("Climber retracted to (or past) the min height!");
+            // System.err.println("Climber retracted to (or past) the min height!");
             climberMotor.set(ControlMode.PercentOutput, 0);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
         }
     }
 
@@ -106,6 +108,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberSolenoid.set(Value.kForward);
         currentSolenoidState = ClimberSolenoidState.FORWARD;
         isVertical = true;
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_ARMS_FORWARD);
     }
 
     /**
@@ -115,6 +118,8 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberSolenoid.set(Value.kReverse);
         currentSolenoidState = ClimberSolenoidState.BACKWARD;
         isVertical = false;
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_ARMS_BACK);
+
     }
 
     public ClimberSolenoidState getClimberSolenoidState() {
@@ -125,13 +130,14 @@ public class HookClimberSubsystem extends SubsystemBase{
         System.err.println("************************ CLIMBER LOCKED");
         lockSolenoid.set(Value.kReverse);
         isLocked = true;
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_LOCK_ENGAGED);
+        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_LOCK_ENGAGED);
     }
 
     public void unlock() {
         System.err.println("************************ CLIMBER UNLOCKED");
         lockSolenoid.set(Value.kForward);
         isLocked = false;
+        LEDSubsystem.getInstance().clearAlertStatusMode();
     }
 
     public void zeroEncoder() {

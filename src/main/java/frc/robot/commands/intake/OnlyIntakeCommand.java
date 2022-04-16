@@ -7,6 +7,8 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class OnlyIntakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
@@ -23,16 +25,10 @@ public class OnlyIntakeCommand extends CommandBase {
     
     addRequirements(this.intake);
   }
-    
-  @Override
-  public void initialize() {
-    // Extend intake arm and spin the intake wheels.
-    intake.armOut();
-  }
 
   @Override
   public void execute() {
-    if (indexer.getCargoStagedDetected() && indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
+    if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
       intake.run();
     }
   }

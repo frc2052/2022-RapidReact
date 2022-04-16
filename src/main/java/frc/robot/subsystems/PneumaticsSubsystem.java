@@ -8,6 +8,8 @@ import frc.robot.Constants;
 public class PneumaticsSubsystem extends SubsystemBase {
   private final PneumaticHub pneumaticHub;
 
+  private double currentPressure;
+
   public PneumaticsSubsystem() {
     pneumaticHub = new PneumaticHub(Constants.Solenoids.COMPRESSOR_MODULE_ID);
     pneumaticHub.clearStickyFaults();
@@ -17,7 +19,11 @@ public class PneumaticsSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Gets the current compressor pressure from channel 0.
-    double currentPressure = pneumaticHub.getPressure(0);
+    currentPressure = pneumaticHub.getPressure(0);
     SmartDashboard.putNumber("currentPressure", currentPressure);
+  }
+
+  public double getCurrentPressure() {
+    return currentPressure;
   }
 }

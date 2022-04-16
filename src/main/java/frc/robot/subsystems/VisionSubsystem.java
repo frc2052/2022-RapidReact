@@ -3,12 +3,16 @@ package frc.robot.subsystems;
 // Subsystem for accessing the Limelight's NetworkTable values and creating methods to control it.
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.util.vision.VisionCalculator;
 
 public class VisionSubsystem extends SubsystemBase{
 
@@ -16,13 +20,13 @@ public class VisionSubsystem extends SubsystemBase{
 
     NetworkTable table;
 
-    private double tx, ty; //, ta, ts, tl, camMode, getpipe;
+    private double tx, ty, tl, pipeline, camMode; //, ta, ts, tl, camMode, getpipe;
     private boolean hasValidTarget;
-    private boolean isLinedUp;
-    private boolean externalIsLinedUp;
     private double lastTl;
     
     private boolean ledOverride = false;
+    private boolean isUpdating = true;
+    private Timer timer;
 
     private NetworkTableEntry ltv; // If the Limelight has any targets.              Value between 0.0 and 1.0.
     private NetworkTableEntry ltx; // Horizontal offset from crosshair to target.    Value between -29.8 and 29.8 (degrees).
@@ -76,31 +80,49 @@ public class VisionSubsystem extends SubsystemBase{
     public void periodic() {
       hasValidTarget = ltv.getDouble(0.0) == 1.0;
 
+      // Values here are always being calculated anyway (probably because of SmartDashboard), so they're done periodic.
       tx = ltx.getDouble(0.0);
       ty = lty.getDouble(0.0);
 
-    //   if (getTl() == lastTl) {
-    //     System.err.println("*** LIMELIGHT ISN'T UPDATING ***");
-    //   }
+      tl = ltl.getDouble(0.0);
+      pipeline = lgetpipe.getDouble(0.0);
+      camMode = lcamMode.getDouble(0.0);
 
-    //   lastTl = getTl();
+      if (tl == lastTl) { // Timer logic for checking if the latency hasn't changed in a full second (which shouldn't happen unless limelight died)
+        if (timer == null) {
+            timer = new Timer();
+            timer.start();
+        }
+        if (timer.hasElapsed(1)) {
+          isUpdating = false;
+        }
+      } else {
+        isUpdating = true;
+        clearTimer();
+      }
 
-      SmartDashboard.putBoolean("Has target?", hasValidTarget);
-      SmartDashboard.putNumber("Pipeline: ", getPipeline());
-      // SmartDashboard.putString("Latency: ", getTl() + "ms");
-      SmartDashboard.putString("Camera Mode: ", getCamMode() == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
+      lastTl = tl;
+
+      SmartDashboard.putBoolean("Has Target?", hasValidTarget);
+      SmartDashboard.putNumber("Pipeline", pipeline);
+      SmartDashboard.putString("Latency", tl + "ms");
+      SmartDashboard.putString("Camera Mode: ", camMode == 0.0 ? "Vision" : "Driver"); // A Java 1 line if statement. If camMode == 0.0 is true it uses "Vision", else is uses "Driver".
 
       if (hasValidTarget) {
-        SmartDashboard.putBoolean("Is lined up?", isLinedUp);
+        // SmartDashboard.putBoolean("Is lined up?", isLinedUp());
         SmartDashboard.putNumber("Vertical Distance from Crosshair: ", ty);
         SmartDashboard.putNumber("Horizontal Distance from Crosshair: ", tx);
-        SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
+        // SmartDashboard.putNumber("Equation xDistance away (Inches)", Units.metersToInches(getEquationDistanceToUpperHubMeters()));
+        // SmartDashboard.putNumber("Test Equation Distance", testEquationDistance());
         SmartDashboard.putNumber("Limelight Tolerance", getTolerance());
+        double distanceInches = VisionCalculator.getInstance().getDistanceInches(ty);
+        SmartDashboard.putNumber("Calculator Distance Inches", distanceInches);
+        SmartDashboard.putNumber("Calculator Distance Feet", distanceInches / 12);
 
         // SmartDashboard.putBoolean("Is In Range?", ty > Constants.Limelight.FAR_RANGE_FROM_HUB_ANGLE_DEGREES ? (ty < Constants.Limelight.CLOSE_RANGE_FROM_HUB_ANGLE_DEGREES ? true : false) : false);
       }
 
-      // if (hasValidTarget) {
+      // if (hasValidTarget) { // Logic for switching pipelines at different ranges, not neccessary
       //   if ((getPipeline() == 0 && ty >= Constants.Limelight.PIPELINE_SWITCH_TY_DEGREES + Constants.Limelight.PIPELINE_SWITCH_THRESHOLD)) { // Logic for switching between Limelight vision pipelines on distance (angle here) - written weirdly to be as efficient as possible
       //     if (getCamMode() != 1.0) {
       //       setPipeline(1);
@@ -117,7 +139,7 @@ public class VisionSubsystem extends SubsystemBase{
       // }
     }
 
-    // public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries.
+    // public void updateLimelight() { // Method for updating class doubles from their NetworkTable entries, moved most logic to periodic
     //     tx = ltx.getDouble(0.0);
     //     ty = lty.getDouble(0.0);
     //     ta = lta.getDouble(0.0);
@@ -132,17 +154,17 @@ public class VisionSubsystem extends SubsystemBase{
 
     public double getTx() {return this.tx;}
     public double getTy() {return this.ty;}
+    public double getTl() {return this.tl;};
     public double getTa() {return this.lta.getDouble(0.0);}
     public double getTs() {return this.lts.getDouble(0.0);}
-    public double getTl() {return this.ltl.getDouble(0.0);}
 
     // public double getTshort() {return this.ltshort.getDouble(0.0);}
     // public double getTlong() {return this.ltlong.getDouble(0.0);}
     // public double getThor() {return this.lthor.getDouble(0.0);}
     // public double getTvert() {return this.ltvert.getDouble(0.0);}
 
-    public double getCamMode() {return this.lcamMode.getDouble(0.0);}
-    public double getPipeline() {return this.lgetpipe.getDouble(0.0);}
+    public double getCamMode() {return this.camMode;}
+    public double getPipeline() {return this.pipeline;}
     public double getLedMode() {return this.lledMode.getDouble(0.0);}
     public double getStreamMode() {return this.lstream.getDouble(0.0);}
 
@@ -155,20 +177,34 @@ public class VisionSubsystem extends SubsystemBase{
     //   }
     // }
     
-    public boolean isLinedUp() {
+    public boolean getIsLinedUp() {
       // return Math.abs(tx) < Constants.Limelight.LINED_UP_THRESHOLD;
-      if (externalIsLinedUp) {
-        return true;
+      if (hasValidTarget) {
+        if (Math.abs(tx) <= getTolerance()) {
+          LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_LINED_UP);
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+          return false;
       }
-      return Math.abs(tx) <= getTolerance();
     }
 
-    public boolean hasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
+    public boolean getHasValidTarget() { // Method for accessing tv to see if it has a target, which is when tv = 1.0.
       return this.hasValidTarget;
     }
 
-    public void setExternalIsLinedUp(boolean isLinedUp) {
-      externalIsLinedUp = isLinedUp;
+    public Rotation2d getXRotation() {
+      return Rotation2d.fromDegrees(tx);
+    }
+
+    public Rotation2d getYRotation() {
+      return Rotation2d.fromDegrees(ty);
+    }
+
+    public boolean getIsUpdating() {
+      return isUpdating;
     }
 
     public void setPipeline(double pipeline) { // Method to set pipeline (Limelight 'profile').
@@ -182,7 +218,7 @@ public class VisionSubsystem extends SubsystemBase{
       ledOverride = override;
     }
 
-    public void setLED(LEDMode mode) {
+    public void setLEDMode(LEDMode mode) {
       if (!ledOverride) {
         switch(mode) {
           case PIPELINE:
@@ -239,8 +275,34 @@ public class VisionSubsystem extends SubsystemBase{
       return (Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS) / (Math.tan(Math.toRadians(Constants.Limelight.MOUNT_ANGLE_DEGREES + ty))) + Constants.Limelight.DISTANCE_CALCULATION_LINEAR_OFFSET;
     }
 
+    // public double getNewEquationDistanceToUpperHubMeters() {
+    //   Translation2d xyTranslation = new Translation2d(tx, ty);
+    //   xyTranslation.rotateBy(Rotation2d.fromDegrees(Constants.Limelight.MOUNT_ANGLE_DEGREES));
+    //   double x = xyTranslation.getX();
+    //   double y = xyTranslation.getY();
+    //   double cameraToTargetHeight = Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS;
+      
+
+    // }
+
+    public double testEquationDistance() { // https://www.chiefdelphi.com/t/what-does-limelight-skew-actually-measure/381167/7?
+      double x = Math.tan(Math.toRadians(tx));
+      double y = Math.tan(Math.toRadians(ty - Constants.Limelight.MOUNT_ANGLE_DEGREES));
+      double z = 1.0;
+
+      double length = Math.sqrt(x * x + y * y + z * z);
+      x /= length;
+      y /= length;
+      z /= length;
+
+      double cameraToTargetHeight = Constants.Field.UPPER_HUB_HEIGHT_METERS - Constants.Limelight.MOUNT_HEIGHT_METERS;
+      double distance = Math.hypot(x, y) / (cameraToTargetHeight / -z);
+
+      return Units.metersToInches(distance);
+    }
+
     public double getRotationSpeedToTarget() { // Returns a speed double in Omega Radians Per Second to be used for swerve chasis rotation.
-      if(hasValidTarget()) {
+      if(getHasValidTarget()) {
         // Logic to set the chassis rotation speed based on horizontal offset.
         if(Math.abs(this.tx) > 5) {
           return -Math.copySign(Math.toRadians(this.tx * 9) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
@@ -253,6 +315,13 @@ public class VisionSubsystem extends SubsystemBase{
         return 0; // If no target found don't rotate.
       }
     }
+
+    private void clearTimer() {
+      if(timer != null) {
+          timer.stop();
+          timer = null;
+      }
+  }
 
     // Limelight VEX Power relay code, can't use because defaults to off when robot is disabled
     // public void togglePowerRelay() {

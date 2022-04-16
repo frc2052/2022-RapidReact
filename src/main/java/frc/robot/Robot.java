@@ -4,14 +4,12 @@
 
 package frc.robot;
 
+// import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-//import frc.robot.subsystems.PixyCamSubsystem;
-//import frc.robot.subsystems.PixyCamSubsystem.BallColor;
-//import io.github.pseudoresonance.pixy2api.Pixy2CCC.Block;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
@@ -40,7 +38,9 @@ public class Robot extends TimedRobot {
     robotContainer.initializeAutonomousCommand();
 //    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
 
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.SOLID_WHITE);
+   // CameraServer.startAutomaticCapture();
+
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
   }
 
   /**
@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    //robotContainer.printSecondaryPannelStuff();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -132,6 +133,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
     LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
+    
   }
 
   /** This function is called periodically during test mode. */

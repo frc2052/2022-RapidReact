@@ -3,7 +3,6 @@ package frc.robot.auto.testing;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -12,13 +11,14 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class MiddleRight5BallDefenseAuto2 extends AutoBase {
@@ -39,6 +39,7 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
      */
     public MiddleRight5BallDefenseAuto2(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
+        TargetingSubsystem targeting = TargetingSubsystem.getInstance();
 
         Pose2d startPos = super.newPose2dInches(0, 0, 0);   // Start Pos
         Pose2d pos1 = super.newPose2dInches(55, 5, 0);      // Ball 1 position
@@ -57,22 +58,22 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         AutoTrajectoryConfig trajectoryConfig5 = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 3, 3, 2);
 
         SwerveControllerCommand driveCommand1 = super.createSwerveTrajectoryCommand(trajectoryConfig1, startPos, pos1);  // Drive to first ball pos
-        SwerveControllerCommand driveCommand2 = super.createSwerveTrajectoryCommand(trajectoryConfig2, super.getLastEndingPosCreated(170), pos2, super.createHubTrackingSupplierWithOffset(170, 10)); // Drive and shoot 2
+        SwerveControllerCommand driveCommand2 = super.createSwerveTrajectoryCommand(trajectoryConfig2, super.getLastEndingPosCreated(170), pos2, () -> targeting.createHubTrackingSupplierWithOffset(170, 10)); // Drive and shoot 2
         SwerveControllerCommand driveCommand3 = super.createSwerveTrajectoryCommand(trajectoryConfig3, super.getLastEndingPosCreated(150), pos3, alignWithWallMidpoint, super.createRotationAngle(150)); // Drive to alliance ball 2 and opposing ball 1
         SwerveControllerCommand driveCommand4 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withEndVelocity(2), super.getLastEndingPosCreated(-23), pos4, super.createHubTrackingSupplier(-110)); // Drive and aim ball 2
         SwerveControllerCommand driveCommand5 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withStartAndEndVelocity(2, 1), super.getLastEndingPosCreated(-23), pos5, super.createRotationAngle(-90)); // Drive to terminal and aim at hanger
         SwerveControllerCommand driveCommand6 = super.createSwerveTrajectoryCommand(trajectoryConfig4.withEndVelocity(1), super.getLastEndingPosCreated(-23), pos6, super.createRotationAngle(-23)); // Drive to terminal ball pos
         SwerveControllerCommand driveCommand7 = super.createSwerveTrajectoryCommand(trajectoryConfig5, super.getLastEndingPosCreated(166), pos7, super.createHubTrackingSupplier(-166)); // Drive back to shoot final ball
 
-        ShootCommand shootAll1 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, super::getIsLinedUp);
-        ShootCommand shootAll2 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, super::getIsLinedUp);
+        ShootCommand shootAll1 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
+        ShootCommand shootAll2 = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
-        ParallelDeadlineGroup driveAndIntakeFirstBall       = new ParallelDeadlineGroup(driveCommand1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup driveAndIntakeFirstBall       = new ParallelDeadlineGroup(driveCommand1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootBall1            = new ParallelDeadlineGroup(driveCommand2, shootAll1, super.newAutoTimedIntakeOnThenInCommand(0.5));
-        ParallelDeadlineGroup intakeBall2AndOpposingBall1   = new ParallelDeadlineGroup(driveCommand3, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall2AndOpposingBall1   = new ParallelDeadlineGroup(driveCommand3, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootBall2            = new ParallelDeadlineGroup(driveCommand4, shootAll2, super.newIntakeArmInCommand());
         ParallelDeadlineGroup shootEnemyBall1ToHanger       = new ParallelDeadlineGroup(driveCommand5, super.newNonVisionShoot1Command(4000, 4000));
-        ParallelDeadlineGroup intakeBall3                   = new ParallelDeadlineGroup(driveCommand6, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall3                   = new ParallelDeadlineGroup(driveCommand6, super.newAutoIntakeCommand());
         ParallelDeadlineGroup goBackToShootFinalBall        = new ParallelDeadlineGroup(driveCommand7, super.newAutoTimedIntakeOnThenInCommand(0.5));
 
         this.addCommands(driveAndIntakeFirstBall);

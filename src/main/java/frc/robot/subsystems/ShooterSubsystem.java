@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +28,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private double bottomWheelTargetVelocity;
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
+  private boolean shootAngle1Override;
+  private Timer timer;
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -56,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
       Constants.Solenoids.SHOOTER_ANGLE_OUT_SOLENOID
     );
 
-    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_1 : FiringAngle.ANGLE_2;
+    currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_2 : FiringAngle.ANGLE_1;
   }
 
   public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
@@ -90,6 +93,19 @@ public class ShooterSubsystem extends SubsystemBase {
         && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
     return topIsOnTarget && bottomIsOnTarget;
+
+    // if (topIsOnTarget && bottomIsOnTarget) {
+    //     if (timer == null) {
+    //         timer = new Timer();
+    //         timer.start();
+    //     }
+    //     if (timer.hasElapsed(0.25)) {
+    //         return true;
+    //     }
+    // } else {
+    //     clearTimer();
+    // }
+    // return false;
   }
 
   // public void setTopWheelVelocity(double velocity) {
@@ -130,13 +146,24 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setShootAngle1() {
-    angleChangeSolenoid.set(Value.kReverse);
-    currentAngle = FiringAngle.ANGLE_1;
+    if (!shootAngle1Override) {
+      angleChangeSolenoid.set(Value.kReverse);
+      currentAngle = FiringAngle.ANGLE_1;
+    }
+    System.err.println("Setting Angle 1");
   }
 
   public void setShootAngle2() {
-    angleChangeSolenoid.set(Value.kForward);
-    currentAngle = FiringAngle.ANGLE_2;
+    if (!shootAngle1Override) {
+      angleChangeSolenoid.set(Value.kForward);
+      currentAngle = FiringAngle.ANGLE_2;
+    }
+    System.err.println("Setting Angle 2");
+
+  }
+
+  public void setShootAngle1Override(boolean override) {
+    shootAngle1Override = override;
   }
 
   public double getShootAngleDegrees() {
@@ -147,15 +174,32 @@ public class ShooterSubsystem extends SubsystemBase {
     return currentAngle;
   }
 
+  public double getTopWheelVelocity() {
+    return topMotor.getSelectedSensorVelocity();
+  }
+
+  public double getBottomWheelVelocity() {
+    return bottomMotor.getSelectedSensorVelocity();
+  }
+
+  public double getTargetTopWheelVelocity() {
+      return topWheelTargetVelocity;
+  }
+
+  public double getTargetBottomWheelVelocity() {
+    return bottomWheelTargetVelocity;
+  }
+
   @Override
   public void periodic() {
-    shooterVelocityBoost = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0); // TODO figure out a better way to do this, weather using the setboost method from dashboardControls or making it a singleton and checking here or somthing.
-
     SmartDashboard.putBoolean("Shooter Wheels At Speed?", isAtSpeed());
     SmartDashboard.putNumber("Shooter Target Top Wheel Speed", topWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Target Bottom Wheel Speed", bottomWheelTargetVelocity);
     SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
+
+    SmartDashboard.putString("Firing Angle", currentAngle.toString());
+    SmartDashboard.putBoolean("Angle Override", shootAngle1Override);
   }
 
   public enum FiringAngle {
@@ -172,4 +216,11 @@ public class ShooterSubsystem extends SubsystemBase {
         return angleDegrees;
     }
   }
+
+  // private void clearTimer() {
+  //   if(timer != null) {
+  //       timer.stop();
+  //       timer = null;
+  //   }
+  // }
 }

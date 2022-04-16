@@ -58,17 +58,20 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final double INDEXER_SPEED = .75;
+        public static final double PRELOAD_WHEEL_SPEED = .75;
         public static final double TOP_WHEEL_SPEED = 5;
         public static final double BOTTOM_WHEEL_SPEED = 5;
-        public static final double FEEDER_SPEED = 1;
+        public static final double INDEXER_WHEEL_SPEED = .50;
 
         public static final double SHOOTER_TOLERANCE = 0.05;
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
-        public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TODO Tune this
-        public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TODO Tune this
+        // public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TODO Tune this
+        // public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TODO Tune this
+
+        public static final double ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES = 66;
+        public static final double ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES = 6;
 
         public static final double FIRING_ANGLE_1_DEGREES = 72.0;
         public static final double FIRING_ANGLE_2_DEGREES = 60.0;
@@ -135,7 +138,7 @@ public final class Constants {
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(45.9);
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(39); //45.9 - old value, changed to straighten back left
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 12;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
@@ -167,9 +170,12 @@ public final class Constants {
     public static final class LEDs {
         // public static final int CANIFIER_PORT = 21;
 
-        public static final int R_PWM_PORT = 0;
-        public static final int G_PWM_PORT = 1;
-        public static final int B_PWM_PORT = 2;
+        public static final int R_1_PWM_PORT = 0;
+        public static final int G_1_PWM_PORT = 1;
+        public static final int B_1_PWM_PORT = 2;
+        public static final int R_2_PWM_PORT = 3;
+        public static final int G_2_PWM_PORT = 4;
+        public static final int B_2_PWM_PORT = 5;
     }
 
     public static final class Misc {

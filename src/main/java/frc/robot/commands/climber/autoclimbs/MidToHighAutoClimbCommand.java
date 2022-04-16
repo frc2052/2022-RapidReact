@@ -1,21 +1,22 @@
 package frc.robot.commands.climber.autoclimbs;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendClimberCommand;
-import frc.robot.commands.climber.RetractClimberCommand;
-import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 
 public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
     
+    /**
+     * Command for automatically transferring robot from the Mid bar to the High bar, by extending the hooks just a bit,
+     * puts the arms back, extends them to max height, and then shifts arms forward again.
+     * Requires being already clipped onto Mid Bar correctly. 
+     * @param climber
+     * @param drivetrain
+     */
     public MidToHighAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
         this.climber = climber;
 
@@ -27,6 +28,7 @@ public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
             new ClimberArmsBackCommand(climber),
             new ExtendClimberCommand(climber, () -> false).withInterrupt(() -> !climber.getIsBelowMaxHeight()),
             new ClimberArmsForwardCommand(climber)
+            // new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_HIGH_BAR))
             // new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)
         );
     }

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -50,10 +50,10 @@ public class LeftTerminal3Cargo extends AutoBase {
 
         
 
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToFirstBallPos, super.newAutoIntakeCommand());
+        ParallelDeadlineGroup terminalMidPoint = new ParallelDeadlineGroup(driveToTerminalMidPointsPos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup intakeShootPos = new ParallelDeadlineGroup(driveToEndShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(intakeBall1);

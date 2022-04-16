@@ -31,18 +31,32 @@ public class IndexerSubsystem extends SubsystemBase {
   }
 
   public void runPreload() {
-    largeIndexer.set(ControlMode.PercentOutput, Constants.Shooter.INDEXER_SPEED);
+    //   /System.err.println("Running Preload");
+    largeIndexer.set(ControlMode.PercentOutput, Constants.Shooter.PRELOAD_WHEEL_SPEED);
+  }
+
+  public void runPreloadReverse() {
+    //System.err.println("Running Preload Reverse");
+    largeIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.PRELOAD_WHEEL_SPEED);
   }
 
   public void runFeeder() {
-    feederIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.FEEDER_SPEED);
+    //System.err.println("Running Feeder");
+    feederIndexer.set(ControlMode.PercentOutput, -Constants.Shooter.INDEXER_WHEEL_SPEED);
+  }
+
+  public void runFeederReverse() {
+    //System.err.println("Running Feeder Reverse");
+    feederIndexer.set(ControlMode.PercentOutput, Constants.Shooter.INDEXER_WHEEL_SPEED);
   }
 
   public void stopPreload() {
+    //System.err.println("Stopping Preload");
     largeIndexer.set(ControlMode.PercentOutput, 0);
   }
 
   public void stopFeeder() {
+    //System.err.println("Running Stopping Feeder");
     feederIndexer.set(ControlMode.PercentOutput, 0);
   }
 

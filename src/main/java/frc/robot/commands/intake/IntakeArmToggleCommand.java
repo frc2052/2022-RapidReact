@@ -16,7 +16,7 @@ public class IntakeArmToggleCommand extends HopperBaseCommand {
     super(indexer, hopper);
     this.intake = intake;
 
-    addRequirements(this.intake);
+    //addRequirements(this.intake);
   }
 
   // Called when the command is initially scheduled.

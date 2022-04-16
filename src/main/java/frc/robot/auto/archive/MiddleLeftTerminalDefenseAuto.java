@@ -10,9 +10,7 @@ import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
-
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -55,14 +53,14 @@ public class MiddleLeftTerminalDefenseAuto extends AutoBase {
         SwerveControllerCommand drivebackToShootPos = super.createSwerveTrajectoryCommand(super.fastTurnTrajectoryConfig, super.getLastEndingPosCreated(30), shootPreloadedPos, super.createHubTrackingSupplier(30));
 
 
-        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
-        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        ShootCommand shoot1CargoCommand = new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
+        ShootCommand shoot2CargoCommand = new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
 
-        NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, 6000, 6000);
+        NonVisionShootCommand nonVisionShoot1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, 6000, 6000);
 
-        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeEnemyBall1 = new ParallelDeadlineGroup(driveToEnemyBall1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveAndShootEnemyBall1 = new ParallelDeadlineGroup(driveTowardsBall2, nonVisionShoot1Command);
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newAutoIntakeCommand());
         ParallelCommandGroup returnToShoot = new ParallelCommandGroup(drivebackToShootPos, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPreloaded); // driveAndShootPreloaded

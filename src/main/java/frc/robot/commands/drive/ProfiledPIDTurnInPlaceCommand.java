@@ -23,9 +23,10 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             // The ProfiledPIDController used by the command
             profiledPIDController,
             // This should return the measurement
-            () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
+            () -> deltaAngleSupplier.get().getRadians(),
+            //() -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
             // This should return the goal (can also be a constant)
-            deltaAngleSupplier.get().getRadians(),
+            deltaAngleSupplier.get().minus(deltaAngleSupplier.get()).getRadians(),
             // This uses the output
             (output, setpoint) -> {
                 // Use the output (and setpoint, if desired) here

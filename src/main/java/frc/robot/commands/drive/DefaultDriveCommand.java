@@ -32,7 +32,6 @@ public class DefaultDriveCommand extends CommandBase {
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         DoubleSupplier rotationSupplier,
-        DashboardControlsSubsystem dashboardControls,
         BooleanSupplier tempFieldCentricButtonPressed
     ) {
         this.drivetrain = drivetrain;
@@ -40,14 +39,14 @@ public class DefaultDriveCommand extends CommandBase {
         this.translationYSupplier = translationYSupplier;
         this.rotationSupplier = rotationSupplier;
 
-        this.dashboardControls = dashboardControls;
+        this.dashboardControls = DashboardControlsSubsystem.getInstance();
         this.tempFieldCentricButtonPressed = tempFieldCentricButtonPressed;
 
         addRequirements(drivetrain);
     }
 
     protected double getTurnValue() { // Seperated as a method so it can be overriden by other commands if needed.
-        return rotationSupplier.getAsDouble();
+        return rotationSupplier.getAsDouble() * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
     }
 
     @Override
@@ -58,8 +57,8 @@ public class DefaultDriveCommand extends CommandBase {
         if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC || tempFieldCentricButtonPressed.getAsBoolean()) {
             drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translationXSupplier.getAsDouble(),
-                    translationYSupplier.getAsDouble(),
+                    translationXSupplier.getAsDouble() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+                    translationYSupplier.getAsDouble() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                     getTurnValue(),
                     drivetrain.getGyroscopeRotation()
                 )
@@ -67,8 +66,8 @@ public class DefaultDriveCommand extends CommandBase {
         } else {
             drivetrain.drive(
                 new ChassisSpeeds(
-                    translationXSupplier.getAsDouble(), 
-                    translationYSupplier.getAsDouble(), 
+                    translationXSupplier.getAsDouble() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+                    translationYSupplier.getAsDouble() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
                     getTurnValue()
                 )
             );

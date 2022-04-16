@@ -1,8 +1,5 @@
 package frc.robot.util.buttonbindings.profiles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.RobotContainer.ButtonCommands;
@@ -21,8 +18,8 @@ public class Default {
         new JoystickButton(driveJoystick, 1).whenPressed(ButtonCommands.VISION_SHOOT_ALL.command); // Vision Shoot
         new JoystickButton(driveJoystick, 2);
         new JoystickButton(driveJoystick, 3);
-        new JoystickButton(driveJoystick, 4).whileHeld(ButtonCommands.NON_VISION_SHOOT_ALL.command);
-        new JoystickButton(driveJoystick, 5).whenHeld(ButtonCommands.SHOOT_LOW_GOAL.command);
+        new JoystickButton(driveJoystick, 4).whileHeld(ButtonCommands.NONVISION_SHOOT_ALL.command);
+        new JoystickButton(driveJoystick, 5).whenHeld(ButtonCommands.NONVISION_SHOOT_LOW_GOAL.command);
         new JoystickButton(driveJoystick, 6);
         new JoystickButton(driveJoystick, 7);
         new JoystickButton(driveJoystick, 8);
@@ -30,7 +27,7 @@ public class Default {
         new JoystickButton(driveJoystick, 10);
         new JoystickButton(driveJoystick, 11);
 
-        new JoystickButton(turnJoystick, 1).whenHeld(ButtonCommands.SHOOT_SINGLE.command);
+        new JoystickButton(turnJoystick, 1).whenHeld(ButtonCommands.VISION_SHOOT_SINGLE.command);
         new JoystickButton(turnJoystick, 2);
         new JoystickButton(turnJoystick, 3);
         new JoystickButton(turnJoystick, 4);

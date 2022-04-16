@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   /**
@@ -85,11 +87,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 //   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
-  private double intendedCurrentVelocity;
   private double lastRollValue;
   private boolean lastRollDelta;
   private boolean isTopOfSwing;
-  private int counter = 0;
+  private int counter;
+  private double intendedXVelocityMPS;
+  private double intendedYVelocityMPS;
+  private boolean climbingSwingingLEDOutput;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -190,7 +194,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void drive(ChassisSpeeds chassisSpeeds) {
         swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
         setModuleStates(swerveModuleStates);
-        intendedCurrentVelocity = Math.hypot(Math.abs(chassisSpeeds.vxMetersPerSecond), Math.abs(chassisSpeeds.vyMetersPerSecond));
+        intendedXVelocityMPS = chassisSpeeds.vxMetersPerSecond;
+        intendedYVelocityMPS = chassisSpeeds.vyMetersPerSecond;
   }
 
   public void stop() {
@@ -246,8 +251,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getGyroPitchDegrees() {
-        // Get the pitch of the robot, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
-        // Wanted for making an auto climb that makes sure the robot isn't swinging in the wrong place before extending the climber.
         return navx.getPitch();
   }
 
@@ -255,7 +258,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       return navx.getYaw();
   }
 
-  public double getGyroRoll() {
+  public double getGyroRoll() { // Gets the robot's roll from the gyro, being a rotation around its y axis from -180 to 180 degrees - the amount it's tipping forward or backward
+    // For auto climb commands that make sure the robot isn't swinging in the wrong place before extending the climber.
       return navx.getRoll();
   }
 
@@ -267,8 +271,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return swerveModuleStates;
   }
 
+  public double getIntendedXVelocityMPS() {
+        return intendedXVelocityMPS;
+  }
+
+  public double getIntendedYVelocityMPS() {
+        return intendedYVelocityMPS;
+  }
+
   public double getIntendedCurrentVelocity() {
-        return intendedCurrentVelocity;
+        return Math.hypot(Math.abs(intendedXVelocityMPS), Math.abs(intendedYVelocityMPS));
+  }
+
+  public Rotation2d getOdometryRotation() { // Returns odometry rotation from -180 to 180
+        return odometry.getPoseMeters().getRotation();
+  }
+
+  public void setClimbingLEDOutput(boolean output) {
+        climbingSwingingLEDOutput = output;
   }
 
 @Override
@@ -278,28 +298,41 @@ public void periodic() {
         isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
         lastRollDelta = isForward;
 
+        // if (climbingSwingingLEDOutput) {
+        //         if (isTopOfSwing) {
+        //                 LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
+        //         } else if (isForward) {
+        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
+        //         } else {
+        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
+        //         }
+        // }
+        // climbingSwingingLEDOutput = false; // Turns off output if no longer being set true every cycle by auto-climb commands
+
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Left Angle", Units.radiansToDegrees(backLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Back Right Angle", Units.radiansToDegrees(backRightModule.getSteerAngle()));
-        // SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
+        SmartDashboard.putNumber("Max Velocity", MAX_VELOCITY_METERS_PER_SECOND);
         // SmartDashboard.putNumber("Max Angular Velocity", MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
-        
-        // For comparing gyro and wheel velocities
-        SmartDashboard.putNumber("Intended Current Velocity", intendedCurrentVelocity);
-        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
 
-        SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
-        SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
+        // For comparing gyro and wheel velocities
+        SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
+        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+        // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
+        // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
         SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
-        
+
         SmartDashboard.putBoolean("Swing Backward", isForward);
         SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
 
-        if (isTopOfSwing) {
-            counter++;
+        SmartDashboard.putNumber("Gyro Rotation", odometry.getPoseMeters().getRotation().getRadians()); 
+
+
+        // if (isTopOfSwing) {
+        //     counter++;
+        // }
+        // SmartDashboard.putNumber("Times at the top", counter);
         }
-        SmartDashboard.putNumber("Times at the top", counter);
-    }
 }

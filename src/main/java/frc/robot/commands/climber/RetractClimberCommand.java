@@ -5,6 +5,8 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class RetractClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
@@ -28,6 +30,7 @@ public class RetractClimberCommand extends CommandBase {
         // Climber retracts.
         if (!climber.getIsLocked()) {
             climber.retract(retractPctOutput, overrideButtonPressed.getAsBoolean());
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_RETRACTING);
         } else {
             System.err.println("Climber locked!");
         }

@@ -11,10 +11,8 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MiddleRightTerminal3CargoAuto extends AutoBase {
 
@@ -47,7 +45,7 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
 
     //  ParallelCommandGroup intakeBall1 =  new ParallelCommandGroup(driveToBall1Pos, intakeArmOutCommand);
     //  ParallelCommandGroup approachTerminalBall = new ParallelCommandGroup(driveTowardsTerminalBall, intakeArmInCommand);
-        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, super.newIntakeArmOutCommand());
+        ParallelCommandGroup intakeTerminalBall = new ParallelCommandGroup(drivetTowardsTerminalBall, super.newAutoIntakeCommand());
         ParallelCommandGroup goBackToShoot = new ParallelCommandGroup(driveBackToShoot2, super.newIntakeArmInCommand());
 
         this.addCommands(driveToShootPos);
@@ -57,8 +55,7 @@ public class MiddleRightTerminal3CargoAuto extends AutoBase {
         this.addCommands(driveBackToShoot2);
         this.addCommands(super.newShootAllCommand());
 
-        this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.andThen(super.autonomousFinishedCommandGroup());
 
     }
 }

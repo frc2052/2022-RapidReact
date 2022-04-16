@@ -43,8 +43,8 @@ public class Simple3BallAuto extends AutoBase {
         SwerveControllerCommand driveToBall2 = super.createSwerveTrajectoryCommand(path2Config, super.getLastEndingPosCreated(60), ball2Pos, super.createRotationAngle(60));
         SwerveControllerCommand driveToShoot = super.createSwerveTrajectoryCommand(path2Config, super.getLastEndingPosCreated(), shootPos, super.createHubTrackingSupplier(-45));
 
-        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newIntakeArmOutCommand());
-        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newIntakeArmOutCommand());
+        ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newAutoIntakeCommand());
+        ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveToBall2, super.newAutoIntakeCommand());
         ParallelDeadlineGroup returnToShoot = new ParallelDeadlineGroup(driveToShoot, super.newAutoTimedIntakeOnThenInCommand(0.25));
 
         this.addCommands(super.newClimberArmsBackCommand());
@@ -56,8 +56,6 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(new PerpetualCommand(super.newAutoAimAndShootAllCommandGroup()));
-
-    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.addCommands(super.autonomousFinishedCommandGroup());
     }
 }

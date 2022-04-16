@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
+import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
 import frc.robot.commands.drive.ProfiledPIDVisionTurnInPlaceCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
@@ -38,10 +39,19 @@ public class AutoTesting extends AutoBase {
     public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
+        Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
+        Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
+
+        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
+
         ProfiledPIDVisionTurnInPlaceCommand visionTurnInPlace = new ProfiledPIDVisionTurnInPlaceCommand(drivetrain, vision);
+
+        ProfiledPIDTurnInPlaceCommand turnInPlace = new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> Rotation2d.fromDegrees(90));
         
         ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(visionTurnInPlace));
 
-        this.addCommands(aimAndShoot);
+        //this.addCommands(driveToFirstBallPos);
+        this.addCommands(turnInPlace);
+        //this.addCommands(aimAndShoot);
     }
 }

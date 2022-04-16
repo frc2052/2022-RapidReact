@@ -23,16 +23,18 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
+import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.intake.AutoTimedIntakeOnThenInCommand;
 import frc.robot.commands.intake.IntakeArmInCommand;
 import frc.robot.commands.intake.IntakeArmOutCommand;
+import frc.robot.commands.intake.OnlyIntakeCommand;
+import frc.robot.commands.intake.AutoIntakeCommand;
 import frc.robot.commands.shooter.AutoNonVisionShootCommand;
 import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.commands.shooter.NonVisionShootCommand.NonVisionShootMode;
-import frc.robot.commands.shooter.ShootCommand.ShootMode;
+import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -42,6 +44,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class AutoBase  extends SequentialCommandGroup {
@@ -55,8 +58,6 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected SwerveDriveKinematics swerveDriveKinematics;
     private Pose2d lastCreatedEndingPose;
-
-    protected boolean isLinedUp;
 
     // private TrajectoryConfig slowTrajectoryConfig;
     // private PIDController slowXYController;
@@ -77,12 +78,11 @@ public class AutoBase  extends SequentialCommandGroup {
         this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
-        isLinedUp = false;
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(swerveDriveKinematics), 
             new PIDController(1, 0, 0),
-            new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
+            new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI))
         );
 
         fastTurnTrajectoryConfig = new AutoTrajectoryConfig(
@@ -105,47 +105,73 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected AutoShootCommand newAutoShoot1Command() {
-        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        return new AutoShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected AutoShootCommand newAutoShootAllCommand() {
-        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        return new AutoShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected ShootCommand newShoot1Command() {
-        return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision);
+        return new ShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, vision, drivetrain);
     }
 
     protected ShootCommand newShootAllCommand() {
-        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision);
+        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain);
+    }
+
+    protected ShootCommand newShootAllCommand(BooleanSupplier isLinedUSupplier) {
+        return new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, isLinedUSupplier, drivetrain);
     }
 
     protected NonVisionShootCommand newNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected NonVisionShootCommand newNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected NonVisionShootCommand newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected NonVisionShootCommand newNonVisionShootAllCommand(FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean delayOverride) {
+        NonVisionShootCommand nonVisionShootCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        if (delayOverride) { nonVisionShootCommand.overrideDelay(); }
+        return nonVisionShootCommand;
     }
 
     protected AutoNonVisionShootCommand newAutoNonVisionShoot1Command(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new AutoNonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
     protected AutoNonVisionShootCommand newAutoNonVisionShootAllCommand(double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
-        return new AutoNonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+        return new AutoNonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
-    protected ParallelCommandGroup newIntakeArmOutCommand() {
-        return new IntakeArmOutCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+    protected ParallelCommandGroup newAutoIntakeCommand() {
+        return new AutoIntakeCommand(intake, indexer, hopper).alongWith(new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON)));
+    }
+
+    protected IntakeArmOutCommand newIntakeArmOutCommand() {
+        return new IntakeArmOutCommand(intake);
     }
 
     protected IntakeArmInCommand newIntakeArmInCommand() {
-        return new IntakeArmInCommand(intake, indexer, hopper);
+        return new IntakeArmInCommand(intake);
+    }
+
+    protected OnlyIntakeCommand newOnlyIntakeCommand() {
+        return new OnlyIntakeCommand(intake, indexer);
     }
 
     protected AutoTimedIntakeOnThenInCommand newAutoTimedIntakeOnThenInCommand(double deadlineSeconds) {
         return new AutoTimedIntakeOnThenInCommand(intake, indexer, hopper, deadlineSeconds);
+    }
+
+    protected TurnInPlaceCommand newTurnInPlaceCommand(double angleDegrees) {
+        return new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(angleDegrees));
     }
 
     protected VisionTurnInPlaceCommand newVisionTurnInPlaceCommand() {
@@ -157,7 +183,8 @@ public class AutoBase  extends SequentialCommandGroup {
     }
 
     protected Command autonomousFinishedCommandGroup() {
-        return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED)).andThen(() -> drivetrain.stop(), drivetrain);
+        return new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED))
+                    .andThen(() -> drivetrain.stop(), drivetrain);
     }
 
     protected ParallelDeadlineGroup newAutoAimAndShootAllCommandGroup() {
@@ -169,7 +196,7 @@ public class AutoBase  extends SequentialCommandGroup {
      * perfect for firing the preloaded cargo when initially aiming at the hub in the least amount of time possible.
      */
     protected Command newInitialNonVisionShootPreloadedCommand() {
-        return new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.7);
+        return new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, 7900, 7900).withTimeout(0.75);
     }
 
     /**
@@ -181,6 +208,10 @@ public class AutoBase  extends SequentialCommandGroup {
      */
     protected Pose2d newPose2dInches(double xInches, double yInches, double wheelRotationDegrees) {
         return new Pose2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches), Rotation2d.fromDegrees(wheelRotationDegrees));
+    }
+
+    protected Translation2d newTranslation2dInches(double xInches, double yInches) {
+        return new Translation2d(Units.inchesToMeters(xInches), Units.inchesToMeters(yInches));
     }
 
     /**
@@ -321,41 +352,16 @@ public class AutoBase  extends SequentialCommandGroup {
     protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
         return () -> {
             if(vision.getLedMode() != 3.0) {
-                vision.setLED(LEDMode.ON);
+                vision.setLEDMode(LEDMode.ON);
             }
             Rotation2d rotation;
-            if(vision.hasValidTarget()) {
+            if(vision.getHasValidTarget()) {
                 rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(vision.getTx()));
             } else {
                 rotation = Rotation2d.fromDegrees(noTargetAngle);
             }
             return rotation;
         };
-    }
-
-    protected Supplier<Rotation2d> createHubTrackingSupplierWithOffset(double noTargetAngle, double offsetAngle) {
-        return () -> {
-            if(vision.getLedMode() != 3.0) {
-                vision.setLED(LEDMode.ON);
-            }
-            Rotation2d rotation;
-            if(vision.hasValidTarget()) {
-                double rotationDegrees = vision.getTx() + offsetAngle;
-                rotation = drivetrain.getPose().getRotation().minus(Rotation2d.fromDegrees(rotationDegrees));
-                if (Math.abs(rotation.getDegrees()) <= 3) {
-                    isLinedUp = true;
-                } else {
-                    isLinedUp = false;
-                }
-            } else {
-                rotation = Rotation2d.fromDegrees(noTargetAngle);
-            }
-            return rotation;
-        };
-    }
-
-    protected boolean getIsLinedUp() {
-        return isLinedUp;
     }
 
     protected Pose2d getLastEndingPosCreated() {
