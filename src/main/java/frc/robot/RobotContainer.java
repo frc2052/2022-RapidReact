@@ -25,6 +25,7 @@ import frc.robot.auto.tuned.OneBallAuto;
 import frc.robot.auto.tuned.Right2BallAuto;
 import frc.robot.auto.tuned.CustomDelayOneBallAuto;
 import frc.robot.auto.tuned.FastRight5BallAuto3;
+import frc.robot.auto.tuned.FastRight5BallAuto4;
 import frc.robot.auto.tuned.Left2Ball2DefenseAuto2;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
@@ -498,8 +499,11 @@ public class RobotContainer {
       case RIGHT_FIVE_BALL:
         autonomousCommand = new RightFiveBallAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
-      case FAST_RIGHT_FIVE_BALL_3:
+      case FAST_RIGHT_5_BALL_3:
         autonomousCommand = new FastRight5BallAuto3(drivetrain, vision, shooter, intake, indexer, hopper, climber);
+        break;
+      case FAST_RIGHT_FIVE_BALL_4:
+        autonomousCommand = new FastRight5BallAuto4(drivetrain, vision, shooter, intake, indexer, hopper, climber);
         break;
       // case RIGHT_MIDDLE_5_BALL_1_DEFENSE:
       //   autonomousCommand = new MiddleRight5BallDefenseAuto(drivetrain, vision, shooter, intake, indexer, hopper, climber);
