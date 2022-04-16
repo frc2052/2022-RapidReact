@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
+import frc.robot.commands.drive.WaitOdometryResetCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -38,21 +39,28 @@ public class FastRight5BallAuto3 extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         
         Pose2d startPos = super.newPose2dInches(0, 0, 115);
-        Pose2d ball1Pos = super.newPose2dInches(-25, 38, 90);
+        Pose2d ball1Pos = super.newPose2dInches(-33, 38, 90);
         List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
         Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 279, 140);
-        Pose2d terminalBallPos = super.newPose2dInches(-1, 302, 150);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 270, 140);
+        Pose2d terminalBallPos = super.newPose2dInches(-6, 309, 150);
         Pose2d shootPos2 = super.newPose2dInches(0, 160, -60);
+        // Pose2d startPos = super.newPose2dInches(0, 0, 115);
+        // Pose2d ball1Pos = super.newPose2dInches(-25, 38, 90);
+        // List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
+        // Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
+        // Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 279, 140);
+        // Pose2d terminalBallPos = super.newPose2dInches(-1, 302, 150);
+        // Pose2d shootPos2 = super.newPose2dInches(0, 160, -60);
 
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
         AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 2, 5, 2);
-        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(4, 4, 3, 5, 2);
+        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(4, 3, 3, 5, 3);
         AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(3, 2, 2, 5, 2);
         AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(4, 4, 2, 6, 2);
 
-        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(2), startPos, ball1Pos, super.createRotationAngle(170));
-        SwerveControllerCommand driveAroundAndToBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(90), ball2Pos, behindBallMidpoint, super.createHubTrackingSupplier(-45));
+        SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(1), startPos, ball1Pos, super.createRotationAngle(170));
+        SwerveControllerCommand driveAroundAndToBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartVelocity(1), super.getLastEndingPosCreated(90), ball2Pos, behindBallMidpoint, super.createRotationAngle(-45));
         SwerveControllerCommand driveToTerminalMidPoint = super.createSwerveTrajectoryCommand(toTerminalTrajectoryConfig.withEndVelocity(2), super.getLastEndingPosCreated(140), terminalBallMidPointPos, super.createRotationAngle(130));
         SwerveControllerCommand driveToTerminalBalls = super.createSwerveTrajectoryCommand(realignTrajectoryConfig.withStartVelocity(2), super.getLastEndingPosCreated(150), terminalBallPos, super.createRotationAngle(135));
         SwerveControllerCommand driveBackToShoot = super.createSwerveTrajectoryCommand(backToShootTrajectoryConfig, super.getLastEndingPosCreated(-60), shootPos2, super.createRotationAngle(-60));
@@ -64,6 +72,7 @@ public class FastRight5BallAuto3 extends AutoBase {
         ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(2));
         ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
+        this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 7900, 7900));
         this.addCommands(intakeBall1);

@@ -50,10 +50,9 @@ public class Left2Ball2DefenseAuto extends AutoBase {
         Pose2d opponentBall2Pos = super.newPose2dInches(-28, 160, -160);
         List<Translation2d> backThroughHangerMidpoints = List.of(new Translation2d(Units.inchesToMeters(100), Units.inchesToMeters(150)));//, new Translation2d(Units.inchesToMeters(120), Units.inchesToMeters(88)));
         Pose2d hideTheBallsPos = super.newPose2dInches(180, 80, 30);
-        Pose2d readyForTeleopPos = super.newPose2dInches(50, -70, -135);
+        Pose2d readyForTeleopPos = super.newPose2dInches(40, -40, -135);
 
         AutoTrajectoryConfig driveToFirstBallTrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 1, 5, 2);
-        AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(1, 0.5, 1, 8, 2);
         AutoTrajectoryConfig driveBehindOpponentFirstBallPosTrajectoryConfig = super.createTrajectoryConfig(2, 2, 1, 5, 3);
         AutoTrajectoryConfig driveToOpponent1stBallTrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 2); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
         AutoTrajectoryConfig driveThroughHangerTrajectoryConfig = super.createTrajectoryConfig(3.5, 2.5, 1, 3, 1); //super.createTrajectoryConfig(3, 3, 1, 3, 1);
@@ -97,7 +96,6 @@ public class Left2Ball2DefenseAuto extends AutoBase {
         this.addCommands(new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, 4000, 4000, true).withTimeout(2));
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(driveBackToBeginTeleop);
-        this.addCommands(super.newIntakeArmOutCommand());
         
         this.andThen(super.autonomousFinishedCommandGroup());
     }

@@ -23,7 +23,7 @@ public class HopperBaseCommand extends CommandBase {
     this.indexer = indexer;
     this.hopper = hopper;
 
-    addRequirements(indexer, hopper);
+    //addRequirements(indexer, hopper);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

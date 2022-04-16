@@ -42,6 +42,11 @@ public class ShooterIndexingCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    IndexerExecute();
+  }
+
+  protected void IndexerExecute() 
+  {
     
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
     boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();

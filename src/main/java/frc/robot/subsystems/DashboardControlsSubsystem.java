@@ -38,7 +38,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     // private boolean isPnuematicsDead;
 
     private boolean lastLimelightLEDsEnabled;
-    private boolean lastIsDriverCamera;
+    // private boolean lastIsDriverCamera;
     // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
     // private boolean lastIsLimelightDead;
@@ -57,9 +57,9 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         this.robotContainer = robotContainer;
         this.shooter = shooter;
         
-        // ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         selectedAuto = Autos.NONE_SELECTED;
         isLimelightDead = false;
+        // ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
         // limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);   // Gets the previous state of the LEDs on the dashbaord if left open.
         // limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         // limelightPowerRelayToggle = vision.getRelayState();
@@ -67,18 +67,18 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // isDrivetrainDead = false;
         // isPnuematicsDead = false;
 
+        lastSelectedAuto = selectedAuto;
         // lastLEDBrightness = ledBrightness;
         // lastLEDStatusMode = LEDStatusMode.RAINBOW;
-        lastSelectedAuto = selectedAuto;
         // lastIsLimelightDead = isLimelightDead;
         // lastLimelightPowerRelayState = limelightPowerRelayToggle;
 
         // Unnecessary, but might be nice for understanding
         lastLimelightLEDsEnabled = false;
-        lastIsDriverCamera = false;
         lastLimelightLEDOverride = false;
-        // lastIsDrivetrainDead = false;
         lastIsPnuematicsDead = false;
+        // lastIsDriverCamera = false;
+        // lastIsDrivetrainDead = false;
 
         autoSelector = new SendableChooser<Autos>();
         driveModeSelector = new SendableChooser<DriveMode>();
@@ -139,11 +139,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Vision X Aim Offset", vision.getXAimOffset());
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", false);
-        SmartDashboard.putBoolean("Toggle Limelight Driver Camera", false);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
         SmartDashboard.putBoolean("Limelight LED Override", false);
         SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
         SmartDashboard.putBoolean("Disable Shooter Idle", false);
+        // SmartDashboard.putBoolean("Toggle Limelight Driver Camera", false);
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
@@ -158,8 +158,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         Autos selectedAuto = getSelectedAuto();
         double shooterBoostPct = SmartDashboard.getNumber("Shooter Velocity Boost Pct", 0);
         double visionXAimOffset = SmartDashboard.getNumber("Vision X Aim Offset", vision.getXAimOffset());
-        Boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
-        Boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
+        boolean limelightLEDsEnabled = SmartDashboard.getBoolean("Enable Limelight LEDs", false);
         boolean limelightLEDOverride = SmartDashboard.getBoolean("Limelight LED Override", false);
         boolean isLimelightDead = !vision.getIsUpdating();
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
@@ -167,6 +166,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
         // LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
         // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
+        // boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
         // int ledBrightness = (int)SmartDashboard.getNumber("LED Brightness", 100);
 
@@ -177,18 +177,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             } else {
                 vision.setLEDMode(LEDMode.OFF);
                 lastLimelightLEDsEnabled = false;
-            }
-        }
-
-        if (limelightDriveCamToggle != lastIsDriverCamera) {
-            if(limelightDriveCamToggle) {
-                vision.setLEDMode(LEDMode.OFF);
-                vision.setCamMode(CamMode.DRIVER);
-                lastIsDriverCamera = true;
-            } else {
-                vision.setLEDMode(LEDMode.ON);
-                vision.setCamMode(CamMode.VISION);
-                lastIsDriverCamera = false;
             }
         }
 
@@ -251,6 +239,18 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             }
             lastIsPnuematicsDead = isPnuematicsDead;
         }
+
+        // if (limelightDriveCamToggle != lastIsDriverCamera) {
+        //     if(limelightDriveCamToggle) {
+        //         vision.setLEDMode(LEDMode.OFF);
+        //         vision.setCamMode(CamMode.DRIVER);
+        //         lastIsDriverCamera = true;
+        //     } else {
+        //         vision.setLEDMode(LEDMode.ON);
+        //         vision.setCamMode(CamMode.VISION);
+        //         lastIsDriverCamera = false;
+        //     }
+        // }
 
         // if (selectedLEDStatusMode != lastLEDStatusMode) {
         //     LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
@@ -350,11 +350,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         MIDDLE_LEFT_3_BALL_TERMINAL_DEFENSE("*TUNED* Terminal 3 Ball", "Middle Left Start (C) Facing Towards Hub"),
         RIGHT_FIVE_BALL("*TUNED* Original Right Five Ball Auto", "Far Right Start (A2) Facing Towards Hub"),
         FAST_RIGHT_FIVE_BALL_3("*TUNED* Right Five Ball Auto 3 - Faster", "Far Right Start (A2) Facing Towards From Hub"),
+        MIDDLE_LEFT_4_BALL_DEFENSE("*TUNED* Middle Left 4 Ball", "Middle Left Start (C) Facing Towards Hub"),
+        RIGHT_2_BALL_DEFENSE("*TUNED* Right 2 Ball", "Far Right Start (A2) Facing Away From Hub"),
+        LEFT_2_BALL_2_DEFENSE_2("*TUNED* Left 2 Ball 2 Defense 2", "Far Left Start (D) Facing Away From Hub"),
         MIDDLE_RIGHT_4_BALL("_TESTING_ Middle Right 4 Ball", "Middle Right Start (B) Facing Away From Hub"),
         LEFT_2_BALL_2_DEFENSE("_TESTING_ Left 2 Ball 2 Defense", "Far Left Start (D) Facing Away From Hub"),
-        LEFT_2_BALL_2_DEFENSE_2("_TESTING_ Left 2 Ball 2 Defense 2", "Far Left Start (D) Facing Away From Hub"),
-        RIGHT_2_BALL("_TESTING_ Right 2 Ball", "Far Right Start (A2) Facing Away From Hub"),
-        MIDDLE_LEFT_4_BALL("_TESTING_ Middle Left 4 Ball", "Middle Left Start (C) Facing Towards Hub")
         //THREE_BALL_DRIVE_AND_SHOOT("3 Ball Drive and Shoot - Far Right Start (A) Facing Away From Hub"),
         //LEFT_TERMINAL_3_BALL("3 Ball Including Terminal Cargo - Far Left Start (D) Facing Away Hub"),
         //MIDDLE_LEFT_TERMINAL_DEFENSE("2 Ball Terminal And Defense - Middle Left Start (C) Facing Towards Hub"),
