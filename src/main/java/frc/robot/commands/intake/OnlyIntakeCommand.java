@@ -28,9 +28,7 @@ public class OnlyIntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {  // Don't allow more balls to be picked up if both the stage and prestage are full.
-      intake.run();
-    }
+    intake.run();
   }
 
   @Override
@@ -40,6 +38,6 @@ public class OnlyIntakeCommand extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return false;
+    return !indexer.getCargoStagedDetected() || !indexer.getCargoPreStagedDetected();
   }
 }

@@ -44,6 +44,7 @@ public class VisionCalculator {
      */
     private void setupShooterDistanceConfigs() {
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(1 * 12, 4800, 4800)); // Low goal shot if pushed up against the wall
+        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 11, 4800, 4800)); // Low goal shot if pushed up against the wall
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(2 * 12, 8000, 8000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(3 * 12, 8000, 8000));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(4 * 12, 8000, 8000));
@@ -52,15 +53,15 @@ public class VisionCalculator {
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(7 * 12, 9800, 9800));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(8 * 12, 10500, 10500));
         angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(9 * 12, 10900, 10900));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 16000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 16000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 17000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 18000, 9000));
-        angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 19000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(10 * 12, 13000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(11 * 12, 14000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(12 * 12, 15000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(13 * 12, 15000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(14 * 12, 16000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(15 * 12, 16000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(16 * 12, 17000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(17 * 12, 18000, 9000));
+        // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(18 * 12, 19000, 9000));
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(19 * 12, 15700, 9000));
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(20 * 12, 15700, 9000));
         // angle1ShooterDistanceConfigs.add(new ShooterDistanceConfig(21 * 12, 15700, 9000));
@@ -221,10 +222,8 @@ public class VisionCalculator {
         // Returns a default shooter configuration if either of the bounds are null
         if (lowerDistanceConfig == null && upperDistanceConfig == null) {
             return distanceToConfigList.get(Constants.Shooter.DEFAULT_ASSUMED_SHOOTER_CONFIG);
-        } else if (lowerDistanceConfig == null) {
-            return upperDistanceConfig;
-        } else if (upperDistanceConfig == null) {
-            return lowerDistanceConfig;
+        } else if (lowerDistanceConfig == null || upperDistanceConfig == null) {
+            return new ShooterDistanceConfig(0, 0, 0);
         }
 
         // deltaInches is the difference between the lower and upper pre-measured inches values.

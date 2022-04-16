@@ -22,6 +22,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
     DrivetrainSubsystem drivetrain;
@@ -32,7 +33,6 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
      * Then drives to and intakes the closest opponent Cargo, and shoots it in the direction of the hanger while driving to the terminal alliance Cargo.
      * Then will intake alliance cargo and wait a second in the case we choose to roll the second cargo out of the terminal to the robot.
      * Drives back to a position near it's starting location to shoot 1 or 2 cargo.
-     * TUNED
      * @param drivetrain
      * @param vision
      * @param shooter
@@ -66,7 +66,7 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
         ParallelDeadlineGroup aimingAndShooting = new ParallelDeadlineGroup(autoShootCommand, new PerpetualCommand(super.newVisionTurnInPlaceCommand())); // Perpetual Command removes the end method of a command, making it run forever.
 
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(this.newNonVisionShoot1Command(7900, 7900).withTimeout(1));
+        this.addCommands(this.newNonVisionShoot1Command(FiringAngle.ANGLE_1, 7900, 7900).withTimeout(1));
         this.addCommands(driveTowardsTerminalBalls);
         this.addCommands(intakeTerminalBalls);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1));

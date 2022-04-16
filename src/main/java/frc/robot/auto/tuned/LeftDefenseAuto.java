@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
-import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -28,7 +27,6 @@ public class LeftDefenseAuto extends AutoBase {
      * Position D Start (Far Left Parallel with Outer Tarmac Line) Facing Away from the Hub.
      * First intakes closest alliance ball, then turns and reapproaches tarmac to score 2.
      * Then drives to and intakes closest opponent cargo, and turns and fires it into the hanger.
-     * TUNED
      * @param drivetrain
      * @param vision
      * @param shooter
@@ -48,7 +46,6 @@ public class LeftDefenseAuto extends AutoBase {
 
         SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
         SwerveControllerCommand driveToOpponentBallPos = super.createSwerveTrajectoryCommand(driveToOpponentBallBallTrajectoryConfig, super.getLastEndingPosCreated(Rotation2d.fromDegrees(-90)), opponentBallPos, super.createRotationAngle(-90));
-        TurnInPlaceCommand turnToFirstTeleopBall = new TurnInPlaceCommand(drivetrain, Rotation2d.fromDegrees(-170));
 
         ClimberArmsBackCommand climberBack = new ClimberArmsBackCommand(climber);
         NonVisionShootCommand nonVisionShootAllCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_2, 6000, 6000);

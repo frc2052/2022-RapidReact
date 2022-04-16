@@ -1,0 +1,254 @@
+{
+  "tabPane": [
+    {
+      "title": "Primary",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 10.0,
+        "tiles": {
+          "8,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Selectors and Toggles",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Is An Auto Selected?",
+                  "_title": "SmartDashboard/Is An Auto Selected?",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "ComboBox Chooser",
+                  "_source0": "network_table:///SmartDashboard/Autos",
+                  "_title": "Auto Selector"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Selected Auto Description",
+                  "_title": "SmartDashboard/Selected Auto Description"
+                },
+                {
+                  "_type": "ComboBox Chooser",
+                  "_source0": "network_table:///SmartDashboard/Drive Modes",
+                  "_title": "Drive Mode"
+                },
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Toggle Limelight Driver Camera",
+                  "_title": "Toggle Limelight Driver Camera"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/Enable Limelight LEDs",
+                  "_title": "Limelight LED Toggle"
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SmartDashboard/Shooter Velocity Boost Pct",
+                  "_title": "Shooter Velocity Boost Percent",
+                  "Slider Settings/Min": -0.1,
+                  "Slider Settings/Max": 0.1,
+                  "Slider Settings/Block increment": 0.01
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/One Ball Delay",
+                  "_title": "/SmartDashboard/One Ball Delay"
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SmartDashboard/Vision X Aim Offset",
+                  "_title": "SmartDashboard/Vision X Aim Offset",
+                  "Slider Settings/Min": -5.0,
+                  "Slider Settings/Max": 5.0,
+                  "Slider Settings/Block increment": 1.0
+                }
+              ]
+            }
+          },
+          "2,0": {
+            "size": [
+              6,
+              3
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Limelight Camera Feed",
+              "Layout/Number of columns": 1,
+              "Layout/Number of rows": 1,
+              "Layout/Label position": "HIDDEN",
+              "_children": {
+                "0,0": {
+                  "_type": "Camera Stream",
+                  "_source0": "camera_server://limelight",
+                  "_title": "limelight",
+                  "Crosshair/Show crosshair": false,
+                  "Crosshair/Crosshair color": "#FFFFFFFF",
+                  "Controls/Show controls": false,
+                  "Controls/Rotation": "NONE",
+                  "compression": -1.0,
+                  "fps": -1,
+                  "imageWidth": 0,
+                  "imageHeight": 0
+                }
+              }
+            }
+          },
+          "6,3": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Limelight Values",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Disable Shooter Idle",
+                  "_title": "SmartDashboard/Disable Shooter Idle"
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Controllers",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Climber Height Ticks",
+                  "_title": "SmartDashboard/Climber Height Ticks"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/currentPressure",
+                  "_title": "SmartDashboard/currentPressure"
+                },
+                {
+                  "_type": "Simple Dial",
+                  "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
+                  "_title": "SmartDashboard/Shooter Top Wheel Speed",
+                  "Range/Min": 0.0,
+                  "Range/Max": 12000.0,
+                  "Visuals/Show value": true
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Lost Limelight Comm Warning",
+                  "_title": "/SmartDashboard/Lost Limelight Comm Warning",
+                  "Colors/Color when true": "#FF0000FF",
+                  "Colors/Color when false": "#FFFFFFFF"
+                },
+                {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Pnuematics Is Dead",
+                  "_title": "SmartDashboard/Pnuematics Is Dead"
+                }
+              ]
+            }
+          },
+          "5,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Limelight LED Override",
+              "_title": "LED OVERRIDE"
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "More Info",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Camera Mode: ",
+                  "_title": "Limelight Cam Mode"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Gyro Angle",
+                  "_title": "SmartDashboard/Gyro Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Limelight Tolerance",
+                  "_title": "/SmartDashboard/Limelight Tolerance"
+                }
+              ]
+            }
+          },
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/PreStaged Cargo Detected",
+              "_title": "PreStaged Cargo",
+              "Colors/Color when true": "#800080FF",
+              "Colors/Color when false": "#FFFFFFFF"
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Staged Cargo Detected",
+              "_title": "Staged Cargo",
+              "Colors/Color when true": "#800080FF",
+              "Colors/Color when false": "#FFFFFFFF"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Zero Climber Encoder",
+              "_title": "SmartDashboard/Zero Climber Encoder"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 838.4000244140625
+  }
+}

@@ -18,7 +18,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 
-public class LeftTerminal3Cargo extends AutoBase {
+public class LeftTerminal3BallAuto extends AutoBase {
 
     /**
      * Position D Start (Far Left Parallel With Outer Tarmac Edge) Facing Away From the Hub.
@@ -34,7 +34,7 @@ public class LeftTerminal3Cargo extends AutoBase {
     4 drive to terminal spot
     5 drive to shooting spot and shoot
     */
-    public LeftTerminal3Cargo(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public LeftTerminal3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(30));

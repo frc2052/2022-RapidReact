@@ -16,7 +16,7 @@ public class AutoIntakeCommand extends IntakeHopperRunCommand {
     super(intake, indexer, hopper);
     this.intake = intake;
 
-    addRequirements(this.intake);
+    //addRequirements(this.intake);
   }
 
   @Override

@@ -90,7 +90,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private double lastRollValue;
   private boolean lastRollDelta;
   private boolean isTopOfSwing;
-  private int counter;
   private double intendedXVelocityMPS;
   private double intendedYVelocityMPS;
   private boolean climbingSwingingLEDOutput;
@@ -246,8 +245,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getGyroVelocity() {
-        // Gets X and Y velocity from the navx and gets their resulting velocity vector - Probably innaccurate, but is to be tested
-        return Math.sqrt(Math.pow(navx.getVelocityY(), 2) * Math.pow(navx.getVelocityX(), 2));
+        // Gets X and Y velocity from the navx and gets their resulting velocity vector length - Probably innaccurate, but is to be tested
+        return Math.hypot(Math.abs(navx.getVelocityY()), Math.abs(navx.getVelocityX()));
   }
 
   public double getGyroPitchDegrees() {
@@ -318,14 +317,14 @@ public void periodic() {
         SmartDashboard.putNumber("Gyro Angle", navx.getAngle());
 
         // For comparing gyro and wheel velocities
-        SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
-        // SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
+        // SmartDashboard.putNumber("Intended Current Velocity", getIntendedCurrentVelocity());
+        SmartDashboard.putNumber("Gyro Velocity", getGyroVelocity());
         // SmartDashboard.putNumber("Gyro Pitch", getGyroPitchDegrees());
         // SmartDashboard.putNumber("Gyro Yaw", getGyroYawDegrees());
-        SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
+        // SmartDashboard.putNumber("Gyro Roll", getGyroRoll());
 
-        SmartDashboard.putBoolean("Swing Backward", isForward);
-        SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
+        // SmartDashboard.putBoolean("Swing Backward", isForward);
+        // SmartDashboard.putBoolean("Is Top Of Swing", isTopOfSwing);
 
         SmartDashboard.putNumber("Gyro Rotation", odometry.getPoseMeters().getRotation().getRadians()); 
 

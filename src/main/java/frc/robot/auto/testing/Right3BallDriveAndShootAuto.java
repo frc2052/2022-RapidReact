@@ -16,16 +16,21 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class ThreeballDriveAndShoot extends AutoBase {
+public class Right3BallDriveAndShootAuto extends AutoBase {
 
     /**
     * Position A Start (Far Right Parallel with Outer Tarmac Line)
     * Varient of Simple3BallAuto originally used for testing driving while aiming at UpperHub in auto.
     * Curretnly only left for driving with horizontal offset aiming based on velocity.
-    * @param drivetrain
-    * @param vision
+     * @param drivetrain
+     * @param vision
+     * @param shooter
+     * @param intake
+     * @param indexer
+     * @param hopper
+     * @param climber
     */
-    public ThreeballDriveAndShoot(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+    public Right3BallDriveAndShootAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         // Positions and rotations

@@ -15,6 +15,7 @@ public class AutoShootCommand extends ShootCommand {
   private final IndexerSubsystem indexer;
 
   private Timer timer;
+  private double deadlineSeconds;
 
   /**
    * Command that extends ShootCommand to be used in Auto.
@@ -26,6 +27,28 @@ public class AutoShootCommand extends ShootCommand {
    * @param vision
    * @param drivetrain
    */
+  public AutoShootCommand(
+    ShootMode shootMode, 
+    ShooterSubsystem shooter, 
+    IndexerSubsystem indexer, 
+    HopperSubsystem hopper, 
+    VisionSubsystem vision,
+    DrivetrainSubsystem drivetrain,
+    double deadlineSeconds
+  ) {
+    super(
+      shootMode,
+      shooter,
+      indexer,
+      hopper,
+      vision,
+      drivetrain
+    );    
+
+    this.indexer = indexer;
+    this.deadlineSeconds = deadlineSeconds;
+  }
+
   public AutoShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
@@ -44,6 +67,7 @@ public class AutoShootCommand extends ShootCommand {
     );    
 
     this.indexer = indexer;
+    deadlineSeconds = 0.5;
   }
 
   @Override
@@ -53,7 +77,7 @@ public class AutoShootCommand extends ShootCommand {
           timer = new Timer();
           timer.start();
       }
-      if (timer.get() >= 0.5) { // At least 1 sec has passed since a ball was last seen
+      if (timer.get() >= deadlineSeconds) { // At least 1 sec has passed since a ball was last seen
         return true;
       }
     } else {

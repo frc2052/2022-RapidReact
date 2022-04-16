@@ -31,7 +31,7 @@ public class ShootCommand extends ShooterIndexingCommand {
 
   private double distanceInches;
   private ShooterDistanceConfig shooterConfig;
-  private boolean lastSawStaged;
+  // private boolean lastSawStaged;
 
   public ShootCommand(
     ShootMode shootMode, 
@@ -60,7 +60,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     shooterConfig = new ShooterDistanceConfig(0, 0, 0); // Initial speed (0) for shooter that'll make it just not run if no vision target.
     // Doesn't fix case where limelight breaks and leaves hasValidTarget true, to which the Limelight Is Dead Smart Dashboard button will need to be pressed.
 
-    addRequirements(this.shooter, this.indexer, this.hopper);
+    addRequirements(this.shooter);
   }
 
   public ShootCommand(
@@ -91,39 +91,44 @@ public class ShootCommand extends ShooterIndexingCommand {
   @Override
   public void execute() {
 
-    boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+    // boolean stagedCargoDetected = indexer.getCargoStagedDetected();
 
     if (vision.getHasValidTarget()) {
-        distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
+      distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
 
-        // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
-        if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
+      // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
+      if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
         shooter.setShootAngle1();
-        } else if (distanceInches > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
+      } else if (distanceInches > Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES + Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_1) {
         shooter.setShootAngle2();
-        }
+      }
 
-        shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
+      shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
     }
 
-    SmartDashboard.putNumber("Distance Inches", distanceInches);
-
-    shooter.shootAtSpeed(
-      shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
-      shooterConfig.getBottomMotorVelocityTicksPerSecond()
-    );
+    // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
+      shooter.runAtSpeed(
+        shooterConfig.getTopMotorVelocityTicksPerSecond(), // Boosts or lowers the shooter velocity by a max of 110% and min of 90%
+        shooterConfig.getBottomMotorVelocityTicksPerSecond()
+      );
 
-      super.isLinedUp = isLinedUSupplier.getAsBoolean();
       super.execute();
 
-      if (!stagedCargoDetected && lastSawStaged) {
-          System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + "Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
-          + "Top Velocity: " + shooter.getTopWheelVelocity() + "Bottom Velocity: " + shooter.getBottomWheelVelocity());
-      }
-      lastSawStaged = stagedCargoDetected;
+      // if (!stagedCargoDetected && lastSawStaged) {
+      //     System.err.println("Shot with: " + "Target Top: " + shooter.getTargetTopWheelVelocity() + " Target Bottom: " + shooter.getTargetBottomWheelVelocity() 
+      //     + " Top Velocity: " + shooter.getTopWheelVelocity() + " Bottom Velocity: " + shooter.getBottomWheelVelocity());
+      // }
+      // lastSawStaged = stagedCargoDetected;
+    } else {
+        shooter.stop();
     }
+  }
+
+  @Override
+  public boolean isReadyToShoot() {
+      return shooter.isAtSpeed() && vision.getIsLinedUp();
   }
 
   @Override

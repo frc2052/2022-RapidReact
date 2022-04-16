@@ -29,7 +29,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private double shooterVelocityBoost;
   private FiringAngle currentAngle;
   private boolean shootAngle1Override;
-  private Timer timer;
+  private boolean idleSpeedEnabled;
+
+//   private double p;
+//   private double p;
+
+//   private double p;
+//   private double p;
+
 
   public ShooterSubsystem() {
     topMotor = new TalonFX(MotorIDs.TOP_SHOOTER_MOTOR);
@@ -37,20 +44,28 @@ public class ShooterSubsystem extends SubsystemBase {
     topMotor.setNeutralMode(NeutralMode.Coast);
     topMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // topMotor.setSelectedSensorPosition(0, 0, 10);
-    topMotor.config_kP(0, 0.05, 10);
-    topMotor.config_kI(0, 0, 10);
-    topMotor.config_kD(0, 0, 10);
-    topMotor.config_kF(0, 0.0522, 10);
+    // topMotor.config_kP(0, 1, 10);
+    topMotor.config_kP(0, 0.15, 10);
+    topMotor.config_kI(0, 0.001, 10); 
+    topMotor.config_kD(0, 1, 10);
+    // topMotor.config_kP(0, 0.1, 10);
+    // topMotor.config_kI(0, 0.0004, 10);
+    // topMotor.config_kD(0, 0.1, 10);
+    //topMotor.config_kF(0, 0.048, 10); // PID Feed forward value - 12 (volts) devided by Maximum RPM - Maximum ticks per 100ms / 2048 (ticks per 1 revolution of a falcon) * 600 (amount of 100ms in a minute)
+    //topMotor.configAllowableClosedloopError(0, 20, 10);
 
     bottomMotor = new TalonFX(MotorIDs.BOTTOM_SHOOTER_MOTOR);
     bottomMotor.configFactoryDefault();
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
-    bottomMotor.config_kP(0, 0.05, 10);
-    bottomMotor.config_kI(0, 0, 10);
-    bottomMotor.config_kD(0, 0, 10);
-    bottomMotor.config_kF(0, 0.0522, 10);
+    bottomMotor.config_kP(0, 0.15, 10);
+    bottomMotor.config_kI(0, 0.001, 10);
+    bottomMotor.config_kD(0, 1, 10);
+    // bottomMotor.config_kP(0, 0.05, 10);
+    // bottomMotor.config_kI(0, 0, 10);
+    // bottomMotor.config_kD(0, 0, 10);
+    // bottomMotor.config_kF(0, 0.0522, 10);
 
     angleChangeSolenoid = new DoubleSolenoid(
       Constants.Solenoids.COMPRESSOR_MODULE_ID,
@@ -60,17 +75,32 @@ public class ShooterSubsystem extends SubsystemBase {
     );
 
     currentAngle = angleChangeSolenoid.get() == Value.kReverse ? FiringAngle.ANGLE_2 : FiringAngle.ANGLE_1;
+
+    // SmartDashboard.putNumber("Shooter P", 0.115);
+    // SmartDashboard.putNumber("Shooter I", 0);
+    // SmartDashboard.putNumber("Shooter D", 0);
+    // SmartDashboard.putNumber("Shooter F", 0.048);
+    idleSpeedEnabled = !SmartDashboard.getBoolean("Disable Shooter Idle", false);
+    stop();
   }
 
-  public void shootAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
+//   public void updatePIDF(double p, double i, double d, double f) {
+//     topMotor.config_kP(0, p, 10);
+//     topMotor.config_kI(0, i, 10);
+//     topMotor.config_kD(0, d, 10);
+//     topMotor.config_kF(0, f, 10); 
+
+//   }
+
+  public void runAtSpeed(double topVelocityTicksPerSeconds, double bottomVelocityTicksPerSeconds) {
     //System.err.println("***************************** RUNNING SHOOTER");
     //System.err.println("***************************** TOP: " + topVelocityTicksPerSeconds);
     //System.err.println("***************************** BOTTOM: " + bottomVelocityTicksPerSeconds);
     topWheelTargetVelocity = topVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
     bottomWheelTargetVelocity = bottomVelocityTicksPerSeconds * (shooterVelocityBoost + 1);
 
-    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
-    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
+    topMotor.set(ControlMode.Velocity, topWheelTargetVelocity);// * Constants.Shooter.SHOOTER_TOP_PULLDOWN_PCT);
+    bottomMotor.set(ControlMode.Velocity, bottomWheelTargetVelocity);// * Constants.Shooter.SHOOTER_BOTTOM_PULLDOWN_PCT);
   }
 
   // public void runAtShootSpeed() {
@@ -86,13 +116,17 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean isAtSpeed() {
     // Consider the shooter on target if we are within a shooter tolerance of target speeds
-    boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
-        && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
+    if (topWheelTargetVelocity != 0 && bottomWheelTargetVelocity != 0) { // To make sure indexing doesn't move balls into shooter because we're in fact at target speed 0
+      boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+          && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
-        && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
+      boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+          && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-    return topIsOnTarget && bottomIsOnTarget;
+      return topIsOnTarget && bottomIsOnTarget;
+    } else {
+      return false;
+    }
 
     // if (topIsOnTarget && bottomIsOnTarget) {
     //     if (timer == null) {
@@ -123,17 +157,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop() {
     //System.err.println("***************************** STOPPING SHOOTER");
-    topWheelTargetVelocity = 0;
-    bottomWheelTargetVelocity = 0;
-
-    topMotor.set(ControlMode.PercentOutput, 0);
-    bottomMotor.set(ControlMode.PercentOutput, 0);
+    if (idleSpeedEnabled) { // Implemented idle speed not long before champs, so this was the easy solution to that rather than rewriting much more
+      runAtSpeed(7400, 7400);
+    } else {
+      topWheelTargetVelocity = 0;
+      bottomWheelTargetVelocity = 0;
+      topMotor.set(ControlMode.PercentOutput, 0);
+      bottomMotor.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   public void shootAtPercentage(double topWheelPercent, double bottomWheelPercent) {
     //System.err.println("***************************** RUN BY PERCENT SHOOTER");
     topMotor.set(ControlMode.PercentOutput, topWheelPercent/100);
     bottomMotor.set(ControlMode.PercentOutput, bottomWheelPercent/100);
+  }
+
+  public void setIdleSpeedEnabled(boolean enabled) {
+    idleSpeedEnabled = enabled;
+    SmartDashboard.putBoolean("Disable Shooter Idle", !enabled);
   }
 
   public void setShooterVelocityBoost(double boostPct) {
@@ -150,7 +192,7 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kReverse);
       currentAngle = FiringAngle.ANGLE_1;
     }
-    System.err.println("Setting Angle 1");
+    // System.err.println("Setting Angle 1");
   }
 
   public void setShootAngle2() {
@@ -158,8 +200,7 @@ public class ShooterSubsystem extends SubsystemBase {
       angleChangeSolenoid.set(Value.kForward);
       currentAngle = FiringAngle.ANGLE_2;
     }
-    System.err.println("Setting Angle 2");
-
+    // System.err.println("Setting Angle 2");
   }
 
   public void setShootAngle1Override(boolean override) {
@@ -198,8 +239,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Top Wheel Speed", topMotor.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter Bottom Wheel Speed", bottomMotor.getSelectedSensorVelocity());
 
-    SmartDashboard.putString("Firing Angle", currentAngle.toString());
-    SmartDashboard.putBoolean("Angle Override", shootAngle1Override);
+    // SmartDashboard.putString("Firing Angle", currentAngle.toString());
+    // SmartDashboard.putBoolean("Angle Override", shootAngle1Override);
   }
 
   public enum FiringAngle {

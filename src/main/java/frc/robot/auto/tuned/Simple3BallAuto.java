@@ -23,9 +23,13 @@ public class Simple3BallAuto extends AutoBase {
      /**
      * Position A Start (Far Right parallel with outer Tarmac line)
      * Simple auto to score 3 alliance cargo.
-     * TUNED AND WORKING
      * @param drivetrain
      * @param vision
+     * @param shooter
+     * @param intake
+     * @param indexer
+     * @param hopper
+     * @param climber
      */
     public Simple3BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
@@ -52,7 +56,6 @@ public class Simple3BallAuto extends AutoBase {
         this.addCommands(turnToBall1);
         this.addCommands(intakeBall1); // Drives and intakes the closest ball to the robot
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
-    //    this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT));
         this.addCommands(returnToShoot); // Drives and rotates to position to shoot ball into upper hub
         this.addCommands(super.newIntakeArmInCommand());
         this.addCommands(new PerpetualCommand(super.newAutoAimAndShootAllCommandGroup()));

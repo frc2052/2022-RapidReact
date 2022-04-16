@@ -20,13 +20,14 @@ import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
 public class Right5BallAuto2 extends AutoBase {
     /**
-     * Position A Start (Far Right Parallel with Outer Tarmac Line) Facing Towards the Hub.
-     * 1. Immediatley shoot preloaded cargo, turn around, and intake closest alliance cargo.
-     * 2. Drive to and intake second closest alliance cargo, and return to a position to shoot both.
-     * 3. Drive to terminal cargo and wait a second to try and make sure cargo rolled out of terminal is in'tooken'.
-     * 4. Then drive back to location just outside tarmac but avoiding upper exit to score 1 or 2 cargo held.
+     * Version of 5 ball for driving and shooting the preloaded and second cargo on its way to the third.
      * @param drivetrain
      * @param vision
+     * @param shooter
+     * @param intake
+     * @param indexer
+     * @param hopper
+     * @param climber
      */
     public Right5BallAuto2(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);

@@ -19,6 +19,7 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
   private FiringAngle firingAngleMode;
   private double topWheelVelocity;
   private double bottomWheelVelocity;
+  private boolean overrideIsAtSpeed;
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
     super(
@@ -33,16 +34,12 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
     this.topWheelVelocity = topWheelVelocity;
     this.bottomWheelVelocity = bottomWheelVelocity;
 
-    super.isLinedUp = true;
-
     addRequirements(shooter, indexer);
   }
 
-  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideDelay) {
+  public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity, boolean overrideIsAtSpeed) {
     this(shootMode, shooter, indexer, hopper, firingAngleMode, topWheelVelocity, bottomWheelVelocity);
-    if (overrideDelay) { 
-      overrideDelay(); 
-    }
+    this.overrideIsAtSpeed = overrideIsAtSpeed;
   }
 
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, ShooterDistanceConfig shooterDistanceConfig) {
@@ -64,11 +61,20 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
       }
   }
 
+  @Override
+  public boolean isReadyToShoot() {
+      if (overrideIsAtSpeed) {
+        return true;
+      } else {
+        return super.isReadyToShoot();
+      }
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    shooter.shootAtSpeed(topWheelVelocity, bottomWheelVelocity);
+    shooter.runAtSpeed(topWheelVelocity, bottomWheelVelocity);
     super.execute();
   }
 

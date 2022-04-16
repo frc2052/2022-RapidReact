@@ -15,6 +15,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final DoubleSolenoid armSolenoid;
     private TalonSRX intakeMotor;
     private boolean isArmOut;
+    private boolean intakeRunning;
 
     public IntakeSubsystem() {
         armSolenoid = new DoubleSolenoid(
@@ -43,18 +44,22 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void run(){
         intakeMotor.set(ControlMode.PercentOutput, Constants.Intake.kIntakeSpeed);
+        intakeRunning = true;
     }
 
     public void reverse(){
-        intakeMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);  
+        intakeMotor.set(ControlMode.PercentOutput, -Constants.Intake.kIntakeSpeed);
+        intakeRunning = true;
     }
    
     public void stop(){
         intakeMotor.set(ControlMode.PercentOutput, 0);
+        intakeRunning = false;
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Intake Arm Out", isArmOut);
+        SmartDashboard.putBoolean("Intake Running", intakeRunning);
     }
 }

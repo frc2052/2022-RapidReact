@@ -30,6 +30,7 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
     * Drives and shoots alliance cargo 2, then rotates to aim relativley in the direction of the hanger, and shoots opposing cargo 1.
     * Drives and rotates to intake alliance cargo 3 and possible an additional alliance cargo if timed correctly by human player.
     * Drives back to just outside the tarmac to fire all cargo into upper hub.
+     * This version (2) was meant for testing using non-descriptive variable names and instead using comments, con continuing work on the auto.
      * @param drivetrain
      * @param vision
      * @param shooter
@@ -85,7 +86,6 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         this.addCommands(goBackToShootFinalBall);
         this.addCommands(new PerpetualCommand(super.newAutoAimAndShootAllCommandGroup()).withTimeout(5));
         
-        //this.andThen(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_FINISHED));
-        this.andThen(() -> drivetrain.stop(), drivetrain);
+        this.addCommands(super.autonomousFinishedCommandGroup());
     }
 }

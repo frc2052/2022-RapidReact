@@ -16,7 +16,8 @@ public class AutoCountShootCommand extends ShootCommand {
 
   private Timer timer;
   private int ballsThroughStagedSensor;
-  private boolean stagedCargoDetected;
+  private boolean stagedCargoWasDetected;
+  private boolean preStagedCargoWasDetected;
   private boolean lastSawStaged;
   private ShootMode shootMode;
 
@@ -52,8 +53,20 @@ public class AutoCountShootCommand extends ShootCommand {
   }
 
   @Override
+  public void initialize() {
+      super.initialize();
+      if (indexer.getCargoStagedDetected()) {
+          stagedCargoWasDetected = true;
+      }
+  }
+
+  @Override
   public boolean isFinished() {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+
+    if (indexer.getCargoPreStagedDetected()) {
+        preStagedCargoWasDetected = true;
+    }
 
     if (!stagedCargoDetected && lastSawStaged) {
         ballsThroughStagedSensor++;
@@ -68,7 +81,15 @@ public class AutoCountShootCommand extends ShootCommand {
         if (timer.hasElapsed(0.25)) {
             return true;
         }
-    } else if (shootMode == ShootMode.SHOOT_ALL && ballsThroughStagedSensor >= 2) {
+    } else if (shootMode == ShootMode.SHOOT_ALL && stagedCargoWasDetected && preStagedCargoWasDetected && ballsThroughStagedSensor >= 2) {
+        if (timer == null) {
+            timer = new Timer();
+            timer.start();
+          }
+        if (timer.hasElapsed(0.25)) {
+            return true;
+        }
+    } else if (shootMode == ShootMode.SHOOT_ALL && stagedCargoWasDetected && !preStagedCargoWasDetected && ballsThroughStagedSensor >= 1) {
         if (timer == null) {
             timer = new Timer();
             timer.start();
