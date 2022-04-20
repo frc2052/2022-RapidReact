@@ -356,6 +356,7 @@ public class RobotContainer {
     driverOuttakeAllButton.whenHeld(outtakeAllCommand);
     eject1Button.whenHeld(eject1Command);
     ejectAllButton.whenHeld(ejectAllCommand);
+    ejectAllButton2.whenHeld(ejectAllCommand);
     runHopperButton.whenHeld(runHoppperCommand);
 
     // --- Shooter Button Command Bindings ---

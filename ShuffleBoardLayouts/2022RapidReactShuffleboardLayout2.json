@@ -9,6 +9,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
+        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -25,7 +26,7 @@
                   "_source0": "network_table:///SmartDashboard/Is An Auto Selected?",
                   "_title": "Is Auto Selected?",
                   "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
+                  "Colors/Color when false": "#E64D4DFF"
                 },
                 {
                   "_type": "ComboBox Chooser",
@@ -63,7 +64,8 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01
+                  "Slider Settings/Block increment": 0.01,
+                  "Visuals/Display value": true
                 },
                 {
                   "_type": "Number Slider",
@@ -71,7 +73,8 @@
                   "_title": "SmartDashboard/Vision X Aim Offset",
                   "Slider Settings/Min": -5.0,
                   "Slider Settings/Max": 5.0,
-                  "Slider Settings/Block increment": 1.0
+                  "Slider Settings/Block increment": 1.0,
+                  "Visuals/Display value": true
                 }
               ]
             }
@@ -117,7 +120,7 @@
                 {
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/Has Target?",
-                  "_title": "Limelight has Target?",
+                  "_title": "/SmartDashboard/Has Target?",
                   "Colors/Color when true": "#00FF00FF",
                   "Colors/Color when false": "#333333FF"
                 },
@@ -131,7 +134,7 @@
                 {
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/Intake Running",
-                  "_title": "SmartDashboard/Intake Running",
+                  "_title": "/SmartDashboard/Intake Running",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#E6E6E6FF"
                 }
@@ -253,7 +256,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Climber Is At Max Height",
-              "_title": "Clim Max Height",
+              "_title": "/SmartDashboard/Climber Is At Max Height",
               "Colors/Color when true": "#008000FF",
               "Colors/Color when false": "#B3B3B3FF"
             }
@@ -266,7 +269,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Climber Is At Min Height",
-              "_title": "Clim Min Height",
+              "_title": "/SmartDashboard/Climber Is At Min Height",
               "Colors/Color when true": "#FFFF4DFF",
               "Colors/Color when false": "#B3B3B3FF"
             }
@@ -283,6 +286,7 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
+        "titleType": 0,
         "tiles": {
           "6,0": {
             "size": [
