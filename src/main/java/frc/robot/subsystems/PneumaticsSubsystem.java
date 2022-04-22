@@ -13,7 +13,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
   public PneumaticsSubsystem() {
     pneumaticHub = new PneumaticHub(Constants.Solenoids.COMPRESSOR_MODULE_ID);
     pneumaticHub.clearStickyFaults();
-    pneumaticHub.enableCompressorAnalog(100, 115);
+    pneumaticHub.enableCompressorAnalog(100, 120);
   }
 
   @Override

@@ -42,9 +42,9 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -160);
-        Pose2d approachTerminalBalls = super.newPose2dInches(-151, -113, -160);
+        Pose2d approachTerminalBalls = super.newPose2dInches(-145, -111, -160);
         List<Translation2d> kickBallMidpoint = List.of(super.newTranslation2dInches(-60, -72));
-        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-178, -124, -135);
+        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-172, -122, -135);
         Pose2d behindBall4Pos = super.newPose2dInches(-60, -140, 30);
         Pose2d ball4Pos = super.newPose2dInches(-30, -130, 30);
 

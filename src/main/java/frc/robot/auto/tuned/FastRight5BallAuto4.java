@@ -43,9 +43,9 @@ public class FastRight5BallAuto4 extends AutoBase {
         Pose2d ball1Pos = super.newPose2dInches(-33, 38, 90);
         List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
         Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 270, 140);
-        Pose2d terminalBallPos = super.newPose2dInches(-6, 309, 150);
-        Pose2d shootPos2 = super.newPose2dInches(0, 160, -60);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 264, 140);
+        Pose2d terminalBallPos = super.newPose2dInches(-6, 301, 150);
+        Pose2d shootPos2 = super.newPose2dInches(-2, 160, -60);
         // Pose2d startPos = super.newPose2dInches(0, 0, 115);
         // Pose2d ball1Pos = super.newPose2dInches(-25, 38, 90);
         // List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));

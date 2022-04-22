@@ -120,7 +120,7 @@
                 {
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/Has Target?",
-                  "_title": "/SmartDashboard/Has Target?",
+                  "_title": "Limelight Has Target?",
                   "Colors/Color when true": "#00FF00FF",
                   "Colors/Color when false": "#333333FF"
                 },
@@ -134,7 +134,7 @@
                 {
                   "_type": "Boolean Box",
                   "_source0": "network_table:///SmartDashboard/Intake Running",
-                  "_title": "/SmartDashboard/Intake Running",
+                  "_title": "Intake Running",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#E6E6E6FF"
                 }
@@ -164,9 +164,9 @@
                 {
                   "_type": "Number Bar",
                   "_source0": "network_table:///SmartDashboard/currentPressure",
-                  "_title": "SmartDashboard/currentPressure",
+                  "_title": "Current Pressure",
                   "Range/Min": -0.0,
-                  "Range/Max": 110.0,
+                  "Range/Max": 120.0,
                   "Range/Center": 0.0,
                   "Visuals/Num tick marks": 6,
                   "Visuals/Show text": true
@@ -174,7 +174,7 @@
                 {
                   "_type": "Simple Dial",
                   "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
-                  "_title": "SmartDashboard/Shooter Top Wheel Speed",
+                  "_title": "Top Wheel Speed",
                   "Range/Min": 0.0,
                   "Range/Max": 12000.0,
                   "Visuals/Show value": true
@@ -205,6 +205,11 @@
               "Layout/Label position": "BOTTOM",
               "_children": [
                 {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/Disable Shooter Idle",
+                  "_title": "Disable Shooter Idle"
+                },
+                {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Gyro Angle",
                   "_title": "SmartDashboard/Gyro Angle"
@@ -213,11 +218,6 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Limelight Tolerance",
                   "_title": "/SmartDashboard/Limelight Tolerance"
-                },
-                {
-                  "_type": "Toggle Button",
-                  "_source0": "network_table:///SmartDashboard/Disable Shooter Idle",
-                  "_title": "SmartDashboard/Disable Shooter Idle"
                 }
               ]
             }
@@ -256,7 +256,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Climber Is At Max Height",
-              "_title": "/SmartDashboard/Climber Is At Max Height",
+              "_title": "Clim Max Height",
               "Colors/Color when true": "#008000FF",
               "Colors/Color when false": "#B3B3B3FF"
             }
@@ -269,7 +269,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Climber Is At Min Height",
-              "_title": "/SmartDashboard/Climber Is At Min Height",
+              "_title": "Clim Min Height",
               "Colors/Color when true": "#FFFF4DFF",
               "Colors/Color when false": "#B3B3B3FF"
             }
@@ -531,9 +531,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -6.400000095367432,
-    "y": 1.600000023841858,
-    "width": 1547.199951171875,
-    "height": 828.7999877929688
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 838.4000244140625
   }
 }
