@@ -21,11 +21,13 @@ public class RetractToMinClimberCommand extends CommandBase {
 
         if (currentHeightTicks <= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS) {
             climber.stop();
-            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MIN_EXTENSION);
         } else if (currentHeightTicks <= Constants.Climber.MIN_CLIMBER_HEIGHT_TICKS + 5000) {
             climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT * 0.5);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_RETRACTING);
         } else {
             climber.movePctOutput(Constants.Climber.CLIMBER_RETRACT_SPEED_PCT);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_RETRACTING);
         }
     }
 

@@ -3,6 +3,8 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class ManualExtendClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
@@ -22,6 +24,7 @@ public class ManualExtendClimberCommand extends CommandBase {
     @Override
     public void execute() {
         climber.movePctOutput(extendPctOutput);
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
     }
 
      @Override

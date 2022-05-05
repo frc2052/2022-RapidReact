@@ -25,15 +25,17 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDSubsystem() {
 //        canifier = new CANifier(Constants.LEDs.CANIFIER_PORT);
 
-        // codeChannel1 = new DigitalOutput(0);
-        // codeChannel2 = new DigitalOutput(1);
-        // codeChannel3 = new DigitalOutput(2);
-        // codeChannel4 = new DigitalOutput(3);
-        // codeChannel5 = new DigitalOutput(4);
+        codeChannel1 = new DigitalOutput(0);
+        codeChannel2 = new DigitalOutput(1);
+        codeChannel3 = new DigitalOutput(2);
+        codeChannel4 = new DigitalOutput(3);
+        codeChannel5 = new DigitalOutput(4);
 
-        // timer = new Timer();
+        timer = new Timer();
 
         currentStatusMode = LEDStatusMode.DISABLED;
+
+        SmartDashboard.putNumber("LED CODE", 0);
     }
     private static LEDSubsystem instance;       // Static that stores the instance of class
     public static LEDSubsystem getInstance() {  // Method to allow calling this class and getting the single instance from anywhere, creating the instance if the first time.
@@ -57,8 +59,6 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_DEFAULT(12, 10),
         CLIMBER_EXTENDING(13, 10),
         CLIMBER_RETRACTING(14, 10),
-        CLIMBING_SWINGING_FORWARD(25, 3),
-        CLIMBING_SWINGING_BACKWARD(26, 3),
         CLIMBER_MAX_EXTENSION(15, 3),
         CLIMBER_MIN_EXTENSION(16, 3),
         CLIMBING_MID_BAR(17, 8),
@@ -67,7 +67,11 @@ public class LEDSubsystem extends SubsystemBase {
         TEST_MODE(21, 10),
         CLIMBER_ARMS_BACK(22, 10),
         CLIMBER_ARMS_FORWARD(23, 10),
-        SHOOTING(24, 2);
+        SHOOTING(24, 2),
+        CLIMBING_SWINGING_FORWARD(25, 3),
+        CLIMBING_SWINGING_BACKWARD(26, 3),
+        TELEOP_INTAKE_ON(28, 9),
+        HOPPER_FULL(29, 8);
 
         private final int code; // Code to be encoded into the DIO pins to be received by arduino
         private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not
@@ -103,92 +107,95 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    // @Override
-    // public void periodic() {
-    //     int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
-    //     int code = 0;
+    @Override
+    public void periodic() {
+        int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
+        int code = 0;
 
-    //     if (matchTime == 120) {
-    //         alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
-    //     }
+        if (matchTime == 120) {
+            alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
+        }
 
-    //     if (alertStatusMode == null) {
-    //         if (currentStatusMode == null) {
-    //             if (DriverStation.isAutonomous()) {
-    //                 currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
-    //             } else if (DriverStation.isTeleop()) {
-    //                 currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-    //             } else if (DriverStation.isTest()) {
-    //                 currentStatusMode = LEDStatusMode.TEST_MODE;
-    //             } else {
-    //                 currentStatusMode = LEDStatusMode.DISABLED;
-    //             }
-    //         }
+        if (alertStatusMode == null) {
+            if (currentStatusMode == null) {
+                if (DriverStation.isAutonomous()) {
+                    currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
+                } else if (DriverStation.isTeleop()) {
+                    currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+                } else if (DriverStation.isTest()) {
+                    currentStatusMode = LEDStatusMode.TEST_MODE;
+                } else {
+                    currentStatusMode = LEDStatusMode.DISABLED;
+                }
+            }
 
-    //         code = currentStatusMode.code;
-    //     } else {
-    //         code = alertStatusMode.code;
+            code = currentStatusMode.code;
+        } else {
+            code = alertStatusMode.code;
 
-    //         if (timer.hasElapsed(alertStatusMode.duration)) {
-    //             clearAlertStatusMode();
-    //         }
-    //     }
+            if (timer.hasElapsed(alertStatusMode.duration)) {
+                clearAlertStatusMode();
+            }
+        }
 
-        // SmartDashboard.putBoolean("channel1", (code & 1) > 0);
-        // SmartDashboard.putBoolean("channel2", (code & 2) > 0);
-        // SmartDashboard.putBoolean("channel3", (code & 4) > 0);
-        // SmartDashboard.putBoolean("channel4", (code & 8) > 0);
-        // SmartDashboard.putBoolean("channel5", (code & 16) > 0);
+        
+        // code = (int) SmartDashboard.getNumber("LED CODE", 0);
+        // System.out.println(code);
 
-        // code = 1;
-        // // Code for encoding the code to binary on the digitalOutput pins
-        // codeChannel1.set((code & 1) > 0);
-        // codeChannel2.set((code & 2) > 0);
-        // codeChannel3.set((code & 4) > 0);
-        // codeChannel4.set((code & 8) > 0);
-        // codeChannel5.set((code & 16) > 0);
+        SmartDashboard.putBoolean("channel1", (code & 1) > 0);
+        SmartDashboard.putBoolean("channel2", (code & 2) > 0);
+        SmartDashboard.putBoolean("channel3", (code & 4) > 0);
+        SmartDashboard.putBoolean("channel4", (code & 8) > 0);
+        SmartDashboard.putBoolean("channel5", (code & 16) > 0);
 
-        // lastStatusMode = currentStatusMode;
-        // clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
-    // }
+        // Code for encoding the code to binary on the digitalOutput pins
+        codeChannel1.set((code & 1) > 0);
+        codeChannel2.set((code & 2) > 0);
+        codeChannel3.set((code & 4) > 0);
+        codeChannel4.set((code & 8) > 0);
+        codeChannel5.set((code & 16) > 0);
+
+        lastStatusMode = currentStatusMode;
+        clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
+    }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
-        // if (statusMode == null) {
-        //     currentStatusMode = null;
-        // } else {
-        //     if (currentStatusMode == null) {
-        //         currentStatusMode = statusMode;
-        //     } else if (statusMode.getRank() >= currentStatusMode.getRank()) {
-        //         currentStatusMode = statusMode;
-        //     }
-        // }
+        if (statusMode == null) {
+            currentStatusMode = null;
+        } else {
+            if (currentStatusMode == null) {
+                currentStatusMode = statusMode;
+            } else if (statusMode.getRank() <= currentStatusMode.getRank()) {
+                currentStatusMode = statusMode;
+            }
+        }
     }
 
     public void setAlertLEDStatusMode(LEDAlertStatusMode statusMode) {
-        // if (alertStatusMode != statusMode) {
-        //     alertStatusMode = statusMode;
-        //     clearTimer();
-        //     timer.start();
-        // }
+        if (alertStatusMode != statusMode) {
+            alertStatusMode = statusMode;
+            clearTimer();
+            timer.start();
+        }
     }
 
     public void clearStatusMode() {
-        // currentStatusMode = null;
+        currentStatusMode = null;
     }
 
     public void clearAlertStatusMode() {
-        // alertStatusMode = null;
+        alertStatusMode = null;
     }
 
     private void lightShow() {
-        // double time = timer.get();
-        // if (time < 15) {
-        //     currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-        // } else if (time < 8) {
-        //     currentStatusMode = LEDStatusMode.RAINBOW;
-        // } else {
-        //     timer.reset();
-        // }
+        double time = timer.get();
+        if (time < 15) {
+            currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        } else if (time < 8) {
+            currentStatusMode = LEDStatusMode.RAINBOW;
+        } else {
+            timer.reset();
+        }
     }
 
     private void clearTimer() {

@@ -205,7 +205,7 @@ public class RobotContainer {
     eject1Button = new JoystickButton(turnJoystick, 5);
     ejectAllButton = new JoystickButton(turnJoystick, 3);
     ejectAllButton2 = new JoystickButton(driveJoystick, 4);
-    JoystickButton disableShooterIdleButton = new JoystickButton(turnJoystick, 9);
+    JoystickButton disableShooterIdleButton = new JoystickButton(driveJoystick, 9);
     
     // --- Climber Buttons Bindings ---
     JoystickButton extendClimberButton = new JoystickButton(secondaryPannel, 5);

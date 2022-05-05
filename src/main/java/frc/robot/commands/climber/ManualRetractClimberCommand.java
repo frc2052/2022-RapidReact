@@ -26,6 +26,7 @@ public class ManualRetractClimberCommand extends CommandBase {
     @Override
     public void execute() {
         climber.movePctOutput(Math.copySign(retractPctOutput, -1)); // Math.copysign just to make sure the pctOutput is negative and therefor always a retract
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_RETRACTING);
     }
 
      @Override

@@ -25,8 +25,10 @@ public class ExtendToMaxClimberCommand extends CommandBase {
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         } else if (currentHeightTicks >= maxHeight * 0.95) {
             climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
         } else {
             climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
         }
     }
 

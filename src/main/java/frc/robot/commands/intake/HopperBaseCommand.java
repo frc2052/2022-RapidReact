@@ -7,6 +7,8 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 /**
  * Class for the base command to run and control the hopper, being the indexer blue and green wheels and hopper omni wheels 
@@ -46,6 +48,7 @@ public class HopperBaseCommand extends CommandBase {
       indexer.stopFeeder();
       indexer.stopPreload();
       hopper.stop();
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.HOPPER_FULL);
     }
   }
 

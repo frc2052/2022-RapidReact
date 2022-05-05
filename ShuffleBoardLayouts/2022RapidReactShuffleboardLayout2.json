@@ -9,7 +9,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 10.0,
-        "titleType": 0,
         "tiles": {
           "8,0": {
             "size": [
@@ -64,8 +63,7 @@
                   "_title": "Shooter Velocity Boost Percent",
                   "Slider Settings/Min": -0.1,
                   "Slider Settings/Max": 0.1,
-                  "Slider Settings/Block increment": 0.01,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 0.01
                 },
                 {
                   "_type": "Number Slider",
@@ -73,8 +71,7 @@
                   "_title": "SmartDashboard/Vision X Aim Offset",
                   "Slider Settings/Min": -5.0,
                   "Slider Settings/Max": 5.0,
-                  "Slider Settings/Block increment": 1.0,
-                  "Visuals/Display value": true
+                  "Slider Settings/Block increment": 1.0
                 }
               ]
             }
@@ -286,7 +283,6 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "titleType": 0,
         "tiles": {
           "6,0": {
             "size": [
@@ -524,6 +520,17 @@
               "_type": "Toggle Button",
               "_source0": "network_table:///SmartDashboard/Disable Shooter Idle",
               "_title": "SmartDashboard/Disable Shooter Idle"
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/LED CODE",
+              "_title": "/SmartDashboard/LED CODE"
             }
           }
         }

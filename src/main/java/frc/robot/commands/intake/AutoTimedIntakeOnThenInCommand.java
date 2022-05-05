@@ -44,10 +44,7 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
 
   @Override
   public boolean isFinished() {
-    if (timer.get() >= deadlineSeconds) { // If the timer has reached or passed the deadlineSeconds, the command ends
-      return true;
-    }
-    return false;
+    return timer.hasElapsed(deadlineSeconds); // If the timer has reached or passed the deadlineSeconds, the command ends
   }
 
   @Override 

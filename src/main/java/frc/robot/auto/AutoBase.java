@@ -168,6 +168,10 @@ public class AutoBase  extends SequentialCommandGroup {
         return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
     }
 
+    protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, double deadlineSeconds) {
+        return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS, deadlineSeconds);
+    }
+
     protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean overrideIsAtSpeed) {
         return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS, overrideIsAtSpeed);
     }
