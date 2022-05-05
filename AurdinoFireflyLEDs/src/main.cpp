@@ -74,9 +74,23 @@ void runStatusModeInitialActions(int code)
       saturation = 1;
       value = 1;
       break;
+    case 9:
+      blueVal = 0.5;
+      isCycleUp = true;
+      break;
+    case 10:
+      greenVal = 0.5;
+      isCycleUp = true;
+      break;
     case 14:
       redVal = 0.5;
       blueVal = redVal * 0.2;
+    case 24:
+      redVal = 0.5;
+      blueVal = 0.5;
+      greenVal = 0.5;
+      isCycleUp = true;
+      break;
     default:
       break;
   }
@@ -394,20 +408,40 @@ void autonomousFinishedStatusMode() {
 }
 
 void endGameWarningStatusMode() {
-    if (isCycleUp) {
-        blueVal += 0.07;
-    } else {
-        blueVal -= 0.07;
-    }
-    greenVal = blueVal;
-    redVal = blueVal;
+  hue += 2;
+
+  if (hue >= 360) {
+    hue = 0;
+  }
+
+  if (isCycleUp) {
+      value += 0.1;
+  } else {
+      value -= 0.1;
+  }
+
+  if (value >= 1) {
+      isCycleUp = false;
+  } else if (value <= 0.3) {
+      isCycleUp = true;
+  }
+
+  setRGBFromHSV();
+
+    // if (isCycleUp) {
+    //     blueVal += 0.07;
+    // } else {
+    //     blueVal -= 0.07;
+    // }
+    // greenVal = blueVal;
+    // redVal = blueVal;
     
-    if (greenVal >= 1) {
-        isCycleUp = false;
-    } else if (greenVal <= 0) {
-        isCycleUp = true;
-        cycleCount++;
-    }
+    // if (greenVal >= 1) {
+    //     isCycleUp = false;
+    // } else if (greenVal <= 0) {
+    //     isCycleUp = true;
+    //     cycleCount++;
+    // }
 }
 
 void climbingDefaultStatusMode() {
@@ -536,7 +570,7 @@ void climbingLockEngagedStatusMode() {
     // } else {
     //     greenVal = 0;
     // }
-  blinkColor(1, 0, 0, 1000);
+  blinkColor(1, 0, 0, 500);
 }
 
 void testStatusMode() {
@@ -575,10 +609,12 @@ void shootingStatusMode() {
 
 void climberSwingingForwardStatusMode() {
   greenVal = 1;
+  blueVal = 0.2;
 }
 
 void climberSwingingBackwardStatusMode() {
   redVal = 1;
+  greenVal = 0.1;
 }
 
 void climbingTopOfSwingStatusMode() {
@@ -591,7 +627,7 @@ void teleopIntakeStatusMode() {
   } else {
       redVal -= 0.05;
   }
-  blueVal = redVal * 0.8;
+  blueVal = redVal * 0.9;
 
   if (redVal >= 1) {
       isCycleUp = false;
@@ -607,6 +643,21 @@ void hopperFullStatusMode() {
       redVal -= 0.05;
   }
   blueVal = redVal * 0.02;
+
+  if (redVal >= 1) {
+      isCycleUp = false;
+  } else if (redVal <= 0.3) {
+      isCycleUp = true;
+  }
+}
+
+void intakeOn1BallStatusMode() {
+    if (isCycleUp) {
+      redVal += 0.05;
+  } else {
+      redVal -= 0.05;
+  }
+  blueVal = redVal * 0.5;
 
   if (redVal >= 1) {
       isCycleUp = false;
@@ -664,7 +715,8 @@ void doLoop()
         rainbowStatusMode();
         break;
       case 2:
-        blinkingRedStatusMode();
+        climbingLockEngagedStatusMode();
+        //blinkingRedStatusMode();
         break;
       case 3:
         LEDsOnWhite();
@@ -718,10 +770,10 @@ void doLoop()
         climbingTraversalBarStatusMode();
         break;   
       case 20:
-        climbingLockEngagedStatusMode();
+        //pulseRedStatusMode();
         break;   
       case 21:
-        testStatusMode();
+        //pulseBlueStatusMode();
         break;   
       case 22:
         climberArmsBackStatusMode();
@@ -748,8 +800,11 @@ void doLoop()
         hopperFullStatusMode();
         break;
       case 30:
-        rainbowStatusMode();
+        intakeOn1BallStatusMode();
         break;
+      // case 30:
+      //   rainbowStatusMode();
+      //   break;
       default:
         LEDsOff();
         break;

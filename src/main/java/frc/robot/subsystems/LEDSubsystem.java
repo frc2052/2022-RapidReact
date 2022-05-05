@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,6 +19,9 @@ public class LEDSubsystem extends SubsystemBase {
     private LEDStatusMode currentStatusMode;
     private LEDStatusMode lastStatusMode;
     private LEDAlertStatusMode alertStatusMode;
+    private LEDStatusMode currentDefaultStatusMode;
+
+    private boolean disableLEDs;
 
     private Timer timer;
 
@@ -47,7 +51,7 @@ public class LEDSubsystem extends SubsystemBase {
     
     public enum LEDStatusMode {
         RAINBOW(1, 10),
-        BLINK_RED(2, 10),
+        //BLINK_RED(2, 10),
         SOLID_WHITE(3, 10),
         DISABLED(4, 1),
         AUTONOMOUS_INTAKE_ON(5, 10),
@@ -64,7 +68,8 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_MID_BAR(17, 8),
         CLIMBING_HIGH_BAR(18, 8),
         CLIMBING_TRAVERSAL(19, 8),
-        TEST_MODE(21, 10),
+        RED_PULSE(20, 10),
+        BLUE_PULSE(21, 10),
         SHOOTING(24, 2),
         CLIMBING_SWINGING_FORWARD(25, 3),
         CLIMBING_SWINGING_BACKWARD(26, 3),
@@ -86,12 +91,13 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public enum LEDAlertStatusMode {
-        CLIMBING_LOCK_ENGAGED(20, 1, Integer.MAX_VALUE),
+        CLIMBING_LOCK_ENGAGED(2, 1, Integer.MAX_VALUE),
         ENG_GAME_WARNING(11, 2, 5),
         CLIMBER_ARMS_BACK(22, 3, 0.5),
         CLIMBER_ARMS_FORWARD(23, 3, 0.5),
         CLIMBING_TOP_OF_SWING(27, 3, 0.5),
-        LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
+        //LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
+        ;
 
         private final int code; // Code to be encoded into the DIO pins to be received by arduino
         private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not
@@ -113,41 +119,57 @@ public class LEDSubsystem extends SubsystemBase {
         int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
         int code = 0;
 
-        if (matchTime == 120) {
-            alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
-        }
+        if(!disableLEDs) {
+            if (matchTime == 120) {
+                alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
+            }
 
-        if (alertStatusMode == null) {
-            if (currentStatusMode == null) {
-                if (DriverStation.isAutonomous()) {
-                    currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
-                } else if (DriverStation.isTeleop()) {
-                    currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-                } else if (DriverStation.isTest()) {
-                    currentStatusMode = LEDStatusMode.TEST_MODE;
-                } else {
-                    currentStatusMode = LEDStatusMode.DISABLED;
+            if (alertStatusMode == null) {
+                if (currentStatusMode == null) {
+                    if (currentDefaultStatusMode == LEDStatusMode.DISABLED) {
+                        if (DriverStation.getAlliance() == Alliance.Red) {
+                            currentStatusMode = LEDStatusMode.RED_PULSE;
+                        } else if (DriverStation.getAlliance() == Alliance.Blue) {
+                            currentStatusMode = LEDStatusMode.BLUE_PULSE;
+                        } else {
+                            currentStatusMode = LEDStatusMode.DISABLED; // Reaches here if DriverStation.getAlliance returns Invalid, which just means it can't determine our alliance and we do cool default effect
+                        }
+                    } else {
+                        currentStatusMode = currentDefaultStatusMode;
+                    }
+
+                    // Old way of determining default status mode depending on game state.
+                    // if (DriverStation.isAutonomous()) {
+                    //     currentStatusMode = LEDStatusMode.AUTONOMOUS_DEFAULT;
+                    // } else if (DriverStation.isTeleop()) {
+                    //     currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+                    // } else if (DriverStation.isTest()) {
+                    //     currentStatusMode = LEDStatusMode.TEST_MODE;
+                    // } else {
+                    //     currentStatusMode = LEDStatusMode.DISABLED;
+                    // }
+                }
+
+                code = currentStatusMode.code;
+            } else {
+                code = alertStatusMode.code;
+
+                if (timer.hasElapsed(alertStatusMode.duration)) {
+                    clearAlertStatusMode();
                 }
             }
-
-            code = currentStatusMode.code;
         } else {
-            code = alertStatusMode.code;
-
-            if (timer.hasElapsed(alertStatusMode.duration)) {
-                clearAlertStatusMode();
-            }
+            code = 0;
         }
-
         
         // code = (int) SmartDashboard.getNumber("LED CODE", 0);
         // System.out.println(code);
 
-        SmartDashboard.putBoolean("channel1", (code & 1) > 0);
-        SmartDashboard.putBoolean("channel2", (code & 2) > 0);
-        SmartDashboard.putBoolean("channel3", (code & 4) > 0);
-        SmartDashboard.putBoolean("channel4", (code & 8) > 0);
-        SmartDashboard.putBoolean("channel5", (code & 16) > 0);
+        // SmartDashboard.putBoolean("channel1", (code & 1) > 0);
+        // SmartDashboard.putBoolean("channel2", (code & 2) > 0);
+        // SmartDashboard.putBoolean("channel3", (code & 4) > 0);
+        // SmartDashboard.putBoolean("channel4", (code & 8) > 0);
+        // SmartDashboard.putBoolean("channel5", (code & 16) > 0);
 
         // Code for encoding the code to binary on the digitalOutput pins
         codeChannel1.set((code & 1) > 0);
@@ -161,23 +183,31 @@ public class LEDSubsystem extends SubsystemBase {
     }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
-        if (statusMode == null) {
-            currentStatusMode = null;
-        } else {
-            if (currentStatusMode == null) {
-                currentStatusMode = statusMode;
-            } else if (statusMode.getRank() <= currentStatusMode.getRank()) {
-                currentStatusMode = statusMode;
+        if (!disableLEDs) {
+            if (statusMode == null) {
+                currentStatusMode = null;
+            } else {
+                if (currentStatusMode == null) {
+                    currentStatusMode = statusMode;
+                } else if (statusMode.getRank() <= currentStatusMode.getRank()) {
+                    currentStatusMode = statusMode;
+                }
             }
         }
     }
 
     public void setAlertLEDStatusMode(LEDAlertStatusMode statusMode) {
-        if (alertStatusMode != statusMode) {
-            alertStatusMode = statusMode;
-            clearTimer();
-            timer.start();
+        if (!disableLEDs) {
+            if (alertStatusMode != statusMode) {
+                alertStatusMode = statusMode;
+                clearTimer();
+                timer.start();
+            }
         }
+    }
+
+    public void setDefaultLEDStatusMode(LEDStatusMode statusMode) {
+        currentDefaultStatusMode = statusMode;
     }
 
     public void clearStatusMode() {
@@ -186,6 +216,14 @@ public class LEDSubsystem extends SubsystemBase {
 
     public void clearAlertStatusMode() {
         alertStatusMode = null;
+    }
+
+    public void disable() {
+        disableLEDs = true;
+    }
+
+    public void enable() {
+        disableLEDs = false;
     }
 
     private void lightShow() {

@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
    // CameraServer.startAutomaticCapture();
 
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
+   LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
   }
 
   /**
@@ -63,7 +63,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -71,6 +73,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    // LEDSubsystem.getInstance().disable(); // Ready for if the LEDs ever crash the robot again
     robotContainer.resetGyro();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -78,7 +81,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
+    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
   }
 
   /** This function is called periodically during autonomous. */
@@ -114,7 +117,10 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
+
+    // LEDSubsystem.getInstance().enable();
+
+    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
   /** This function is called periodically during operator control. */
@@ -126,7 +132,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     robotContainer.resetGyro();
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
+    //LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
     
   }
 
