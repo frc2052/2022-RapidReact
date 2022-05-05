@@ -666,6 +666,52 @@ void intakeOn1BallStatusMode() {
   }
 }
 
+void limelightDeadStatusMode() {
+  if (isCycleUp) {
+      redVal += 0.02;
+  } else {
+      redVal -= 0.02;
+  }
+
+  if (redVal >= 1) {
+      isCycleUp = false;
+  } else if (redVal <= 0.2) {
+      isCycleUp = true;
+  }
+}
+
+void pulseRedStatusMode() {
+  if (isCycleUp) {
+      cycleCount += 0.5;
+  } else {
+      cycleCount -= 0.5;
+  }
+
+  redVal = 0.0008 * (cycleCount * cycleCount) - 0.05;
+
+  if (redVal >= 1) {
+      isCycleUp = false;
+  } else if (cycleCount <= 0) {
+      isCycleUp = true;
+  }
+}
+
+void pulseBlueStatusMode() {
+  if (isCycleUp) {
+      cycleCount += 0.5;
+  } else {
+      cycleCount -= 0.5;
+  }
+
+  blueVal = 0.0008 * (cycleCount * cycleCount) - 0.05;
+
+  if (blueVal >= 1) {
+      isCycleUp = false;
+  } else if (cycleCount <= 0) {
+      isCycleUp = true;
+  }
+}
+
 void doLoop()
 {
   
@@ -761,7 +807,8 @@ void doLoop()
         climberMinExtensionStatusMode();
         break;   
       case 17:
-        climbingMidBarStatusMode();
+        limelightDeadStatusMode();
+        //climbingMidBarStatusMode();
         break;   
       case 18:
         climbingHighBarStatusMode();
@@ -770,10 +817,10 @@ void doLoop()
         climbingTraversalBarStatusMode();
         break;   
       case 20:
-        //pulseRedStatusMode();
+        pulseRedStatusMode();
         break;   
       case 21:
-        //pulseBlueStatusMode();
+        pulseBlueStatusMode();
         break;   
       case 22:
         climberArmsBackStatusMode();

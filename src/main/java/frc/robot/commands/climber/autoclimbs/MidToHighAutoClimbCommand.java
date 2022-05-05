@@ -1,11 +1,14 @@
 package frc.robot.commands.climber.autoclimbs;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
@@ -26,9 +29,8 @@ public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getIsAboveMaxHeight()),
-            new ClimberArmsForwardCommand(climber)
-            // new InstantCommand(() -> LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_HIGH_BAR))
-            // new RetractClimberCommand(climber, () -> false, 0.8).withInterrupt(climber::getIsAtMinHeight)
+            new ClimberArmsForwardCommand(climber),
+            new InstantCommand(() -> LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.CLIMBING_HIGH_BAR))
         );
     }
 }

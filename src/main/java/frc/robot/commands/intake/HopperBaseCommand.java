@@ -25,6 +25,7 @@ public class HopperBaseCommand extends CommandBase {
     this.indexer = indexer;
     this.hopper = hopper;
 
+    // Requirements commented out to be able to run the intake while shooting. The two still will not conflict because of our button mappings, but because this was here it was in a loop of interuppting the shoot command when it didn't need to.
     //addRequirements(indexer, hopper);
   }
 

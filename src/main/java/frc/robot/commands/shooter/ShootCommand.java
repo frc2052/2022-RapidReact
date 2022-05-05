@@ -26,7 +26,7 @@ public class ShootCommand extends ShooterIndexingCommand {
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
-  private final BooleanSupplier isLinedUSupplier;
+  private final BooleanSupplier isLinedUpSupplier;
   private final VisionCalculator visionCalculator;
 
   private double distanceInches;
@@ -39,7 +39,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    BooleanSupplier isLinedUSupplier,
+    BooleanSupplier isLinedUpSupplier,
     DrivetrainSubsystem drivetrain
   ) {
     super (
@@ -54,7 +54,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     this.indexer = indexer;
     this.hopper = hopper;
     this.vision = vision;
-    this.isLinedUSupplier = isLinedUSupplier;
+    this.isLinedUpSupplier = isLinedUpSupplier;
 
     visionCalculator = VisionCalculator.getInstance();
     shooterConfig = new ShooterDistanceConfig(0, 0, 0); // Initial speed (0) for shooter that'll make it just not run if no vision target.
@@ -63,6 +63,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     addRequirements(this.shooter);
   }
 
+  // Another constructor for just giving the default isLinedUpSupplier of vision.getIsLinedUp() to make things easy and clean elsewhere.
   public ShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 

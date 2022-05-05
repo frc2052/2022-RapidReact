@@ -65,7 +65,8 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBER_RETRACTING(14, 10),
         CLIMBER_MAX_EXTENSION(15, 3),
         CLIMBER_MIN_EXTENSION(16, 3),
-        CLIMBING_MID_BAR(17, 8),
+        //CLIMBING_MID_BAR(17, 8),
+        LIMELIGHT_DEAD(17, 1),
         CLIMBING_HIGH_BAR(18, 8),
         CLIMBING_TRAVERSAL(19, 8),
         RED_PULSE(20, 10),
@@ -75,7 +76,8 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBING_SWINGING_BACKWARD(26, 3),
         INTAKE_ON_0_BALLS(28, 9),
         INTAKE_ON_1_BALL(30, 8),
-        HOPPER_FULL(29, 7);
+        HOPPER_FULL(29, 7)
+        ;
 
         private final int code; // Code to be encoded into the DIO pins to be received by arduino
         private final int rank; // Ranking of status mode to determine if trying to set a new status mode should overide the current or not
@@ -96,6 +98,7 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBER_ARMS_BACK(22, 3, 0.5),
         CLIMBER_ARMS_FORWARD(23, 3, 0.5),
         CLIMBING_TOP_OF_SWING(27, 3, 0.5),
+        //LIMELIGHT_DEAD(17, 8, Integer.MAX_VALUE)
         //LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
         ;
 

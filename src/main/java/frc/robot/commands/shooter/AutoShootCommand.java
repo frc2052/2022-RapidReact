@@ -98,11 +98,6 @@ public class AutoShootCommand extends ShootCommand {
   }
 
   @Override
-  public void execute() {
-      super.execute();
-  }
-
-  @Override
   public boolean isFinished() {
     if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       if (timer == null) { // This is the first time we've not seen a ball

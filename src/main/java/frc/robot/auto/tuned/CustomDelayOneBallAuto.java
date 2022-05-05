@@ -43,7 +43,7 @@ public class CustomDelayOneBallAuto extends AutoBase{
 
         this.andThen(() -> timer.start());
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 7900, 7900).withTimeout(3));
+        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 8100, 8100).withTimeout(3));
         this.addCommands(new WaitUntilCommand(() -> timer.hasElapsed(dashboard.getOneBallDelay())));
         this.addCommands(backUp);
         this.addCommands(super.autonomousFinishedCommandGroup());

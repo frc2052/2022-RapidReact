@@ -224,6 +224,7 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             flashLostLimelightCommunicationWarning();
             // this.isLimelightDead = isLimelightDead;
             // lastIsLimelightDead = isLimelightDead;
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.LIMELIGHT_DEAD);
         } else {
             SmartDashboard.putBoolean("Lost Limelight Comm Warning", false);
             limelightDeadSeconds = 0;

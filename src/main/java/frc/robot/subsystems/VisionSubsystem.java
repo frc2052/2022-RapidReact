@@ -276,12 +276,14 @@ public class VisionSubsystem extends SubsystemBase{
       }
     }
 
+    // Method for calculating how far we can be from aiming at the target to determine we're lined up to shoot, depending on our distance away with the ty.
     public double getTolerance() {
       return 0.07 * ty + 3.0; // Intended to be linear tolerance curve for isLinedUp that is 5 degrees when ty = -20 and 1.8 when ty = 20
     }
 
+    // Linear equation for how far to the left we should aim from the center of the target based on the ty. Implemented because we were constantly firing to the right, and don't need to aim as far when we're far away from the target.
     public double getLinearXAimOffset() {
-      return -(0.03 * ty + 2.0);
+      return -(0.03 * ty + 2.0); // 3 Degrees to the left when really close (ty of ~25 degrees) and 1 degree when really far (ty of ~-25 degrees).
     }
 
     public double getEquationDistanceToUpperHubMeters() { // Calculates the distance from the Upper Hub using constants and ty. Make sure to first call updateLimelight() before using this.

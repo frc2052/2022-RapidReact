@@ -39,7 +39,7 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
   @Override
   public void execute() {
       super.execute();
-      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
+      //LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
   }
 
   @Override
@@ -50,7 +50,6 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
   @Override 
   public void end(boolean interrupted){
     super.end(interrupted);
-    intake.stop();
     intake.armIn();
   }
 

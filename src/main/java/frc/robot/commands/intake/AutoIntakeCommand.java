@@ -25,19 +25,9 @@ public class AutoIntakeCommand extends IntakeHopperRunCommand {
     intake.armOut();
   }
 
-  @Override
-  public void execute() {
-      super.execute();
-      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
-  }
-
-  @Override
-  public boolean isFinished(){
-    return super.isFinished();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    super.end(interrupted);
-  }
+  // @Override
+  // public void execute() {
+  //   super.execute();
+  //   //LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.AUTONOMOUS_INTAKE_ON);
+  // }
 }
