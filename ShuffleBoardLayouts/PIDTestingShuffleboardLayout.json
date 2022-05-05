@@ -9,6 +9,7 @@
         "showGrid": true,
         "hgap": 10.0,
         "vgap": 12.0,
+        "titleType": 0,
         "tiles": {
           "2,3": {
             "size": [
@@ -31,9 +32,11 @@
               "_source0": "network_table:///SmartDashboard/Shooter Top Wheel Speed",
               "_title": "SmartDashboard/Shooter Top Wheel Speed",
               "Graph/Visible time": 10.0,
+              "Graph/X-axis auto scrolling": true,
               "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 4000.0,
-              "Y-axis/Lower bound": 12000.0,
+              "Y-axis/Upper bound": 12000.0,
+              "Y-axis/Lower bound": 4000.0,
+              "Y-axis/Unit": "ul",
               "Visible data/SmartDashboard/Shooter Top Wheel Speed": true
             }
           },
@@ -73,9 +76,11 @@
               "_source0": "network_table:///SmartDashboard/Shooter Bottom Wheel Speed",
               "_title": "SmartDashboard/Shooter Bottom Wheel Speed",
               "Graph/Visible time": 10.0,
+              "Graph/X-axis auto scrolling": true,
               "Y-axis/Automatic bounds": false,
-              "Y-axis/Upper bound": 4000.0,
-              "Y-axis/Lower bound": 12000.0,
+              "Y-axis/Upper bound": 12000.0,
+              "Y-axis/Lower bound": 4000.0,
+              "Y-axis/Unit": "ul",
               "Visible data/SmartDashboard/Shooter Bottom Wheel Speed": true
             }
           }

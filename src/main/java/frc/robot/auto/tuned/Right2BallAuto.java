@@ -54,8 +54,8 @@ public class Right2BallAuto extends AutoBase {
         this.addCommands(intakeOpponentBall);
         this.addCommands(super.newAutoIntakeCommand().withTimeout(1));
         this.addCommands(super.newIntakeArmInCommand());
-        this.addCommands(super.newTurnInPlaceCommand(-116));
+        this.addCommands(super.newTurnInPlaceCommand(-120));
         this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_2, 9500, 9500));
-        this.addCommands(super.newTurnInPlaceCommand(-160));
+        this.addCommands(super.newTurnInPlaceCommand(-155));
     }
 }

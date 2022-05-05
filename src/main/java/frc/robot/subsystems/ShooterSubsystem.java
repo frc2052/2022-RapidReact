@@ -45,9 +45,9 @@ public class ShooterSubsystem extends SubsystemBase {
     topMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // topMotor.setSelectedSensorPosition(0, 0, 10);
     // topMotor.config_kP(0, 1, 10);
-    topMotor.config_kP(0, 0.15, 10);
+    topMotor.config_kP(0, 0.11, 10);
     topMotor.config_kI(0, 0.001, 10); 
-    topMotor.config_kD(0, 1, 10);
+    topMotor.config_kD(0, 0.7, 10);
     // topMotor.config_kP(0, 0.1, 10);
     // topMotor.config_kI(0, 0.0004, 10);
     // topMotor.config_kD(0, 0.1, 10);
@@ -59,9 +59,9 @@ public class ShooterSubsystem extends SubsystemBase {
     bottomMotor.setNeutralMode(NeutralMode.Coast);
     bottomMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // bottomMotor.setSelectedSensorPosition(0, 0, 10);
-    bottomMotor.config_kP(0, 0.15, 10);
+    bottomMotor.config_kP(0, 0.11, 10);
     bottomMotor.config_kI(0, 0.001, 10);
-    bottomMotor.config_kD(0, 1, 10);
+    bottomMotor.config_kD(0, 0.7, 10);
     // bottomMotor.config_kP(0, 0.05, 10);
     // bottomMotor.config_kI(0, 0, 10);
     // bottomMotor.config_kD(0, 0, 10);

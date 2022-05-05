@@ -15,7 +15,10 @@ public class AutoShootCommand extends ShootCommand {
   private final IndexerSubsystem indexer;
 
   private Timer timer;
+  private Timer timer2;
   private double deadlineSeconds;
+  private boolean wasTwoBallsDetected;
+  private boolean delayOverride;
 
   /**
    * Command that extends ShootCommand to be used in Auto.
@@ -57,17 +60,42 @@ public class AutoShootCommand extends ShootCommand {
     VisionSubsystem vision,
     DrivetrainSubsystem drivetrain
   ) {
-    super(
+    this(
       shootMode,
       shooter,
       indexer,
       hopper,
       vision,
-      drivetrain
+      drivetrain,
+      0.5
+    );
+  }
+
+  public AutoShootCommand(
+    ShootMode shootMode, 
+    ShooterSubsystem shooter, 
+    IndexerSubsystem indexer, 
+    HopperSubsystem hopper, 
+    VisionSubsystem vision,
+    DrivetrainSubsystem drivetrain,
+    boolean delayOverride
+  ) {
+    this(
+      shootMode,
+      shooter,
+      indexer,
+      hopper,
+      vision,
+      drivetrain,
+      0.5
     );    
 
-    this.indexer = indexer;
-    deadlineSeconds = 0.5;
+    this.delayOverride = delayOverride;
+  }
+
+  @Override
+  public void execute() {
+      super.execute();
   }
 
   @Override
@@ -84,6 +112,36 @@ public class AutoShootCommand extends ShootCommand {
         clearTimer();   // Ball showed up, stop the timer
     }
     return false;
+  }
+
+  @Override
+  protected void IndexerExecute() {
+    if (!delayOverride) {
+        boolean stagedCargoDetected = indexer.getCargoStagedDetected();
+        boolean preStagedCargoDetected = indexer.getCargoPreStagedDetected();
+
+        if (!wasTwoBallsDetected) {
+            if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
+                wasTwoBallsDetected = true;
+            }
+        }
+        if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected && !delayOverride) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
+            indexer.stopFeeder();
+            if (timer2 == null) { // Creates timer if it hasn't started yet or was stopped.
+                timer2 = new Timer();
+                timer2.start();
+            }
+            // System.err.println("TIME: " + timer2.get());
+            if (timer2.hasElapsed(0.5)) { // If the beam's been broken for a quarter second, we can feed again.
+                wasTwoBallsDetected = false;
+                clearTimer();
+            }
+        } else {
+            super.IndexerExecute();
+        }
+    } else {
+        super.IndexerExecute();
+    }
   }
 
   private void clearTimer() {

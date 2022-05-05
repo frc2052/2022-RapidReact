@@ -232,6 +232,8 @@ public class HookClimberSubsystem extends SubsystemBase{
 public void periodic() {
     SmartDashboard.putNumber("Climber Height Ticks", climberMotor.getSelectedSensorPosition());
     SmartDashboard.putBoolean("Climber Locked", isLocked);
+    SmartDashboard.putBoolean("Climber Is At Max Height", getIsAboveMaxHeight());
+    SmartDashboard.putBoolean("Climber Is At Min Height", !getIsAboveMinHeight());
 }
 
     public static enum ClimberSolenoidState {
