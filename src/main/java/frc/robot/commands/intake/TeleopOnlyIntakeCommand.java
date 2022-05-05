@@ -27,7 +27,7 @@ public class TeleopOnlyIntakeCommand extends OnlyIntakeCommand {
   @Override
   public void execute() {
       super.execute();
-      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TELEOP_INTAKE_ON);
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.INTAKE_ON_0_BALLS);
   }
 
   @Override

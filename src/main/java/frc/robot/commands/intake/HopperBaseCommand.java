@@ -38,11 +38,13 @@ public class HopperBaseCommand extends CommandBase {
       indexer.runPreload();
       indexer.runFeeder();
       hopper.run();
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.INTAKE_ON_0_BALLS);
     } else if (indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       //The staged detector shows a ball ready to be fired but no second ball is detected
       indexer.stopFeeder();
       indexer.runPreload();
       hopper.run();
+      LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.INTAKE_ON_1_BALL);
     } else {
       //Two balls are loaded and no more can be taken
       indexer.stopFeeder();
