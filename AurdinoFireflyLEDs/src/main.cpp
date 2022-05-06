@@ -491,31 +491,33 @@ void climberRetractingStatusMode() {
 }
 
 void climberMaxExtensionStatusMode() {
-    if (isCycleUp) {
-        redVal += 0.07;
-    } else {
-        redVal -= 0.07;
-    }
+  redVal = 1;
+    // if (isCycleUp) {
+    //     redVal += 0.07;
+    // } else {
+    //     redVal -= 0.07;
+    // }
 
-    if (redVal >= 1) {
-        isCycleUp = false;
-    } else if (redVal <= 0.25) {
-        isCycleUp = true;
-    }
+    // if (redVal >= 1) {
+    //     isCycleUp = false;
+    // } else if (redVal <= 0.25) {
+    //     isCycleUp = true;
+    // }
 }
 
 void climberMinExtensionStatusMode() {
-    if (isCycleUp) {
-        redVal += 0.07;
-    } else {
-        redVal -= 0.07;
-    }
+  redVal = 1;
+    // if (isCycleUp) {
+    //     redVal += 0.07;
+    // } else {
+    //     redVal -= 0.07;
+    // }
 
-    if (redVal >= 1) {
-        isCycleUp = false;
-    } else if (redVal <= 0.25) {
-        isCycleUp = true;
-    }
+    // if (redVal >= 1) {
+    //     isCycleUp = false;
+    // } else if (redVal <= 0.25) {
+    //     isCycleUp = true;
+    // }
 }
 
 void climbingMidBarStatusMode() {
@@ -585,10 +587,12 @@ void testStatusMode() {
 
 void climberArmsForwardStatusMode() {
   greenVal = 1; 
+  blueVal = 0.3;
 }
 
 void climberArmsBackStatusMode() {
   redVal = 1; 
+  greenVal = 0.3;
 }
 
 void shootingStatusMode() {
@@ -627,13 +631,15 @@ void teleopIntakeStatusMode() {
   } else {
       redVal -= 0.05;
   }
-  blueVal = redVal * 0.9;
+  blueVal = redVal;
+  greenVal = redVal * 0.2;
 
   if (redVal >= 1) {
       isCycleUp = false;
   } else if (redVal <= 0.3) {
       isCycleUp = true;
   }
+  //blueVal = 1;
 }
 
 void hopperFullStatusMode() {
@@ -642,7 +648,7 @@ void hopperFullStatusMode() {
   } else {
       redVal -= 0.05;
   }
-  blueVal = redVal * 0.02;
+  blueVal = redVal * 0.05;
 
   if (redVal >= 1) {
       isCycleUp = false;
@@ -652,16 +658,16 @@ void hopperFullStatusMode() {
 }
 
 void intakeOn1BallStatusMode() {
-    if (isCycleUp) {
+  if (isCycleUp) {
       redVal += 0.05;
   } else {
       redVal -= 0.05;
   }
-  blueVal = redVal * 0.5;
+  blueVal = redVal * 0.45;
 
   if (redVal >= 1) {
       isCycleUp = false;
-  } else if (redVal <= 0.3) {
+  } else if (redVal <= 0.2) {
       isCycleUp = true;
   }
 }
@@ -675,7 +681,7 @@ void limelightDeadStatusMode() {
 
   if (redVal >= 1) {
       isCycleUp = false;
-  } else if (redVal <= 0.2) {
+  } else if (redVal <= 0.1) {
       isCycleUp = true;
   }
 }

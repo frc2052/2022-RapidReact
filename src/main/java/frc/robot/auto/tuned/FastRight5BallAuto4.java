@@ -61,10 +61,10 @@ public class FastRight5BallAuto4 extends AutoBase {
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveAroundAndToBall2, super.newAutoIntakeCommand());
-        ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(0.7), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), new PerpetualCommand(super.newOnlyIntakeCommand()));
+        ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), new PerpetualCommand(super.newOnlyIntakeCommand()));
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newAutoIntakeCommand());
         ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(1.5));
-        ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(0.7), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
+        ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());

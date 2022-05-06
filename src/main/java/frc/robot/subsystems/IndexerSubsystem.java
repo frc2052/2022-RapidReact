@@ -9,10 +9,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorIDs;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class IndexerSubsystem extends SubsystemBase {
   
@@ -82,11 +84,20 @@ public class IndexerSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    boolean stagedDetected = getCargoStagedDetected();
+    boolean preStagedDetected = getCargoPreStagedDetected();
+
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Feeder Indexer Speed", getFeederIndexerSpeed());
     // SmartDashboard.putNumber("Large Indexer Speed", getLargeIndexerSpeed());
-    SmartDashboard.putBoolean("Staged Cargo Detected", getCargoStagedDetected());
-    SmartDashboard.putBoolean("PreStaged Cargo Detected", getCargoPreStagedDetected());
+    SmartDashboard.putBoolean("Staged Cargo Detected", stagedDetected);
+    SmartDashboard.putBoolean("PreStaged Cargo Detected", preStagedDetected);
+
+    if (stagedDetected && preStagedDetected) {
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.HOPPER_FULL);
+    } else if (!DriverStation.isDisabled() && (preStagedDetected || stagedDetected)) {
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.INTAKE_ON_1_BALL);
+    }
   }
   
 }

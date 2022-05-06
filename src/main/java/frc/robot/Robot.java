@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.DISABLED);
   }
 
   @Override

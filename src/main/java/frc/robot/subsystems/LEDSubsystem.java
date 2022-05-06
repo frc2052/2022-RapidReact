@@ -50,6 +50,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
     
     public enum LEDStatusMode {
+        OFF(0, 10),
         RAINBOW(1, 10),
         //BLINK_RED(2, 10),
         SOLID_WHITE(3, 10),
@@ -69,8 +70,8 @@ public class LEDSubsystem extends SubsystemBase {
         LIMELIGHT_DEAD(17, 1),
         CLIMBING_HIGH_BAR(18, 8),
         CLIMBING_TRAVERSAL(19, 8),
-        RED_PULSE(20, 10),
-        BLUE_PULSE(21, 10),
+        RED_PULSE(20, 5),
+        BLUE_PULSE(21, 5),
         SHOOTING(24, 2),
         CLIMBING_SWINGING_FORWARD(25, 3),
         CLIMBING_SWINGING_BACKWARD(26, 3),
@@ -95,8 +96,8 @@ public class LEDSubsystem extends SubsystemBase {
     public enum LEDAlertStatusMode {
         CLIMBING_LOCK_ENGAGED(2, 1, Integer.MAX_VALUE),
         ENG_GAME_WARNING(11, 2, 5),
-        CLIMBER_ARMS_BACK(22, 3, 0.5),
-        CLIMBER_ARMS_FORWARD(23, 3, 0.5),
+        CLIMBER_ARMS_BACK(22, 3, 0.2),
+        CLIMBER_ARMS_FORWARD(23, 3, 0.2),
         CLIMBING_TOP_OF_SWING(27, 3, 0.5),
         //LIMELIGHT_DEAD(17, 8, Integer.MAX_VALUE)
         //LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
@@ -123,13 +124,14 @@ public class LEDSubsystem extends SubsystemBase {
         int code = 0;
 
         if(!disableLEDs) {
-            if (matchTime == 120) {
+            if (matchTime == 40) {
                 alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
             }
 
             if (alertStatusMode == null) {
                 if (currentStatusMode == null) {
                     if (currentDefaultStatusMode == LEDStatusMode.DISABLED) {
+                        //System.err.println("" + DriverStation.getAlliance());
                         if (DriverStation.getAlliance() == Alliance.Red) {
                             currentStatusMode = LEDStatusMode.RED_PULSE;
                         } else if (DriverStation.getAlliance() == Alliance.Blue) {
@@ -203,7 +205,8 @@ public class LEDSubsystem extends SubsystemBase {
         if (!disableLEDs) {
             if (alertStatusMode != statusMode) {
                 alertStatusMode = statusMode;
-                clearTimer();
+                
+                timer.reset();
                 timer.start();
             }
         }

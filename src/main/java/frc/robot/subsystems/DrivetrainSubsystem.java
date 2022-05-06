@@ -90,6 +90,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private double lastRollValue;
   private boolean lastRollDelta;
   private boolean isTopOfSwing;
+  private boolean isForward;
   private double intendedXVelocityMPS;
   private double intendedYVelocityMPS;
   private boolean climbingSwingingLEDOutput;
@@ -263,6 +264,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
    public boolean getIsTopOfSwing() { 
+    if (isTopOfSwing) {
+            LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
+    } else if (isForward) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
+    } else {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
+    }
     return isTopOfSwing;
    }
 
@@ -292,7 +300,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 @Override
 public void periodic() {
-        boolean isForward = getGyroRoll() < lastRollValue ? true : false;
+        isForward = getGyroRoll() < lastRollValue ? true : false;
         lastRollValue = getGyroRoll();
         isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
         lastRollDelta = isForward;
