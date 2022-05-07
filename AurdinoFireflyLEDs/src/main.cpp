@@ -332,6 +332,8 @@ void rainbowStatusMode()
     hue = 0;
   }
 
+  hue = hue > 360 ? 360 : hue;
+
   setRGBFromHSV();
 }
 
@@ -408,40 +410,52 @@ void autonomousFinishedStatusMode() {
 }
 
 void endGameWarningStatusMode() {
-  hue += 2;
 
-  if (hue >= 360) {
-    hue = 0;
-  }
+  // rainbowStatusMode();
 
-  if (isCycleUp) {
-      value += 0.1;
-  } else {
-      value -= 0.1;
-  }
+  // hue += 2;
 
-  if (value >= 1) {
-      isCycleUp = false;
-  } else if (value <= 0.3) {
-      isCycleUp = true;
-  }
+  // if (hue >= 360) {
+  //   hue = 0;
+  // }
 
-  setRGBFromHSV();
+  // hue = hue > 360 ? 360 : hue;
 
-    // if (isCycleUp) {
-    //     blueVal += 0.07;
-    // } else {
-    //     blueVal -= 0.07;
-    // }
-    // greenVal = blueVal;
-    // redVal = blueVal;
+  // setRGBFromHSV();
+  // hue += 2;
+
+  // if (hue >= 360) {
+  //   hue = 0;
+  // }
+
+  // if (isCycleUp) {
+  //     value += 0.1;
+  // } else {
+  //     value -= 0.1;
+  // }
+
+  // if (value >= 1) {
+  //     isCycleUp = false;
+  // } else if (value <= 0.3) {
+  //     isCycleUp = true;
+  // }
+
+  // setRGBFromHSV();
+
+    if (isCycleUp) {
+        blueVal += 0.07;
+    } else {
+        blueVal -= 0.07;
+    }
+    greenVal = blueVal;
+    redVal = blueVal;
     
-    // if (greenVal >= 1) {
-    //     isCycleUp = false;
-    // } else if (greenVal <= 0) {
-    //     isCycleUp = true;
-    //     cycleCount++;
-    // }
+    if (greenVal >= 1) {
+        isCycleUp = false;
+    } else if (greenVal <= 0) {
+        isCycleUp = true;
+        cycleCount++;
+    }
 }
 
 void climbingDefaultStatusMode() {
@@ -673,17 +687,19 @@ void intakeOn1BallStatusMode() {
 }
 
 void limelightDeadStatusMode() {
-  if (isCycleUp) {
-      redVal += 0.02;
-  } else {
-      redVal -= 0.02;
-  }
+  blinkColor(1, 0, 0, 250);
 
-  if (redVal >= 1) {
-      isCycleUp = false;
-  } else if (redVal <= 0.1) {
-      isCycleUp = true;
-  }
+  // if (isCycleUp) {
+  //     redVal += 0.02;
+  // } else {
+  //     redVal -= 0.02;
+  // }
+
+  // if (redVal >= 1) {
+  //     isCycleUp = false;
+  // } else if (redVal <= 0.1) {
+  //     isCycleUp = true;
+  // }
 }
 
 void pulseRedStatusMode() {
@@ -757,6 +773,9 @@ void doLoop()
       greenVal = 0; 
       blueVal = 0;
       cycleCount = 0;
+      hue = 0;
+      saturation = 0;
+      value = 0;
       runStatusModeInitialActions(code);
       lastCode = code;
     }

@@ -95,7 +95,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     public enum LEDAlertStatusMode {
         CLIMBING_LOCK_ENGAGED(2, 1, Integer.MAX_VALUE),
-        ENG_GAME_WARNING(11, 2, 5),
+        END_GAME_WARNING(11, 2, 5),
         CLIMBER_ARMS_BACK(22, 3, 0.2),
         CLIMBER_ARMS_FORWARD(23, 3, 0.2),
         CLIMBING_TOP_OF_SWING(27, 3, 0.5),
@@ -120,13 +120,13 @@ public class LEDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
+        // int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
         int code = 0;
 
         if(!disableLEDs) {
-            if (matchTime == 40) {
-                alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
-            }
+            // if (matchTime == 40) {
+            //     alertStatusMode = LEDAlertStatusMode.END_GAME_WARNING;
+            // }
 
             if (alertStatusMode == null) {
                 if (currentStatusMode == null) {

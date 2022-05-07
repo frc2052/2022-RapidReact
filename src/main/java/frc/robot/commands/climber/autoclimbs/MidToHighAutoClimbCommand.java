@@ -29,8 +29,8 @@ public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getEncoderPosition() >= 25000), // Slightly above bar so we can toggle arms back
             new ClimberArmsBackCommand(climber),
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getIsAboveMaxHeight()),
-            new ClimberArmsForwardCommand(climber),
-            new InstantCommand(() -> LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.CLIMBING_HIGH_BAR))
+            new ClimberArmsForwardCommand(climber)
+            // new InstantCommand(() -> LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.CLIMBING_HIGH_BAR))
         );
     }
 }

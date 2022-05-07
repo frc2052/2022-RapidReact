@@ -34,7 +34,8 @@ public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
             new WaitUntilCommand(() ->  drivetrain.getIsTopOfSwing()),
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getIsAboveMaxHeight()),
             new ClimberArmsForwardCommand(climber),
-            new InstantCommand(() -> LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.CLIMBING_TRAVERSAL))
+            
+            new InstantCommand(() -> LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.RAINBOW))
         );
     }
 }

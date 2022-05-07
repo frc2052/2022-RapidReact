@@ -72,6 +72,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.UsbCameraSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.util.ProjectileCalculator;
 import frc.robot.util.buttonbindings.profiles.Default;
@@ -383,6 +384,8 @@ public class RobotContainer {
     // --- SmartDashboard Command Buttons ---
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
+
+    // SmartDashboard.putData("Test LED Mode", new InstantCommand(() -> LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.END_GAME_WARNING)));
 
     // Testing Zone
     // Command testCommand = new OnlyIntakeCommand(intake, indexer);
