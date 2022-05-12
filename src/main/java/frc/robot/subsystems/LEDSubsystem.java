@@ -67,7 +67,7 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBER_MAX_EXTENSION(15, 3),
         CLIMBER_MIN_EXTENSION(16, 3),
         //CLIMBING_MID_BAR(17, 8),
-        LIMELIGHT_DEAD(17, 1),
+        LIMELIGHT_DEAD(17, 1), // Placed here rather than alert status modes to be activated by DashboardControlsSubsystem only while the Limelight is in fact dead.
         CLIMBING_HIGH_BAR(18, 8),
         CLIMBING_TRAVERSAL(19, 8),
         RED_PULSE(20, 5),
@@ -99,7 +99,6 @@ public class LEDSubsystem extends SubsystemBase {
         CLIMBER_ARMS_BACK(22, 3, 0.2),
         CLIMBER_ARMS_FORWARD(23, 3, 0.2),
         CLIMBING_TOP_OF_SWING(27, 3, 0.5),
-        //LIMELIGHT_DEAD(17, 8, Integer.MAX_VALUE)
         //LIGHT_SHOW(30, 10, Integer.MAX_VALUE); // Meant for either demonstration or when the drivetrian is dead
         ;
 
@@ -224,14 +223,18 @@ public class LEDSubsystem extends SubsystemBase {
         alertStatusMode = null;
     }
 
+    // Disables LEDs (turns them off)
     public void disable() {
         disableLEDs = true;
     }
 
+    // Enables LEDs (turns them on)
     public void enable() {
         disableLEDs = false;
     }
 
+    // Unfinished indended for making the robot look nice 
+    // if we're sitting on the field with a dead drivetrain or somthing
     private void lightShow() {
         double time = timer.get();
         if (time < 15) {
@@ -242,13 +245,10 @@ public class LEDSubsystem extends SubsystemBase {
             timer.reset();
         }
     }
+}
 
-    private void clearTimer() {
-        if(timer != null) {
-            timer.stop();
-            timer = null;
-        }
-    }
+// -- OLD ROBOT LED CODE FOR USE WITH CANIFIER AND DOING LED LOGIC ON THE ROBOTRIO --
+// Bad because it created alot more CAN traffic and weird processing
 
 //    private final CANifier canifier;
 
@@ -836,4 +836,4 @@ public class LEDSubsystem extends SubsystemBase {
 //     //Converts HSV (Hue Saturation Value) to RGB (Red Green Blue)
 //         rgb = HsvToRgb.convert(hue, saturation, value);
 //     }
-}
+// }

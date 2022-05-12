@@ -9,7 +9,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 
 /** 
- * Wrapper class for creating custom TrajectoryConfigs for max velocity, accelaration, PID control of XY and turn, as well as start and end velocity all in auto.
+ * Wrapper class for creating custom TrajectoryConfigs for max velocity, acceleration, 
+ * PID control of XY and turn, as well as start and end velocity all in auto.
  */
 public class AutoTrajectoryConfig {
     private final TrajectoryConfig trajectoryConfig;

@@ -21,10 +21,11 @@ public class CustomDelayOneBallAuto extends AutoBase{
     
     /**
      * No starting position is needed, simply face the robot towards the hub.
-     * target. This auto backs up to get the "off the trmac" point and shoots the preloaded ball
-     * This auto is intended to be used either if we were unable to plan ahead with alliance partners
-     * and get any good auto spot or as a last resort, in case of inability to use limelight or other malfunctions.
-     * Custom Delay - Allows a number of seconds to be input into shuffleboard for how long until the robot should begin backing up.
+     * This auto backs up to get the "off the trmac" points and shoots the preloaded ball are an
+     * amount of time that can be inputted on the SamrtDashbaord.
+     * This auto is intended to be used if we need to wait before backing up to avoid hitting alliance partners,
+     * as well as the other reasons that we'd use a one ball auto that doesn't require vision (limelight dies,
+     * robot broken, arrived at the field without being able to organize with alliance partners).
      * @param drivetrain
      * @param shooter
      * @param indexer
