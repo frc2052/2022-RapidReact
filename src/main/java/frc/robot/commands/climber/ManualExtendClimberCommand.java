@@ -10,6 +10,11 @@ public class ManualExtendClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     private double extendPctOutput;
 
+    /**
+     * Extends climber manually regardless of limits (override).
+     * @param climber
+     * @param extendPctOutput
+     */
     public ManualExtendClimberCommand(HookClimberSubsystem climber, double extendPctOutput) {
         this.climber = climber;
         this.extendPctOutput = extendPctOutput;

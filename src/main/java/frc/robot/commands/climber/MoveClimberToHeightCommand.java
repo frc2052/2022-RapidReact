@@ -7,7 +7,13 @@ import frc.robot.subsystems.HookClimberSubsystem;
 public class MoveClimberToHeightCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     protected double heightTicks;
+    private double currentHeightTicks;
 
+    /**
+     * Command to run the climber to specified height in ticks.
+     * @param climber
+     * @param heightTicks
+     */
     public MoveClimberToHeightCommand(HookClimberSubsystem climber, double heightTicks) {
         this.climber = climber;
         this.heightTicks = heightTicks;        
@@ -16,7 +22,7 @@ public class MoveClimberToHeightCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double currentHeightTicks = climber.getEncoderPosition();
+        currentHeightTicks = climber.getEncoderPosition();
 
         if (currentHeightTicks > heightTicks + 2500) {
             if (currentHeightTicks <= heightTicks * 1.03) {
@@ -38,6 +44,11 @@ public class MoveClimberToHeightCommand extends CommandBase {
      @Override
     public void end(boolean interrupted) {
         climber.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Math.abs(currentHeightTicks - heightTicks) < 2500;
     }
 }
 

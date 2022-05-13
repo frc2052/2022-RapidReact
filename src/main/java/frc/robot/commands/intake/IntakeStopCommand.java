@@ -12,6 +12,11 @@ public class IntakeStopCommand extends CommandBase {
     private final IntakeSubsystem intake;
     private final HopperSubsystem hopper;
 
+    /**
+     * Command to manually stop the intake and hopper wheels
+     * @param intake
+     * @param hopper
+     */
     public IntakeStopCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
       this.intake = intake;
       this.hopper = hopper;
@@ -21,7 +26,6 @@ public class IntakeStopCommand extends CommandBase {
   
     @Override
     public void initialize() {
-        // Stops the intake and hopper.
         intake.stop();
         hopper.stop();
     }

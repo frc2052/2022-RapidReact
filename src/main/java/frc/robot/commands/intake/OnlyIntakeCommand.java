@@ -29,6 +29,7 @@ public class OnlyIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     intake.run();
+    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.INTAKE_ON_0_BALLS); // Need this here because LED mode is otherwise set in hopper base, which isn't called here
   }
 
   @Override

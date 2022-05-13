@@ -1,7 +1,5 @@
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -12,6 +10,11 @@ public class ManualRetractClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     private double retractPctOutput;
 
+    /**
+     * Retracts climber manually regardless of limits (override).
+     * @param climber
+     * @param retractPctOutput
+     */
     public ManualRetractClimberCommand(HookClimberSubsystem climber, double retractPctOutput) {
         this.climber = climber;
         this.retractPctOutput = retractPctOutput;

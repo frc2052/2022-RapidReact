@@ -9,6 +9,10 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 public class ExtendToMaxClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
 
+    /**
+     * Extends the climber to the extension max height in ticks.
+     * @param climber
+     */
     public ExtendToMaxClimberCommand(HookClimberSubsystem climber) {
         this.climber = climber;
 

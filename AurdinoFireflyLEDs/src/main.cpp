@@ -768,7 +768,6 @@ void doLoop()
         break;
       case 2:
         climbingLockEngagedStatusMode();
-        //blinkingRedStatusMode();
         break;
       case 3:
         LEDsOnWhite();
@@ -814,7 +813,6 @@ void doLoop()
         break;   
       case 17:
         limelightDeadStatusMode();
-        //climbingMidBarStatusMode();
         break;   
       case 18:
         climbingHighBarStatusMode();
