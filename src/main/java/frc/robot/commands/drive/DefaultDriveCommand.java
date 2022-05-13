@@ -14,11 +14,9 @@ public class DefaultDriveCommand extends CommandBase {
     private final DrivetrainSubsystem drivetrain;
     private final DashboardControlsSubsystem dashboardControls;
 
-    // Slew rate limiters to make joystick inputs more gentle.
-    // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-    private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+    private final SlewRateLimiter xLimiter;
+    private final SlewRateLimiter yLimiter;
+    private final SlewRateLimiter turnLimiter;
 
     private final DoubleSupplier translationXSupplier;
     private final DoubleSupplier translationYSupplier;
@@ -46,6 +44,11 @@ public class DefaultDriveCommand extends CommandBase {
 
         this.dashboardControls = DashboardControlsSubsystem.getInstance();
         this.tempFieldCentricButtonPressed = tempFieldCentricButtonPressed;
+
+        // Limiter objects located in drivetrainSubsystem to avoid weirdness with VisionDriveCommand making a new instance of this class every time it activates.
+        xLimiter = drivetrain.getXLimiter();
+        yLimiter = drivetrain.getYLimiter();
+        turnLimiter = drivetrain.getTurnLimiter();
 
         addRequirements(drivetrain);
     }

@@ -82,9 +82,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule backLeftModule;
   private final SwerveModule backRightModule;
 
-//   private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
-//   private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
-//   private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
+  // Slew rate limiters to make joystick inputs more gentle.
+  // A value of .1 will requier 10 seconds to get from 0 to 1. It is calculated as 1/rateLimitPerSecond to go from 0 to 1
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter turnLimiter = new SlewRateLimiter(2);
 
   private SwerveModuleState[] swerveModuleStates;
   private double lastRollValue;
@@ -93,7 +95,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private boolean isForward;
   private double intendedXVelocityMPS;
   private double intendedYVelocityMPS;
-  private boolean climbingSwingingLEDOutput;
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -206,7 +207,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] states) {
 
         double maxVelocity = MAX_VELOCITY_METERS_PER_SECOND;
-        double maxAngularVelocity = 1;
+        // double maxAngularVelocity = 1;
 
         SwerveDriveKinematics.desaturateWheelSpeeds(states, maxVelocity);
 
@@ -264,6 +265,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
    public boolean getIsTopOfSwing() { 
+        // Nice little LED output for weather it's swinging forward or backward when this method is being evaluated.
     if (isTopOfSwing) {
             LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
     } else if (isForward) {
@@ -294,8 +296,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return odometry.getPoseMeters().getRotation();
   }
 
-  public void setClimbingLEDOutput(boolean output) {
-        climbingSwingingLEDOutput = output;
+  public SlewRateLimiter getXLimiter() {
+        return xLimiter;
+  }
+
+  public SlewRateLimiter getYLimiter() {
+        return yLimiter;
+  }
+
+  public SlewRateLimiter getTurnLimiter() {
+        return turnLimiter;
   }
 
 @Override
@@ -304,17 +314,6 @@ public void periodic() {
         lastRollValue = getGyroRoll();
         isTopOfSwing = isForward && !lastRollDelta; // We were swinging back the last time we checked, return true if we're now swinging forward.
         lastRollDelta = isForward;
-
-        // if (climbingSwingingLEDOutput) {
-        //         if (isTopOfSwing) {
-        //                 LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBING_TOP_OF_SWING);
-        //         } else if (isForward) {
-        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_FORWARD);
-        //         } else {
-        //                 LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBING_SWINGING_BACKWARD);
-        //         }
-        // }
-        // climbingSwingingLEDOutput = false; // Turns off output if no longer being set true every cycle by auto-climb commands
 
         SmartDashboard.putNumber("Front Left Angle", Units.radiansToDegrees(frontLeftModule.getSteerAngle()));
         SmartDashboard.putNumber("Front Right Angle", Units.radiansToDegrees(frontRightModule.getSteerAngle()));

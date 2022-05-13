@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,7 +43,6 @@ public class ShooterSubsystem extends SubsystemBase {
     topMotor.setNeutralMode(NeutralMode.Coast);
     topMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
     // topMotor.setSelectedSensorPosition(0, 0, 10);
-    // topMotor.config_kP(0, 1, 10);
     topMotor.config_kP(0, 0.11, 10);
     topMotor.config_kI(0, 0.001, 10); 
     topMotor.config_kD(0, 0.7, 10);

@@ -18,10 +18,8 @@ public class AutoShootCommand extends ShootCommand {
   private Timer timer;
   private Timer timer2;
   private double deadlineSeconds;
-  private boolean wasTwoBallsDetected;
-  private boolean delayOverride;
-
-  
+  // private boolean wasTwoBallsDetected;
+  // private boolean delayOverride;
 
   /**
    * Command that extends ShootCommand to be used in Auto.

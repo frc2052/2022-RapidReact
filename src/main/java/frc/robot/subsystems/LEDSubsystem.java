@@ -5,19 +5,15 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 // Subsystem to Control LEDs.
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.util.HsvToRgb;
 
 public class LEDSubsystem extends SubsystemBase {
     private DigitalOutput codeChannel1, codeChannel2, codeChannel3, codeChannel4, codeChannel5;
 
     private LEDStatusMode currentStatusMode;
-    private LEDStatusMode lastStatusMode;
     private LEDAlertStatusMode alertStatusMode;
     private LEDStatusMode currentDefaultStatusMode;
 
@@ -182,8 +178,8 @@ public class LEDSubsystem extends SubsystemBase {
         codeChannel4.set((code & 8) > 0);
         codeChannel5.set((code & 16) > 0);
 
-        lastStatusMode = currentStatusMode;
-        clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes don't stick around forever and everything trying to use it has to be activley setting the status mode
+        clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes 
+        // don't stick around forever and everything trying to use it has to be activley setting the status mode
     }
 
     public void setLEDStatusMode(LEDStatusMode statusMode) {
@@ -233,18 +229,18 @@ public class LEDSubsystem extends SubsystemBase {
         disableLEDs = false;
     }
 
-    // Unfinished indended for making the robot look nice 
+    // Unfinished lightShow method indended for making the robot look nice 
     // if we're sitting on the field with a dead drivetrain or somthing
-    private void lightShow() {
-        double time = timer.get();
-        if (time < 15) {
-            currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
-        } else if (time < 8) {
-            currentStatusMode = LEDStatusMode.RAINBOW;
-        } else {
-            timer.reset();
-        }
-    }
+        // private void lightShow() {
+        //     double time = timer.get();
+        //     if (time < 15) {
+        //         currentStatusMode = LEDStatusMode.TELEOP_DEFAULT;
+        //     } else if (time < 8) {
+        //         currentStatusMode = LEDStatusMode.RAINBOW;
+        //     } else {
+        //         timer.reset();
+        //     }
+        // }
 }
 
 // -- OLD ROBOT LED CODE FOR USE WITH CANIFIER AND DOING LED LOGIC ON THE ROBOTRIO --

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.LEDSubsystem.LEDAlertStatusMode;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.CamMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -23,34 +22,34 @@ public class DashboardControlsSubsystem extends SubsystemBase {
     private SendableChooser<LEDStatusMode> ledStatusModeSelector;
     // private SendableChooser<ButtonBindingsProfile> buttonBindingsProfileSelector;
 
-    // private int ledBrightness;
-    // private int lastLEDBrightness;
     private double limelightDeadSeconds;
     private double lastShooterBoostPct;
     private double lastXAimOffset;
+    // private int ledBrightness;
+    // private int lastLEDBrightness;
 
+    private boolean isLimelightDead;
     // private boolean limelightLEDsEnabled;
     // private boolean limelightDriveCamToggle;
     // private boolean limelightPowerRelayToggle;
     // private boolean limelightLEDOverride;
-    private boolean isLimelightDead;
     // private boolean isDrivetrainDead;
     // private boolean isPnuematicsDead;
 
     private boolean lastLimelightLEDsEnabled;
-    // private boolean lastIsDriverCamera;
-    // private boolean lastLimelightPowerRelayState;
     private boolean lastLimelightLEDOverride;
-    // private boolean lastIsLimelightDead;
-    // private boolean lastIsDrivetrainDead;
     private boolean lastIsPnuematicsDead;
     private boolean lastDisableShooterIdle;
+    // private boolean lastIsDriverCamera;
+    // private boolean lastLimelightPowerRelayState;
+    // private boolean lastIsLimelightDead;
+    // private boolean lastIsDrivetrainDead;
 
-    private LEDStatusMode lastLEDStatusMode;
     private Autos selectedAuto;
     private Autos lastSelectedAuto;
-    // private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
     private Timer timer;
+    // private ButtonBindingsProfile lastSelectedButtonBindingsProfile;
+    // private LEDStatusMode lastLEDStatusMode;
 
     private DashboardControlsSubsystem(VisionSubsystem vision, RobotContainer robotContainer, ShooterSubsystem shooter) { // Adds values and items to selectors and toggles. Currently don't like passing robot container but might need to...
         this.vision = vision;
@@ -68,8 +67,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         // isPnuematicsDead = false;
 
         lastSelectedAuto = selectedAuto;
+        // lastLEDStatusMode = LEDStatusMode.DISABLED;
         // lastLEDBrightness = ledBrightness;
-        lastLEDStatusMode = LEDStatusMode.OFF;
         // lastIsLimelightDead = isLimelightDead;
         // lastLimelightPowerRelayState = limelightPowerRelayToggle;
 
@@ -95,9 +94,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         for (int i = 1; i < LEDStatusMode.values().length; i++) {
             ledStatusModeSelector.addOption(LEDStatusMode.values()[i].toString(), LEDStatusMode.values()[i]);
         }
-        // for (int i = 1; i < LEDAlertStatusMode.values().length; i++) {
-        //     ledStatusModeSelector.addOption(LEDAlertStatusMode.values()[i].toString(), LEDAlertStatusMode.values()[i]);
-        // }
     
         driveModeSelector.setDefaultOption("Robot Centric Drive", DriveMode.ROBOT_CENTRIC);
         driveModeSelector.addOption("Field Centric Drive", DriveMode.FIELD_CENTRIC);
@@ -127,19 +123,20 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         return instance;
     }
 
-    public void addSelectorsToSmartDashboard() {    // Method currently run in robotInit to add selectors to the SmartDashboard
+    /** Method currently run in robotInit to add selectors to the SmartDashboard */
+    public void addSelectorsToSmartDashboard() {
         SmartDashboard.putData("Autos", autoSelector);
         SmartDashboard.putData("Drive Modes", driveModeSelector);
         SmartDashboard.putData("Limelight Cam Mode", limelightCamModeSelector);
         SmartDashboard.putData("LED Status Modes", ledStatusModeSelector);
-        // SmartDashboard.putData("Button Bindings Profiles", buttonBindingsProfileSelector);
         SmartDashboard.putString("Selected Auto Description", selectedAuto.description);
+        // SmartDashboard.putData("Button Bindings Profiles", buttonBindingsProfileSelector);
 
-        // SmartDashboard.putNumber("LED Brightness", ledBrightness);
-        // SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
         SmartDashboard.putNumber("Shooter Velocity Boost Pct", 0);
         SmartDashboard.putNumber("One Ball Delay", 0);
         SmartDashboard.putNumber("Vision X Aim Offset", vision.getXAimOffset());
+        // SmartDashboard.putNumber("LED Brightness", ledBrightness);
+        // SmartDashboard.putNumber("Stream Mode", vision.getStreamMode());
 
         SmartDashboard.putBoolean("Enable Limelight LEDs", false);
         SmartDashboard.putBoolean("Is An Auto Selected?", false);
@@ -150,8 +147,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
 
         // Dead subsystem buttons
         SmartDashboard.putBoolean("Limelight Is Dead", false);
-        // SmartDashboard.putBoolean("Drivetrain Is Dead", false);
         SmartDashboard.putBoolean("Pnuematics Is Dead", false);
+        // SmartDashboard.putBoolean("Drivetrain Is Dead", false);
         // SmartDashboard.putBoolean("Limelight Power Relay", limelightPowerRelayToggle);
     }
 
@@ -166,8 +163,8 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         boolean isLimelightDead = !vision.getIsUpdating();
         boolean isPnuematicsDead = SmartDashboard.getBoolean("Pnuematics Is Dead", false);
         boolean disableShooterIdle = SmartDashboard.getBoolean("Disable Shooter Idle", false);
-        // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
         LEDStatusMode selectedLEDStatusMode = getSelectedLEDStatusMode();
+        // ButtonBindingsProfile selectedButtonBindingsProfile = getSelectButtonBindingsProfile();
         // boolean isDrivetrainDead = SmartDashboard.getBoolean("Drivetrain Is Dead", false);
         // boolean limelightDriveCamToggle = SmartDashboard.getBoolean("Toggle Limelight Driver Camera", false);
         // limelightPowerRelayToggle = SmartDashboard.getBoolean("Limelight Power Relay", vision.getRelayState());
@@ -244,6 +241,11 @@ public class DashboardControlsSubsystem extends SubsystemBase {
             lastIsPnuematicsDead = isPnuematicsDead;
         }
 
+        if (selectedLEDStatusMode != LEDStatusMode.OFF) {
+            LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
+            //lastLEDStatusMode = selectedLEDStatusMode;
+        }
+
         // if (limelightDriveCamToggle != lastIsDriverCamera) {
         //     if(limelightDriveCamToggle) {
         //         vision.setLEDMode(LEDMode.OFF);
@@ -255,11 +257,6 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         //         lastIsDriverCamera = false;
         //     }
         // }
-
-        if (selectedLEDStatusMode != LEDStatusMode.OFF) {
-            LEDSubsystem.getInstance().setLEDStatusMode(selectedLEDStatusMode);
-            //lastLEDStatusMode = selectedLEDStatusMode;
-        }
 
         // if (ledBrightness != lastLEDBrightness) {
         //     LEDSubsystem.setBothChannelBrightnesses(ledBrightness);
@@ -327,17 +324,17 @@ public class DashboardControlsSubsystem extends SubsystemBase {
         }
     }
 
+    public LEDStatusMode getSelectedLEDStatusMode() {
+        return ledStatusModeSelector.getSelected();
+    }
+
     // Didn't work
-    // public void reset SelectedAuto() {
+    // public void resetSelectedAuto() {
     //     SendableChooser<Autos> autoSelector1 = new SendableChooser<Autos>();
     //     autoSelector1.setDefaultOption(Autos.NONE_SELECTED.name, Autos.NONE_SELECTED);
     //     SmartDashboard.putData("Autos", autoSelector1);
     //     SmartDashboard.putData("Autos", autoSelector);
     // }
-
-    public LEDStatusMode getSelectedLEDStatusMode() {
-        return ledStatusModeSelector.getSelected();
-    }
 
     // public ButtonBindingsProfile getSelectButtonBindingsProfile() {
     //     return buttonBindingsProfileSelector.getSelected();
