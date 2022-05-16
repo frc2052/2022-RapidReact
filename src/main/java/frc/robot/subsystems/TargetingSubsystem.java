@@ -30,6 +30,7 @@ public class TargetingSubsystem extends SubsystemBase {
     private Rotation2d rotation;
     private boolean isLinedUpToShoot;
 
+    // Singleton pattern to allow this class to be accessed from anywhere
     private TargetingSubsystem(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
         this.vision = vision;
         this.drivetrain = drivetrain;
@@ -39,7 +40,7 @@ public class TargetingSubsystem extends SubsystemBase {
         rotation = Rotation2d.fromDegrees(0);
     }
     private static TargetingSubsystem instance;
-    public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
+    public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) { // Init method called in robotContainer's constructor to give subsystem pointers to this class.
         if (instance == null) {
             instance = new TargetingSubsystem(vision, drivetrain, shooter);
         }

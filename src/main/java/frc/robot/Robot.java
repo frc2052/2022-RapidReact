@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-// import edu.wpi.first.cameraserver.CameraServer;
-//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,14 +28,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    robotContainer = new RobotContainer();
-
+    robotContainer = new RobotContainer();  // Instantiate our RobotContainer.  This will perform all our button bindings, and put our autonomous chooser on the dashboard.
     robotContainer.initializeAutonomousCommand();
-//    robotContainer.addSelectorsAndCommandButtonsToSmartDashboard();
-
-   // CameraServer.startAutomaticCapture();
 
    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
   }
@@ -86,6 +78,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    // Pixy cam testing code
 //    Rotation2d angle = pixy.angleToBall(BallColor.BLUE);
 //		SmartDashboard.putString("Pixyblock.Angle", (angle != null) ? angle.toString() : "-------");
 
@@ -109,16 +102,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (autonomousCommand != null) {
+    if (autonomousCommand != null) { // Makes sure auto stops when teleop starts.
       autonomousCommand.cancel();
     }
 
     // LEDSubsystem.getInstance().enable();
-
     LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
@@ -128,11 +116,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    CommandScheduler.getInstance().cancelAll(); // Cancels all running commands at the start of test mode.
     robotContainer.resetGyro();
-    //LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.TEST_MODE);
-    
   }
 
   /** This function is called periodically during test mode. */

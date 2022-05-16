@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,13 +11,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.auto.testing.AutoTesting;
 import frc.robot.auto.testing.Left2Ball2DefenseAuto;
 import frc.robot.auto.tuned.LeftDefenseAuto;
-import frc.robot.auto.testing.LeftTerminal3BallAuto;
 import frc.robot.auto.tuned.MiddleLeft3BallTerminalDefenseAuto;
 import frc.robot.auto.tuned.MiddleLeft4BallDefenseAuto;
 import frc.robot.auto.tuned.MiddleLeftHanger4BallDefenseAuto;
-import frc.robot.auto.testing.MiddleRight5BallDefenseAuto;
 import frc.robot.auto.testing.MiddleRight4BallAuto;
-import frc.robot.auto.testing.Right5BallAuto2;
 import frc.robot.auto.tuned.OneBallAuto;
 import frc.robot.auto.tuned.Right2BallAuto;
 import frc.robot.auto.tuned.CustomDelayOneBallAuto;
@@ -29,15 +23,11 @@ import frc.robot.auto.tuned.FastRight5BallAuto4;
 import frc.robot.auto.tuned.Left2Ball2DefenseAuto2;
 import frc.robot.auto.tuned.RightFiveBallAuto;
 import frc.robot.auto.tuned.Simple3BallAuto;
-import frc.robot.auto.testing.Right3BallDriveAndShootAuto;
 
 import frc.robot.commands.drive.DefaultDriveCommand;
-import frc.robot.commands.drive.PIDVisionDriveCommand;
-import frc.robot.commands.drive.ProfiledPIDTurnInPlaceCommand;
 import frc.robot.commands.drive.VisionDriveCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
 import frc.robot.commands.climber.ManualExtendClimberCommand;
-import frc.robot.commands.climber.MoveClimberToHeightCommand;
 import frc.robot.commands.climber.RetractToMinClimberCommand;
 import frc.robot.commands.climber.ManualRetractClimberCommand;
 import frc.robot.commands.climber.ToggleClimberSolenoidCommand;
@@ -45,12 +35,8 @@ import frc.robot.commands.climber.ZeroClimberEncoderCommand;
 import frc.robot.commands.climber.autoclimbs.MidToHighAutoClimbCommand;
 import frc.robot.commands.climber.autoclimbs.HighToTraversalAutoClimbCommand;
 import frc.robot.commands.intake.HopperBaseCommand;
-import frc.robot.commands.intake.IntakeArmInCommand;
-import frc.robot.commands.intake.IntakeArmOutCommand;
 import frc.robot.commands.intake.IntakeArmToggleCommand;
-import frc.robot.commands.intake.IntakeHopperRunCommand;
 import frc.robot.commands.intake.IntakeReverseCommand;
-import frc.robot.commands.intake.OnlyIntakeCommand;
 import frc.robot.commands.intake.OuttakeCommand;
 import frc.robot.commands.intake.TeleopIntakeCommand;
 import frc.robot.commands.intake.TeleopOnlyIntakeCommand;
@@ -67,27 +53,17 @@ import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
-import frc.robot.subsystems.UsbCameraSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 
-import frc.robot.util.ProjectileCalculator;
-import frc.robot.util.buttonbindings.profiles.Default;
-import frc.robot.util.buttonbindings.profiles.SoloDriver;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -102,25 +78,24 @@ public class RobotContainer {
   private VisionSubsystem vision;
   private DashboardControlsSubsystem dashboard;
   private ShooterSubsystem shooter;
-  private UsbCameraSubsystem intakeCamera;
-  private TargetingSubsystem targeting;
   private IndexerSubsystem indexer;
   private IntakeSubsystem intake;
   private HopperSubsystem hopper;
-  private PneumaticsSubsystem pneumatics;
   private HookClimberSubsystem climber;
+  // private UsbCameraSubsystem intakeCamera;
 
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
 
   private Command autonomousCommand;
-
-  private boolean initComplete = false;
-  private boolean isShooting = false;
+  private boolean isShooting;
   // private boolean competitionMode = true;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /** The container for the robot. Contains subsystems, OI devices, and commands. 
+   * The place where robot wide things that need to be done that don't fit in other subsystems
+   * or commands should be done.
+   */
   public RobotContainer() {
     vision = new VisionSubsystem();
     shooter = new ShooterSubsystem();
@@ -141,12 +116,11 @@ public class RobotContainer {
     );
 
     TargetingSubsystem.init(vision, drivetrain, shooter);
-    targeting = TargetingSubsystem.getInstance();
     indexer = new IndexerSubsystem();
     intake = new IntakeSubsystem();
     hopper = new HopperSubsystem();
-    pneumatics = new PneumaticsSubsystem();
     climber = new HookClimberSubsystem();
+    new PneumaticsSubsystem(); // Put here to instanciate the subsystem's constructor, but we don't use it anywhere so we don't need to store it in a variable (also wanted to get rid of the warning for that lol).
     // intakeCamera = new UsbCameraSubsystem();
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
@@ -230,26 +204,21 @@ public class RobotContainer {
 
     // --- Intake Commands ---
     Command intakeToggleCommand = new IntakeArmToggleCommand(intake);
-    // Command driverIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting);
     Command teleopIntakeOnCommand =
       new ConditionalCommand( // Makes sure the intake doesn't stop the shooter because both of them require the hopper, by checking if shoot button is pressed and using the OnlyIntakeCommand instead if it is.
         new TeleopOnlyIntakeCommand(intake, indexer), 
-    //     //new StartEndCommand(() -> intake.run(), () -> intake.stop()),
-    //     //new InstantCommand(() -> intake.run()),
-    //     new WaitCommand(0.25),
         new TeleopIntakeCommand(intake, indexer, hopper),
         () -> isShooting
-      );//.withInterrupt(() -> getIsShooting());
-    // Command teleopIntakeOnCommand = new TeleopIntakeCommand(intake, indexer, hopper).withInterrupt(() -> isShooting );
-    Command basicIntakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting/* || !intakeInButton2.get() */|| intakeInButton.get() || driverIntakeButton.get(); } );
+      );
     Command intakeReverseCommand = new IntakeReverseCommand(intake, hopper);
-    Command intakeArmInCommand = new IntakeArmInCommand(intake);
-    Command intakeArmOutCommand = new IntakeArmOutCommand(intake);
     Command outtake1Command = new OuttakeCommand(OuttakeMode.ONE_BALL, intake, hopper, indexer);
     Command outtakeAllCommand = new OuttakeCommand(OuttakeMode.ALL_BALLS, intake, hopper, indexer);
     Command eject1Command = new NonVisionShootCommand(ShootMode.SHOOT_SINGLE, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get(); });//|| intakeInButton2.get(); });
     Command ejectAllCommand = new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, null, 7400, 7400, true).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get(); }); //|| intakeInButton2.get(); });
     Command runHoppperCommand = new HopperBaseCommand(indexer, hopper).withInterrupt(() -> { return isShooting || intakeInButton.get() || driverIntakeButton.get(); });
+    // Command basicIntakeOnCommand = new IntakeHopperRunCommand(intake, indexer, hopper).withInterrupt(() -> { return isShooting || !intakeInButton2.get() || intakeInButton.get() || driverIntakeButton.get(); } );
+    // Command intakeArmInCommand = new IntakeArmInCommand(intake);
+    // Command intakeArmOutCommand = new IntakeArmOutCommand(intake);
 
     // --- Shooter Commands ---
     Command shootSingleCommand =
@@ -265,12 +234,7 @@ public class RobotContainer {
       );
     Command visionShootAllCommand =
       new ParallelCommandGroup(
-        // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-        //new ConditionalCommand(
-        //  new NonVisionShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
         new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-        //  dashboardControls::getIsLimelightDead
-       // ),
         new VisionDriveCommand( // Overrides the DefualtDriveCommand and uses VisionDriveCommand when the trigger on the turnJoystick is held.
           drivetrain,
           () -> driveJoystick.getY(),
@@ -345,10 +309,7 @@ public class RobotContainer {
     // --- Intake Button Command Bindings ---
     intakeArmToggleButton.whenPressed(intakeToggleCommand);
     intakeInButton.whileHeld(teleopIntakeOnCommand);
-    //intakeInButton2.whenPressed(basicIntakeOnCommand);
     intakeReverseButton.whenHeld(intakeReverseCommand);
-    // intakeArmOutButton.whenPressed(intakeArmOutCommand);
-    // intakeArmInButton.whenPressed(intakeArmInCommand);
     pannelEjectAllButton.whenHeld(ejectAllCommand);
     pannelEject1Button.whenHeld(eject1Command);
     pannelOuttakeAllCargoButton.whenHeld(outtakeAllCommand);
@@ -360,6 +321,9 @@ public class RobotContainer {
     ejectAllButton.whenHeld(ejectAllCommand);
     ejectAllButton2.whenHeld(ejectAllCommand);
     runHopperButton.whenHeld(runHoppperCommand);
+    // intakeInButton2.whenPressed(basicIntakeOnCommand);
+    // intakeArmOutButton.whenPressed(intakeArmOutCommand);
+    // intakeArmInButton.whenPressed(intakeArmInCommand);
 
     // --- Shooter Button Command Bindings ---
     shootSingleButton.whileHeld(shootSingleCommand);
@@ -389,27 +353,12 @@ public class RobotContainer {
     // Testing Zone
     // Command testCommand = new OnlyIntakeCommand(intake, indexer);
     //testingButton.whenPressed(new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> { return Rotation2d.fromDegrees(180); }));
-        //   Command testCommand = 
-    //     new PIDVisionDriveCommand(
-    //         drivetrain, 
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         vision
-    //     );
-    //     Command testCommand =
-    //   new ParallelCommandGroup(
-    //     // new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision),
-    //     new ConditionalCommand(
-    //       new NonVisionShootCommand(NonVisionShootMode.SHOOT_ALL, shooter, indexer, hopper, FiringAngle.ANGLE_1, VisionCalculator.getInstance().getShooterConfig(3 * 12, FiringAngle.ANGLE_1)), 
-    //       new ShootCommand(ShootMode.SHOOT_ALL, shooter, indexer, hopper, vision, drivetrain), 
-    //       dashboardControls::getIsLimelightDead
-    //     ),
-    //     new PIDVisionDriveCommand(
-    //         drivetrain, 
-    //         () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-    //         vision
-    //   )
+    // Command testCommand = 
+    //   new PIDVisionDriveCommand(
+    //       drivetrain, 
+    //       () -> -modifyAxis(driveJoystick.getY(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //       () -> -modifyAxis(driveJoystick.getX(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+    //       vision
     //   );
 
     // testingButton.whenHeld(testCommand);
@@ -584,16 +533,4 @@ public class RobotContainer {
         this.command = command;
     }
   }
-
-  // public void init() {
-  //   if (!initComplete) {
-  //       initComplete = true;
-
-  //   // //The following subsystems have a dependency on CAN
-
-  //       // shooter = new ShooterSubsystem();
-  //      // intakeCamera = new UsbCameraSubsystem();  
-
-  //   }
-  // }
 }

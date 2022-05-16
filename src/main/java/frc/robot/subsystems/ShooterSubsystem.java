@@ -255,11 +255,4 @@ public class ShooterSubsystem extends SubsystemBase {
         return angleDegrees;
     }
   }
-
-  // private void clearTimer() {
-  //   if(timer != null) {
-  //       timer.stop();
-  //       timer = null;
-  //   }
-  // }
 }

@@ -17,7 +17,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -74,6 +73,10 @@ public class AutoBase extends SequentialCommandGroup {
      * Base class that all Auto classes inherited from. Contains easy command instanciation methods,
      * Pose2d and Rotation2d making methods, trajectory generation methods, and most importantly 
      * SwerveControllerCommand generation.
+     * 
+     * Refer to this slideshow for more information on this class and autos!
+     * https://docs.google.com/presentation/d/1bthvLatei40UqnZPt9zO2BCpLaEcsibTTxtQ7s9Iypo/edit?usp=sharing 
+     * 
      * @param drivetrain
      * @param vision
      * @param shooter

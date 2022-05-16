@@ -14,20 +14,27 @@ import edu.wpi.first.math.util.Units;
  *
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
+ * 
+ * All distance constants should be stored in meters.
  */
-// Constants shall be stored in meters
 public final class Constants {
+    public static final class Field {
+        public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
+        public static final double EDGE_TO_CENTER_OF_HUB_OFFSET_METERS = 0.68;
+    }
+
     public static final class MotorIDs {
-//        public static final int ARM_MOTOR = 14;
-//        public static final int PITCH_MOTOR = 91;
         public static final int CLIMBER_MOTOR = 14;
         public static final int TOP_SHOOTER_MOTOR = 15;
         public static final int BOTTOM_SHOOTER_MOTOR = 16;
-        public static final int HOPPER_MOTOR = 17;
-        public static final int INDEXER_MOTOR = 18; //GREEN
-        public static final int INDEXER_MOTOR_FEEDER = 19; 
+        public static final int HOPPER_MOTOR = 17; // Horizontal blue compliant wheels
+        public static final int PRELOAD_INDEXER_MOTOR = 18; // Green compliant wheel
+        public static final int FEEDER_INDEXER_MOTOR = 19; // Small blue wheel directly under shooter
         public static final int INTAKE_MOTOR = 20;
+        // public static final int ARM_MOTOR = 14;
+        // public static final int PITCH_MOTOR = 91;
     }
+
     public static final class Solenoids {
         // Used for claw climber.
         // public static final int CLOSE_A_SOLENOID = 0;
@@ -49,6 +56,7 @@ public final class Constants {
         public static final int SHOOTER_ANGLE_OUT_SOLENOID = 7;
         public static final int SHOOTER_ANGLE_IN_SOLENOID = 6;
     }
+
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
@@ -67,8 +75,8 @@ public final class Constants {
         public static final double SHOOTER_TOP_PULLDOWN_PCT = 0.97;
         public static final double SHOOTER_BOTTOM_PULLDOWN_PCT = 0.97;
 
-        // public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0; // TODO Tune this
-        // public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; // TODO Tune this
+        // public static final double ANGLE_CHANGE_THRESHOLD_TY = -5.0;
+        // public static final double ANGLE_CHANGE_TOLERANCE_DEGREES = 1; //
 
         public static final double ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES = 66;
         public static final double ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES = 6;
@@ -79,15 +87,6 @@ public final class Constants {
 
         public static final double SHOOTER_MOUNT_HEIGHT_METERS = Units.inchesToMeters(20);
         public static final int DEFAULT_ASSUMED_SHOOTER_CONFIG = 0;
-
-        // public static final double FAR_RANGE_LIMIT_FROM_HUB_METERS = 10; // TEMP VALUE
-        // public static final double CLOSE_RANGE_LIMIT_FROM_HUB_METERS = 0.5; // TEMP VALUE
-    }
-
-    public static final class Field {
-        public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
-
-        public static final double EDGE_TO_CENTER_OF_HUB_OFFSET_METERS = 0.68;
     }
 
     public static final class Limelight {
@@ -148,8 +147,7 @@ public final class Constants {
         public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }
 
-    public static final class Intake {
-        //sets the speed of the motors
+    public static final class Intake {  // Sets the speed of the motors
         public static final double kIntakeSpeed = .90;
         public static final double kHopperSpeed = .75;
     }
@@ -161,8 +159,7 @@ public final class Constants {
         // our gearbox ratio is 20
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
-        // TODO: These Value Needs To Change
-        public static final double MIN_CLIMBER_HEIGHT_TICKS = -10000; //allow to climb below zero because under weight, the rope will wind tigher, test show we lose 1.125 inches when retracting under weight)
+        public static final double MIN_CLIMBER_HEIGHT_TICKS = -10000; // Allow to climb below zero because under weight, the strap will wind tigher.
         public static final double MAX_CLIMBER_HEIGHT_TICKS_VERTICAL = 220000;
         public static final double MAX_CLIMBER_HEIGHT_TICKS_TILTED = 300000;
     }
@@ -170,12 +167,13 @@ public final class Constants {
     public static final class LEDs {
         // public static final int CANIFIER_PORT = 21;
 
-        public static final int R_1_PWM_PORT = 0;
-        public static final int G_1_PWM_PORT = 1;
-        public static final int B_1_PWM_PORT = 2;
-        public static final int R_2_PWM_PORT = 3;
-        public static final int G_2_PWM_PORT = 4;
-        public static final int B_2_PWM_PORT = 5;
+        // For binary arduino code output
+        public static final int CHANNEL_1_PIN = 0; // 2^0
+        public static final int CHANNEL_2_PIN = 1; // 2^1
+        public static final int CHANNEL_3_PIN = 2; // 2^2
+        public static final int CHANNEL_4_PIN = 3; // 2^3
+        public static final int CHANNEL_5_PIN = 4; // 2^4
+
     }
 
     public static final class Misc {

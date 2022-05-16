@@ -3,14 +3,12 @@ package frc.robot.auto.tuned;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.commands.drive.WaitOdometryResetCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -63,7 +61,6 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
         ParallelDeadlineGroup intakeBall4 = new ParallelDeadlineGroup(driveToBall4Pos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), super.newOnlyIntakeCommand());
 
-        //this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(this.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 7900, 7900));
         this.addCommands(driveTowardsTerminalBalls);

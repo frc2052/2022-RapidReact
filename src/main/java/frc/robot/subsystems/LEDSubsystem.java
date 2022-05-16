@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 /**
  * Subsystem to control the robot's LEDs, by determining what number should be encoded to DIO pins and
@@ -24,11 +25,11 @@ public class LEDSubsystem extends SubsystemBase {
 // This is a singleton pattern for making sure only 1 instance of this class exists that can be called from anywhere. Call with LEDSubsystem.getInstance()
 // Construtor is private, instance is stored in static variable for the class, and instance is accessed using public getInstance() method.
     private LEDSubsystem() {
-        codeChannel1 = new DigitalOutput(0);    // DIO outputs
-        codeChannel2 = new DigitalOutput(1);
-        codeChannel3 = new DigitalOutput(2);
-        codeChannel4 = new DigitalOutput(3);
-        codeChannel5 = new DigitalOutput(4);
+        codeChannel1 = new DigitalOutput(Constants.LEDs.CHANNEL_1_PIN);    // DIO outputs
+        codeChannel2 = new DigitalOutput(Constants.LEDs.CHANNEL_2_PIN);
+        codeChannel3 = new DigitalOutput(Constants.LEDs.CHANNEL_3_PIN);
+        codeChannel4 = new DigitalOutput(Constants.LEDs.CHANNEL_4_PIN);
+        codeChannel5 = new DigitalOutput(Constants.LEDs.CHANNEL_5_PIN);
 
         timer = new Timer();
 
@@ -115,13 +116,13 @@ public class LEDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time
+        // int matchTime = (int) DriverStation.getMatchTime(); // The current approximate match time // Included for end game status mode
         int code = 0;
 
         if(!disableLEDs) {
-            if (matchTime == 40) {
-                alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
-            }
+            // if (matchTime == 40) { // For displaying an end game warning alert status mode when there's 40 seconds left. Removed because was untested for State and we trusted Pete.
+            //     alertStatusMode = LEDAlertStatusMode.ENG_GAME_WARNING;
+            // }
 
             if (alertStatusMode == null) {
                 if (currentStatusMode == null) {
@@ -170,11 +171,11 @@ public class LEDSubsystem extends SubsystemBase {
         // SmartDashboard.putBoolean("channel5", (code & 16) > 0);
 
         // Code for encoding the code to binary on the digitalOutput pins
-        codeChannel1.set((code & 1) > 0);
-        codeChannel2.set((code & 2) > 0);
-        codeChannel3.set((code & 4) > 0);
-        codeChannel4.set((code & 8) > 0);
-        codeChannel5.set((code & 16) > 0);
+        codeChannel1.set((code & 1) > 0);   // 2^0
+        codeChannel2.set((code & 2) > 0);   // 2^1
+        codeChannel3.set((code & 4) > 0);   // 2^2
+        codeChannel4.set((code & 8) > 0);   // 2^3
+        codeChannel5.set((code & 16) > 0);  // 2^4
 
         clearStatusMode(); // Clears status mode after every loop to make sure high priority status modes 
         // don't stick around forever and everything trying to use it has to be activley setting the status mode
