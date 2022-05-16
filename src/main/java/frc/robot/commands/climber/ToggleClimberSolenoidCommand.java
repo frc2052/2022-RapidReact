@@ -11,8 +11,12 @@ import frc.robot.subsystems.HookClimberSubsystem.ClimberSolenoidState;
 public class ToggleClimberSolenoidCommand extends CommandBase {
   private final HookClimberSubsystem climberSubsystem;
 
-  public ToggleClimberSolenoidCommand(HookClimberSubsystem climbSubsystem) {
-      this.climberSubsystem = climbSubsystem;
+  /**
+   * Toggles the state of the back climber arms position.
+   * @param climber
+   */
+  public ToggleClimberSolenoidCommand(HookClimberSubsystem climber) {
+      this.climberSubsystem = climber;
 
       addRequirements(this.climberSubsystem);
   }

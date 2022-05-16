@@ -17,7 +17,15 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
     private final DrivetrainSubsystem drivetrain;
 
-    /** Creates a new ProfiledPIDTurnInPlaceCommand. */
+    /**
+     * Command for making the robot turn in place to a desired rotation using a pid controller
+     * to control motor input to make nice and smooth.
+     * Has unsolved issues and did not end up being used during the 2022 season - does not turn
+     * to the correct rotation for unknown reasons.
+     * @param profiledPIDController
+     * @param drivetrain
+     * @param deltaAngleSupplier
+     */
     public ProfiledPIDTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
         super(
             // The ProfiledPIDController used by the command
@@ -27,7 +35,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
             () -> drivetrain.getPose().getRotation().minus(deltaAngleSupplier.get()).getRadians(),
             // This should return the goal (can also be a constant)
             //deltaAngleSupplier.get().minus(deltaAngleSupplier.get()).getRadians(),
-            () -> (deltaAngleSupplier.get().getRadians() / 4),
+            () -> (deltaAngleSupplier.get().getRadians()),
             // This uses the output
             (output, setpoint) -> {
                 // Use the output (and setpoint, if desired) here

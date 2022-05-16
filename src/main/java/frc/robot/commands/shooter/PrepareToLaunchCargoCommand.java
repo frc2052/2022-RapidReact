@@ -16,6 +16,13 @@ public class PrepareToLaunchCargoCommand extends HopperBaseCommand {
   protected final ShooterSubsystem shooter;
   private final VisionSubsystem vision;
 
+  /**
+   * Old initial command created for shooting.
+   * @param shooter
+   * @param indexer
+   * @param hopper
+   * @param vision
+   */
   public PrepareToLaunchCargoCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, VisionSubsystem vision) {
     super(indexer, hopper);
     this.shooter = shooter;

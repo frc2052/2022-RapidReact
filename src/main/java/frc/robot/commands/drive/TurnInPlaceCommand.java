@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 
 public class TurnInPlaceCommand extends CommandBase {
   private final DrivetrainSubsystem drivetrain;
@@ -18,10 +17,9 @@ public class TurnInPlaceCommand extends CommandBase {
   private Rotation2d targetTurn;
 
   /**
-   * Command for turning the robot a certain rotation amount
-   * 
+   * Command for turning the robot a certain rotation angle (not field relative).
    * @param drivetrain
-   * @param deltaAngle - Angle change from current robot angle.
+   * @param deltaAngle - Rotation2d of the angle change from current robot angle.
 
    */
   public TurnInPlaceCommand(DrivetrainSubsystem drivetrain, Rotation2d deltaAngle) {

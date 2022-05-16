@@ -10,7 +10,13 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class WaitOdometryResetCommand extends CommandBase {
   private DrivetrainSubsystem drivetrain;
-  /** Command that checks to make sure  */
+
+  /** 
+   * Command intended to check and make sure the robot's odometry was completley at 0 before 
+   * starting an auto, because we had issues with odometry messing up the path if another auto
+   * was initiated without redeploying or power cycling.
+   * Did not work.
+   */
   public WaitOdometryResetCommand(DrivetrainSubsystem drivetrain) {
     this.drivetrain = drivetrain;
   }

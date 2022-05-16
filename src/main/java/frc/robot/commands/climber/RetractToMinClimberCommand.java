@@ -9,6 +9,10 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 public class RetractToMinClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
 
+    /**
+     * Retracts the extendable climber arms to the minimum height allowed.
+     * @param climber
+     */
     public RetractToMinClimberCommand(HookClimberSubsystem climber) {
         this.climber = climber;
 

@@ -1,20 +1,13 @@
 package frc.robot.commands.drive;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
@@ -23,12 +16,17 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     private final VisionSubsystem vision;
     private final DrivetrainSubsystem drivetrain;
-    private final TargetingSubsystem targeting;
+    // private final TargetingSubsystem targeting;
     private ProfiledPIDController pidController;
 
     /**
      * PID Controlled VisionDriveCommand for tracking the hub and by overriding the DefaultDriveCommand's getTurnValue method.
-     * Untested and probably unworking right now
+     * Currently less stable than old arbitrary value VisionDrive, was not further tuned because was a lower priority than
+     * other tasks.
+     * @param drivetrain
+     * @param translationXSupplier
+     * @param translationYSupplier
+     * @param vision
      */
     public PIDVisionDriveCommand(
         DrivetrainSubsystem drivetrain,
@@ -46,7 +44,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
         
         this.vision = vision;
         this.drivetrain = drivetrain;
-        this.targeting = TargetingSubsystem.getInstance();
+        // this.targeting = TargetingSubsystem.getInstance();
 
         pidController = new ProfiledPIDController(
             7, 0, 0.3,//0.01, 0.01,
@@ -76,6 +74,11 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
             );
         }
 
+        if (pidController.atSetpoint()) {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGET_LINED_UP);
+        } else {
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.VISION_TARGETING);
+        }
 
         // System.err.println("Vision angle: " + vision.getTx());
         // System.err.println("Gyro Rotation: " + drivetrain.getGyroscopeRotation().getDegrees());

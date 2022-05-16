@@ -10,7 +10,7 @@ import frc.robot.subsystems.HookClimberSubsystem;
 public class ZeroClimberEncoderCommand extends CommandBase {
   private final HookClimberSubsystem climber;
   
-  /** Command to zero climber encoder */
+  /** Command to zero the climber's encoder */
   public ZeroClimberEncoderCommand(HookClimberSubsystem climber) {
     this.climber = climber;
   }

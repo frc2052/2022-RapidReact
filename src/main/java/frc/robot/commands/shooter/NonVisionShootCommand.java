@@ -21,6 +21,17 @@ public class NonVisionShootCommand extends ShooterIndexingCommand {
   private double bottomWheelVelocity;
   private boolean overrideIsAtSpeed;
 
+  /**
+   * Command for shooting balls without vision using manually inputted wheel speeds or a ShooterTrajectoryConfig,
+   * and a optional hood angle specification.
+   * @param shootMode
+   * @param shooter
+   * @param indexer
+   * @param hopper
+   * @param firingAngleMode
+   * @param topWheelVelocity
+   * @param bottomWheelVelocity
+   */
   public NonVisionShootCommand(ShootMode shootMode, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, FiringAngle firingAngleMode, double topWheelVelocity, double bottomWheelVelocity) {
     super(
       shootMode, 

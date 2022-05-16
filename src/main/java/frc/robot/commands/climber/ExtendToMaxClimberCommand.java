@@ -10,7 +10,8 @@ public class ExtendToMaxClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
 
     /**
-     * Extends the climber to the extension max height in ticks.
+     * Extends the climber to the max extension height to stay in frame perimeter,
+     * which changes depending on if the arms are vertical or tilted back.
      * @param climber
      */
     public ExtendToMaxClimberCommand(HookClimberSubsystem climber) {

@@ -33,6 +33,17 @@ public class ShootCommand extends ShooterIndexingCommand {
   private ShooterDistanceConfig shooterConfig;
   // private boolean lastSawStaged;
 
+  /**
+   * Command for shooting balls using vision.
+   * @param shootMode
+   * @param shooter
+   * @param indexer
+   * @param hopper
+   * @param vision
+   * @param isLinedUpSupplier - Optional supplier parameter for telling where this command should look to see if we're lined up or not. Created for targeting subsystem.
+   * 
+   * @param drivetrain
+   */
   public ShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
