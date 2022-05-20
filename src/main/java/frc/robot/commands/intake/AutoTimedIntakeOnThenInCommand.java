@@ -27,13 +27,13 @@ public class AutoTimedIntakeOnThenInCommand extends IntakeHopperRunCommand {
     addRequirements(this.intake);
 
     timer = new Timer();
-    timer.start();
   }
 
   @Override
   public void initialize() {
     super.initialize();
     intake.armOut(); // Makes sure the intake arm is out when the command begins
+    timer.start();
   }
 
   @Override

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.auto.testing.AutoTesting;
@@ -109,6 +110,8 @@ public class RobotContainer {
   private PneumaticsSubsystem pneumatics;
   private HookClimberSubsystem climber;
 
+  private PowerDistribution pdh;
+
   private final Joystick driveJoystick = new Joystick(0);
   private final Joystick turnJoystick = new Joystick(1);
   private final Joystick secondaryPannel = new Joystick(2);
@@ -146,6 +149,8 @@ public class RobotContainer {
     hopper = new HopperSubsystem();
     pneumatics = new PneumaticsSubsystem();
     climber = new HookClimberSubsystem();
+
+    pdh = new PowerDistribution();
     // intakeCamera = new UsbCameraSubsystem();
     // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
@@ -321,8 +326,8 @@ public class RobotContainer {
     Command toggleClimberAngleCommand = new ToggleClimberSolenoidCommand(climber);
     Command unlockClimberCommand = new InstantCommand(() -> { climber.unlock(); });
     Command lockClimberCommand = new InstantCommand(() -> { climber.lock(); });
-    Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !traversalAutoClimbButton.get());
-    Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain).withInterrupt(() -> !highAutoClimbButton.get());
+    Command traversalAutoClimbCommand = new HighToTraversalAutoClimbCommand(climber, drivetrain);//.withInterrupt(() -> !traversalAutoClimbButton.get());
+    Command highAutoClimbCommand = new MidToHighAutoClimbCommand(climber, drivetrain);//.withInterrupt(() -> !highAutoClimbButton.get());
     Command fineClimberUpCommand = new ManualExtendClimberCommand(climber, 0.1);
     Command fineClimberDownCommand = new ManualRetractClimberCommand(climber, 0.1);
 
@@ -376,14 +381,16 @@ public class RobotContainer {
     climberSolenoidToggleButton.whenPressed(toggleClimberAngleCommand);
     climberUnlockButton.whenPressed(unlockClimberCommand);
     climberLockButton.whenPressed(lockClimberCommand);
-    traversalAutoClimbButton.whenPressed(traversalAutoClimbCommand);
-    highAutoClimbButton.whenPressed(highAutoClimbCommand);
+    traversalAutoClimbButton.whenHeld(traversalAutoClimbCommand);
+    highAutoClimbButton.whenHeld(highAutoClimbCommand);
     fineClimberUpButton.whenHeld(fineClimberUpCommand);
     fineClimberDownButton.whenHeld(fineClimberDownCommand);
 
     // --- SmartDashboard Command Buttons ---
     SmartDashboard.putData("Zero Climber Encoder", new ZeroClimberEncoderCommand(climber));
     SmartDashboard.putData("Zero Gyroscope", new InstantCommand(() -> this.resetGyro()));
+
+    //SmartDashboard.putData("Test PDH Slot", new InstantCommand(() -> pdh.setSwitchableChannel(true)));
 
     // SmartDashboard.putData("Test LED Mode", new InstantCommand(() -> LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.END_GAME_WARNING)));
 
@@ -443,6 +450,8 @@ public class RobotContainer {
   public void periodic() {
     evaluateIsShooting();
     SmartDashboard.putBoolean("Is Shooting", isShooting);
+
+    //drivetrain.getIsTopOfSwing();
   }
 
   public void resetGyro() {

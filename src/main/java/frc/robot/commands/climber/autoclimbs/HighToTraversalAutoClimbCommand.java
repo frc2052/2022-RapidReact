@@ -2,6 +2,7 @@ package frc.robot.commands.climber.autoclimbs;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
@@ -32,6 +33,7 @@ public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
             new ClimberArmsBackCommand(climber),
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getEncoderPosition() >= 130000), // Just slightly below the bar
             new WaitUntilCommand(() ->  drivetrain.getIsTopOfSwing()),
+            new WaitCommand(0.25),
             new ExtendToMaxClimberCommand(climber).withInterrupt(() -> climber.getIsAboveMaxHeight()),
             new ClimberArmsForwardCommand(climber),
             

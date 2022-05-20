@@ -120,8 +120,8 @@ public class ShooterSubsystem extends SubsystemBase {
       boolean topIsOnTarget = topMotor.getSelectedSensorVelocity() > topWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
           && topMotor.getSelectedSensorVelocity() < topWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
-      boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
-          && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
+      boolean bottomIsOnTarget = bottomMotor.getSelectedSensorVelocity() > bottomWheelTargetVelocity * (shooterVelocityBoost + 1) * (1 - Constants.Shooter.SHOOTER_TOLERANCE)
+          && bottomMotor.getSelectedSensorVelocity() < bottomWheelTargetVelocity * (shooterVelocityBoost + 1) * (1 + Constants.Shooter.SHOOTER_TOLERANCE);
 
       return topIsOnTarget && bottomIsOnTarget;
     } else {

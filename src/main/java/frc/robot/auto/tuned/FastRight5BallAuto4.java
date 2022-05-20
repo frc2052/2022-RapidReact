@@ -43,8 +43,8 @@ public class FastRight5BallAuto4 extends AutoBase {
         Pose2d ball1Pos = super.newPose2dInches(-33, 38, 90);
         List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
         Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 264, 140);
-        Pose2d terminalBallPos = super.newPose2dInches(-6, 301, 150);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 262, 140);
+        Pose2d terminalBallPos = super.newPose2dInches(-3, 303, 150);
         Pose2d shootPos2 = super.newPose2dInches(-2, 160, -60);
 
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
@@ -63,7 +63,7 @@ public class FastRight5BallAuto4 extends AutoBase {
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveAroundAndToBall2, super.newAutoIntakeCommand());
         ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), new PerpetualCommand(super.newOnlyIntakeCommand()));
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newAutoIntakeCommand());
-        ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(1.5));
+        ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(0.75));
         ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
