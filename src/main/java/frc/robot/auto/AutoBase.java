@@ -75,7 +75,7 @@ public class AutoBase extends SequentialCommandGroup {
      * SwerveControllerCommand generation.
      * 
      * Refer to this slideshow for more information on this class and autos!
-     * https://docs.google.com/presentation/d/1bthvLatei40UqnZPt9zO2BCpLaEcsibTTxtQ7s9Iypo/edit?usp=sharing 
+     * https://docs.google.com/presentation/d/1bthvLatei40UqnZPt9zO2BCpLaEcsibTTxtQ7s9Iypo/
      * 
      * @param drivetrain
      * @param vision

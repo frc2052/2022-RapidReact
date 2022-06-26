@@ -17,7 +17,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
 
     /**
      * Command for making the robot aim at the hub and track it while driving if desired.
-     * Uses relatively arbitrary values but it worked and did so better than what we coulsd get with 
+     * Uses relatively arbitrary values but it worked and did so better than what we could get with 
      * PID controlled rotation lol, see PIDVisionDriveCommand for attempt at that.
      * Extends DefaultDriveCommand and uses it's drive functions, but overrides the turn value with
      * using the limelight to center the crosshair on the hub.
