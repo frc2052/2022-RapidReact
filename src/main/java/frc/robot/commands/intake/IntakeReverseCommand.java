@@ -12,6 +12,11 @@ public class IntakeReverseCommand extends CommandBase {
   private final IntakeSubsystem intake;
   private final HopperSubsystem hopper;
 
+  /**
+   * Runs the intake and hopper wheels in reverse.
+   * @param intake
+   * @param hopper
+   */
   public IntakeReverseCommand(IntakeSubsystem intake, HopperSubsystem hopper) {
     this.intake = intake;
     this.hopper = hopper;
@@ -19,10 +24,8 @@ public class IntakeReverseCommand extends CommandBase {
     addRequirements(this.intake, this.hopper);
   }
     
-  // TODO: If the stage or prestages are full run them in reverse to flush the system.
   @Override
   public void execute() {
-    // Spin the intake wheels in reverse.
     intake.reverse();
     hopper.reverse();
   }
@@ -31,10 +34,5 @@ public class IntakeReverseCommand extends CommandBase {
   public void end(boolean interrupted) {
     intake.stop();
     hopper.stop();
-  }
-
-  @Override
-  public boolean isFinished(){
-    return false;
   }
 }

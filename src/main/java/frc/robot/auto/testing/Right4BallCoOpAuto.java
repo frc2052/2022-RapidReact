@@ -42,7 +42,7 @@ public class Right4BallCoOpAuto extends AutoBase {
         Pose2d shootPos2 = super.newPose2dInches(-10, 220, -30);
 
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
-        AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 2, 3, 2);
+        // AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(4, 3, 2, 3, 2);
         AutoTrajectoryConfig shoot1TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 1, 8, 3);
         AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 3.5, 3, 3, 2);
         AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(2.5, 1.5, 2, 5, 2);

@@ -5,18 +5,18 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.HopperSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeArmToggleCommand extends CommandBase {
   private final IntakeSubsystem intake;
 
-  /** Creates a new IntakeArmToggleCommand. */
+  /** 
+   * Command to toggle the intake up or down 
+   */
   public IntakeArmToggleCommand(IntakeSubsystem intake) {
     this.intake = intake;
 
-    //addRequirements(this.intake);
+    //addRequirements(this.intake); // Requirement commented out because unlikely this can conflict with anything and more likely the requirement itself would cause conflicts.
   }
 
   // Called when the command is initially scheduled.
@@ -29,9 +29,8 @@ public class IntakeArmToggleCommand extends CommandBase {
     }
   }
 
-  // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() { // Command ends immediatley
     return true;
   }
 }

@@ -21,25 +21,36 @@ import frc.robot.util.vision.VisionCalculator;
 public class ShootCommand extends ShooterIndexingCommand {
   private final ShooterSubsystem shooter;
   protected final IndexerSubsystem indexer;
-  private final HopperSubsystem hopper;
   private final VisionSubsystem vision;
+  private final VisionCalculator visionCalculator;
+
   // Determines whether all the balls should be shot and both feeder and preloader should be run (true)
   // or if only one ball should be shot and only the feeder should be run (false).
   // This is useful if you pick up the wrong color ball.
-  private final BooleanSupplier isLinedUSupplier;
-  private final VisionCalculator visionCalculator;
+  private final BooleanSupplier isLinedUpSupplier;
 
   private double distanceInches;
   private ShooterDistanceConfig shooterConfig;
   // private boolean lastSawStaged;
 
+  /**
+   * Command for shooting balls using vision.
+   * @param shootMode
+   * @param shooter
+   * @param indexer
+   * @param hopper
+   * @param vision
+   * @param isLinedUpSupplier - Optional supplier parameter for telling where this command should look to see if we're lined up or not. Created for targeting subsystem.
+   * 
+   * @param drivetrain
+   */
   public ShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    BooleanSupplier isLinedUSupplier,
+    BooleanSupplier isLinedUpSupplier,
     DrivetrainSubsystem drivetrain
   ) {
     super (
@@ -52,9 +63,8 @@ public class ShootCommand extends ShooterIndexingCommand {
 
     this.shooter = shooter;
     this.indexer = indexer;
-    this.hopper = hopper;
     this.vision = vision;
-    this.isLinedUSupplier = isLinedUSupplier;
+    this.isLinedUpSupplier = isLinedUpSupplier;
 
     visionCalculator = VisionCalculator.getInstance();
     shooterConfig = new ShooterDistanceConfig(0, 0, 0); // Initial speed (0) for shooter that'll make it just not run if no vision target.
@@ -63,6 +73,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     addRequirements(this.shooter);
   }
 
+  // Another constructor for just giving the default isLinedUpSupplier of vision.getIsLinedUp() to make things easy and clean elsewhere.
   public ShootCommand(
     ShootMode shootMode, 
     ShooterSubsystem shooter, 
@@ -95,6 +106,7 @@ public class ShootCommand extends ShooterIndexingCommand {
 
     if (vision.getHasValidTarget()) {
       distanceInches = visionCalculator.getDistanceInches(vision.getTy()); // + drivetrain.getIntendedXVelocityMPS() * 0.1 + 0.1; // TEMP VALUES
+      SmartDashboard.putNumber("Distance Inches", distanceInches);
 
       // Logic for switching the shoot angle depending on the ty of the target plus or minus a threshold (so we don't have any rapid movement) and if it's already at the right angle or not.
       if (distanceInches < Constants.Shooter.ANGLE_CHANGE_THRESHOLD_DISTANCE_INCHES - Constants.Shooter.ANGLE_CHANGE_TOLERANCE_DISTANCE_INCHES && shooter.getShootAngleEnum() == FiringAngle.ANGLE_2) {
@@ -105,8 +117,6 @@ public class ShootCommand extends ShooterIndexingCommand {
 
       shooterConfig = visionCalculator.getShooterConfig((int) distanceInches, shooter.getShootAngleEnum());
     }
-
-    // SmartDashboard.putNumber("Distance Inches", distanceInches);
 
     if (shooterConfig.getDistanceInches() > 0) { // Makes sure the wheels are running so that we're not going to jam it by pushing a ball into a wheel that isn't running
       shooter.runAtSpeed(
@@ -128,7 +138,7 @@ public class ShootCommand extends ShooterIndexingCommand {
 
   @Override
   public boolean isReadyToShoot() {
-      return shooter.isAtSpeed() && vision.getIsLinedUp();
+      return shooter.isAtSpeed() && isLinedUpSupplier.getAsBoolean();
   }
 
   @Override

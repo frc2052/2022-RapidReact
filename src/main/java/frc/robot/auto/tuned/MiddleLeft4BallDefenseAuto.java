@@ -3,14 +3,12 @@ package frc.robot.auto.tuned;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.commands.drive.WaitOdometryResetCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -42,9 +40,9 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -160);
-        Pose2d approachTerminalBalls = super.newPose2dInches(-151, -113, -160);
+        Pose2d approachTerminalBalls = super.newPose2dInches(-145, -111, -160);
         List<Translation2d> kickBallMidpoint = List.of(super.newTranslation2dInches(-60, -72));
-        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-178, -124, -135);
+        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-172, -122, -135);
         Pose2d behindBall4Pos = super.newPose2dInches(-60, -140, 30);
         Pose2d ball4Pos = super.newPose2dInches(-30, -130, 30);
 
@@ -63,7 +61,6 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
         ParallelDeadlineGroup intakeBall4 = new ParallelDeadlineGroup(driveToBall4Pos, super.newAutoIntakeCommand());
         ParallelDeadlineGroup aimingAndShooting2 = new ParallelDeadlineGroup(new PerpetualCommand(super.newAutoShootAllCommand()), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), super.newOnlyIntakeCommand());
 
-        //this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
         this.addCommands(this.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 7900, 7900));
         this.addCommands(driveTowardsTerminalBalls);

@@ -13,6 +13,15 @@ import frc.robot.subsystems.VisionSubsystem.LEDMode;
 public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceCommand {
     private final VisionSubsystem vision;
 
+    /**
+     * Command for making the robot turn in place to aim at the hub using a pid controller
+     * to control motor input to make nice and smooth.
+     * Has unsolved issues and did not end up being used during the 2022 season - extension
+     * of ProfiledPIDTurnInPlaceCommand's issues.
+     * @param profiledPIDController
+     * @param drivetrain
+     * @param deltaAngleSupplier
+     */
     public ProfiledPIDVisionTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         super(
             profiledPIDController,

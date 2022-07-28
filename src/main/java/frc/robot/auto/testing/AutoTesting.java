@@ -42,16 +42,18 @@ public class AutoTesting extends AutoBase {
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));
         Pose2d firstBallPos = new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(20), Rotation2d.fromDegrees(30));
 
-        SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
+        // SwerveControllerCommand driveToFirstBallPos = super.createSwerveTrajectoryCommand(super.slowTrajectoryConfig, startPos, firstBallPos, super.createRotationAngle(30));
 
-        ProfiledPIDVisionTurnInPlaceCommand visionTurnInPlace = new ProfiledPIDVisionTurnInPlaceCommand(drivetrain, vision);
+        // ProfiledPIDVisionTurnInPlaceCommand visionTurnInPlace = new ProfiledPIDVisionTurnInPlaceCommand(drivetrain, vision);
 
-        ProfiledPIDTurnInPlaceCommand turnInPlace = new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> Rotation2d.fromDegrees(90));
+        // ProfiledPIDTurnInPlaceCommand turnInPlace = new ProfiledPIDTurnInPlaceCommand(drivetrain, () -> Rotation2d.fromDegrees(90));
         
-        ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(visionTurnInPlace));
+        // ParallelDeadlineGroup aimAndShoot = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(visionTurnInPlace));
 
         //this.addCommands(driveToFirstBallPos);
-        this.addCommands(turnInPlace);
+        // this.addCommands(turnInPlace);
         //this.addCommands(aimAndShoot);
+
+        this.addCommands(new ParallelDeadlineGroup(super.newAutoShootAllCommand(100), new PerpetualCommand(super.newVisionTurnInPlaceCommand())));
     }
 }

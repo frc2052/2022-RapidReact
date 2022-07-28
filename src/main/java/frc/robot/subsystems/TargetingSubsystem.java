@@ -13,16 +13,24 @@ import frc.robot.util.vision.VisionCalculator;
 //     OFFSET
 // }
 
+/**
+ * Experimental class intended for driving while shooting offset calculations and the general reference
+ * point for the robot was lined up for where it intended to be aiming.
+ * @param vision
+ * @param drivetrain
+ * @param shooter
+ */
 public class TargetingSubsystem extends SubsystemBase {
     private final VisionSubsystem vision;
     private final DrivetrainSubsystem drivetrain;
     private final ShooterSubsystem shooter;
 
-    private TargetingMode targetingMode;
-    private Rotation2d currentRotation;
+    // private TargetingMode targetingMode;
+    // private Rotation2d currentRotation;
     private Rotation2d rotation;
     private boolean isLinedUpToShoot;
 
+    // Singleton pattern to allow this class to be accessed from anywhere
     private TargetingSubsystem(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
         this.vision = vision;
         this.drivetrain = drivetrain;
@@ -32,7 +40,7 @@ public class TargetingSubsystem extends SubsystemBase {
         rotation = Rotation2d.fromDegrees(0);
     }
     private static TargetingSubsystem instance;
-    public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
+    public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) { // Init method called in robotContainer's constructor to give subsystem pointers to this class.
         if (instance == null) {
             instance = new TargetingSubsystem(vision, drivetrain, shooter);
         }
@@ -115,9 +123,9 @@ public class TargetingSubsystem extends SubsystemBase {
         return isLinedUpToShoot;
     }
 
-    public void setTargetingMode(TargetingMode targetingMode) {
-        this.targetingMode = targetingMode;
-    }
+    // public void setTargetingMode(TargetingMode targetingMode) {
+    //     this.targetingMode = targetingMode;
+    // }
 
     // @Override
     // public void periodic() {

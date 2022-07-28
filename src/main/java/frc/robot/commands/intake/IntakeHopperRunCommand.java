@@ -22,8 +22,8 @@ public class IntakeHopperRunCommand extends HopperBaseCommand {
   public void execute() {
     super.execute();
     
-    // Don't allow more balls to be picked up if both the stage and prestage are full.
-    if (!isFinished()) {
+    // Don't allow more balls to be picked up if both the stage and prestage are full (counted in the HopperBaseCommand isFinished method).
+    if (!isFinished()) { // check isFinished first because execute is normally run before isfinished when command begins.
       intake.run();
     }
   }
@@ -32,10 +32,5 @@ public class IntakeHopperRunCommand extends HopperBaseCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     intake.stop();
-  }
-  
-  @Override
-  public boolean isFinished() {
-    return super.isFinished();
   }
 }

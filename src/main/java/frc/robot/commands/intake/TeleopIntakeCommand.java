@@ -18,7 +18,9 @@ public class TeleopIntakeCommand extends IntakeHopperRunCommand {
   @Override
   public void initialize() {
     super.initialize();
-    intake.armOut();
+    if(!isFinished()) {  // initialize usually runs before isFinished, but this way we can make sure not to swap the solenoid
+        intake.armOut();
+    }
   }
 
   @Override

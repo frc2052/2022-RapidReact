@@ -3,11 +3,18 @@ package frc.robot.commands.climber;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class ManualExtendClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     private double extendPctOutput;
 
+    /**
+     * Extends climber manually regardless of limits (override).
+     * @param climber
+     * @param extendPctOutput
+     */
     public ManualExtendClimberCommand(HookClimberSubsystem climber, double extendPctOutput) {
         this.climber = climber;
         this.extendPctOutput = extendPctOutput;
@@ -22,6 +29,7 @@ public class ManualExtendClimberCommand extends CommandBase {
     @Override
     public void execute() {
         climber.movePctOutput(extendPctOutput);
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
     }
 
      @Override

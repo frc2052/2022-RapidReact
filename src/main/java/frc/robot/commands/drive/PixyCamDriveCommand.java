@@ -17,7 +17,15 @@ public class PixyCamDriveCommand extends DefaultDriveCommand {
   private final PixyCamSubsystem pixyCamSubsystem;
   private final BallColor ballColor;
 
-  /** Creates a new PixyCamDriveCommand. */
+  /**
+   * Command for driving the robot using the pixy cam.
+   * Developed but unused during the 2022 season.
+   * @param drivetrainSubsystem
+   * @param pixyCamSubsystem
+   * @param translationXSupplier
+   * @param translationYSupplier
+   * @param dashboard
+   */
   public PixyCamDriveCommand(
     DrivetrainSubsystem drivetrainSubsystem,
     PixyCamSubsystem pixyCamSubsystem,

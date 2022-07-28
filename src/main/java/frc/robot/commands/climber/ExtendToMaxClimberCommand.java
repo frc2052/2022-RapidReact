@@ -9,6 +9,11 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 public class ExtendToMaxClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
 
+    /**
+     * Extends the climber to the max extension height to stay in frame perimeter,
+     * which changes depending on if the arms are vertical or tilted back.
+     * @param climber
+     */
     public ExtendToMaxClimberCommand(HookClimberSubsystem climber) {
         this.climber = climber;
 
@@ -25,8 +30,10 @@ public class ExtendToMaxClimberCommand extends CommandBase {
             LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_MAX_EXTENSION);
         } else if (currentHeightTicks >= maxHeight * 0.95) {
             climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT * 0.5);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
         } else {
             climber.movePctOutput(Constants.Climber.CLIMBER_EXTENSION_SPEED_PCT);
+            LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_EXTENDING);
         }
     }
 

@@ -6,16 +6,28 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
 public class VisionDriveCommand extends DefaultDriveCommand {
     private final VisionSubsystem vision;
-    private final TargetingSubsystem targeting;
+    // private final TargetingSubsystem targeting;
     private double visionRotation;
 
+    /**
+     * Command for making the robot aim at the hub and track it while driving if desired.
+     * Uses relatively arbitrary values but it worked and did so better than what we could get with 
+     * PID controlled rotation lol, see PIDVisionDriveCommand for attempt at that.
+     * Extends DefaultDriveCommand and uses it's drive functions, but overrides the turn value with
+     * using the limelight to center the crosshair on the hub.
+     * @param drivetrain
+     * @param translationXSupplier
+     * @param translationYSupplier
+     * @param vision
+     * @param shooter
+     * @param tempFieldCentricButtonPressed
+     */
     public VisionDriveCommand(
         DrivetrainSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
@@ -33,7 +45,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
         );
 
         this.vision = vision;
-        this.targeting = TargetingSubsystem.getInstance();
+        // this.targeting = TargetingSubsystem.getInstance();
     }
 
     public VisionDriveCommand(
@@ -77,7 +89,7 @@ public class VisionDriveCommand extends DefaultDriveCommand {
                 // targeting.setIsLinedUpToShoot(true);
             }
         } else {
-            // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle - old todo and would be highly advanced, but possible.
+            // Possible todo: Use the gyro to get the possible general direction of the hub and spin towards that angle - would be highly advanced, but possible.
             visionRotation = 0;
         }
 

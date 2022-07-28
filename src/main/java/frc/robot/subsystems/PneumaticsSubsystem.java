@@ -13,7 +13,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
   public PneumaticsSubsystem() {
     pneumaticHub = new PneumaticHub(Constants.Solenoids.COMPRESSOR_MODULE_ID);
     pneumaticHub.clearStickyFaults();
-    pneumaticHub.enableCompressorAnalog(100, 115);
+    pneumaticHub.enableCompressorAnalog(100, 120); // Recharge pressure, max pressure (even though set to 120 it always stops at 115)
   }
 
   @Override

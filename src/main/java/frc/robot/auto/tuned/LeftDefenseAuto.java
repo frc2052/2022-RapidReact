@@ -64,8 +64,7 @@ public class LeftDefenseAuto extends AutoBase {
         this.addCommands(turnToHangerIntakeStayOn);
         this.addCommands(nonVisionShootAllCommand.withTimeout(1.5));
         this.addCommands(super.newTurnInPlaceCommand(-175));
-        this.addCommands(super.newIntakeArmOutCommand());
-        
+          
         this.addCommands(super.autonomousFinishedCommandGroup());
 
         // Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));

@@ -43,16 +43,9 @@ public class FastRight5BallAuto4 extends AutoBase {
         Pose2d ball1Pos = super.newPose2dInches(-33, 38, 90);
         List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
         Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
-        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 270, 140);
-        Pose2d terminalBallPos = super.newPose2dInches(-6, 309, 150);
-        Pose2d shootPos2 = super.newPose2dInches(0, 160, -60);
-        // Pose2d startPos = super.newPose2dInches(0, 0, 115);
-        // Pose2d ball1Pos = super.newPose2dInches(-25, 38, 90);
-        // List<Translation2d> behindBallMidpoint = List.of(super.newTranslation2dInches(-20, 160));
-        // Pose2d ball2Pos = super.newPose2dInches(27, 153, 30);
-        // Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 279, 140);
-        // Pose2d terminalBallPos = super.newPose2dInches(-1, 302, 150);
-        // Pose2d shootPos2 = super.newPose2dInches(0, 160, -60);
+        Pose2d terminalBallMidPointPos = super.newPose2dInches(4, 264, 140);
+        Pose2d terminalBallPos = super.newPose2dInches(-6, 301, 150);
+        Pose2d shootPos2 = super.newPose2dInches(-2, 160, -60);
 
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
         AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 2, 5, 2);
@@ -68,14 +61,14 @@ public class FastRight5BallAuto4 extends AutoBase {
 
         ParallelDeadlineGroup intakeBall1 = new ParallelDeadlineGroup(driveToBall1, super.newAutoIntakeCommand());
         ParallelDeadlineGroup intakeBall2 = new ParallelDeadlineGroup(driveAroundAndToBall2, super.newAutoIntakeCommand());
-        ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(1), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), new PerpetualCommand(super.newOnlyIntakeCommand()));
+        ParallelDeadlineGroup aimAndShoot1 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()), new PerpetualCommand(super.newOnlyIntakeCommand()));
         ParallelDeadlineGroup intakeTerminalBalls = new ParallelDeadlineGroup(driveToTerminalBalls, super.newAutoIntakeCommand());
-        ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(2));
-        ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
+        ParallelDeadlineGroup driveBackAndShoot = new ParallelDeadlineGroup(driveBackToShoot, super.newAutoTimedIntakeOnThenInCommand(1.5));
+        ParallelDeadlineGroup aimAndShoot2 = new ParallelDeadlineGroup(super.newAutoShootAllCommand(), new PerpetualCommand(super.newVisionTurnInPlaceCommand()));
 
         this.addCommands(new WaitOdometryResetCommand(drivetrain));
         this.addCommands(super.newClimberArmsBackCommand());
-        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 7900, 7900));
+        this.addCommands(super.newAutoNonVisionShootAllCommand(ShootMode.SHOOT_ALL, FiringAngle.ANGLE_1, 8100, 8100, 0.2));
         this.addCommands(intakeBall1);
         this.addCommands(intakeBall2); // Drives and rotates to the second ball near the Tarmac
         this.addCommands(aimAndShoot1); // Drives and rotates to position to shoot ball into upper hub\

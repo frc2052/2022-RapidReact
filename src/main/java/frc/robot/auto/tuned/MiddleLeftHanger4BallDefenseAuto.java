@@ -5,7 +5,6 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -43,9 +42,9 @@ public class MiddleLeftHanger4BallDefenseAuto extends AutoBase {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -160);
-        Pose2d approachTerminalBalls = super.newPose2dInches(-158, -100, -160);
+        Pose2d approachTerminalBalls = super.newPose2dInches(-152, -98, -160);
         List<Translation2d> kickBallMidpoint = List.of(super.newTranslation2dInches(-60, -54));
-        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-186, -111, -135);
+        Pose2d arriveAtTerminalBalls = super.newPose2dInches(-180, -109, -135);
         List<Translation2d> throughHangerMidpoint = List.of(super.newTranslation2dInches(-155, 62));
         Pose2d shootPos = super.newPose2dInches(-50, 100, -30);
         Pose2d ball4Pos = super.newPose2dInches(-20, 97, -30);

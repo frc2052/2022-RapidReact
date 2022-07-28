@@ -24,6 +24,7 @@ public class AutoCountShootCommand extends ShootCommand {
   /**
    * Command that extends ShootCommand to be used in Auto. 
    * Counts balls that pass through staged cargo sensor and finishes if the amount determined by shootMode passes through.
+   * Was tested and attempted but ended up unused in the 2022 season.
    * @param shootMode
    * @param shooter
    * @param indexer
@@ -60,6 +61,7 @@ public class AutoCountShootCommand extends ShootCommand {
       }
   }
 
+  // Lots of logic for different cases of counting balls through the staged sensor.
   @Override
   public boolean isFinished() {
     boolean stagedCargoDetected = indexer.getCargoStagedDetected();
@@ -68,6 +70,7 @@ public class AutoCountShootCommand extends ShootCommand {
         preStagedCargoWasDetected = true;
     }
 
+    // Checks if the delta of the reading was the ball leaving the sensor (was there and now is not)
     if (!stagedCargoDetected && lastSawStaged) {
         ballsThroughStagedSensor++;
     }

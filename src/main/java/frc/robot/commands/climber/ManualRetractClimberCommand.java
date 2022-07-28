@@ -1,7 +1,5 @@
 package frc.robot.commands.climber;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.HookClimberSubsystem;
@@ -12,6 +10,11 @@ public class ManualRetractClimberCommand extends CommandBase {
     private final HookClimberSubsystem climber;
     private double retractPctOutput;
 
+    /**
+     * Retracts climber manually regardless of limits (override).
+     * @param climber
+     * @param retractPctOutput
+     */
     public ManualRetractClimberCommand(HookClimberSubsystem climber, double retractPctOutput) {
         this.climber = climber;
         this.retractPctOutput = retractPctOutput;
@@ -26,6 +29,7 @@ public class ManualRetractClimberCommand extends CommandBase {
     @Override
     public void execute() {
         climber.movePctOutput(Math.copySign(retractPctOutput, -1)); // Math.copysign just to make sure the pctOutput is negative and therefor always a retract
+        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_RETRACTING);
     }
 
      @Override

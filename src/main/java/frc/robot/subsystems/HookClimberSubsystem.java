@@ -141,7 +141,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberSolenoid.set(Value.kForward);
         currentSolenoidState = ClimberSolenoidState.FORWARD;
         isVertical = true;
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_ARMS_FORWARD);
+        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBER_ARMS_FORWARD);
     }
 
     /**
@@ -151,7 +151,7 @@ public class HookClimberSubsystem extends SubsystemBase{
         climberSolenoid.set(Value.kReverse);
         currentSolenoidState = ClimberSolenoidState.BACKWARD;
         isVertical = false;
-        LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.CLIMBER_ARMS_BACK);
+        LEDSubsystem.getInstance().setAlertLEDStatusMode(LEDAlertStatusMode.CLIMBER_ARMS_BACK);
 
     }
 

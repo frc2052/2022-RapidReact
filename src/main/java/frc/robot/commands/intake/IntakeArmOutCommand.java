@@ -7,16 +7,17 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-/**
- * Command used in auto to raise the intake.
- */
 public class IntakeArmOutCommand extends CommandBase {
     private final IntakeSubsystem intake;
     
+    /**
+     * Command to simply lower the intake.
+     * @param intake
+     */
     public IntakeArmOutCommand(IntakeSubsystem intake) {
         this.intake = intake;
 
-        addRequirements(this.intake);
+        // addRequirements(this.intake); // Requirement commented out because unlikely this can conflict with anything and more likely the requirement itself would cause conflicts.
     }
 
     @Override

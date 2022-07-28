@@ -61,5 +61,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putBoolean("Intake Arm Out", isArmOut);
         SmartDashboard.putBoolean("Intake Running", intakeRunning);
+
+        
     }
 }

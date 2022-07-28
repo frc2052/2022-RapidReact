@@ -17,7 +17,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -49,7 +48,7 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
 
-public class AutoBase  extends SequentialCommandGroup {
+public class AutoBase extends SequentialCommandGroup {
     private DrivetrainSubsystem drivetrain;
     private VisionSubsystem vision;
     private ShooterSubsystem shooter;
@@ -70,6 +69,22 @@ public class AutoBase  extends SequentialCommandGroup {
     protected final AutoTrajectoryConfig fastTurnSlowDriveTrajectoryConfig;
     protected final AutoTrajectoryConfig speedDriveTrajectoryConfig;
 
+    /**
+     * Base class that all Auto classes inherited from. Contains easy command instanciation methods,
+     * Pose2d and Rotation2d making methods, trajectory generation methods, and most importantly 
+     * SwerveControllerCommand generation.
+     * 
+     * Refer to this slideshow for more information on this class and autos!
+     * https://docs.google.com/presentation/d/1bthvLatei40UqnZPt9zO2BCpLaEcsibTTxtQ7s9Iypo/
+     * 
+     * @param drivetrain
+     * @param vision
+     * @param shooter
+     * @param intake
+     * @param hopper
+     * @param indexer
+     * @param climber
+     */
     public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         this.drivetrain = drivetrain;
         this.vision = vision;
@@ -80,6 +95,8 @@ public class AutoBase  extends SequentialCommandGroup {
         this.climber = climber;
 
         swerveDriveKinematics = drivetrain.getKinematics();
+
+        // PreConfigured trajectory configs
 
         slowTrajectoryConfig = new AutoTrajectoryConfig(
             new TrajectoryConfig(2.5, 1.5).setKinematics(swerveDriveKinematics), 
@@ -105,6 +122,10 @@ public class AutoBase  extends SequentialCommandGroup {
             new ProfiledPIDController(10, 0, 0, new TrapezoidProfile.Constraints(4*Math.PI, 3*Math.PI))
         );
     }
+
+    // --- Command instanciation methods ---
+    // Made it so we didn't have to pass all the subsystem arguments in each auto and instead used a single method from here to instanciate a new command.
+    // Also contains commonly used command groups. All return the Command object type because that is what all commands inherit from.
 
     protected Command newStopDrivetrainCommand() {
         return new InstantCommand(() -> drivetrain.stop());
@@ -166,6 +187,10 @@ public class AutoBase  extends SequentialCommandGroup {
 
     protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS) {
         return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS);
+    }
+
+    protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, double deadlineSeconds) {
+        return new AutoNonVisionShootCommand(shootMode, shooter, indexer, hopper, firingAngle, topWheelVelocityTP100MS, bottomWheelVelocityTP100MS, deadlineSeconds);
     }
 
     protected Command newAutoNonVisionShootAllCommand(ShootMode shootMode, FiringAngle firingAngle, double topWheelVelocityTP100MS, double bottomWheelVelocityTP100MS, boolean overrideIsAtSpeed) {
@@ -276,6 +301,43 @@ public class AutoBase  extends SequentialCommandGroup {
             );
     }
 
+        // Swerve controller command generator method. Gives desired arguments to the SwerveControllerCommand
+        // class that ultimatley tells the swerve drive robot where to drive and how to do so.
+
+        // IMPORTANT THING TO KNOW ABOUT THE SWERVER CONTROLLER COMMAND: This command does not decide to
+        // end by measuring the robot's actual position and measure if it hit the right point or not,
+        // rather it calculates the expected amount of time that the path it's taking should take (highly accurate)
+        // and ends after that specific amount of time has passed.
+
+        protected SwerveControllerCommand createSwerveTrajectoryCommand(
+            AutoTrajectoryConfig trajectoryConfig, 
+            Pose2d startPose, 
+            Pose2d endPose, 
+            List<Translation2d> midpointList,
+            Supplier<Rotation2d> rotationSupplier
+        ) {
+            lastCreatedEndingPose = endPose;
+    
+            return new SwerveControllerCommand(
+                TrajectoryGenerator.generateTrajectory(
+                    startPose,
+                    midpointList,
+                    endPose,
+                    trajectoryConfig.getTrajectoryConfig()
+                ),
+                drivetrain::getPose,
+                swerveDriveKinematics,
+                trajectoryConfig.getXYController(),
+                trajectoryConfig.getXYController(),
+                trajectoryConfig.getThetaController(), 
+                rotationSupplier,
+                drivetrain::setModuleStates,
+                drivetrain
+            );
+        }
+
+    // -- Different method versions containing different arguments)
+
     // Most basic deafult swerve command, automatically using slowTrajectoryConfig.
     protected SwerveControllerCommand createSwerveTrajectoryCommand(
         Pose2d startPose, 
@@ -343,38 +405,13 @@ public class AutoBase  extends SequentialCommandGroup {
         );
     }
 
-    // Swerve controller command for adding an ArrayList of midpoints.
-    protected SwerveControllerCommand createSwerveTrajectoryCommand(
-        AutoTrajectoryConfig trajectoryConfig, 
-        Pose2d startPose, 
-        Pose2d endPose, 
-        List<Translation2d> midpointList,
-        Supplier<Rotation2d> rotationSupplier
-    ) {
-        lastCreatedEndingPose = endPose;
-
-        return new SwerveControllerCommand(
-            TrajectoryGenerator.generateTrajectory(
-                startPose,
-                midpointList,
-                endPose,
-                trajectoryConfig.getTrajectoryConfig()
-            ),
-            drivetrain::getPose,
-            swerveDriveKinematics,
-            trajectoryConfig.getXYController(),
-            trajectoryConfig.getXYController(),
-            trajectoryConfig.getThetaController(), 
-            rotationSupplier,
-            drivetrain::setModuleStates,
-            drivetrain
-        );
-    }
-
+    // Creates easy rotation 2d suppliers for the SwerveControllerCommands
     protected Supplier<Rotation2d> createRotationAngle(double angle) {
         return () -> { return Rotation2d.fromDegrees(angle); };
     }
 
+    // Creates a Rotation2d supplier that will turn the robot to track the hub as it drives
+    // * Should not be used until the end of the auto to avoid throwing off the rest of the path by tracking false vision targets or general inconsistency.
     protected Supplier<Rotation2d> createHubTrackingSupplier(double noTargetAngle) {
         return () -> {
             if(vision.getLedMode() != 3.0) {

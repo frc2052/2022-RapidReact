@@ -13,12 +13,13 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoShootCommand extends ShootCommand {
   private final IndexerSubsystem indexer;
+  private final ShooterSubsystem shooter;
 
   private Timer timer;
   private Timer timer2;
   private double deadlineSeconds;
-  private boolean wasTwoBallsDetected;
-  private boolean delayOverride;
+  // private boolean wasTwoBallsDetected;
+  // private boolean delayOverride;
 
   /**
    * Command that extends ShootCommand to be used in Auto.
@@ -49,6 +50,7 @@ public class AutoShootCommand extends ShootCommand {
     );    
 
     this.indexer = indexer;
+    this.shooter = shooter;
     this.deadlineSeconds = deadlineSeconds;
   }
 
@@ -94,11 +96,6 @@ public class AutoShootCommand extends ShootCommand {
   }
 
   @Override
-  public void execute() {
-      super.execute();
-  }
-
-  @Override
   public boolean isFinished() {
     if (!indexer.getCargoStagedDetected() && !indexer.getCargoPreStagedDetected()) {
       if (timer == null) { // This is the first time we've not seen a ball
@@ -114,6 +111,26 @@ public class AutoShootCommand extends ShootCommand {
     return false;
   }
 
+
+  @Override
+  public boolean isReadyToShoot() {
+      if(shooter.isAtSpeed()) {
+        if (timer2 == null) { // Creates timer if it hasn't started yet or was stopped.
+            timer2 = new Timer();
+            timer2.start();
+        }
+
+        if (timer2.hasElapsed(0.25)) {
+            return super.isReadyToShoot();
+        }
+      } else {
+        clearTimer();
+      }
+
+      return false;
+  }
+
+  /*
   @Override
   protected void IndexerExecute() {
     if (!delayOverride) {
@@ -143,6 +160,7 @@ public class AutoShootCommand extends ShootCommand {
         super.IndexerExecute();
     }
   }
+  */
 
   private void clearTimer() {
       if(timer != null) {

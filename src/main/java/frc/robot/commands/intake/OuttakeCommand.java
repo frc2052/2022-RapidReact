@@ -4,13 +4,10 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 public class OuttakeCommand extends CommandBase {
   private final IntakeSubsystem intake;
@@ -18,6 +15,13 @@ public class OuttakeCommand extends CommandBase {
   private final IndexerSubsystem indexer;
   private OuttakeMode outtakeMode;
 
+  /**
+   * Reverses the intake, hopper, and the indexer wheels for 1 or 2 balls depending on the outtakeMode
+   * @param outtakeMode - ONE_BALL, or ALL_BALLS
+   * @param intake
+   * @param hopper
+   * @param indexer
+   */
   public OuttakeCommand(OuttakeMode outtakeMode, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer) {
     this.intake = intake;
     this.hopper = hopper;
@@ -29,7 +33,6 @@ public class OuttakeCommand extends CommandBase {
   
   @Override
   public void execute() {
-    // Spin the intake wheels in reverse.
     intake.reverse();
     hopper.reverse();
     indexer.runPreloadReverse();
@@ -44,11 +47,6 @@ public class OuttakeCommand extends CommandBase {
     hopper.stop();
     indexer.stopPreload();
     indexer.stopFeeder();
-  }
-
-  @Override
-  public boolean isFinished(){
-    return false;
   }
 
   public enum OuttakeMode {

@@ -17,6 +17,11 @@ public class VisionTurnInPlaceCommand extends CommandBase {
     private double tx;
     private boolean isLinedUp;
 
+    /**
+     * Command to turn in place to aim the robot at the hub.
+     * @param drivetrain
+     * @param vision
+     */
     public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
         this.drivetrain = drivetrain;
         this.vision = vision;
@@ -26,10 +31,10 @@ public class VisionTurnInPlaceCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         vision.setLEDMode(LEDMode.ON);
     }
 
+    // Same relatively arbitrary aiming logic based on limelight tx found in VisionDriveCommand
     @Override
     public void execute() {
         //double rotation = vision.getRotationToTarget();
@@ -38,10 +43,10 @@ public class VisionTurnInPlaceCommand extends CommandBase {
 
         if(vision.getHasValidTarget()) {
             // Logic to set the chassis rotation speed based on horizontal offset.
-            if(Math.abs(this.tx) > 5) {
-              visionRotation = -Math.copySign(Math.toRadians(this.tx * 8) , this.tx); // Dynamically changes rotation speed to be faster at a larger tx,
-            } else if(Math.abs(this.tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
-              visionRotation =  -Math.copySign(Math.PI /4, this.tx);
+            if(Math.abs(tx) > 5) {
+              visionRotation = -Math.copySign(Math.toRadians(tx * 8) , tx); // Dynamically changes rotation speed to be faster at a larger tx,
+            } else if(Math.abs(tx) > 2) {                              // multiplying tx by 9 to have the lowest value at 5 degrees being PI/4.
+              visionRotation =  -Math.copySign(Math.PI /4, tx);
             } else {
               visionRotation = 0; // Must set rotation to 0 once it's lined up or loses a target, or the chassis will continue to spin.
               isLinedUp = true;
@@ -67,7 +72,6 @@ public class VisionTurnInPlaceCommand extends CommandBase {
             );
             //visionRotation = vision.getRotationSpeedToTarget();
         /*} else {
-            // TODO Use the gyro to get the possible general direction of the hub and spin towards that angle
             drivetrainSubsystem.stop();
             isLinedUp = true;
         }*/
@@ -82,7 +86,6 @@ public class VisionTurnInPlaceCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // TODO Auto-generated method stub
         return isLinedUp;
     }
 }
