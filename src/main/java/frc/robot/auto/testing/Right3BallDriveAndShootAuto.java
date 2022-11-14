@@ -8,13 +8,13 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class Right3BallDriveAndShootAuto extends AutoBase {
 
@@ -30,7 +30,7 @@ public class Right3BallDriveAndShootAuto extends AutoBase {
      * @param hopper
      * @param climber
     */
-    public Right3BallDriveAndShootAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+    public Right3BallDriveAndShootAuto(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         // Positions and rotations

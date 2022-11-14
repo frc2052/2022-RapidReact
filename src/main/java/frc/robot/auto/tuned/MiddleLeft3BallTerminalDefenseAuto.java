@@ -14,8 +14,6 @@ import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
-
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -23,9 +21,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
-    DrivetrainSubsystem drivetrain;
+    SwerveDriveSubsystem drivetrain;
 
     /**
      * Position C Start (Middle Left Parallel with Outer Tarmac line) facing inwards towards the hub.
@@ -41,7 +40,7 @@ public class MiddleLeft3BallTerminalDefenseAuto extends AutoBase {
      * @param hopper
      * @param climber
      */
-    public MiddleLeft3BallTerminalDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public MiddleLeft3BallTerminalDefenseAuto(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0, 0, Rotation2d.fromDegrees(-160));

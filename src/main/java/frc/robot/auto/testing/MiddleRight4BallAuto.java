@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class MiddleRight4BallAuto extends AutoBase {
 
@@ -27,7 +27,7 @@ public class MiddleRight4BallAuto extends AutoBase {
      * @param indexer
      * @param hopper
      */
-    public MiddleRight4BallAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public MiddleRight4BallAuto(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -30);

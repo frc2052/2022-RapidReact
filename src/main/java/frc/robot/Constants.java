@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -31,17 +34,9 @@ public final class Constants {
         public static final int PRELOAD_INDEXER_MOTOR = 18; // Green compliant wheel
         public static final int FEEDER_INDEXER_MOTOR = 19; // Small blue wheel directly under shooter
         public static final int INTAKE_MOTOR = 20;
-        // public static final int ARM_MOTOR = 14;
-        // public static final int PITCH_MOTOR = 91;
     }
 
     public static final class Solenoids {
-        // Used for claw climber.
-        // public static final int CLOSE_A_SOLENOID = 0;
-        // public static final int CLOSE_B_SOLENOID = 2;
-        // public static final int OPEN_A_SOLENOID = 1;
-        // public static final int OPEN_B_SOLENOID = 3;
-
         public static final int COMPRESSOR_MODULE_ID = 13;
 
         public static final int CLIMBER_FORWARD_SOLENOID = 2;
@@ -60,9 +55,9 @@ public final class Constants {
     public static final class LimitSwitch {
         public static final int CLAW_A_LIMIT_SWITCH = 7;
         public static final int CLAW_B_LIMIT_SWITCH = 2;
+
         public static final int INDEXER_PRELOAD = 9;
         public static final int INDEXER_FEEDER = 8;
-
     }
 
     public static final class Shooter {
@@ -117,12 +112,36 @@ public final class Constants {
     }
 
     public static final class DriveTrain {
+        /*
+         * The maximum voltage that will be delivered to the drive motors.
+         * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
+         */
+        public static final double MAX_VOLTAGE = 12.0;
+
         // The left-to-right distance between the drivetrain wheels
         // Should be measured from center to center.
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.5);
         // The front-to-back distance between the drivetrain wheels.
         // Should be measured from center to center.
         public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(23.25);
+
+        /*
+         * The formula for calculating the theoretical maximum velocity is:
+         * [Motor free speed (RPM)] / 60 * [Drive reduction] * [Wheel diameter (m)] * pi
+         * By default this value is setup for a Mk3 standard module using Falcon500s to drive.
+         * An example of this constant for a Mk4 L2 module with NEOs to drive is:
+         * 5880.0 (RPM) / 60.0 * SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
+         * This is a measure of how fast the robot should be able to drive in a straight line.
+         */
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
+            SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
+            SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+        /*
+         * The theoretical maximum angular velocity of the robot in radians per second.
+         * This is a measure of how fast the robot can rotate in place.
+         */
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
+            Math.hypot(Constants.DriveTrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DriveTrain.DRIVETRAIN_WHEELBASE_METERS / 2.0);
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
@@ -147,7 +166,8 @@ public final class Constants {
         public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }
 
-    public static final class Intake {  // Sets the speed of the motors
+    public static final class Intake {  
+        // Sets the speed of the motors
         public static final double kIntakeSpeed = .90;
         public static final double kHopperSpeed = .75;
     }
@@ -156,7 +176,7 @@ public final class Constants {
         public static final double CLIMBER_EXTENSION_SPEED_PCT  = 1; // .5
         public static final double CLIMBER_RETRACT_SPEED_PCT  = -.8; // .75
         public static final double WINCH_CIRCUMFERENCE_INCHES = .8 * Math.PI;
-        // our gearbox ratio is 20
+        // Gearbox ratio is 20
         public static final double TICKS_PER_WINCH_ROTATION = 2048 / 12;
 
         public static final double MIN_CLIMBER_HEIGHT_TICKS = -10000; // Allow to climb below zero because under weight, the strap will wind tigher.

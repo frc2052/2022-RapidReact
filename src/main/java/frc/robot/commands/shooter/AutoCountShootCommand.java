@@ -5,11 +5,11 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class AutoCountShootCommand extends ShootCommand {
     private final IndexerSubsystem indexer;
@@ -38,7 +38,7 @@ public class AutoCountShootCommand extends ShootCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    DrivetrainSubsystem drivetrain
+    SwerveDriveSubsystem drivetrain
   ) {
     super(
       shootMode,

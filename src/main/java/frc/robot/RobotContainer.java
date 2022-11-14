@@ -48,7 +48,6 @@ import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShootLowCommand;
 
 import frc.robot.subsystems.DashboardControlsSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -58,7 +57,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
-
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.vision.VisionCalculator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -74,7 +73,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private DrivetrainSubsystem drivetrain;
+  private SwerveDriveSubsystem drivetrain;
   private VisionSubsystem vision;
   private DashboardControlsSubsystem dashboard;
   private ShooterSubsystem shooter;
@@ -104,7 +103,7 @@ public class RobotContainer {
     dashboard = DashboardControlsSubsystem.getInstance();
     dashboard.addSelectorsToSmartDashboard();
 
-    drivetrain = new DrivetrainSubsystem();
+    drivetrain = new SwerveDriveSubsystem();
     drivetrain.setDefaultCommand(
       new DefaultDriveCommand(
         drivetrain,

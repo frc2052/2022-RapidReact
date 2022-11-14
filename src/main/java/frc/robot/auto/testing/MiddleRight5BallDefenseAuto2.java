@@ -12,7 +12,6 @@ import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -20,6 +19,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class MiddleRight5BallDefenseAuto2 extends AutoBase {
 
@@ -38,7 +38,7 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
      * @param indexer
      * @param climber
      */
-    public MiddleRight5BallDefenseAuto2(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public MiddleRight5BallDefenseAuto2(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
         TargetingSubsystem targeting = TargetingSubsystem.getInstance();
 
@@ -56,7 +56,7 @@ public class MiddleRight5BallDefenseAuto2 extends AutoBase {
         AutoTrajectoryConfig trajectoryConfig2 = super.createTrajectoryConfig(2, 2, 1, 3, 2);   // Drive and shoot 2 trajectory config
         AutoTrajectoryConfig trajectoryConfig3 = super.createTrajectoryConfig(4, 3, 1, 3, 1);   // Drive to alliance and opponent balls trajectory config
         AutoTrajectoryConfig trajectoryConfig4 = super.createTrajectoryConfig(4, 3, 1, 1, 10);  // Path to Terminal trajectory config
-        AutoTrajectoryConfig trajectoryConfig5 = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 3, 3, 2);
+        AutoTrajectoryConfig trajectoryConfig5 = super.createTrajectoryConfig(SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 3, 3, 2);
 
         SwerveControllerCommand driveCommand1 = super.createSwerveTrajectoryCommand(trajectoryConfig1, startPos, pos1);  // Drive to first ball pos
         SwerveControllerCommand driveCommand2 = super.createSwerveTrajectoryCommand(trajectoryConfig2, super.getLastEndingPosCreated(170), pos2, () -> targeting.createHubTrackingSupplierWithOffset(170, 10)); // Drive and shoot 2

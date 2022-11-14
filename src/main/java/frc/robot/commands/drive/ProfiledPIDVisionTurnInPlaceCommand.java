@@ -6,9 +6,9 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceCommand {
     private final VisionSubsystem vision;
@@ -22,7 +22,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
      * @param drivetrain
      * @param deltaAngleSupplier
      */
-    public ProfiledPIDVisionTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+    public ProfiledPIDVisionTurnInPlaceCommand(ProfiledPIDController profiledPIDController, SwerveDriveSubsystem drivetrain, VisionSubsystem vision) {
         super(
             profiledPIDController,
             drivetrain, 
@@ -31,7 +31,7 @@ public class ProfiledPIDVisionTurnInPlaceCommand extends ProfiledPIDTurnInPlaceC
         this.vision = vision;
     }
 
-    public ProfiledPIDVisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+    public ProfiledPIDVisionTurnInPlaceCommand(SwerveDriveSubsystem drivetrain, VisionSubsystem vision) {
         super(
             drivetrain, 
             () -> { return Rotation2d.fromDegrees(vision.getTx()); }

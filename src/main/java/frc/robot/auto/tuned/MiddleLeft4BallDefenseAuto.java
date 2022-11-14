@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -18,9 +17,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class MiddleLeft4BallDefenseAuto extends AutoBase {
-    DrivetrainSubsystem drivetrain;
+    SwerveDriveSubsystem drivetrain;
 
     /**
      * Position C Start (Middle Left Parallel with Outer Tarmac line) facing inwards towards the hub.
@@ -36,7 +36,7 @@ public class MiddleLeft4BallDefenseAuto extends AutoBase {
      * @param hopper
      * @param climber
      */
-    public MiddleLeft4BallDefenseAuto(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public MiddleLeft4BallDefenseAuto(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = super.newPose2dInches(0, 0, -160);

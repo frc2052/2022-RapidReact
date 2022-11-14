@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
@@ -20,7 +20,7 @@ public class MidToHighAutoClimbCommand extends SequentialCommandGroup{
      * @param climber
      * @param drivetrain
      */
-    public MidToHighAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
+    public MidToHighAutoClimbCommand(HookClimberSubsystem climber, SwerveDriveSubsystem drivetrain) {
         this.climber = climber;
 
         addRequirements(this.climber);

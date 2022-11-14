@@ -5,13 +5,13 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class ResetDrivetrainCommand extends CommandBase {
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
 
     /** Comand intended to completely zero the drivetrain's odometry. */
-    public ResetDrivetrainCommand(DrivetrainSubsystem drivetrain) {
+    public ResetDrivetrainCommand(SwerveDriveSubsystem drivetrain) {
         this.drivetrain = drivetrain;
         
         addRequirements(this.drivetrain);

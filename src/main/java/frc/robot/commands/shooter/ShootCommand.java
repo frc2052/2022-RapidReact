@@ -8,13 +8,13 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.vision.ShooterDistanceConfig;
 import frc.robot.util.vision.VisionCalculator;
 
@@ -51,7 +51,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     HopperSubsystem hopper, 
     VisionSubsystem vision,
     BooleanSupplier isLinedUpSupplier,
-    DrivetrainSubsystem drivetrain
+    SwerveDriveSubsystem drivetrain
   ) {
     super (
       shootMode,
@@ -80,7 +80,7 @@ public class ShootCommand extends ShooterIndexingCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    DrivetrainSubsystem drivetrain
+    SwerveDriveSubsystem drivetrain
   ) {
     this(
       shootMode, 

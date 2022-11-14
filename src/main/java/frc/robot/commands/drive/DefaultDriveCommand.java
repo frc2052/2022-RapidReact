@@ -3,15 +3,15 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem;
 import frc.robot.subsystems.DashboardControlsSubsystem.DriveMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DefaultDriveCommand extends CommandBase {
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
     private final DashboardControlsSubsystem dashboardControls;
 
     private final SlewRateLimiter xLimiter;
@@ -31,7 +31,7 @@ public class DefaultDriveCommand extends CommandBase {
      * @param rotationSupplier a DoubleSupplier that should pass the TurnJoystick's value
      */
     public DefaultDriveCommand(
-        DrivetrainSubsystem drivetrain,
+        SwerveDriveSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         DoubleSupplier rotationSupplier,
@@ -61,8 +61,8 @@ public class DefaultDriveCommand extends CommandBase {
         if(dashboardControls.getSelectedDriveMode() == DriveMode.FIELD_CENTRIC || tempFieldCentricButtonPressed.getAsBoolean()) {
             drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    -modifyAxis(translationXSupplier.getAsDouble(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                    -modifyAxis(translationYSupplier.getAsDouble(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(translationXSupplier.getAsDouble(), xLimiter) * SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+                    -modifyAxis(translationYSupplier.getAsDouble(), yLimiter) * SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
                     getTurnValue(),
                     drivetrain.getGyroscopeRotation()
                 )
@@ -70,8 +70,8 @@ public class DefaultDriveCommand extends CommandBase {
         } else {
             drivetrain.drive(
                 new ChassisSpeeds(
-                    -modifyAxis(translationXSupplier.getAsDouble(), xLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
-                    -modifyAxis(translationYSupplier.getAsDouble(), yLimiter) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+                    -modifyAxis(translationXSupplier.getAsDouble(), xLimiter) * SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
+                    -modifyAxis(translationYSupplier.getAsDouble(), yLimiter) * SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 
                     getTurnValue()
                 )
             );
@@ -80,7 +80,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     // Seperated as a method so it may be overriden by other commands if needed.
     protected double getTurnValue() {
-        return -modifyAxis(rotationSupplier.getAsDouble(), turnLimiter) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+        return -modifyAxis(rotationSupplier.getAsDouble(), turnLimiter) * SwerveDriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
     }
 
     @Override

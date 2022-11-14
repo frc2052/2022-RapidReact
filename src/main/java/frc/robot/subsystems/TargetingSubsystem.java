@@ -5,6 +5,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.vision.VisionCalculator;
 
 // public enum Mode {
@@ -22,7 +23,7 @@ import frc.robot.util.vision.VisionCalculator;
  */
 public class TargetingSubsystem extends SubsystemBase {
     private final VisionSubsystem vision;
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
     private final ShooterSubsystem shooter;
 
     // private TargetingMode targetingMode;
@@ -31,7 +32,7 @@ public class TargetingSubsystem extends SubsystemBase {
     private boolean isLinedUpToShoot;
 
     // Singleton pattern to allow this class to be accessed from anywhere
-    private TargetingSubsystem(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) {
+    private TargetingSubsystem(VisionSubsystem vision, SwerveDriveSubsystem drivetrain, ShooterSubsystem shooter) {
         this.vision = vision;
         this.drivetrain = drivetrain;
         this.shooter = shooter;
@@ -40,7 +41,7 @@ public class TargetingSubsystem extends SubsystemBase {
         rotation = Rotation2d.fromDegrees(0);
     }
     private static TargetingSubsystem instance;
-    public static void init(VisionSubsystem vision, DrivetrainSubsystem drivetrain, ShooterSubsystem shooter) { // Init method called in robotContainer's constructor to give subsystem pointers to this class.
+    public static void init(VisionSubsystem vision, SwerveDriveSubsystem drivetrain, ShooterSubsystem shooter) { // Init method called in robotContainer's constructor to give subsystem pointers to this class.
         if (instance == null) {
             instance = new TargetingSubsystem(vision, drivetrain, shooter);
         }

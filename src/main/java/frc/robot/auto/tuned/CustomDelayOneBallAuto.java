@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
 import frc.robot.subsystems.DashboardControlsSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class CustomDelayOneBallAuto extends AutoBase{
     
@@ -31,7 +31,7 @@ public class CustomDelayOneBallAuto extends AutoBase{
      * @param hopper
      * @param climber
      */
-    public CustomDelayOneBallAuto(DrivetrainSubsystem drivetrain, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber, DashboardControlsSubsystem dashboard) {
+    public CustomDelayOneBallAuto(SwerveDriveSubsystem drivetrain, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber, DashboardControlsSubsystem dashboard) {
         super(drivetrain, null, shooter, null, hopper, indexer, climber);
 
         Timer timer = new Timer();

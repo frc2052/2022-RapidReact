@@ -36,7 +36,6 @@ import frc.robot.commands.shooter.AutoShootCommand;
 import frc.robot.commands.shooter.NonVisionShootCommand;
 import frc.robot.commands.shooter.ShootCommand;
 import frc.robot.commands.shooter.ShooterIndexingCommand.ShootMode;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -47,9 +46,10 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class AutoBase extends SequentialCommandGroup {
-    private DrivetrainSubsystem drivetrain;
+    private SwerveDriveSubsystem drivetrain;
     private VisionSubsystem vision;
     private ShooterSubsystem shooter;
     private IntakeSubsystem intake;
@@ -85,7 +85,7 @@ public class AutoBase extends SequentialCommandGroup {
      * @param indexer
      * @param climber
      */
-    public AutoBase(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+    public AutoBase(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.shooter = shooter;

@@ -5,13 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.auto.AutoBase;
-
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class OneBallAuto extends AutoBase{
     
@@ -26,7 +25,7 @@ public class OneBallAuto extends AutoBase{
      * @param hopper
      * @param climber
      */
-    public OneBallAuto(DrivetrainSubsystem drivetrain, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public OneBallAuto(SwerveDriveSubsystem drivetrain, ShooterSubsystem shooter, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, null, shooter, null, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(175));

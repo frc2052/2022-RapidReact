@@ -6,16 +6,16 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class PIDVisionDriveCommand extends DefaultDriveCommand {
 
     private final VisionSubsystem vision;
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
     // private final TargetingSubsystem targeting;
     private ProfiledPIDController pidController;
 
@@ -29,7 +29,7 @@ public class PIDVisionDriveCommand extends DefaultDriveCommand {
      * @param vision
      */
     public PIDVisionDriveCommand(
-        DrivetrainSubsystem drivetrain,
+        SwerveDriveSubsystem drivetrain,
         DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier,
         VisionSubsystem vision

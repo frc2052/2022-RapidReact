@@ -6,10 +6,10 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class WaitOdometryResetCommand extends CommandBase {
-  private DrivetrainSubsystem drivetrain;
+  private SwerveDriveSubsystem drivetrain;
 
   /** 
    * Command intended to check and make sure the robot's odometry was completley at 0 before 
@@ -17,7 +17,7 @@ public class WaitOdometryResetCommand extends CommandBase {
    * was initiated without redeploying or power cycling.
    * Did not work.
    */
-  public WaitOdometryResetCommand(DrivetrainSubsystem drivetrain) {
+  public WaitOdometryResetCommand(SwerveDriveSubsystem drivetrain) {
     this.drivetrain = drivetrain;
   }
 

@@ -13,7 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -25,7 +25,7 @@ public class TestAuto1 extends SequentialCommandGroup {
    * Only leaving for potential reference for now.
    * @param drivetrain
    */
-  public TestAuto1(DrivetrainSubsystem drivetrain) {
+  public TestAuto1(SwerveDriveSubsystem drivetrain) {
 
     var swerveDriveKinematics = drivetrain.getKinematics();
 

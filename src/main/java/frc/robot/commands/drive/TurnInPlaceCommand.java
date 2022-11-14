@@ -7,10 +7,10 @@ package frc.robot.commands.drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class TurnInPlaceCommand extends CommandBase {
-  private final DrivetrainSubsystem drivetrain;
+  private final SwerveDriveSubsystem drivetrain;
   private final Rotation2d deltaAngle;
 
   // Combined angle of robot and deltaAngle used to find.
@@ -22,7 +22,7 @@ public class TurnInPlaceCommand extends CommandBase {
    * @param deltaAngle - Rotation2d of the angle change from current robot angle.
 
    */
-  public TurnInPlaceCommand(DrivetrainSubsystem drivetrain, Rotation2d deltaAngle) {
+  public TurnInPlaceCommand(SwerveDriveSubsystem drivetrain, Rotation2d deltaAngle) {
     this.drivetrain = drivetrain;
     this.deltaAngle = deltaAngle;
    

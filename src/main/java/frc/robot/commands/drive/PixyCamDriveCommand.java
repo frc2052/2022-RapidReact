@@ -9,9 +9,9 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystems.DashboardControlsSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PixyCamSubsystem;
 import frc.robot.subsystems.PixyCamSubsystem.BallColor;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class PixyCamDriveCommand extends DefaultDriveCommand {
   private final PixyCamSubsystem pixyCamSubsystem;
@@ -27,7 +27,7 @@ public class PixyCamDriveCommand extends DefaultDriveCommand {
    * @param dashboard
    */
   public PixyCamDriveCommand(
-    DrivetrainSubsystem drivetrainSubsystem,
+    SwerveDriveSubsystem drivetrainSubsystem,
     PixyCamSubsystem pixyCamSubsystem,
     DoubleSupplier translationXSupplier,
     DoubleSupplier translationYSupplier,

@@ -12,10 +12,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
 
     /**
      * Command for making the robot turn in place to a desired rotation using a pid controller
@@ -26,7 +26,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
      * @param drivetrain
      * @param deltaAngleSupplier
      */
-    public ProfiledPIDTurnInPlaceCommand(ProfiledPIDController profiledPIDController, DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
+    public ProfiledPIDTurnInPlaceCommand(ProfiledPIDController profiledPIDController, SwerveDriveSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
         super(
             // The ProfiledPIDController used by the command
             profiledPIDController,
@@ -52,7 +52,7 @@ public class ProfiledPIDTurnInPlaceCommand extends ProfiledPIDCommand {
         getController().setTolerance(Units.degreesToRadians(5));//, Units.degreesToRadians(10));
     }
 
-    public ProfiledPIDTurnInPlaceCommand(DrivetrainSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
+    public ProfiledPIDTurnInPlaceCommand(SwerveDriveSubsystem drivetrain, Supplier<Rotation2d> deltaAngleSupplier) {
         this(
             // The default ProfiledPIDController used by the command
             new ProfiledPIDController(

@@ -7,10 +7,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 import frc.robot.subsystems.VisionSubsystem.LEDMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class VisionTurnInPlaceCommand extends CommandBase {
 
-    private final DrivetrainSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
     private final VisionSubsystem vision;
 
     private double visionRotation = 0;
@@ -22,7 +23,7 @@ public class VisionTurnInPlaceCommand extends CommandBase {
      * @param drivetrain
      * @param vision
      */
-    public VisionTurnInPlaceCommand(DrivetrainSubsystem drivetrain, VisionSubsystem vision) {
+    public VisionTurnInPlaceCommand(SwerveDriveSubsystem drivetrain, VisionSubsystem vision) {
         this.drivetrain = drivetrain;
         this.vision = vision;
 

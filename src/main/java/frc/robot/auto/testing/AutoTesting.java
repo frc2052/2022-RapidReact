@@ -14,7 +14,6 @@ import frc.robot.commands.drive.ProfiledPIDVisionTurnInPlaceCommand;
 import frc.robot.commands.drive.TurnInPlaceCommand;
 import frc.robot.commands.drive.VisionTurnInPlaceCommand;
 import frc.robot.commands.shooter.ShootCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -23,6 +22,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class AutoTesting extends AutoBase {
 
@@ -36,7 +36,7 @@ public class AutoTesting extends AutoBase {
      * @param indexer
      * @param climber
      */
-    public AutoTesting(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
+    public AutoTesting(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, HopperSubsystem hopper, IndexerSubsystem indexer, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         Pose2d startPos = new Pose2d(0,0, Rotation2d.fromDegrees(0));

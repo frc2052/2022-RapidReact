@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.climber.ClimberArmsBackCommand;
 import frc.robot.commands.climber.ClimberArmsForwardCommand;
 import frc.robot.commands.climber.ExtendToMaxClimberCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
     private final HookClimberSubsystem climber;
@@ -22,7 +22,7 @@ public class HighToTraversalAutoClimbCommand extends SequentialCommandGroup{
      * @param climber
      * @param drivetrain
      */
-    public HighToTraversalAutoClimbCommand(HookClimberSubsystem climber, DrivetrainSubsystem drivetrain) {
+    public HighToTraversalAutoClimbCommand(HookClimberSubsystem climber, SwerveDriveSubsystem drivetrain) {
         this.climber = climber;
 
         addRequirements(this.climber);

@@ -5,11 +5,11 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class AutoShootCommand extends ShootCommand {
   private final IndexerSubsystem indexer;
@@ -37,7 +37,7 @@ public class AutoShootCommand extends ShootCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    DrivetrainSubsystem drivetrain,
+    SwerveDriveSubsystem drivetrain,
     double deadlineSeconds
   ) {
     super(
@@ -60,7 +60,7 @@ public class AutoShootCommand extends ShootCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    DrivetrainSubsystem drivetrain
+    SwerveDriveSubsystem drivetrain
   ) {
     this(
       shootMode,
@@ -79,7 +79,7 @@ public class AutoShootCommand extends ShootCommand {
     IndexerSubsystem indexer, 
     HopperSubsystem hopper, 
     VisionSubsystem vision,
-    DrivetrainSubsystem drivetrain,
+    SwerveDriveSubsystem drivetrain,
     boolean delayOverride
   ) {
     this(

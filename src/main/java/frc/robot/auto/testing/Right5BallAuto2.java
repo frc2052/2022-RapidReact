@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.AutoBase;
 import frc.robot.auto.AutoTrajectoryConfig;
-import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HookClimberSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -17,6 +16,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TargetingSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.FiringAngle;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 public class Right5BallAuto2 extends AutoBase {
     /**
@@ -29,7 +29,7 @@ public class Right5BallAuto2 extends AutoBase {
      * @param hopper
      * @param climber
      */
-    public Right5BallAuto2(DrivetrainSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
+    public Right5BallAuto2(SwerveDriveSubsystem drivetrain, VisionSubsystem vision, ShooterSubsystem shooter, IntakeSubsystem intake, IndexerSubsystem indexer, HopperSubsystem hopper, HookClimberSubsystem climber) {
         super(drivetrain, vision, shooter, intake, hopper, indexer, climber);
 
         TargetingSubsystem targeting = TargetingSubsystem.getInstance();
@@ -46,9 +46,9 @@ public class Right5BallAuto2 extends AutoBase {
         AutoTrajectoryConfig intakeBall1TrajectoryConfig = super.createTrajectoryConfig(3, 2, 1, 5, 3);
         AutoTrajectoryConfig intakeBall2TrajectoryConfig = super.createTrajectoryConfig(1.5, 1, 2, 5, 3);
         //AutoTrajectoryConfig shoot1TrajectoryConfig = super.createTrajectoryConfig(3.5, 3, 1, 8, 3);
-        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 3.5, 3, 3, 2);
+        AutoTrajectoryConfig toTerminalTrajectoryConfig = super.createTrajectoryConfig(SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 3.5, 3, 3, 2);
         AutoTrajectoryConfig realignTrajectoryConfig = super.createTrajectoryConfig(2.5, 1.5, 2, 5, 2);
-        AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 2, 3, 2);
+        AutoTrajectoryConfig backToShootTrajectoryConfig = super.createTrajectoryConfig(SwerveDriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND, 4, 2, 3, 2);
 
         SwerveControllerCommand driveToBall1 = super.createSwerveTrajectoryCommand(intakeBall1TrajectoryConfig.withEndVelocity(1.5), startPos, ball1Pos, super.createRotationAngle(-10));
         SwerveControllerCommand driveBehindBall2 = super.createSwerveTrajectoryCommand(intakeBall2TrajectoryConfig.withStartAndEndVelocity(1.5, 1.5), super.getLastEndingPosCreated(-110), behindBall2Pos, () -> targeting.createHubTrackingSupplierWithOffset(140, 8));
