@@ -25,25 +25,11 @@ import frc.robot.Constants;
 
 /** Add your docs here. */
 public class MK3StandardSwerveModule {
-
-    /*
-     *  wheel diameter 0.1016,
-        drive reduction (14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 60.0),
-        drive inverted true,
-        steer reduction (15.0 / 32.0) * (10.0 / 60.0),
-        steer inverted true
-    */
-
     private final String debugName;
 
     private final TalonFX driveMotor;
     private final TalonFX steerMotor;
     private final CANCoder encoder;
-
-    private static final double wheelDiameter = 0.1016;
-    private static final double driveReduction = (14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 60.0);
-    private static final double steerReduction = (15.0 / 32.0) * (10.0 / 60.0);
-    private static final int TICKS_PER_ROTATION = 2048;
 
     private static final int CAN_TIMEOUT_MS = 250;
 
@@ -65,12 +51,15 @@ public class MK3StandardSwerveModule {
     }
 
     private TalonFX createDriveMotor(int driveMotorChannel) {
-        double sensorPositionCoefficient = Math.PI * wheelDiameter * driveReduction / TICKS_PER_ROTATION;
+        double sensorPositionCoefficient = Math.PI * 
+            Constants.SwerveModule.WHEEL_DIAMETER_METERS * 
+            Constants.SwerveModule.DRIVE_REDUCTION / 
+            Constants.SwerveModule.TICKS_PER_ROTATION;
         double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
         TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
-        motorConfiguration.voltageCompSaturation = Constants.DriveTrain.MAX_VOLTAGE;
+        motorConfiguration.voltageCompSaturation = Constants.SwerveModule.MAX_VOLTAGE;
         motorConfiguration.supplyCurrLimit.currentLimit = driveCurrentLimit;
         motorConfiguration.supplyCurrLimit.enable = true;
 
@@ -97,7 +86,9 @@ public class MK3StandardSwerveModule {
     }
     
     private TalonFX createSteerMotor(int steerMotorChannel) {
-        double sensorPositionCoefficient = 2.0 * Math.PI / TICKS_PER_ROTATION * steerReduction;
+        double sensorPositionCoefficient = 2.0 * Math.PI / 
+            Constants.SwerveModule.TICKS_PER_ROTATION * 
+            Constants.SwerveModule.STEER_REDUCTION;
         double sensorVelocityCoefficient = sensorPositionCoefficient * 10.0;
 
         TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
@@ -105,7 +96,7 @@ public class MK3StandardSwerveModule {
         motorConfiguration.slot0.kI = 0.0;
         motorConfiguration.slot0.kD = 0.1;
         
-        motorConfiguration.voltageCompSaturation = Constants.DriveTrain.MAX_VOLTAGE;
+        motorConfiguration.voltageCompSaturation = Constants.SwerveModule.MAX_VOLTAGE;
 
         motorConfiguration.supplyCurrLimit.currentLimit = steerCurrentLimit;
         motorConfiguration.supplyCurrLimit.enable = true;
@@ -167,7 +158,9 @@ public class MK3StandardSwerveModule {
     }
 
     public void setState(SwerveModuleState state) {
-        double driveVoltage = state.speedMetersPerSecond / Constants.DriveTrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DriveTrain.MAX_VOLTAGE;
+        double driveVoltage = state.speedMetersPerSecond / 
+            Constants.SwerveModule.MAX_VELOCITY_METERS_PER_SECOND * 
+            Constants.SwerveModule.MAX_VOLTAGE;
         double steerAngleRadians = state.angle.getRadians();
     }
 

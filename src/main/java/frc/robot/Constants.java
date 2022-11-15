@@ -36,6 +36,67 @@ public final class Constants {
         public static final int INTAKE_MOTOR = 20;
     }
 
+    public static final class SwerveModule {
+        /*
+         * The maximum voltage that will be delivered to the drive motors.
+         * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
+         */
+        public static final double MAX_VOLTAGE = 12.0;
+
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
+        public static final double DRIVE_REDUCTION = (14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 60.0);
+        public static final double STEER_REDUCTION = (15.0 / 32.0) * (10.0 / 60.0);
+        public static final int TICKS_PER_ROTATION = 2048;
+
+        /*
+         * The formula for calculating the theoretical maximum velocity is:
+         * [Motor free speed (RPM)] / 60 * [Drive reduction] * [Wheel diameter (m)] * pi
+         * By default this value is setup for a Mk3 standard module using Falcon500s to drive.
+         * An example of this constant for a Mk4 L2 module with NEOs to drive is:
+         * 5880.0 (RPM) / 60.0 * SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
+         * This is a measure of how fast the robot should be able to drive in a straight line.
+         */
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
+            DRIVE_REDUCTION * WHEEL_DIAMETER_METERS * Math.PI;
+        /*
+         * The theoretical maximum angular velocity of the robot in radians per second.
+         * This is a measure of how fast the robot can rotate in place.
+         */
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(
+            Constants.SwerveDriveTrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, 
+            Constants.SwerveDriveTrain.DRIVETRAIN_WHEELBASE_METERS / 2.0
+        );
+    }
+
+    public static final class SwerveDriveTrain {
+        // The left-to-right distance between the drivetrain wheels
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.5);
+        // The front-to-back distance between the drivetrain wheels.
+        // Should be measured from center to center.
+        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(23.25);
+
+        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4;
+        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
+        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 5;
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET_RADIANS = -Math.toRadians(218.1);
+
+        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 9;
+        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
+        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 8;
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET_RADIANS = -Math.toRadians(176.5);
+
+        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
+        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
+        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2;
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET_RADIANS = -Math.toRadians(39); //45.9 - old value, changed to straighten back left
+
+        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 12;
+        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
+        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11;
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET_RADIANS = -Math.toRadians(61.1);
+    }
+
     public static final class Solenoids {
         public static final int COMPRESSOR_MODULE_ID = 13;
 
@@ -109,61 +170,6 @@ public final class Constants {
     public static final class PixyCamConstants {
         public static final double FOV = 60;
         public static final double IMAGE_WIDTH_PIXELS = 316;
-    }
-
-    public static final class DriveTrain {
-        /*
-         * The maximum voltage that will be delivered to the drive motors.
-         * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
-         */
-        public static final double MAX_VOLTAGE = 12.0;
-
-        // The left-to-right distance between the drivetrain wheels
-        // Should be measured from center to center.
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(22.5);
-        // The front-to-back distance between the drivetrain wheels.
-        // Should be measured from center to center.
-        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(23.25);
-
-        /*
-         * The formula for calculating the theoretical maximum velocity is:
-         * [Motor free speed (RPM)] / 60 * [Drive reduction] * [Wheel diameter (m)] * pi
-         * By default this value is setup for a Mk3 standard module using Falcon500s to drive.
-         * An example of this constant for a Mk4 L2 module with NEOs to drive is:
-         * 5880.0 (RPM) / 60.0 * SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
-         * This is a measure of how fast the robot should be able to drive in a straight line.
-         */
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-            SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
-            SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
-        /*
-         * The theoretical maximum angular velocity of the robot in radians per second.
-         * This is a measure of how fast the robot can rotate in place.
-         */
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND /
-            Math.hypot(Constants.DriveTrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, Constants.DriveTrain.DRIVETRAIN_WHEELBASE_METERS / 2.0);
-
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4;
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 6;
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 5;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(218.1);
-
-        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 9;
-        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7;
-        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 8;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(176.5);
-
-        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 1;
-        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3;
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 2;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(39); //45.9 - old value, changed to straighten back left
-
-        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 12;
-        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(61.1);
-
-        public static final double DRIVING_AIM_ANGLE_OFFSET_DEGREES = 0.0;
     }
 
     public static final class Intake {  

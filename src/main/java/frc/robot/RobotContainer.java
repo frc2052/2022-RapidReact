@@ -73,58 +73,58 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private SwerveDriveSubsystem drivetrain;
-  private VisionSubsystem vision;
-  private DashboardControlsSubsystem dashboard;
-  private ShooterSubsystem shooter;
-  private IndexerSubsystem indexer;
-  private IntakeSubsystem intake;
-  private HopperSubsystem hopper;
-  private HookClimberSubsystem climber;
-  // private UsbCameraSubsystem intakeCamera;
+    private SwerveDriveSubsystem drivetrain;
+    private VisionSubsystem vision;
+    private DashboardControlsSubsystem dashboard;
+    private ShooterSubsystem shooter;
+    private IndexerSubsystem indexer;
+    private IntakeSubsystem intake;
+    private HopperSubsystem hopper;
+    private HookClimberSubsystem climber;
+    // private UsbCameraSubsystem intakeCamera;
 
-  private final Joystick driveJoystick = new Joystick(0);
-  private final Joystick turnJoystick = new Joystick(1);
-  private final Joystick secondaryPannel = new Joystick(2);
+    private final Joystick driveJoystick = new Joystick(0);
+    private final Joystick turnJoystick = new Joystick(1);
+    private final Joystick secondaryPannel = new Joystick(2);
 
-  private Command autonomousCommand;
-  private boolean isShooting;
-  // private boolean competitionMode = true;
+    private Command autonomousCommand;
+    private boolean isShooting;
+    // private boolean competitionMode = true;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. 
-   * The place where robot wide things that need to be done that don't fit in other subsystems
-   * or commands should be done.
-   */
-  public RobotContainer() {
-    vision = new VisionSubsystem();
-    shooter = new ShooterSubsystem();
+    /** The container for the robot. Contains subsystems, OI devices, and commands. 
+     * The place where robot wide things that need to be done that don't fit in other subsystems
+     * or commands should be done.
+     */
+    public RobotContainer() {
+        vision = new VisionSubsystem();
+        shooter = new ShooterSubsystem();
 
-    DashboardControlsSubsystem.init(vision, this, shooter);
-    dashboard = DashboardControlsSubsystem.getInstance();
-    dashboard.addSelectorsToSmartDashboard();
+        DashboardControlsSubsystem.init(vision, this, shooter);
+        dashboard = DashboardControlsSubsystem.getInstance();
+        dashboard.addSelectorsToSmartDashboard();
 
-    drivetrain = new SwerveDriveSubsystem();
-    drivetrain.setDefaultCommand(
-      new DefaultDriveCommand(
-        drivetrain,
-        () -> driveJoystick.getY(),
-        () -> driveJoystick.getX(),
-        () -> turnJoystick.getX(),
-        () -> tempFieldCentricButton.get()
-		  )
-    );
+        drivetrain = new SwerveDriveSubsystem();
+        drivetrain.setDefaultCommand(
+            new DefaultDriveCommand(
+                drivetrain,
+                () -> driveJoystick.getY(),
+                () -> driveJoystick.getX(),
+                () -> turnJoystick.getX(),
+                () -> tempFieldCentricButton.get()
+            )
+        );
 
-    TargetingSubsystem.init(vision, drivetrain, shooter);
-    indexer = new IndexerSubsystem();
-    intake = new IntakeSubsystem();
-    hopper = new HopperSubsystem();
-    climber = new HookClimberSubsystem();
-    new PneumaticsSubsystem(); // Put here to instanciate the subsystem's constructor, but we don't use it anywhere so we don't need to store it in a variable (also wanted to get rid of the warning for that lol).
-    // intakeCamera = new UsbCameraSubsystem();
-    // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
+        TargetingSubsystem.init(vision, drivetrain, shooter);
+        indexer = new IndexerSubsystem();
+        intake = new IntakeSubsystem();
+        hopper = new HopperSubsystem();
+        climber = new HookClimberSubsystem();
+        new PneumaticsSubsystem(); // Put here to instanciate the subsystem's constructor, but we don't use it anywhere so we don't need to store it in a variable (also wanted to get rid of the warning for that lol).
+        // intakeCamera = new UsbCameraSubsystem();
+        // pixySub.setDefaultCommand(new PixyCamManualDriveCommand(pixySub));
 
-    configureButtonBindings();
-  }
+        configureButtonBindings();
+    }
 
   // Declaring some buttons classwide as commmands rely on getting weather they're pressed or not. Needed for our method of rebinding button profiles.
   private JoystickButton tempFieldCentricButton;
