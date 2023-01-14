@@ -21,6 +21,7 @@ public final class Constants {
     public static final class Field {
         public static final double UPPER_HUB_HEIGHT_METERS = 2.64;
         public static final double EDGE_TO_CENTER_OF_HUB_OFFSET_METERS = 0.68;
+       
     }
 
     public static final class MotorIDs {
@@ -179,4 +180,8 @@ public final class Constants {
     public static final class Misc {
         public static final double USB_CAM_MOUNT_HEIGHT_METERS = Units.inchesToMeters(29.5);
     }
+
+    public static final String USB_CAMERA_NAME = "USB_Camera-T3H-00016";
+
+   
 }
