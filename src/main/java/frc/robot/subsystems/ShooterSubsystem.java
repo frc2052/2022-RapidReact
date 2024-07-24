@@ -78,7 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Shooter I", 0);
     // SmartDashboard.putNumber("Shooter D", 0);
     // SmartDashboard.putNumber("Shooter F", 0.048);
-    idleSpeedEnabled = !SmartDashboard.getBoolean("Disable Shooter Idle", false);
+    idleSpeedEnabled = false;
     stop();
   }
 

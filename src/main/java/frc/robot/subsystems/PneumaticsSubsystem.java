@@ -19,8 +19,8 @@ public class PneumaticsSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Gets the current compressor pressure from channel 0.
-    currentPressure = pneumaticHub.getPressure(0);
-    SmartDashboard.putNumber("currentPressure", currentPressure);
+    //currentPressure = pneumaticHub.getPressure(0);
+    //SmartDashboard.putNumber("currentPressure", currentPressure);
   }
 
   public double getCurrentPressure() {

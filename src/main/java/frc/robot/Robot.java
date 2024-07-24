@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,10 +15,9 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command autonomousCommand;
+  private Command m_autonomousCommand;
 
-  private RobotContainer robotContainer;
-//  private PixyCamSubsystem pixy;
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -28,15 +25,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    robotContainer = new RobotContainer();  // Instantiate our RobotContainer.  This will perform all our button bindings, and put our autonomous chooser on the dashboard.
-    robotContainer.initializeAutonomousCommand();
-
-   LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
@@ -47,16 +43,17 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-    robotContainer.periodic();
+    
+    try {
+        CommandScheduler.getInstance().run();    
+    } catch (Exception e) {
+        System.err.println(e.getMessage());
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.DISABLED);
-    LEDSubsystem.getInstance().setLEDStatusMode(LEDStatusMode.DISABLED);
-  }
+  public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
@@ -64,50 +61,27 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // LEDSubsystem.getInstance().disable(); // Ready for if the LEDs ever crash the robot again
-    robotContainer.resetGyro();
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
     }
-    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.AUTONOMOUS_DEFAULT);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    // Pixy cam testing code
-//    Rotation2d angle = pixy.angleToBall(BallColor.BLUE);
-//		SmartDashboard.putString("Pixyblock.Angle", (angle != null) ? angle.toString() : "-------");
-
-  //   System.err.println("AUTO");
-  //   Block b = pixy.getBiggestBlock(BallColor.BLUE);
-  //   if (b == null) {
-  //     System.err.println("****************BLOCK IS NULL**********************");
-  //   } else {
-  //     System.err.println("**************BLOCK SIZE " + b.getHeight());
-  //   }
-  //  {
-  //   System.err.println("AUTO");
-  //   Block r = pixy.getBiggestBlock(BallColor.RED);
-  //   if (r == null) {
-  //     System.err.println("****************BLOCK IS NULL**********************");
-  //   } else {
-  //     System.err.println("**************BLOCK SIZE " + r.getHeight());
-  //   }
-  // }
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
-    if (autonomousCommand != null) { // Makes sure auto stops when teleop starts.
-      autonomousCommand.cancel();
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
     }
-
-    // LEDSubsystem.getInstance().enable();
-    LEDSubsystem.getInstance().setDefaultLEDStatusMode(LEDStatusMode.TELEOP_DEFAULT);
   }
 
   /** This function is called periodically during operator control. */
@@ -116,11 +90,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    CommandScheduler.getInstance().cancelAll(); // Cancels all running commands at the start of test mode.
-    robotContainer.resetGyro();
+    // Cancels all running commands at the start of test mode.
+    CommandScheduler.getInstance().cancelAll();
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {}
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 }

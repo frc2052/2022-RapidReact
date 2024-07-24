@@ -4,11 +4,11 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeStopCommand extends CommandBase {
+public class IntakeStopCommand extends Command {
     private final IntakeSubsystem intake;
     private final HopperSubsystem hopper;
 

@@ -4,22 +4,20 @@
 
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class ShooterIndexingCommand extends CommandBase {
+public class ShooterIndexingCommand extends Command {
   private final IndexerSubsystem indexer;
   private final HopperSubsystem hopper;
   private final ShooterSubsystem shooter;
 
   private ShootMode shootMode;
   protected boolean delayOverride = true;
-  // private boolean wasTwoBallsDetected;
-  // private Timer timer;
 
   /** 
    * Command for indexing balls for the shooter in shoot commands.
@@ -66,25 +64,6 @@ public class ShooterIndexingCommand extends CommandBase {
         hopper.run();
       }
     }
-
-    // Old Logic for having a delay in stopping the preloaded ball to make it lose its momentum and solve shooter wheel speed issues
-      // if (!wasTwoBallsDetected) {
-      //   if (preStagedCargoDetected) { // If the prestaged sensor detects a ball, sets boolean true because we'll need to slow it down.
-      //     wasTwoBallsDetected = true;
-      //   }
-      // }
-
-      // if (wasTwoBallsDetected && stagedCargoDetected && !preStagedCargoDetected && !delayOverride) { // If only staged beam break is broken and a second ball was on the way, stop the ball and check timer 
-      //   indexer.stopFeeder();
-      //   if (timer == null) { // Creates timer if it hasn't started yet or was stopped.
-      //       timer = new Timer();
-      //       timer.start();
-      //   }
-      //   if (timer.get() >= 0.0) { // If the beam's been broken for a quarter second, we can feed again.
-      //     wasTwoBallsDetected = false;
-      //     clearTimer();
-      //   }
-      // } else 
   }
 
   // Override this in different shoot commands for custom shoot control
@@ -99,13 +78,6 @@ public class ShooterIndexingCommand extends CommandBase {
     indexer.stopFeeder();
     indexer.stopPreload();
   }
-
-  // private void clearTimer() {
-  //   if(timer != null) {
-  //       timer.stop();
-  //       timer = null;
-  //   }
-  // }
 
   public enum ShootMode {
     SHOOT_SINGLE,

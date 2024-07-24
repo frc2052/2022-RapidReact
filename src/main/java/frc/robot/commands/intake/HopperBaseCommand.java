@@ -4,7 +4,7 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 /**
  * Class for the base command to run and control the hopper, being the indexer blue and green wheels and hopper compliant wheels 
  */
-public class HopperBaseCommand extends CommandBase {
+public class HopperBaseCommand extends Command {
   protected final IndexerSubsystem indexer;
   protected final HopperSubsystem hopper;
   

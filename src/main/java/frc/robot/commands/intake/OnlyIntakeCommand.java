@@ -4,13 +4,13 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LEDSubsystem.LEDStatusMode;
 
-public class OnlyIntakeCommand extends CommandBase {
+public class OnlyIntakeCommand extends Command {
   private final IntakeSubsystem intake;
   private final IndexerSubsystem indexer;
 

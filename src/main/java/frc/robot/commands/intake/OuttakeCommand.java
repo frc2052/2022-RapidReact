@@ -4,12 +4,12 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class OuttakeCommand extends CommandBase {
+public class OuttakeCommand extends Command {
   private final IntakeSubsystem intake;
   private final HopperSubsystem hopper;
   private final IndexerSubsystem indexer;
