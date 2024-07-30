@@ -37,9 +37,9 @@ public class DriveCommand extends Command {
         this.ySupplier = ySupplier;
         this.rotationSupplier = rotationSupplier;
 
-        xLimiter = new SlewRateLimiter(2);
-        yLimiter = new SlewRateLimiter(2);
-        rotationLimiter = new SlewRateLimiter(3);
+        xLimiter = new SlewRateLimiter(3);
+        yLimiter = new SlewRateLimiter(3);
+        rotationLimiter = new SlewRateLimiter(5);
 
         addRequirements(drivetrain);
     }
@@ -71,7 +71,7 @@ public class DriveCommand extends Command {
     }
 
     protected double deadBand(double value) {
-        if (Math.abs(value) <= 0.15) {
+        if (Math.abs(value) <= 0.1) {
             return 0.0;
         }
         // Limit the value to always be in the range of [-1.0, 1.0]
